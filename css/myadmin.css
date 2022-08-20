@@ -144,9 +144,9 @@ a:focus {
 }
 
 .bg-gradient-primary {
-  background-color: #6777ef;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #6777ef), to(#303f9f));
-  background-image: linear-gradient(180deg, #6777ef 10%, #303f9f 100%);
+  background-color: #ff10c9;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #ff10c9), to( #cb0ba0));
+  background-image: linear-gradient(180deg, #ff10c9 10%,  #cb0ba0 100%);
   background-size: cover
 }
 
@@ -597,7 +597,7 @@ a:focus {
 }
 
 .bg-navbar {
-  background-color: #6777ef
+  background-color: #ff10c9
 }
 
 .sidebar {
@@ -1900,7 +1900,7 @@ body.sidebar-toggled footer.sticky-footer {
 }
 
 .form-control:focus {
-  border: 1px solid #6777ef
+  border: 1px solid #ff10c9
 }
 
 .input-group-append span {

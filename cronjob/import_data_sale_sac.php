@@ -9,28 +9,23 @@ include("../config/connect_db.php");
 include('../cond_file/doc_info_sale_daily_cp.php');
 include('../util/month_util.php');
 
-$str_doc1 = array("30", "CS4", "CS5", "DS4", "IS3", "IS4", "ISC3", "ISC4");
-$str_doc2 = array("CS.8", "CS.9", "IC.3", "IC.4", "IS.3", "IS.4", "S.5", "S.6");
-$str_doc3 = array("CS.6", "CS.7", "IC.1", "IC.2", "IS.1", "IS.2", "S.1", "S.2");
-$str_doc4 = array("CS.2", "CS.3", "IC.5", "IC.6", "IS.5", "IS.6", "S.3", "S.4");
+$str_doc1 = array("DS02", "IS01", "IS02", "IV01", "IV3");
+$str_doc2 = array("2");
 
-$str_group1 = array("6SAC08","2SAC01","2SAC09","2SAC11","2SAC02","2SAC06","2SAC05","2SAC04","2SAC03","2SAC12","2SAC07","2SAC08","2SAC10","2SAC13","2SAC14","2SAC15","3SAC03","1SAC10");
-$str_group2 = array("5SAC02","8SAC11","5SAC01","TA01-001","8SAC09","TA01-003","8CPA01-002","8BTCA01-002","8CPA01-001","8BTCA01-001");
-$str_group3 = array("9SA01","999-13","999-07","999-08","TATA-004");
-$str_group4 = array("TATA-003","SAC08","10SAC12");
+$str_group1 = array("1SAC01","1SAC02","1SAC03","1SAC04","1SAC05","1SAC06","1SAC07","1SAC08","1SAC09","1SAC10","1SAC11","1SAC12","1SAC13","1SAC14","2SAC01","2SAC02","2SAC03","2SAC04","2SAC05","2SAC06","2SAC07","2SAC08","2SAC09","2SAC10","2SAC11","2SAC12","2SAC13","2SAC14","2SAC15","3SAC01","3SAC02","3SAC03","3SAC04","3SAC05","3SAC06","4SAC01","4SAC02","4SAC03","4SAC04","4SAC05","4SAC06");
+$str_group2 = array("5SAC01","5SAC02","6SAC08","8CPA01-001","8CPA01-002","8SAC09");
+$str_group3 = array("TATA-004");
+$str_group4 = array("SAC08","TATA-003","10SAC12");
 
 echo "Today is " . date("Y/m/d");
 echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
-$query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('30','CS4','CS5','DS4','IS3','IS4','ISC3','ISC4','CS.8','CS.9','IC.3','IC.4','IS.3','IS.4','S.5','S.6','CS.6','CS.7','IC.1','IC.2','IS.1','IS.2','S.1','S.2','CS.2','CS.3','IC.5','IC.6','IS.5','IS.6','S.3','S.4')) ";
 
 $query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 //$query_year = " AND DI_DATE BETWEEN '2017/01/01' AND '2021/12/31'";
 //$query_year = " AND DI_DATE BETWEEN '2022/05/15' AND '" . date("Y/m/d") . "'";
 
-$sql_sqlsvr = $select_query_daily . $select_query_daily_cond . $query_daily_cond_ext . $query_year . $select_query_daily_order;
-
-echo $sql_sqlsvr;
+$sql_sqlsvr = $select_query_daily . $select_query_daily_cond . $query_year . $select_query_daily_order;
 
 //$myfile = fopen("qry_file_mssql_server.txt", "w") or die("Unable to open file!");
 //fwrite($myfile, $sql_sqlsvr);
@@ -56,7 +51,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $branch = "";
 
     if (in_array($DT_DOCCODE, $str_doc1)) {
-        $branch = "CP-340";
+        $branch = "SAC";
     }
 
     if (in_array($DT_DOCCODE, $str_doc2)) {
@@ -82,24 +77,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     $p_group = "";
 
-    /*
-        if (strpos($group1, $ICCAT_CODE) !== false) {
-            $p_group = "P1";
-        }
-
-        if (strpos($group2, $ICCAT_CODE) !== false) {
-            $p_group = "P2";
-        }
-
-        if (strpos($group3, $ICCAT_CODE) !== false) {
-            $p_group = "P3";
-        }
-
-        if (strpos($group4, $ICCAT_CODE) !== false) {
-            $p_group = "P4";
-        }
-    */
-
     if (in_array($ICCAT_CODE, $str_group1)) {
         $p_group = "P1";
     }
@@ -116,7 +93,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $p_group = "P4";
     }
 
-    $sql_find = "SELECT * FROM ims_product_sale_cockpit "
+    $sql_find = "SELECT * FROM ims_product_sale_sac "
         . " WHERE DI_KEY = '" . $result_sqlsvr["DI_KEY"]
         . "' AND DI_REF = '" . $result_sqlsvr["DI_REF"]
         . "' AND DI_DATE = '" . $result_sqlsvr["DI_DATE"]
@@ -128,7 +105,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
 
-        $sql_update = " UPDATE ims_product_sale_cockpit  SET AR_CODE=:AR_CODE,AR_NAME=:AR_NAME,SLMN_CODE=:SLMN_CODE,SLMN_NAME=:SLMN_NAME
+        $sql_update = " UPDATE ims_product_sale_sac  SET AR_CODE=:AR_CODE,AR_NAME=:AR_NAME,SLMN_CODE=:SLMN_CODE,SLMN_NAME=:SLMN_NAME
 ,SKU_CODE=:SKU_CODE,SKU_NAME=:SKU_NAME,SKU_CAT=:SKU_CAT,ICCAT_CODE=:ICCAT_CODE,ICCAT_NAME=:ICCAT_NAME,TRD_QTY=:TRD_QTY,TRD_U_PRC=:TRD_U_PRC
 ,TRD_DSC_KEYINV=:TRD_DSC_KEYINV,TRD_B_SELL=:TRD_B_SELL
 ,TRD_B_VAT=:TRD_B_VAT,TRD_G_KEYIN=:TRD_G_KEYIN,WL_CODE=:WL_CODE,BRANCH=:BRANCH,BRN_CODE=:BRN_CODE
@@ -181,7 +158,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     } else {
 
-        $sql = " INSERT INTO ims_product_sale_cockpit (DI_KEY,DI_REF,DI_DATE,DI_MONTH,DI_MONTH_NAME,DI_YEAR
+        $sql = " INSERT INTO ims_product_sale_sac (DI_KEY,DI_REF,DI_DATE,DI_MONTH,DI_MONTH_NAME,DI_YEAR
         ,AR_CODE,AR_NAME,SLMN_CODE,SLMN_NAME,SKU_CODE,SKU_NAME,SKU_CAT,ICCAT_CODE,ICCAT_NAME,TRD_QTY,TRD_U_PRC
         ,TRD_DSC_KEYINV,TRD_B_SELL,TRD_B_VAT,TRD_G_KEYIN,WL_CODE,BRANCH,DT_DOCCODE,TRD_SEQ,BRN_CODE,BRN_NAME,DI_TIME_CHK,PGROUP)
         VALUES (:DI_KEY,:DI_REF,:DI_DATE,:DI_MONTH,:DI_MONTH_NAME,:DI_YEAR,:AR_CODE,:AR_NAME,:SLMN_CODE,:SLMN_NAME,:SKU_CODE,:SKU_NAME,:SKU_CAT

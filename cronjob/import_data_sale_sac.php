@@ -66,6 +66,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     $res = $res . $result_sqlsvr["DI_REF"] . "  *** " . $result_sqlsvr["DT_DOCCODE"] . " *** " . "\n\r";
 
+
     //$myfile = fopen("sql_get_DATA.txt", "w") or die("Unable to open file!");
     //fwrite($myfile, "[" . $res) ;
     //fclose($myfile);

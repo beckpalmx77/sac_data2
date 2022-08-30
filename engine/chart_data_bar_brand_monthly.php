@@ -14,11 +14,11 @@ $sql_get = "
  SELECT BRN_NAME,DI_MONTH,DI_MONTH_NAME,DI_DATE
  ,sum(CAST(TRD_QTY AS DECIMAL(10,2))) as TRD_QTY
  ,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as  TRD_G_KEYIN
- FROM ims_product_sale_cockpit 
+ FROM ims_product_sale_sac
  WHERE DI_YEAR = '" . $year . "'   
  and BRN_NAME = '" . $brn_name . "'
  GROUP BY  BRN_NAME,DI_MONTH,DI_MONTH_NAME 
- ORDER BY DI_MONTH
+ ORDER BY BRN_NAME,DI_MONTH
  ";
 
 $return_arr = array();

@@ -7,15 +7,27 @@ $year = date("Y");
 
 $doc_date = str_replace("-", "/", $_POST["doc_date"]);
 $branch = $_POST["branch"];
-//WHERE SKU_CAT IN ('2SAC01','2SAC02','2SAC03','2SAC02','2SAC04','2SAC05','2SAC06','2SAC07','2SAC08','2SAC09','2SAC10','2SAC11','2SAC12','2SAC13','2SAC14','2SAC15')
+
+/*
 $sql_get = "
  SELECT BRN_CODE,BRN_NAME,SKU_CAT,ICCAT_NAME,sum(CAST(TRD_QTY AS DECIMAL(10,2))) as  TRD_QTY
  ,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TRD_G_KEYIN 
- FROM ims_product_sale_sac 
+ FROM ims_product_sale_sac
  WHERE PGROUP IN ('P1')
  AND DI_YEAR = '" . $year . "'
  GROUP BY BRN_CODE,BRN_NAME,SKU_CAT,ICCAT_NAME
  ORDER BY SKU_CAT 
+ ";
+*/
+
+$sql_get = "
+ SELECT BRN_CODE,BRN_NAME,sum(CAST(TRD_QTY AS DECIMAL(10,2))) as  TRD_QTY
+ ,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TRD_G_KEYIN 
+ FROM ims_product_sale_sac 
+ WHERE PGROUP IN ('P1')
+ AND DI_YEAR = '" . $year . "'
+ GROUP BY BRN_CODE,BRN_NAME
+ ORDER BY BRN_CODE 
  ";
 
 //$myfile = fopen("sql_get.txt", "w") or die("Unable to open file!");

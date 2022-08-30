@@ -13,8 +13,8 @@ $str_doc1 = array("DS02", "IS01", "IS02", "IV01", "IV3");
 $str_doc2 = array("2");
 
 $str_group1 = array("1SAC01","1SAC02","1SAC03","1SAC04","1SAC05","1SAC06","1SAC07","1SAC08","1SAC09","1SAC10","1SAC11","1SAC12","1SAC13","1SAC14","2SAC01","2SAC02","2SAC03","2SAC04","2SAC05","2SAC06","2SAC07","2SAC08","2SAC09","2SAC10","2SAC11","2SAC12","2SAC13","2SAC14","2SAC15","3SAC01","3SAC02","3SAC03","3SAC04","3SAC05","3SAC06","4SAC01","4SAC02","4SAC03","4SAC04","4SAC05","4SAC06");
-$str_group2 = array("5SAC01","5SAC02","6SAC08","8CPA01-001","8CPA01-002","8SAC09");
-$str_group3 = array("TATA-004");
+$str_group2 = array("5SAC01","5SAC02","6SAC08","8CPA01-001","8CPA01-002","8SAC09","8BTCA01-002","8BTCA01-001");
+$str_group3 = array("TATA-004","999-08","999-07","999-14");
 $str_group4 = array("SAC08","TATA-003","10SAC12");
 
 echo "Today is " . date("Y/m/d");

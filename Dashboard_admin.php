@@ -16,8 +16,8 @@ if (strlen($_SESSION['alogin']) == "") {
         $month_name = $row_curr["month_name"];
     }
 
-    $sale_point = 1500000;
-    $sale_point_text = '1,500,000 บาท';
+    $sale_point = 15000000;
+    $sale_point_text = '10,500,000 บาท';
 
     ?>
 
@@ -65,13 +65,13 @@ if (strlen($_SESSION['alogin']) == "") {
                                            cellspacing="0" width="100%">
                                         <thead>
                                         <tr>
-                                            <th>สาขา</th>
+                                            <th>Sale</th>
                                             <th>ยอดขาย</th>
                                         </tr>
                                         </thead>
                                         <tfoot>
                                         <tr>
-                                            <th>สาขา</th>
+                                            <th>Sale</th>
                                             <th>ยอดขาย</th>
                                         </tr>
                                         </tfoot>
@@ -101,15 +101,15 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <?php } ?>
 
                                         </tbody>
-                                        <?php echo "ยอดขายรวมทุกสาขา วันที่ " . $date . " = " . number_format($total, 2) . " บาท " ?>
+                                        <?php echo "ยอดขายรวม วันที่ " . $date . " = " . number_format($total, 2) . " บาท " ?>
                                     </table>
                                 </div>
 
 
                                 <div class="card-header">
-                                    สถิติ ยอดขายรายวัน Cockpit แต่ละสาขา เดือน
+                                    สถิติ ยอดขายรายวัน เดือน
                                     <?php echo $month_name . " " . date("Y"); ?>
-                                    เป้าหมายยอดขายสาขาละ = <?php echo $sale_point_text ?>
+                                    เป้าหมายยอดขาย = <?php echo $sale_point_text ?>
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">ปี <?php echo date("Y"); ?></h5>
@@ -120,13 +120,13 @@ if (strlen($_SESSION['alogin']) == "") {
                                            cellspacing="0" width="100%">
                                         <thead>
                                         <tr>
-                                            <th>สาขา</th>
+                                            <th>Sale</th>
                                             <th>ยอดขาย</th>
                                         </tr>
                                         </thead>
                                         <tfoot>
                                         <tr>
-                                            <th>สาขา</th>
+                                            <th>Sale</th>
                                             <th>ยอดขาย</th>
                                         </tr>
                                         </tfoot>
@@ -179,8 +179,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <?php } ?>
 
                                         </tbody>
-                                        <?php echo "ยอดขายรวมทุกสาขา เดือน " . $month_name . " " . date("Y") . " = " . number_format($total, 2) . " บาท " ?>
-                                        เป้าหมายยอดขายสาขาละ = <?php echo $sale_point_text ?>
+                                        <?php echo "ยอดขายรวม เดือน " . $month_name . " " . date("Y") . " = " . number_format($total, 2) . " บาท " ?>
+                                        เป้าหมายยอดขาย = <?php echo $sale_point_text ?>
                                     </table>
                                 </div>
 
@@ -224,27 +224,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
 
-        function GET_DATA(table_name, idx) {
-            let input_text = document.getElementById("Text" + idx);
-            let action = "GET_COUNT_RECORDS";
-            let formData = {action: action, table_name: table_name};
-            $.ajax({
-                type: "POST",
-                url: 'model/manage_general_data.php',
-                data: formData,
-                success: function (response) {
-                    input_text.innerHTML = response;
-                },
-                error: function (response) {
-                    alertify.error("error : " + response);
-                }
-            });
-        }
-
-    </script>
-
-    <script>
-
         function showGraph_Tires_Brand() {
             {
 
@@ -264,6 +243,13 @@ if (strlen($_SESSION['alogin']) == "") {
                     "#fcae13",
                     "#1d7804",
                     "#1a8cec",
+                    "#1f5f03",
+                    "#2a37a8",
+                    "#9a2204",
+                    "#50e310",
+                    "#26283b",
+                    "#4d28b4",
+                    "#5f052f",
                     "#50e310",
                     "#fa6ae4"
                 ];
@@ -277,7 +263,6 @@ if (strlen($_SESSION['alogin']) == "") {
                         label.push(data[i].BRN_CODE);
                         label_name.push(data[i].BRN_NAME);
                         total.push(parseFloat(data[i].TRD_G_KEYIN).toFixed(2));
-                        //alert(label);
                     }
 
                     new Chart("myChart2", {

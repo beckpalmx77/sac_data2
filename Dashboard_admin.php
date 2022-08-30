@@ -229,29 +229,34 @@ if (strlen($_SESSION['alogin']) == "") {
 
                 let barColors = [
                     "#0a4dd3",
-                    "#17c024",
-                    "#f3661a",
                     "#f81b61",
+                    "#f3661a",
+                    "#17c024",
                     "#0c3f10",
                     "#1da5f2",
                     "#0e0b71",
                     "#e9e207",
                     "#07e9d8",
                     "#b91d47",
-                    "#af43f5",
+                    "#f2a6fa",
                     "#00aba9",
                     "#fcae13",
                     "#1d7804",
                     "#1a8cec",
-                    "#1f5f03",
+                    "#043b74",
                     "#2a37a8",
                     "#9a2204",
-                    "#50e310",
+                    "#7c63d4",
                     "#26283b",
                     "#4d28b4",
                     "#5f052f",
-                    "#50e310",
-                    "#fa6ae4"
+                    "#7c8d73",
+                    "#1a8cec",
+                    "#1f5f03",
+                    "#2a37a8",
+                    "#9a2204",
+                    "#ea59f5",
+                    "#53e561"
                 ];
 
                 $.post("engine/chart_data_pie_tires_brand.php", {doc_date: "1", SLMN_NAME: "2"}, function (data) {

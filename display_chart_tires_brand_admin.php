@@ -58,15 +58,6 @@
                                         GROUP BY BRN_CODE,BRN_NAME
                                         ORDER BY BRN_CODE ";
 
-/*
-                $sql_brand = "SELECT BRN_CODE,BRN_NAME,SKU_CAT,ICCAT_NAME,sum(CAST(TRD_QTY AS DECIMAL(10,2))) as  TRD_QTY,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TRD_G_KEYIN 
-                                        FROM ims_product_sale_sac                                        
-                                        WHERE PGROUP IN ('P1')                                        
-                                        AND DI_YEAR = '" . $year . "'
-                                        GROUP BY BRN_CODE,BRN_NAME,SKU_CAT,ICCAT_NAME
-                                        ORDER BY SKU_CAT ";
-*/
-
                 $statement_brand = $conn->query($sql_brand);
                 $results_brand = $statement_brand->fetchAll(PDO::FETCH_ASSOC);
 

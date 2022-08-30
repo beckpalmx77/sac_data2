@@ -6,28 +6,15 @@ include("../config/connect_db.php");
 $year = date("Y");
 
 $doc_date = str_replace("-", "/", $_POST["doc_date"]);
-$branch = $_POST["branch"];
-
-/*
-$sql_get = "
- SELECT BRN_CODE,BRN_NAME,SKU_CAT,ICCAT_NAME,sum(CAST(TRD_QTY AS DECIMAL(10,2))) as  TRD_QTY
- ,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TRD_G_KEYIN 
- FROM ims_product_sale_sac
- WHERE PGROUP IN ('P1')
- AND DI_YEAR = '" . $year . "'
- GROUP BY BRN_CODE,BRN_NAME,SKU_CAT,ICCAT_NAME
- ORDER BY SKU_CAT 
- ";
-*/
-
+$branch = $_POST["SLMN_NAME"];
 $sql_get = "
  SELECT BRN_CODE,BRN_NAME,sum(CAST(TRD_QTY AS DECIMAL(10,2))) as  TRD_QTY
  ,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TRD_G_KEYIN 
  FROM ims_product_sale_sac 
  WHERE PGROUP IN ('P1')
  AND DI_YEAR = '" . $year . "'
- GROUP BY BRN_CODE,BRN_NAME
- ORDER BY BRN_CODE 
+ GROUP BY BRN_NAME
+ ORDER BY BRN_NAME 
  ";
 
 //$myfile = fopen("sql_get.txt", "w") or die("Unable to open file!");

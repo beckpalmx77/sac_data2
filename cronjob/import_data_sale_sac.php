@@ -9,6 +9,9 @@ include("../config/connect_db.php");
 include('../cond_file/doc_info_sale_daily_cp.php');
 include('../util/month_util.php');
 
+
+$DT_DOCCODE_MINUS = "IS";
+
 $str_doc1 = array("DS02", "IS01", "IS02", "IV01", "IV3");
 $str_doc2 = array("2");
 

@@ -231,8 +231,8 @@ if (strlen($_SESSION['alogin']) == "") {
                     "#0a4dd3",
                     "#f81b61",
                     "#f3661a",
-                    "#17c024",
-                    "#0c3f10",
+                    "#12aa1e",
+                    "#016808",
                     "#1da5f2",
                     "#0e0b71",
                     "#e9e207",
@@ -241,7 +241,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     "#f2a6fa",
                     "#00aba9",
                     "#fcae13",
-                    "#1d7804",
+                    "#842484",
                     "#1a8cec",
                     "#043b74",
                     "#2a37a8",
@@ -252,11 +252,11 @@ if (strlen($_SESSION['alogin']) == "") {
                     "#5f052f",
                     "#7c8d73",
                     "#1a8cec",
-                    "#1f5f03",
+                    "#ead588",
                     "#2a37a8",
                     "#9a2204",
                     "#ea59f5",
-                    "#53e561"
+                    "#60ff6f"
                 ];
 
                 $.post("engine/chart_data_pie_tires_brand.php", {doc_date: "1", SLMN_NAME: "2"}, function (data) {

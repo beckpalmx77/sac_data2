@@ -11,7 +11,7 @@ $branch = $_POST["branch"];
 $sql_get = "
  SELECT BRN_CODE,BRN_NAME,SKU_CAT,ICCAT_NAME,sum(CAST(TRD_QTY AS DECIMAL(10,2))) as  TRD_QTY
  ,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TRD_G_KEYIN 
- FROM ims_product_sale_cockpit 
+ FROM ims_product_sale_sac 
  WHERE PGROUP IN ('P1')
  AND DI_YEAR = '" . $year . "'
  GROUP BY BRN_CODE,BRN_NAME,SKU_CAT,ICCAT_NAME

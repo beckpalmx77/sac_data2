@@ -13,7 +13,7 @@ $p_group = $_POST["p_group"];
 $sql_get = "
  SELECT BRN_NAME
  ,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TRD_G_KEYIN
- FROM ims_product_sale_cockpit 
+ FROM ims_product_sale_sac
  WHERE  PGROUP = '" . $p_group . "'  
  AND DI_YEAR = '" . $year . "'   
  GROUP BY BRN_NAME

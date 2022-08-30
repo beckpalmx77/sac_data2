@@ -53,7 +53,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
-                                    สถิติ ยอดขายรายวัน Cockpit แต่ละสาขา วันที่
+                                    สถิติ ยอดขายรายวัน SAC วันที่
                                     <?php echo date("d/m/Y"); ?>
                                 </div>
                                 <div class="card-body">
@@ -79,11 +79,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                         <?php
                                         $date = date("d/m/Y");
                                         $total = 0;
-                                        $sql_daily = "SELECT BRANCH,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as  TRD_G_KEYIN
-                                                      FROM ims_product_sale_cockpit 
+                                        $sql_daily = "SELECT SLMN_NAME,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as  TRD_G_KEYIN
+                                                      FROM ims_product_sale_sac 
                                                       WHERE DI_DATE = '" . $date . "'
-                                                      GROUP BY  BRANCH
-                                                      ORDER BY BRANCH";
+                                                      GROUP BY  SLMN_NAME
+                                                      ORDER BY SLMN_NAME";
 
                                         $statement_daily = $conn->query($sql_daily);
                                         $results_daily = $statement_daily->fetchAll(PDO::FETCH_ASSOC);
@@ -93,7 +93,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                         as $row_daily) { ?>
 
                                         <tr>
-                                            <td><?php echo htmlentities($row_daily['BRANCH']); ?></td>
+                                            <td><?php echo htmlentities($row_daily['SLMN_NAME']); ?></td>
                                             <td>
                                                 <p class="number"><?php echo htmlentities(number_format($row_daily['TRD_G_KEYIN'], 2)); ?></p>
                                             </td>
@@ -134,12 +134,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                         <?php
                                         $date = date("d/m/Y");
                                         $total = 0;
-                                        $sql_daily = "SELECT BRANCH,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as  TRD_G_KEYIN
-                                                      FROM ims_product_sale_cockpit 
+                                        $sql_daily = "SELECT SLMN_NAME,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as  TRD_G_KEYIN
+                                                      FROM ims_product_sale_sac 
                                                       WHERE DI_MONTH = '" . date("n") . "'
                                                       AND DI_YEAR = '" . date("Y") . "'
-                                                      GROUP BY  BRANCH
-                                                      ORDER BY BRANCH";
+                                                      GROUP BY  SLMN_NAME
+                                                      ORDER BY SLMN_NAME";
 
                                         $statement_daily = $conn->query($sql_daily);
                                         $results_daily = $statement_daily->fetchAll(PDO::FETCH_ASSOC);
@@ -149,7 +149,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                         as $row_daily) { ?>
 
                                         <tr>
-                                            <td><?php echo htmlentities($row_daily['BRANCH']); ?></td>
+                                            <td><?php echo htmlentities($row_daily['SLMN_NAME']); ?></td>
                                             <td>
                                                 <?php $precent_sale = ($row_daily['TRD_G_KEYIN'] / $sale_point) * 100;
                                                 $total_remain = $sale_point - $row_daily['TRD_G_KEYIN'];
@@ -222,30 +222,6 @@ if (strlen($_SESSION['alogin']) == "") {
         }, 100000);
     </script>
 
-
-    <script>
-
-        $(document).ready(function () {
-            /*
-
-            GET_DATA("ims_order_master", "1");
-            GET_DATA("ims_product", "2");
-            GET_DATA("ims_customer_ar", "3");
-            GET_DATA("ims_supplier", "4");
-
-            setInterval(function () {
-                GET_DATA("ims_order_master", "1");
-                GET_DATA("ims_product", "2");
-                GET_DATA("ims_customer_ar", "3");
-                GET_DATA("ims_supplier", "4");
-            }, 3000);
-
-             */
-        });
-
-
-    </script>
-
     <script>
 
         function GET_DATA(table_name, idx) {
@@ -292,7 +268,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     "#fa6ae4"
                 ];
 
-                $.post("engine/chart_data_pie_tires_brand.php", {doc_date: "1", branch: "2"}, function (data) {
+                $.post("engine/chart_data_pie_tires_brand.php", {doc_date: "1", SLMN_NAME: "2"}, function (data) {
                     console.log(data);
                     let label = [];
                     let label_name = [];
@@ -389,15 +365,15 @@ if (strlen($_SESSION['alogin']) == "") {
 
                 $.post("engine/chart_data_cockpit_daily.php", {date: "2"}, function (data) {
                     console.log(data);
-                    let branch = [];
+                    let SLMN_NAME = [];
                     let total = [];
                     for (let i in data) {
-                        branch.push(data[i].BRANCH);
+                        SLMN_NAME.push(data[i].SLMN_NAME);
                         total.push(parseFloat(data[i].TRD_G_KEYIN).toFixed(2));
                     }
 
                     let chartdata = {
-                        labels: branch,
+                        labels: SLMN_NAME,
                         datasets: [{
                             label: 'ยอดขายรายวัน รวม VAT (Daily)',
                             backgroundColor: backgroundColor,
@@ -432,15 +408,15 @@ if (strlen($_SESSION['alogin']) == "") {
 
                 $.post("engine/chart_data_cockpit_monthly.php", {date: "2"}, function (data) {
                     console.log(data);
-                    let branch = [];
+                    let SLMN_NAME = [];
                     let total = [];
                     for (let i in data) {
-                        branch.push(data[i].BRANCH);
+                        SLMN_NAME.push(data[i].SLMN_NAME);
                         total.push(parseFloat(data[i].TRD_G_KEYIN).toFixed(2));
                     }
 
                     let chartdata = {
-                        labels: branch,
+                        labels: SLMN_NAME,
                         datasets: [{
                             label: 'ยอดขายรายเดือน รวม VAT (Daily)',
                             backgroundColor: backgroundColor,

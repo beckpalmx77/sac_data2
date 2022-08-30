@@ -23,17 +23,24 @@ echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3')) ";
 
-//$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
+$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 //$query_year = " AND DI_DATE BETWEEN '2017/01/01' AND '2021/12/31'";
 //$query_year = " AND DI_DATE BETWEEN '2022/05/15' AND '" . date("Y/m/d") . "'";
 
-$query_year = " AND DI_DATE BETWEEN '1900/01/01' AND '" . date("Y/m/d") . "'";
+//$query_year = " AND DI_DATE BETWEEN '2022/08/21' AND '" . date("Y/m/d") . "'";
 
 $sql_sqlsvr = $select_query_daily . $select_query_daily_cond . $query_daily_cond_ext . $query_year . $select_query_daily_order;
 
 //$myfile = fopen("qry_file_mssql_server.txt", "w") or die("Unable to open file!");
 //fwrite($myfile, $sql_sqlsvr);
 //fclose($myfile);
+
+
+/*
+ select * from ims_product_sale_sac
+    order by
+        STR_TO_DATE(DI_DATE, '%m/%d/%Y') desc
+ */
 
 $insert_data = "";
 $update_data = "";

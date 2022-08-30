@@ -1,7 +1,7 @@
 <div class="col-md-6">
     <div class="card">
         <div class="card-header">
-            สถิติ มูลค่าการขายยาง แต่ละยี่ห้อ
+            สถิติ - มูลค่าการขายยาง แต่ละยี่ห้อ
         </div>
         <div class="card-body">
             <h5 class="card-title">ปี <?php echo date("Y"); ?></h5>

@@ -12,8 +12,9 @@ include('../util/month_util.php');
 
 $DT_DOCCODE_MINUS = "IS";
 
-$str_doc1 = array("DS02", "IS01", "IS02", "IV01", "IV3");
+$str_doc1 = array("DS02", "IS01", "IS02", "IV01");
 $str_doc2 = array("2");
+$str_doc3 = array("IV3");
 
 $str_group1 = array("1SAC01","1SAC02","1SAC03","1SAC04","1SAC05","1SAC06","1SAC07","1SAC08","1SAC09","1SAC10","1SAC11","1SAC12","1SAC13","1SAC14","2SAC01","2SAC02","2SAC03","2SAC04","2SAC05","2SAC06","2SAC07","2SAC08","2SAC09","2SAC10","2SAC11","2SAC12","2SAC13","2SAC14","2SAC15","3SAC01","3SAC02","3SAC03","3SAC04","3SAC05","3SAC06","4SAC01","4SAC02","4SAC03","4SAC04","4SAC05","4SAC06");
 $str_group2 = array("5SAC01","5SAC02","6SAC08","8CPA01-001","8CPA01-002","8SAC09","8BTCA01-002","8BTCA01-001");
@@ -27,7 +28,7 @@ echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3')) ";
 
 $query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
-//$query_year = " AND DI_DATE BETWEEN '2017/01/01' AND '2021/12/31'";
+//$query_year = " AND DI_DATE BETWEEN '1990/01/01' AND '2022/08/31'";
 //$query_year = " AND DI_DATE BETWEEN '2022/05/15' AND '" . date("Y/m/d") . "'";
 
 //$query_year = " AND DI_DATE BETWEEN '2022/08/21' AND '" . date("Y/m/d") . "'";
@@ -72,7 +73,36 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $branch = "RQ";
     }
 
+    if (in_array($DT_DOCCODE, $str_doc3)) {
+        $branch = "BTC";
+    }
+
+    if(strpos($result_sqlsvr['DT_DOCCODE'], $DT_DOCCODE_MINUS) !== false){
+        $TRD_QTY = (double)$result_sqlsvr["TRD_QTY"]>0 ? "-" . $result_sqlsvr["TRD_QTY"] : $result_sqlsvr["TRD_QTY"];
+        $TRD_U_PRC = (double)$result_sqlsvr["TRD_U_PRC"]>0 ? "-" . $result_sqlsvr["TRD_U_PRC"] : $result_sqlsvr["TRD_U_PRC"];
+        $TRD_DSC_KEYINV = (double)$result_sqlsvr["TRD_DSC_KEYINV"]>0 ? "-" . $result_sqlsvr["TRD_DSC_KEYINV"] : $result_sqlsvr["TRD_DSC_KEYINV"];
+        $TRD_B_SELL = (double)$result_sqlsvr["TRD_B_SELL"]>0 ? "-" . $result_sqlsvr["TRD_B_SELL"] : $result_sqlsvr["TRD_B_SELL"];
+        $TRD_B_VAT = (double)$result_sqlsvr["TRD_B_VAT"]>0 ? "-" . $result_sqlsvr["TRD_B_VAT"] : $result_sqlsvr["TRD_B_VAT"];
+        $TRD_G_KEYIN = (double)$result_sqlsvr["TRD_G_KEYIN"]>0 ? "-" . $result_sqlsvr["TRD_G_KEYIN"] : $result_sqlsvr["TRD_G_KEYIN"];
+/*
+        $TRD_U_PRC = "-" . $result_sqlsvr["TRD_U_PRC"];
+        $TRD_DSC_KEYINV = "-" . $result_sqlsvr["TRD_DSC_KEYINV"];
+        $TRD_B_SELL = "-" . $result_sqlsvr["TRD_B_SELL"];
+        $TRD_B_VAT = "-" . $result_sqlsvr["TRD_B_VAT"];
+        $TRD_G_KEYIN = "-" . $result_sqlsvr["TRD_G_KEYIN"];
+*/
+
+    } else {
+        $TRD_QTY =  $result_sqlsvr["TRD_QTY"];
+        $TRD_U_PRC =  $result_sqlsvr["TRD_U_PRC"];
+        $TRD_DSC_KEYINV =  $result_sqlsvr["TRD_DSC_KEYINV"];
+        $TRD_B_SELL =  $result_sqlsvr["TRD_B_SELL"];
+        $TRD_B_VAT =  $result_sqlsvr["TRD_B_VAT"];
+        $TRD_G_KEYIN =  $result_sqlsvr["TRD_G_KEYIN"];
+    }
+
     echo "[ " . $DT_DOCCODE . " | " . $branch . " ]" . "\n\r";
+    echo "[ " . $TRD_QTY . " | " . $TRD_U_PRC . " | " . $TRD_DSC_KEYINV . " | " . $TRD_B_SELL . " | " . $TRD_B_VAT . " | " . $TRD_G_KEYIN . " ]" . "\n\r";
 
     $res = $res . $result_sqlsvr["DI_REF"] . "  *** " . $result_sqlsvr["DT_DOCCODE"] . " *** " . "\n\r";
 
@@ -112,6 +142,8 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
 
+
+
         $sql_update = " UPDATE ims_product_sale_sac  SET AR_CODE=:AR_CODE,AR_NAME=:AR_NAME,SLMN_CODE=:SLMN_CODE,SLMN_NAME=:SLMN_NAME
 ,SKU_CODE=:SKU_CODE,SKU_NAME=:SKU_NAME,SKU_CAT=:SKU_CAT,ICCAT_CODE=:ICCAT_CODE,ICCAT_NAME=:ICCAT_NAME,TRD_QTY=:TRD_QTY,TRD_U_PRC=:TRD_U_PRC
 ,TRD_DSC_KEYINV=:TRD_DSC_KEYINV,TRD_B_SELL=:TRD_B_SELL
@@ -133,12 +165,12 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':SKU_CAT', $result_sqlsvr["ICCAT_CODE"], PDO::PARAM_STR);
         $query->bindParam(':ICCAT_CODE', $result_sqlsvr["ICCAT_CODE"], PDO::PARAM_STR);
         $query->bindParam(':ICCAT_NAME', $result_sqlsvr["ICCAT_NAME"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_QTY', $result_sqlsvr["TRD_QTY"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_U_PRC', $result_sqlsvr["TRD_U_PRC"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_DSC_KEYINV', $result_sqlsvr["TRD_DSC_KEYINV"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_B_SELL', $result_sqlsvr["TRD_B_SELL"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_B_VAT', $result_sqlsvr["TRD_B_VAT"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_G_KEYIN', $result_sqlsvr["TRD_G_KEYIN"], PDO::PARAM_STR);
+        $query->bindParam(':TRD_QTY', $TRD_QTY, PDO::PARAM_STR);
+        $query->bindParam(':TRD_U_PRC', $TRD_U_PRC, PDO::PARAM_STR);
+        $query->bindParam(':TRD_DSC_KEYINV', $TRD_DSC_KEYINV, PDO::PARAM_STR);
+        $query->bindParam(':TRD_B_SELL', $TRD_B_SELL, PDO::PARAM_STR);
+        $query->bindParam(':TRD_B_VAT', $TRD_B_VAT, PDO::PARAM_STR);
+        $query->bindParam(':TRD_G_KEYIN', $TRD_G_KEYIN, PDO::PARAM_STR);
         $query->bindParam(':WL_CODE', $result_sqlsvr["WL_CODE"], PDO::PARAM_STR);
 
         $query->bindParam(':BRANCH', $branch, PDO::PARAM_STR);
@@ -187,12 +219,12 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':SKU_CAT', $result_sqlsvr["ICCAT_CODE"], PDO::PARAM_STR);
         $query->bindParam(':ICCAT_CODE', $result_sqlsvr["ICCAT_CODE"], PDO::PARAM_STR);
         $query->bindParam(':ICCAT_NAME', $result_sqlsvr["ICCAT_NAME"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_QTY', $result_sqlsvr["TRD_QTY"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_U_PRC', $result_sqlsvr["TRD_U_PRC"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_DSC_KEYINV', $result_sqlsvr["TRD_DSC_KEYINV"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_B_SELL', $result_sqlsvr["TRD_B_SELL"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_B_VAT', $result_sqlsvr["TRD_B_VAT"], PDO::PARAM_STR);
-        $query->bindParam(':TRD_G_KEYIN', $result_sqlsvr["TRD_G_KEYIN"], PDO::PARAM_STR);
+        $query->bindParam(':TRD_QTY', $TRD_QTY, PDO::PARAM_STR);
+        $query->bindParam(':TRD_U_PRC', $TRD_U_PRC, PDO::PARAM_STR);
+        $query->bindParam(':TRD_DSC_KEYINV', $TRD_DSC_KEYINV, PDO::PARAM_STR);
+        $query->bindParam(':TRD_B_SELL', $TRD_B_SELL, PDO::PARAM_STR);
+        $query->bindParam(':TRD_B_VAT', $TRD_B_VAT, PDO::PARAM_STR);
+        $query->bindParam(':TRD_G_KEYIN', $TRD_G_KEYIN, PDO::PARAM_STR);
         $query->bindParam(':WL_CODE', $result_sqlsvr["WL_CODE"], PDO::PARAM_STR);
 
         $query->bindParam(':BRANCH', $branch, PDO::PARAM_STR);

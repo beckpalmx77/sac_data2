@@ -37,9 +37,9 @@ foreach ($results as $result) {
 //fwrite($myfile, $sql_get);
 //fclose($myfile);
 
-$myfile = fopen("ret_data.txt", "w") or die("Unable to open file!");
-fwrite($myfile, json_encode($return_arr));
-fclose($myfile);
+//$myfile = fopen("ret_data.txt", "w") or die("Unable to open file!");
+//fwrite($myfile, json_encode($return_arr));
+//fclose($myfile);
 
 echo json_encode($return_arr);
 

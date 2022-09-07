@@ -27,7 +27,7 @@ if (strlen($_SESSION['alogin']) == "") {
     $MonthRecords = $stmt_month->fetchAll();
 
     $sql_year = " SELECT DISTINCT(DI_YEAR) AS DI_YEAR
- FROM ims_product_sale_cockpit WHERE DI_YEAR >= 2019
+ FROM ims_product_sale_sac WHERE DI_YEAR >= 2019
  order by DI_YEAR desc ";
     $stmt_year = $conn->prepare($sql_year);
     $stmt_year->execute();

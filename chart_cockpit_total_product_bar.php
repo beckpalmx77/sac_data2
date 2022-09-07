@@ -100,7 +100,7 @@ include("config/connect_db.php");
             <canvas id="graphCanvas_Monthly15"></canvas>
         </div>
 
-        <!--div id="chart-container">
+        <div id="chart-container">
             <canvas id="graphCanvas_Monthly16"></canvas>
         </div>
 
@@ -113,10 +113,36 @@ include("config/connect_db.php");
         </div>
 
         <div id="chart-container">
-            <canvas id="graphCanvas_Monthly18"></canvas>
-        </div-->
+            <canvas id="graphCanvas_Monthly19"></canvas>
+        </div>
 
-
+        <div id="chart-container">
+            <canvas id="graphCanvas_Monthly20"></canvas>
+        </div>
+        <div id="chart-container">
+            <canvas id="graphCanvas_Monthly21"></canvas>
+        </div>
+        <div id="chart-container">
+            <canvas id="graphCanvas_Monthly22"></canvas>
+        </div>
+        <div id="chart-container">
+            <canvas id="graphCanvas_Monthly23"></canvas>
+        </div>
+        <div id="chart-container">
+            <canvas id="graphCanvas_Monthly24"></canvas>
+        </div>
+        <div id="chart-container">
+            <canvas id="graphCanvas_Monthly25"></canvas>
+        </div>
+        <div id="chart-container">
+            <canvas id="graphCanvas_Monthly26"></canvas>
+        </div>
+        <div id="chart-container">
+            <canvas id="graphCanvas_Monthly27"></canvas>
+        </div>
+        <div id="chart-container">
+            <canvas id="graphCanvas_Monthly28"></canvas>
+        </div>
 
     </div>
 </div>
@@ -274,12 +300,83 @@ include("config/connect_db.php");
                 hoverBorderColor = '#f372f3';
                 graphTarget = $('#graphCanvas_Monthly17');
                 break;
+            case 18:
+                backgroundColor = '#5733f8';
+                borderColor = '#8358f8';
+                hoverBackgroundColor = '#4d0ff5';
+                hoverBorderColor = '#8452f8';
+                graphTarget = $('#graphCanvas_Monthly18');
+                break;
+            case 19:
+                backgroundColor = '#f10d96';
+                borderColor = '#a16db6';
+                hoverBackgroundColor = '#cb037c';
+                hoverBorderColor = '#f372f3';
+                graphTarget = $('#graphCanvas_Monthly19');
+                break;
+            case 20:
+                backgroundColor = '#14cd28';
+                borderColor = '#3ff573';
+                hoverBackgroundColor = '#14930a';
+                hoverBorderColor = '#33b41d';
+                graphTarget = $('#graphCanvas_Monthly20');
+                break;
+            case 21:
+                backgroundColor = '#fadb15';
+                borderColor = '#f8e358';
+                hoverBackgroundColor = '#c7af04';
+                hoverBorderColor = '#eec42e';
+                graphTarget = $('#graphCanvas_Monthly21');
+                break;
+            case 22:
+                backgroundColor = '#c03cf8';
+                borderColor = '#c371f6';
+                hoverBackgroundColor = '#9220e7';
+                hoverBorderColor = '#bf6bee';
+                graphTarget = $('#graphCanvas_Monthly22');
+                break;
+
+            case 23:
+                backgroundColor = '#5733f8';
+                borderColor = '#8358f8';
+                hoverBackgroundColor = '#4d0ff5';
+                hoverBorderColor = '#8452f8';
+                graphTarget = $('#graphCanvas_Monthly23');
+                break;
+            case 24:
+                backgroundColor = '#14cd28';
+                borderColor = '#3ff573';
+                hoverBackgroundColor = '#14930a';
+                hoverBorderColor = '#33b41d';
+                graphTarget = $('#graphCanvas_Monthly24');
+                break;
+            case 25:
+                backgroundColor = '#f10d96';
+                borderColor = '#a16db6';
+                hoverBackgroundColor = '#cb037c';
+                hoverBorderColor = '#f372f3';
+                graphTarget = $('#graphCanvas_Monthly25');
+                break;
+            case 26:
+                backgroundColor = '#14cd28';
+                borderColor = '#3ff573';
+                hoverBackgroundColor = '#14930a';
+                hoverBorderColor = '#33b41d';
+                graphTarget = $('#graphCanvas_Monthly26');
+                break;
+            case 27:
+                backgroundColor = '#5733f8';
+                borderColor = '#8358f8';
+                hoverBackgroundColor = '#4d0ff5';
+                hoverBorderColor = '#8452f8';
+                graphTarget = $('#graphCanvas_Monthly27');
+                break;
             default:
                 backgroundColor = '#f65439';
                 borderColor = '#f87858';
                 hoverBackgroundColor = '#f84a2e';
                 hoverBorderColor = '#fc9053';
-                graphTarget = $('#graphCanvas_Monthly18');
+                graphTarget = $('#graphCanvas_Monthly28');
                 break;
 
         }

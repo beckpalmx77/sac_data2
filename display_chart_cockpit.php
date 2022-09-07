@@ -38,6 +38,13 @@ if (strlen($_SESSION['alogin']) == "") {
     $stmt_branch->execute();
     $BranchRecords = $stmt_branch->fetchAll();
 
+    $sql_sale_man = " SELECT DISTINCT(SLMN_NAME) AS SLMN_NAME
+    FROM ims_product_sale_sac WHERE DI_YEAR >= 2022
+    order by SLMN_NAME desc  ";
+    $stmt_sale_man = $conn->prepare($sql_sale_man);
+    $stmt_sale_man->execute();
+    $SaleManRecords = $stmt_sale_man->fetchAll();
+
 
     ?>
 

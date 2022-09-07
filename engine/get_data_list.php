@@ -17,7 +17,7 @@ $sql_get = "
  WHERE  PGROUP = '" . $p_group . "'  
  AND DI_YEAR = '" . $year . "'   
  GROUP BY BRN_NAME
- ORDER BY BRN_NAME,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) DESC 
+ ORDER BY BRN_NAME 
 ";
 
 //$myfile = fopen("param-brn2.txt", "w") or die("Unable to open file!");

@@ -19,8 +19,8 @@ foreach ($MonthRecords as $row) {
 }
 
 //$myfile = fopen("param_post.txt", "w") or die("Unable to open file!");
-//fwrite($myfile, $month . "| month_name " . $month_name . "| branch = " . $_POST["branch"] . "| Branch Name = "
-//    . $branch_name . " | " . $sql_month . " | " . $sql_branch);
+//fwrite($myfile, $month . "| month_name " . $month_name . "| SLMN_NAME = " . $_POST["SLMN_NAME"] . "| SLMN_NAME Name = "
+//    . $SLMN_NAME_name . " | " . $sql_month . " | " . $sql_SLMN_NAME);
 //fclose($myfile);
 
 ?>
@@ -63,7 +63,7 @@ foreach ($MonthRecords as $row) {
     <a id="myLink" href="#" onclick="PrintPage();"><i class="fa fa-print"></i> พิมพ์</a>
 </div>
 
-<div class="card-body">
+<!--div class="card-body">
 
     <div class="card-body">
         <h4><span class="badge bg-success">ยอดขาย ยาง อะไหล่ ค่าแรง-ค่าบริการ</span></h4>
@@ -85,10 +85,10 @@ foreach ($MonthRecords as $row) {
             $date = date("d/m/Y");
             $total = 0;
             $sql_total = " SELECT *
- FROM ims_report_product_sale_summary 
+ FROM ims_report_product_sale_summary_2 
  WHERE DI_YEAR = '" . $year . "' 
  AND DI_MONTH = '" . $month . "'
- ORDER BY BRANCH";
+ ORDER BY SLMN_NAME";
 
             $statement_total = $conn->query($sql_total);
             $results_total = $statement_total->fetchAll(PDO::FETCH_ASSOC);
@@ -98,7 +98,7 @@ foreach ($MonthRecords as $row) {
             as $row_total) { ?>
 
             <tr>
-                <td><?php echo htmlentities($row_total['BRANCH']); ?></td>
+                <td><?php echo htmlentities($row_total['SLMN_NAME']); ?></td>
                 <td align="right">
                     <p class="number"><?php echo htmlentities(number_format($row_total['tires_total_amt'], 2)); ?></p>
                 </td>
@@ -113,7 +113,7 @@ foreach ($MonthRecords as $row) {
             </tbody>
         </table>
     </div>
-</div>
+</div-->
 
 <div class="card">
     <div class="card-body">
@@ -122,36 +122,40 @@ foreach ($MonthRecords as $row) {
                cellspacing="0" width="100%">
             <thead>
             <tr>
-                <th>สาขา</th>
-                <th>BS
+                <th>SALE</th>
+                <th>AT</th>
+                <th>AT</th>
+                <th>BF</th>
+                <th>BF</th>
+                <th>BKT</th>
+                <th>BKT</th>
                 <th>BS</th>
-                <th>FS</th>
-                <th>FS</th>
+                <th>BS</th>
+                <th>BS.</th>
+                <th>BS.</th>
+                <th>DBC</th>
+                <th>DBC</th>
                 <th>DL</th>
                 <th>DL</th>
-                <th>LLIT</th>
-                <th>LLIT</th>
                 <th>DS</th>
                 <th>DS</th>
+                <th>DS.</th>
+                <th>DS.</th>
                 <th>DT</th>
                 <th>DT</th>
-                <th>ML</th>
-                <th>ML</th>
-                <th>PL</th>
-                <th>PL</th>
-                <th>AT</th>
-                <th>AT</th>
-                <th>CT</th>
-                <th>CT</th>
+                <th>DT.</th>
+                <th>DT.</th>
+                <th>FS</th>
+                <th>FS</th>
+                <th>FS.</th>
+                <th>FS.</th>
                 <th>GY</th>
                 <th>GY</th>
-                <th>LE</th>
-                <th>LE</th>
-                <th>YK</th>
-                <th>YK</th>
             </tr>
             <tr>
                 <th></th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
                 <th>(เส้น)</th>
                 <th>(บาท)</th>
                 <th>(เส้น)</th>
@@ -189,39 +193,41 @@ foreach ($MonthRecords as $row) {
             $total = 0;
             $sql_brand = " 
 SELECT
-BRANCH,
-SUM(IF(BRN_CODE='BS',TRD_QTY,0)) AS BS_QTY,
-SUM(IF(BRN_CODE='BS',TRD_G_KEYIN,0)) AS BS_AMT,
-SUM(IF(BRN_CODE='FS',TRD_QTY,0)) AS FS_QTY,
-SUM(IF(BRN_CODE='FS',TRD_G_KEYIN,0)) AS FS_AMT,
-SUM(IF(BRN_CODE='DL',TRD_QTY,0)) AS DL_QTY,
-SUM(IF(BRN_CODE='DL',TRD_G_KEYIN,0)) AS DL_AMT,
-SUM(IF(BRN_CODE='LLIT',TRD_QTY,0)) AS LLIT_QTY,
-SUM(IF(BRN_CODE='LLIT',TRD_G_KEYIN,0)) AS LLIT_AMT,
-SUM(IF(BRN_CODE='DS',TRD_QTY,0)) AS DS_QTY,
-SUM(IF(BRN_CODE='DS',TRD_G_KEYIN,0)) AS DS_AMT,
-SUM(IF(BRN_CODE='DT',TRD_QTY,0)) AS DT_QTY,
-SUM(IF(BRN_CODE='DT',TRD_G_KEYIN,0)) AS DT_AMT,
-SUM(IF(BRN_CODE='ML',TRD_QTY,0)) AS ML_QTY,
-SUM(IF(BRN_CODE='ML',TRD_G_KEYIN,0)) AS ML_AMT,
-SUM(IF(BRN_CODE='PL',TRD_QTY,0)) AS PL_QTY,
-SUM(IF(BRN_CODE='PL',TRD_G_KEYIN,0)) AS PL_AMT,
+SLMN_NAME,
 SUM(IF(BRN_CODE='AT',TRD_QTY,0)) AS AT_QTY,
 SUM(IF(BRN_CODE='AT',TRD_G_KEYIN,0)) AS AT_AMT,
-SUM(IF(BRN_CODE='CT',TRD_QTY,0)) AS CT_QTY,
-SUM(IF(BRN_CODE='CT',TRD_G_KEYIN,0)) AS CT_AMT,
+SUM(IF(BRN_CODE='BF',TRD_QTY,0)) AS BF_QTY,
+SUM(IF(BRN_CODE='BF',TRD_G_KEYIN,0)) AS BF_AMT,
+SUM(IF(BRN_CODE='BKT',TRD_QTY,0)) AS BKT_QTY,
+SUM(IF(BRN_CODE='BKT',TRD_G_KEYIN,0)) AS BKT_AMT,
+SUM(IF(BRN_CODE='BS',TRD_QTY,0)) AS BS_QTY,
+SUM(IF(BRN_CODE='BS',TRD_G_KEYIN,0)) AS BS_AMT,
+SUM(IF(BRN_CODE='BS.',TRD_QTY,0)) AS BS__QTY,
+SUM(IF(BRN_CODE='BS.',TRD_G_KEYIN,0)) AS BS__AMT,
+SUM(IF(BRN_CODE='DBC',TRD_QTY,0)) AS DBC_QTY,
+SUM(IF(BRN_CODE='DBC',TRD_G_KEYIN,0)) AS DBC_AMT,
+SUM(IF(BRN_CODE='DL',TRD_QTY,0)) AS DL_QTY,
+SUM(IF(BRN_CODE='DL',TRD_G_KEYIN,0)) AS DL_AMT,
+SUM(IF(BRN_CODE='DS',TRD_QTY,0)) AS DS_QTY,
+SUM(IF(BRN_CODE='DS',TRD_G_KEYIN,0)) AS DS_AMT,
+SUM(IF(BRN_CODE='DS.',TRD_QTY,0)) AS DS__QTY,
+SUM(IF(BRN_CODE='DS.',TRD_G_KEYIN,0)) AS DS__AMT,
+SUM(IF(BRN_CODE='DT',TRD_QTY,0)) AS DT_QTY,
+SUM(IF(BRN_CODE='DT',TRD_G_KEYIN,0)) AS DT_AMT,
+SUM(IF(BRN_CODE='DT.',TRD_QTY,0)) AS DT__QTY,
+SUM(IF(BRN_CODE='DT.',TRD_G_KEYIN,0)) AS DT__AMT,
+SUM(IF(BRN_CODE='FS',TRD_QTY,0)) AS FS_QTY,
+SUM(IF(BRN_CODE='FS',TRD_G_KEYIN,0)) AS FS_AMT,
+SUM(IF(BRN_CODE='FS.',TRD_QTY,0)) AS FS__QTY,
+SUM(IF(BRN_CODE='FS.',TRD_G_KEYIN,0)) AS FS__AMT,
 SUM(IF(BRN_CODE='GY',TRD_QTY,0)) AS GY_QTY,
-SUM(IF(BRN_CODE='GY',TRD_G_KEYIN,0)) AS GY_AMT,
-SUM(IF(BRN_CODE='LE',TRD_QTY,0)) AS LE_QTY,
-SUM(IF(BRN_CODE='LE',TRD_G_KEYIN,0)) AS LE_AMT,
-SUM(IF(BRN_CODE='YK',TRD_QTY,0)) AS YK_QTY,
-SUM(IF(BRN_CODE='YK',TRD_G_KEYIN,0)) AS YK_AMT                
- FROM ims_product_sale_cockpit 
+SUM(IF(BRN_CODE='GY',TRD_G_KEYIN,0)) AS GY_AMT     
+ FROM ims_product_sale_sac 
  WHERE DI_YEAR = '" . $year . "'
  AND DI_MONTH = '" . $month . "'  
  AND PGROUP like '%P1'
- GROUP BY BRANCH 
- ORDER BY BRANCH";
+ GROUP BY SLMN_NAME 
+ ORDER BY SLMN_NAME";
 
             $statement_brand = $conn->query($sql_brand);
             $results_brand = $statement_brand->fetchAll(PDO::FETCH_ASSOC);
@@ -231,33 +237,35 @@ SUM(IF(BRN_CODE='YK',TRD_G_KEYIN,0)) AS YK_AMT
             as $row_brand) { ?>
 
             <tr>
-                <td><?php echo htmlentities($row_brand['BRANCH']); ?></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BS_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BS_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['FS_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['FS_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DL_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DL_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LLIT_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LLIT_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DS_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DS_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DT_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DT_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['ML_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['ML_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['PL_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['PL_AMT'], 2)); ?></p></td>
+                <td><?php echo htmlentities($row_brand['SLMN_NAME']); ?></td>
                 <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['AT_QTY'], 2)); ?></p></td>
                 <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['AT_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['CT_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['CT_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BF_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BF_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BKT_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BKT_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BS_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BS_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BS__QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['BS__AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DBC_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DBC_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DL_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DL_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DS_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DS_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DS__QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DS__AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DT_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DT_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DT__QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['DT__AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['FS_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['FS_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['FS__QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['FS__AMT'], 2)); ?></p></td>
                 <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['GY_QTY'], 2)); ?></p></td>
                 <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['GY_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LE_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LE_AMT'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['YK_QTY'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['YK_AMT'], 2)); ?></p></td>
                 <?php } ?>
 
             </tbody>
@@ -265,77 +273,152 @@ SUM(IF(BRN_CODE='YK',TRD_G_KEYIN,0)) AS YK_AMT
     </div>
 </div>
 
+
+
 <div class="card">
-    <input type="hidden" name="month" id="month" value="<?php echo $month; ?>">
-    <input type="hidden" name="year" id="year" value="<?php echo $year; ?>">
     <div class="card-body">
-        <h4><span class="badge bg-success">ยอดขาย อะไหล่ต่างๆ</span></h4>
+        <h4><span class="badge bg-success">ยอดขาย ยางตามยี่ห้อ</span></h4>
         <table id="example" class="display table table-striped table-bordered"
                cellspacing="0" width="100%">
             <thead>
             <tr>
-                <th>สาขา</th>
-                <th>อะไหล่ยางใหญ่</th>
-                <th>อะไหล่นอก ยางใหญ่</th>
-                <th>อะไหล่ยางเล็ก</th>
-                <th>อะไหล่นอก ยางเล็ก</th>
-                <th>น้ำมันเครื่อง</th>
-                <th>อะไหล่</th>
+                <th>SALE</th>
+                <th>HT</th>
+                <th>HT</th>
+                <th>LE</th>
+                <th>LE</th>
+                <th>LL</th>
+                <th>LL</th>
+                <th>LLIT</th>
+                <th>LLIT</th>
+                <th>ML</th>
+                <th>ML.</th>
+                <th>MT</th>
+                <th>MT</th>
+                <th>MX</th>
+                <th>MX</th>
+                <th>PL</th>
+                <th>PL</th>
+                <th>SP</th>
+                <th>SP</th>
+                <th>VB</th>
+                <th>VB</th>
+                <th>WTL</th>
+                <th>WTL</th>
+                <th>YK</th>
+                <th>YK</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+                <th>(เส้น)</th>
+                <th>(บาท)</th>
+            </tr>
             </tr>
             </thead>
             <tfoot>
-            <!--tr>
-                <th>สาขา</th>
-                <th>อะไหล่ยางใหญ่</th>
-                <th>อะไหล่นอก ยางใหญ่</th>
-                <th>อะไหล่ยางเล็ก</th>
-                <th>อะไหล่นอก ยางเล็ก</th>
-                <th>น้ำมันเครื่อง</th>
-                <th>อะไหล่</th>
-            </tr-->
             </tfoot>
             <tbody>
             <?php
+            $date = date("d/m/Y");
             $total = 0;
-            $total_sale = 0;
-            $sql_part = " SELECT BRANCH,
-SUM(IF(SKU_CAT='8BTCA01-001',TRD_G_KEYIN,0)) AS PART_1,
-SUM(IF(SKU_CAT='8BTCA01-002',TRD_G_KEYIN,0)) AS PART_2,
-SUM(IF(SKU_CAT='8CPA01-001',TRD_G_KEYIN,0)) AS PART_3,
-SUM(IF(SKU_CAT='8CPA01-002',TRD_G_KEYIN,0)) AS PART_4,
-SUM(IF(SKU_CAT='8SAC11',TRD_G_KEYIN,0)) AS PART_5,
-SUM(IF(SKU_CAT='TA01-001',TRD_G_KEYIN,0)) AS PART_6
- FROM ims_product_sale_cockpit 
- WHERE DI_YEAR = '" . $year . "' 
- AND DI_MONTH = '" . $month . "'
- AND PGROUP like '%P2'
- GROUP BY BRANCH 
- ORDER BY BRANCH";
+            $sql_brand = " 
+SELECT
+SLMN_NAME,
+SUM(IF(BRN_CODE='HT',TRD_QTY,0)) AS HT_QTY,
+SUM(IF(BRN_CODE='HT',TRD_G_KEYIN,0)) AS HT_AMT,
+SUM(IF(BRN_CODE='LE',TRD_QTY,0)) AS LE_QTY,
+SUM(IF(BRN_CODE='LE',TRD_G_KEYIN,0)) AS LE_AMT,
+SUM(IF(BRN_CODE='LL',TRD_QTY,0)) AS LL_QTY,
+SUM(IF(BRN_CODE='LL',TRD_G_KEYIN,0)) AS LL_AMT,
+SUM(IF(BRN_CODE='LLIT',TRD_QTY,0)) AS LLIT_QTY,
+SUM(IF(BRN_CODE='LLIT',TRD_G_KEYIN,0)) AS LLIT_AMT,
+SUM(IF(BRN_CODE='ML',TRD_QTY,0)) AS ML_QTY,
+SUM(IF(BRN_CODE='ML',TRD_G_KEYIN,0)) AS ML_AMT,
+SUM(IF(BRN_CODE='ML.',TRD_QTY,0)) AS ML__QTY,
+SUM(IF(BRN_CODE='ML.',TRD_G_KEYIN,0)) AS ML__AMT,
+SUM(IF(BRN_CODE='MX',TRD_QTY,0)) AS MX_QTY,
+SUM(IF(BRN_CODE='MX',TRD_G_KEYIN,0)) AS MX_AMT,
+SUM(IF(BRN_CODE='PL',TRD_QTY,0)) AS PL_QTY,
+SUM(IF(BRN_CODE='PL',TRD_G_KEYIN,0)) AS PL_AMT,
+SUM(IF(BRN_CODE='SP',TRD_QTY,0)) AS SP_QTY,
+SUM(IF(BRN_CODE='SP',TRD_G_KEYIN,0)) AS SP_AMT,
+SUM(IF(BRN_CODE='VB',TRD_QTY,0)) AS VB_QTY,
+SUM(IF(BRN_CODE='VB',TRD_G_KEYIN,0)) AS VB_AMT,
+SUM(IF(BRN_CODE='WTL',TRD_QTY,0)) AS WTL_QTY,
+SUM(IF(BRN_CODE='WTL',TRD_G_KEYIN,0)) AS WTL_AMT,
+SUM(IF(BRN_CODE='YK',TRD_QTY,0)) AS YK_QTY,
+SUM(IF(BRN_CODE='YK',TRD_G_KEYIN,0)) AS YK_AMT                 
+ FROM ims_product_sale_sac 
+ WHERE DI_YEAR = '" . $year . "'
+ AND DI_MONTH = '" . $month . "'  
+ AND PGROUP like '%P1'
+ GROUP BY SLMN_NAME 
+ ORDER BY SLMN_NAME";
 
-            $statement_part = $conn->query($sql_part);
-            $results_part = $statement_part->fetchAll(PDO::FETCH_ASSOC);
+            $statement_brand = $conn->query($sql_brand);
+            $results_brand = $statement_brand->fetchAll(PDO::FETCH_ASSOC);
 
-            foreach ($results_part
+            foreach ($results_brand
 
-            as $row_part) { ?>
+            as $row_brand) { ?>
 
             <tr>
-                <td><?php echo htmlentities($row_part['BRANCH']); ?></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_part['PART_1'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_part['PART_2'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_part['PART_3'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_part['PART_4'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_part['PART_5'], 2)); ?></p></td>
-                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_part['PART_6'], 2)); ?></p></td>
+                <td><?php echo htmlentities($row_brand['SLMN_NAME']); ?></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['HT_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['HT_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LE_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LE_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LL_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LL_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LLIT_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['LLIT_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['ML_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['ML_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['ML__QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['ML__AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['MX_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['MX_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['PL_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['PL_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['SP_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['SP_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['VB_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['VB_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['WTL_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['WTL_AMT'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['YK_QTY'], 2)); ?></p></td>
+                <td align="right"><p class="number"><?php echo htmlentities(number_format($row_brand['YK_AMT'], 2)); ?></p></td>
 
                 <?php } ?>
 
             </tbody>
         </table>
     </div>
-
-
 </div>
+
+
 
 </body>
 </html>

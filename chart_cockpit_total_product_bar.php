@@ -301,10 +301,10 @@ include("config/connect_db.php");
                 graphTarget = $('#graphCanvas_Monthly17');
                 break;
             case 18:
-                backgroundColor = '#5733f8';
-                borderColor = '#8358f8';
-                hoverBackgroundColor = '#4d0ff5';
-                hoverBorderColor = '#8452f8';
+                backgroundColor = '#f65439';
+                borderColor = '#f87858';
+                hoverBackgroundColor = '#f84a2e';
+                hoverBorderColor = '#fc9053';
                 graphTarget = $('#graphCanvas_Monthly18');
                 break;
             case 19:

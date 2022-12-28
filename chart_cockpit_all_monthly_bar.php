@@ -174,7 +174,7 @@ foreach ($MonthRecords as $row) {
                 <th>(บาท)</th>
                 <th>(เส้น)</th>
                 <th>(บาท)</th>
-                <th>(เส้น)</th>
+ึ                <th>(เส้น)</th>
                 <th>(บาท)</th>
                 <th>(เส้น)</th>
                 <th>(บาท)</th>
@@ -182,7 +182,6 @@ foreach ($MonthRecords as $row) {
                 <th>(บาท)</th>
                 <th>(เส้น)</th>
                 <th>(บาท)</th>
-            </tr>
             </tr>
             </thead>
             <tfoot>
@@ -334,7 +333,6 @@ SUM(IF(BRN_CODE='GY',TRD_G_KEYIN,0)) AS GY_AMT
                 <th>(บาท)</th>
                 <th>(เส้น)</th>
                 <th>(บาท)</th>
-            </tr>
             </tr>
             </thead>
             <tfoot>

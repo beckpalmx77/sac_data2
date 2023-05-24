@@ -27,8 +27,8 @@ echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3')) ";
 
-$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
-//$query_year = " AND DI_DATE BETWEEN '2018/01/01' AND '2023/12/31'";
+//$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
+$query_year = " AND DI_DATE BETWEEN '2021/01/01' AND '2023/12/31'";
 //$query_year = " AND DI_DATE BETWEEN '2022/05/15' AND '" . date("Y/m/d") . "'";
 
 //$query_year = " AND DI_DATE BETWEEN '2022/08/21' AND '" . date("Y/m/d") . "'";
@@ -84,13 +84,13 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $TRD_B_SELL = (double)$result_sqlsvr["TRD_B_SELL"]>0 ? "-" . $result_sqlsvr["TRD_B_SELL"] : $result_sqlsvr["TRD_B_SELL"];
         $TRD_B_VAT = (double)$result_sqlsvr["TRD_B_VAT"]>0 ? "-" . $result_sqlsvr["TRD_B_VAT"] : $result_sqlsvr["TRD_B_VAT"];
         $TRD_G_KEYIN = (double)$result_sqlsvr["TRD_G_KEYIN"]>0 ? "-" . $result_sqlsvr["TRD_G_KEYIN"] : $result_sqlsvr["TRD_G_KEYIN"];
-/*
-        $TRD_U_PRC = "-" . $result_sqlsvr["TRD_U_PRC"];
-        $TRD_DSC_KEYINV = "-" . $result_sqlsvr["TRD_DSC_KEYINV"];
-        $TRD_B_SELL = "-" . $result_sqlsvr["TRD_B_SELL"];
-        $TRD_B_VAT = "-" . $result_sqlsvr["TRD_B_VAT"];
-        $TRD_G_KEYIN = "-" . $result_sqlsvr["TRD_G_KEYIN"];
-*/
+        /*
+                $TRD_U_PRC = "-" . $result_sqlsvr["TRD_U_PRC"];
+                $TRD_DSC_KEYINV = "-" . $result_sqlsvr["TRD_DSC_KEYINV"];
+                $TRD_B_SELL = "-" . $result_sqlsvr["TRD_B_SELL"];
+                $TRD_B_VAT = "-" . $result_sqlsvr["TRD_B_VAT"];
+                $TRD_G_KEYIN = "-" . $result_sqlsvr["TRD_G_KEYIN"];
+        */
 
     } else {
         $TRD_QTY =  $result_sqlsvr["TRD_QTY"];

@@ -3,7 +3,7 @@
 ini_set('display_errors', 1);
 error_reporting(~0);
 
-include("../config/connect_sqlserver.php");
+include("../config/connect_sqlserver40.php");
 include("../config/connect_db.php");
 
 include('../cond_file/doc_info_sale_daily_cp.php');
@@ -27,8 +27,9 @@ echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3')) ";
 
-//$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
-$query_year = " AND DI_DATE BETWEEN '2021/01/01' AND '2023/12/31'";
+$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
+//$query_year = " AND DI_DATE BETWEEN '2019/01/01' AND '2023/12/31'";
+echo $query_year ;
 //$query_year = " AND DI_DATE BETWEEN '2022/05/15' AND '" . date("Y/m/d") . "'";
 
 //$query_year = " AND DI_DATE BETWEEN '2022/08/21' AND '" . date("Y/m/d") . "'";

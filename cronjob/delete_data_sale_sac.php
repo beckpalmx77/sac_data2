@@ -6,8 +6,11 @@ error_reporting(~0);
 include("../config/connect_sqlserver.php");
 include("../config/connect_db.php");
 
+$delete_data = "";
 
-$sql_sqlsvr = " SELECT DOCINFO.DI_KEY,DOCINFO.DI_REF,DOCINFO.DI_ACTIVE FROM DOCINFO WHERE DOCINFO.DI_ACTIVE = 1 ";
+$sql_sqlsvr = " SELECT DOCINFO.DI_KEY,DOCINFO.DI_REF,DI_DATE,DOCINFO.DI_ACTIVE FROM DOCINFO WHERE DOCINFO.DI_ACTIVE = 1 ";
+$query_year = " AND DI_DATE BETWEEN '2014/01/01' AND '2021/12/31'";
+$sql_sqlsvr = $sql_sqlsvr . $query_year ;
 $stmt_sqlsvr = $conn_sqlsvr->prepare($sql_sqlsvr);
 $stmt_sqlsvr->execute();
 
@@ -24,7 +27,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     $query->execute();
 
-    $delete_data .= $result_sqlsvr["DI_KEY"] . ":" . $result_sqlsvr["DI_REF"] . " - " . $sql_delete . "\n\r";
+    $delete_data .= $result_sqlsvr["DI_DATE"] . " | " . $result_sqlsvr["DI_KEY"] . ":" . $result_sqlsvr["DI_REF"] . " - " . $sql_delete . "\n\r";
 
     echo " Delete DATA " . $delete_data;
 

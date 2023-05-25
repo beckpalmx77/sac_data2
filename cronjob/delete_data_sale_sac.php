@@ -3,13 +3,13 @@
 ini_set('display_errors', 1);
 error_reporting(~0);
 
-include("../config/connect_sqlserver.php");
+include("../config/connect_sqlserver40.php");
 include("../config/connect_db.php");
 
 $delete_data = "";
 
 $sql_sqlsvr = " SELECT DOCINFO.DI_KEY,DOCINFO.DI_REF,DI_DATE,DOCINFO.DI_ACTIVE FROM DOCINFO WHERE DOCINFO.DI_ACTIVE = 1 ";
-$query_year = " AND DI_DATE BETWEEN '2014/01/01' AND '2021/12/31'";
+$query_year = " AND DI_DATE BETWEEN '2021/01/01' AND '2021/12/31'";
 $sql_sqlsvr = $sql_sqlsvr . $query_year ;
 $stmt_sqlsvr = $conn_sqlsvr->prepare($sql_sqlsvr);
 $stmt_sqlsvr->execute();

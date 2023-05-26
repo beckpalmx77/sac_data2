@@ -9,7 +9,7 @@ include("../config/connect_db.php");
 $delete_data = "";
 
 $sql_sqlsvr = " SELECT DOCINFO.DI_KEY,DOCINFO.DI_REF,DI_DATE,DOCINFO.DI_ACTIVE FROM DOCINFO WHERE DOCINFO.DI_ACTIVE = 1 ";
-$query_year = " AND DI_DATE BETWEEN '2020/01/01' AND '2023/05/31'";
+$query_year = " AND DI_DATE BETWEEN '2021/07/01' AND '2023/05/31'";
 
 $sql_sqlsvr = $sql_sqlsvr . $query_year ;
 

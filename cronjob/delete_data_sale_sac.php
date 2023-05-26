@@ -9,8 +9,12 @@ include("../config/connect_db.php");
 $delete_data = "";
 
 $sql_sqlsvr = " SELECT DOCINFO.DI_KEY,DOCINFO.DI_REF,DI_DATE,DOCINFO.DI_ACTIVE FROM DOCINFO WHERE DOCINFO.DI_ACTIVE = 1 ";
-$query_year = " AND DI_DATE BETWEEN '2021/01/01' AND '2021/12/31'";
+$query_year = " AND DI_DATE BETWEEN '2023/01/01' AND '2023/01/31'";
+
 $sql_sqlsvr = $sql_sqlsvr . $query_year ;
+
+echo " MSSQL DATA " . $sql_sqlsvr;
+
 $stmt_sqlsvr = $conn_sqlsvr->prepare($sql_sqlsvr);
 $stmt_sqlsvr->execute();
 
@@ -31,9 +35,9 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     echo " Delete DATA " . $delete_data;
 
-    $myfile = fopen("../logs/qry_file_mssql_server_delete.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_sqlsvr . "\n\r" ." - " . $result_sqlsvr["DI_DATE"] . " | " . $result_sqlsvr["DI_KEY"] . ":" . $result_sqlsvr["DI_REF"] . " - " . $sql_delete);
-    fclose($myfile);
+    //$myfile = fopen("../logs/qry_file_mssql_server_delete.txt", "w") or die("Unable to open file!");
+    //fwrite($myfile, $sql_sqlsvr . "\n\r" ." - " . $result_sqlsvr["DI_DATE"] . " | " . $result_sqlsvr["DI_KEY"] . ":" . $result_sqlsvr["DI_REF"] . " - " . $sql_delete);
+    //lose($myfile);
 
 }
 

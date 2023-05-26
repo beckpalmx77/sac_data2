@@ -31,6 +31,9 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     echo " Delete DATA " . $delete_data;
 
+    $myfile = fopen("../logs/qry_file_mssql_server_delete.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $sql_sqlsvr . "\n\r" ." - " . $result_sqlsvr["DI_DATE"] . " | " . $result_sqlsvr["DI_KEY"] . ":" . $result_sqlsvr["DI_REF"] . " - " . $sql_delete);
+    fclose($myfile);
 
 }
 

@@ -28,7 +28,7 @@ echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3')) ";
 
 //$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
-$query_year = " AND DI_DATE BETWEEN '2020/09/01' AND '2020/10/31'";
+$query_year = " AND DI_DATE BETWEEN '2020/11/01' AND '2020/12/31'";
 //$query_year = " AND DI_DATE BETWEEN '2022/05/15' AND '" . date("Y/m/d") . "'";
 
 //$query_year = " AND DI_DATE BETWEEN '2022/08/21' AND '" . date("Y/m/d") . "'";

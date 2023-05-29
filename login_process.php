@@ -34,6 +34,7 @@ if ($query->rowCount() == 1) {
             $_SESSION['user_picture'] = $result->picture;
             $_SESSION['lang'] = $result->lang;
             $_SESSION['permission_price'] = $result->permission_price;
+            $_SESSION['manage_team_id'] = $result->manage_team_id;
             //$_SESSION['dashboard_page'] = $result->dashboard_page . ".php";
             $_SESSION['dashboard_page'] = $result->dashboard_page;
             $_SESSION['system_name'] = $system_name;

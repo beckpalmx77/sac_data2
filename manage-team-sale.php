@@ -38,15 +38,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <section class="container-fluid">
 
-                                        <div class="col-md-12 col-md-offset-2">
-                                            <label for="brand_name"
-                                                   class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
 
-                                            <button type='button' name='btnAdd' id='btnAdd'
-                                                    class='btn btn-primary btn-xs'>Add
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
 
                                         <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>

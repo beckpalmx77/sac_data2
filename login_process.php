@@ -13,7 +13,8 @@ if ($_SESSION['alogin'] != '') {
 $username = $_POST['username'];
 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 $remember = $_POST['remember'];
-$sql = "SELECT *,pm.dashboard_page as dashboard_page FROM ims_user  
+$sql = "SELECT *,pm.dashboard_page as dashboard_page,slt.SLT_CODE,slt.SLT_NAME FROM ims_user  
+        left join ims_slteam slt  on slt.SLT_KEY = ims_user.manage_team_id         
         left join ims_permission pm on pm.permission_id = ims_user.account_type WHERE email=:username ";
 
 $query = $conn->prepare($sql);
@@ -35,6 +36,8 @@ if ($query->rowCount() == 1) {
             $_SESSION['lang'] = $result->lang;
             $_SESSION['permission_price'] = $result->permission_price;
             $_SESSION['company'] = $result->company;
+            $_SESSION['SLT_CODE'] = $result->SLT_CODE;
+            $_SESSION['SLT_NAME'] = $result->SLT_NAME;
             $_SESSION['manage_team_id'] = $result->manage_team_id;
             //$_SESSION['dashboard_page'] = $result->dashboard_page . ".php";
             $_SESSION['dashboard_page'] = $result->dashboard_page;

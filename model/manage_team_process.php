@@ -165,9 +165,9 @@ if ($_POST["action"] === 'GET_CUSTOMER') {
     . $searchQuery . $where_company . $where_manage_team
     . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
-    $myfile = fopen("qry_file_mysql_server.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_load);
-    fclose($myfile);
+    //$myfile = fopen("qry_file_mysql_server.txt", "w") or die("Unable to open file!");
+    //fwrite($myfile, $sql_load);
+    //fclose($myfile);
 
     $stmt = $conn->prepare($sql_load);
 

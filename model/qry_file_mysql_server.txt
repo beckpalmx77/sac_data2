@@ -1,1 +1,0 @@
-SELECT * FROM v_customer_salename WHERE 1   AND AR_CODE LIKE '%SAC%' AND SLMN_SLT LIKE '%107%' ORDER BY AR_CODE asc LIMIT :limit,:offset

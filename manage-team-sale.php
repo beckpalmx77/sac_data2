@@ -23,7 +23,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page']?>">Home</a></li>
+                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['company'] . $_SESSION['dashboard_page']?>">Home</a></li>
                             <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
                             <li class="breadcrumb-item active"
                                 aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
@@ -47,9 +47,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>รหัสลูกค้า</th>
                                                     <th>ชื่อลูกค้า</th>
                                                     <th>ชื่อพนักงานขาย</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
-                                                    <th>Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
@@ -57,9 +54,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>รหัสลูกค้า</th>
                                                     <th>ชื่อลูกค้า</th>
                                                     <th>ชื่อพนักงานขาย</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
-                                                    <th>Action</th>
                                                 </tr>
                                                 </tfoot>
                                             </table>
@@ -288,10 +282,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 'columns': [
                     {data: 'AR_CODE'},
                     {data: 'AR_NAME'},
-                    {data: 'SLMN_NAME'},
-                    {data: 'status'},
-                    {data: 'update'},
-                    {data: 'delete'}
+                    {data: 'SLMN_NAME'}
                 ]
             });
 

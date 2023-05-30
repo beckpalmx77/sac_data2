@@ -138,21 +138,38 @@ if ($_POST["action"] === 'GET_CUSTOMER') {
         );
     }
 
+    $company = ($_SESSION['company'] === '-') ? "%" : "%" . $_SESSION['company'] . "%" ;
+
+    $manage_team_id = ($_SESSION['manage_team_id'] === '-') ? "%" : "%" . $_SESSION['manage_team_id'] . "%" ;
+
+    $where_company = " AND AR_CODE LIKE '" . $company . "'";
+    $where_manage_team = " AND SLMN_SLT LIKE '" . $manage_team_id . "'";
+
+    $sql_count = "SELECT COUNT(*) AS allcount FROM v_customer_salename WHERE 1 " ;
+
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_customer_salename ");
+    $stmt = $conn->prepare($sql_count);
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_customer_salename WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare($sql_count . $searchQuery . $where_company . $where_manage_team );
+
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM v_customer_salename WHERE 1 " . $searchQuery
-        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+    $sql_load = "SELECT * FROM v_customer_salename WHERE 1 "
+    . $searchQuery . $where_company . $where_manage_team
+    . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
+
+    $myfile = fopen("qry_file_mysql_server.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $sql_load);
+    fclose($myfile);
+
+    $stmt = $conn->prepare($sql_load);
 
 // Bind values
     foreach ($searchArray as $key => $search) {
@@ -172,9 +189,8 @@ if ($_POST["action"] === 'GET_CUSTOMER') {
                 "AR_CODE" => $row['AR_CODE'],
                 "AR_NAME" => $row['AR_NAME'],
                 "SLMN_SLT" => $row['SLMN_SLT'],
-                "update" => "<button type='button' name='update' id='" . $row['AR_CODE'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
-                "delete" => "<button type='button' name='delete' id='" . $row['AR_CODE'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
-                "status" => $row['status'] === 'Active' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"
+                "SLMN_NAME" => $row['SLMN_NAME']
+
             );
         } else {
             $data[] = array(

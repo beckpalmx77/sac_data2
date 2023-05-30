@@ -14,7 +14,7 @@ $sql_sqlsvr = " SELECT DOCINFO.DI_KEY,DOCINFO.DI_REF,DI_DATE,DOCINFO.DI_ACTIVE F
 
 //$query_year = " AND DI_DATE BETWEEN '2021/01/01' AND '2023/05/31'";
 
-$query_year = " AND DI_KEY >= " . "1110697 AND DI_KEY < " . "1119981";
+$query_year = " AND DI_KEY >= " . "1119982 AND DI_KEY < " . "1119981";
 
 $sql_sqlsvr = $sql_sqlsvr . $query_year ;
 

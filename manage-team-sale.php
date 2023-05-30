@@ -21,7 +21,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 <!-- Container Fluid-->
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
+                        <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) . " [ " . $_SESSION['SLT_CODE'] . "]" ?></h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page']?>">Home</a></li>
                             <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
@@ -259,7 +259,7 @@ if (strlen($_SESSION['alogin']) == "") {
         $(document).ready(function () {
             let formData = {action: "GET_CUSTOMER", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[10, 20, 50, 100], [10, 20, 50, 100]],
+                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
                     info: 'หน้าที่ _PAGE_ จาก _PAGES_',

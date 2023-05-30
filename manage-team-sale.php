@@ -44,8 +44,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
-                                                    <th>รหัสยี่ห้อ-ชื่อทางการค้า</th>
-                                                    <th>ชื่อยี่ห้อ-ชื่อทางการค้า</th>
+                                                    <th>รหัสลูกค้า</th>
+                                                    <th>ชื่อลูกค้า</th>
+                                                    <th>ชื่อพนักงานขาย</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -53,8 +54,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </thead>
                                                 <tfoot>
                                                 <tr>
-                                                    <th>รหัสยี่ห้อ-ชื่อทางการค้า</th>
-                                                    <th>ชื่อยี่ห้อ-ชื่อทางการค้า</th>
+                                                    <th>รหัสลูกค้า</th>
+                                                    <th>ชื่อลูกค้า</th>
+                                                    <th>ชื่อพนักงานขาย</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -80,21 +82,21 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="modal-body">
 
                                                                 <div class="form-group">
-                                                                    <label for="brand_id" class="control-label">รหัสยี่ห้อ-ชื่อทางการค้า</label>
-                                                                    <input type="brand_id" class="form-control"
-                                                                           id="brand_id" name="brand_id"
+                                                                    <label for="AR_CODE" class="control-label">รหัส - ชื่อลูกค้า</label>
+                                                                    <input type="AR_CODE" class="form-control"
+                                                                           id="AR_CODE" name="AR_CODE"
                                                                            readonly="true"
                                                                            placeholder="สร้างอัตโนมัติ">
                                                                 </div>
 
                                                                 <div class="form-group">
-                                                                    <label for="brand_name"
-                                                                           class="control-label">ชื่อยี่ห้อ-ชื่อทางการค้า</label>
+                                                                    <label for="AR_NAME"
+                                                                           class="control-label">ชื่อ่พนักงานขาย</label>
                                                                     <input type="text" class="form-control"
-                                                                           id="brand_name"
-                                                                           name="brand_name"
+                                                                           id="AR_NAME"
+                                                                           name="AR_NAME"
                                                                            required="required"
-                                                                           placeholder="ชื่อยี่ห้อ-ชื่อทางการค้า">
+                                                                           placeholder="ชื่อ่พนักงานขาย">
                                                                 </div>
 
                                                                 <div class="form-group">
@@ -238,12 +240,12 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
 
-        $("#brand_name").blur(function () {
+        $("#AR_NAME").blur(function () {
             let method = $('#action').val();
             if (method === "ADD") {
-                let brand_id = $('#brand_id').val();
-                let brand_name = $('#brand_name').val();
-                let formData = {action: "SEARCH", brand_id: brand_id, brand_name: brand_name};
+                let AR_CODE = $('#AR_CODE').val();
+                let AR_NAME = $('#AR_NAME').val();
+                let formData = {action: "SEARCH", AR_CODE: AR_CODE, AR_NAME: AR_NAME};
                 $.ajax({
                     url: 'model/manage_unit_process.php',
                     method: "POST",
@@ -261,7 +263,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_BRAND", sub_action: "GET_MASTER"};
+            let formData = {action: "GET_CUSTOMER", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[10, 20, 50, 100], [10, 20, 50, 100]],
                 'language': {
@@ -284,8 +286,9 @@ if (strlen($_SESSION['alogin']) == "") {
                     'data': formData
                 },
                 'columns': [
-                    {data: 'brand_id'},
-                    {data: 'brand_name'},
+                    {data: 'AR_CODE'},
+                    {data: 'AR_NAME'},
+                    {data: 'SLMN_NAME'},
                     {data: 'status'},
                     {data: 'update'},
                     {data: 'delete'}
@@ -319,8 +322,8 @@ if (strlen($_SESSION['alogin']) == "") {
             $("#btnAdd").click(function () {
                 $('#recordModal').modal('show');
                 $('#id').val("");
-                $('#brand_id').val("");
-                $('#brand_name').val("");
+                $('#AR_CODE').val("");
+                $('#AR_NAME').val("");
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');
@@ -343,14 +346,14 @@ if (strlen($_SESSION['alogin']) == "") {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
-                        let brand_id = response[i].brand_id;
-                        let brand_name = response[i].brand_name;
+                        let AR_CODE = response[i].AR_CODE;
+                        let AR_NAME = response[i].AR_NAME;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
-                        $('#brand_id').val(brand_id);
-                        $('#brand_name').val(brand_name);
+                        $('#AR_CODE').val(AR_CODE);
+                        $('#AR_NAME').val(AR_NAME);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
@@ -379,14 +382,14 @@ if (strlen($_SESSION['alogin']) == "") {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
-                        let brand_id = response[i].brand_id;
-                        let brand_name = response[i].brand_name;
+                        let AR_CODE = response[i].AR_CODE;
+                        let AR_NAME = response[i].AR_NAME;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
-                        $('#brand_id').val(brand_id);
-                        $('#brand_name').val(brand_name);
+                        $('#AR_CODE').val(AR_CODE);
+                        $('#AR_NAME').val(AR_NAME);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-minus'></i> Delete Record");
                         $('#action').val('DELETE');

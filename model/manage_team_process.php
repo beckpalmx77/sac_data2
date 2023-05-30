@@ -13,7 +13,7 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM ims_brand WHERE id = " . $id;
+    $sql_get = "SELECT * FROM ims_product_sale_sac WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -33,7 +33,7 @@ if ($_POST["action"] === 'SEARCH') {
     if ($_POST["brand_name"] !== '') {
 
         $brand_name = $_POST["brand_name"];
-        $sql_find = "SELECT * FROM ims_brand WHERE brand_name = '" . $brand_name . "'";
+        $sql_find = "SELECT * FROM ims_product_sale_sac WHERE brand_name = '" . $brand_name . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo 2;
@@ -45,15 +45,15 @@ if ($_POST["action"] === 'SEARCH') {
 
 if ($_POST["action"] === 'ADD') {
     if ($_POST["brand_name"] !== '') {
-        $brand_id = "B-" . sprintf('%04s', LAST_ID($conn, "ims_brand", 'id'));
+        $brand_id = "B-" . sprintf('%04s', LAST_ID($conn, "ims_product_sale_sac", 'id'));
         $brand_name = $_POST["brand_name"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM ims_brand WHERE brand_name = '" . $brand_name . "'";
+        $sql_find = "SELECT * FROM ims_product_sale_sac WHERE brand_name = '" . $brand_name . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO ims_brand(brand_id,brand_name,status) VALUES (:brand_id,:brand_name,:status)";
+            $sql = "INSERT INTO ims_product_sale_sac(brand_id,brand_name,status) VALUES (:brand_id,:brand_name,:status)";
             $query = $conn->prepare($sql);
             $query->bindParam(':brand_id', $brand_id, PDO::PARAM_STR);
             $query->bindParam(':brand_name', $brand_name, PDO::PARAM_STR);
@@ -79,10 +79,10 @@ if ($_POST["action"] === 'UPDATE') {
         $brand_id = $_POST["brand_id"];
         $brand_name = $_POST["brand_name"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM ims_brand WHERE brand_id = '" . $brand_id . "'";
+        $sql_find = "SELECT * FROM ims_product_sale_sac WHERE brand_id = '" . $brand_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE ims_brand SET brand_id=:brand_id,brand_name=:brand_name,status=:status            
+            $sql_update = "UPDATE ims_product_sale_sac SET brand_id=:brand_id,brand_name=:brand_name,status=:status            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':brand_id', $brand_id, PDO::PARAM_STR);
@@ -100,11 +100,11 @@ if ($_POST["action"] === 'DELETE') {
 
     $id = $_POST["id"];
 
-    $sql_find = "SELECT * FROM ims_brand WHERE id = " . $id;
+    $sql_find = "SELECT * FROM ims_product_sale_sac WHERE id = " . $id;
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {
-            $sql = "DELETE FROM ims_brand WHERE id = " . $id;
+            $sql = "DELETE FROM ims_product_sale_sac WHERE id = " . $id;
             $query = $conn->prepare($sql);
             $query->execute();
             echo $del_success;
@@ -114,7 +114,7 @@ if ($_POST["action"] === 'DELETE') {
     }
 }
 
-if ($_POST["action"] === 'GET_BRAND') {
+if ($_POST["action"] === 'GET_CUSTOMER') {
 
     ## Read value
     $draw = $_POST['draw'];
@@ -130,28 +130,28 @@ if ($_POST["action"] === 'GET_BRAND') {
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (brand_id LIKE :brand_id or
-        brand_name LIKE :brand_name ) ";
+        $searchQuery = " AND (AR_NAME LIKE :AR_NAME or
+        SLMN_NAME LIKE :SLMN_NAME ) ";
         $searchArray = array(
-            'brand_id' => "%$searchValue%",
-            'brand_name' => "%$searchValue%",
+            'AR_NAME' => "%$searchValue%",
+            'SLMN_NAME' => "%$searchValue%",
         );
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_brand ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_product_sale_sac ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_brand WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_product_sale_sac WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM ims_brand WHERE 1 " . $searchQuery
+    $stmt = $conn->prepare("SELECT * FROM ims_product_sale_sac WHERE 1 " . $searchQuery
         . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
 
 // Bind values

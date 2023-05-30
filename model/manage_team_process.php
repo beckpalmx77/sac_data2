@@ -13,14 +13,14 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM ims_product_sale_sac WHERE id = " . $id;
+    $sql_get = "SELECT * FROM v_customer_salename WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $result) {
         $return_arr[] = array("id" => $result['id'],
-            "brand_id" => $result['brand_id'],
-            "brand_name" => $result['brand_name'],
+            "AR_CODE" => $result['AR_CODE'],
+            "AR_NAME" => $result['AR_NAME'],
             "status" => $result['status']);
     }
 
@@ -30,10 +30,10 @@ if ($_POST["action"] === 'GET_DATA') {
 
 if ($_POST["action"] === 'SEARCH') {
 
-    if ($_POST["brand_name"] !== '') {
+    if ($_POST["AR_NAME"] !== '') {
 
-        $brand_name = $_POST["brand_name"];
-        $sql_find = "SELECT * FROM ims_product_sale_sac WHERE brand_name = '" . $brand_name . "'";
+        $AR_NAME = $_POST["AR_NAME"];
+        $sql_find = "SELECT * FROM v_customer_salename WHERE AR_NAME = '" . $AR_NAME . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo 2;
@@ -44,19 +44,19 @@ if ($_POST["action"] === 'SEARCH') {
 }
 
 if ($_POST["action"] === 'ADD') {
-    if ($_POST["brand_name"] !== '') {
-        $brand_id = "B-" . sprintf('%04s', LAST_ID($conn, "ims_product_sale_sac", 'id'));
-        $brand_name = $_POST["brand_name"];
+    if ($_POST["AR_NAME"] !== '') {
+        $AR_CODE = "B-" . sprintf('%04s', LAST_ID($conn, "v_customer_salename", 'id'));
+        $AR_NAME = $_POST["AR_NAME"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM ims_product_sale_sac WHERE brand_name = '" . $brand_name . "'";
+        $sql_find = "SELECT * FROM v_customer_salename WHERE AR_NAME = '" . $AR_NAME . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO ims_product_sale_sac(brand_id,brand_name,status) VALUES (:brand_id,:brand_name,:status)";
+            $sql = "INSERT INTO v_customer_salename(AR_CODE,AR_NAME,status) VALUES (:AR_CODE,:AR_NAME,:status)";
             $query = $conn->prepare($sql);
-            $query->bindParam(':brand_id', $brand_id, PDO::PARAM_STR);
-            $query->bindParam(':brand_name', $brand_name, PDO::PARAM_STR);
+            $query->bindParam(':AR_CODE', $AR_CODE, PDO::PARAM_STR);
+            $query->bindParam(':AR_NAME', $AR_NAME, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
@@ -73,20 +73,20 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["brand_name"] != '') {
+    if ($_POST["AR_NAME"] != '') {
 
         $id = $_POST["id"];
-        $brand_id = $_POST["brand_id"];
-        $brand_name = $_POST["brand_name"];
+        $AR_CODE = $_POST["AR_CODE"];
+        $AR_NAME = $_POST["AR_NAME"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM ims_product_sale_sac WHERE brand_id = '" . $brand_id . "'";
+        $sql_find = "SELECT * FROM v_customer_salename WHERE AR_CODE = '" . $AR_CODE . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE ims_product_sale_sac SET brand_id=:brand_id,brand_name=:brand_name,status=:status            
+            $sql_update = "UPDATE v_customer_salename SET AR_CODE=:AR_CODE,AR_NAME=:AR_NAME,status=:status            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
-            $query->bindParam(':brand_id', $brand_id, PDO::PARAM_STR);
-            $query->bindParam(':brand_name', $brand_name, PDO::PARAM_STR);
+            $query->bindParam(':AR_CODE', $AR_CODE, PDO::PARAM_STR);
+            $query->bindParam(':AR_NAME', $AR_NAME, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
@@ -100,11 +100,11 @@ if ($_POST["action"] === 'DELETE') {
 
     $id = $_POST["id"];
 
-    $sql_find = "SELECT * FROM ims_product_sale_sac WHERE id = " . $id;
+    $sql_find = "SELECT * FROM v_customer_salename WHERE id = " . $id;
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {
-            $sql = "DELETE FROM ims_product_sale_sac WHERE id = " . $id;
+            $sql = "DELETE FROM v_customer_salename WHERE id = " . $id;
             $query = $conn->prepare($sql);
             $query->execute();
             echo $del_success;
@@ -139,19 +139,19 @@ if ($_POST["action"] === 'GET_CUSTOMER') {
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_product_sale_sac ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_customer_salename ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_product_sale_sac WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_customer_salename WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM ims_product_sale_sac WHERE 1 " . $searchQuery
+    $stmt = $conn->prepare("SELECT * FROM v_customer_salename WHERE 1 " . $searchQuery
         . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
 
 // Bind values
@@ -169,19 +169,19 @@ if ($_POST["action"] === 'GET_CUSTOMER') {
 
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
-                "id" => $row['id'],
-                "brand_id" => $row['brand_id'],
-                "brand_name" => $row['brand_name'],
-                "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
-                "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
+                "AR_CODE" => $row['AR_CODE'],
+                "AR_NAME" => $row['AR_NAME'],
+                "SLMN_SLT" => $row['SLMN_SLT'],
+                "update" => "<button type='button' name='update' id='" . $row['AR_CODE'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
+                "delete" => "<button type='button' name='delete' id='" . $row['AR_CODE'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
                 "status" => $row['status'] === 'Active' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"
             );
         } else {
             $data[] = array(
                 "id" => $row['id'],
-                "brand_id" => $row['brand_id'],
-                "brand_name" => $row['brand_name'],
-                "select" => "<button type='button' name='select' id='" . $row['brand_id'] . "@" . $row['brand_name'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
+                "AR_CODE" => $row['AR_CODE'],
+                "AR_NAME" => $row['AR_NAME'],
+                "select" => "<button type='button' name='select' id='" . $row['AR_CODE'] . "@" . $row['AR_NAME'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
 </button>",
             );
         }

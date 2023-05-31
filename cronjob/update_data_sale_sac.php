@@ -27,7 +27,10 @@ echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3')) ";
 
-$query_year = " AND DI_KEY >= " . "109007 AND DI_KEY <= 865494 " ;
+//$query_year = " AND DI_KEY >= " . "109007 AND DI_KEY <= 865494 " ;
+
+$query_year = " AND DI_KEY >= " . "170108 AND DI_KEY <= 865494 " ;
+
 
 //$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 //$query_year = " AND DI_DATE BETWEEN '2014/12/23' AND '2018/12/31'";

@@ -31,7 +31,12 @@ $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','
 
 //$query_year = " AND DI_KEY >= " . "170108 AND DI_KEY <= 865494 " ;
 
-$query_year = " AND DI_KEY >= " . "389724 AND DI_KEY <= 865494 " ;
+//$query_year = " AND DI_KEY >= " . "389724 AND DI_KEY <= 865494 " ;
+
+$query_year = " AND DI_KEY >= " . "746324 AND DI_KEY <= 865494 " ;
+
+
+
 
 
 

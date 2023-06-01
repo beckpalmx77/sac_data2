@@ -1,5 +1,6 @@
 <?php
-
+session_start();
+error_reporting(0);
 include("config/connect_db.php");
 
 $month = $_POST["month"];

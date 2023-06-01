@@ -161,7 +161,9 @@ if ($_POST["action"] === 'GET_CUSTOMER') {
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $sql_load = "SELECT * FROM v_customer_salename WHERE 1 "
+    $sql_load = "SELECT * FROM v_customer_salename "
+    . " LEFT JOIN ims_customer_ar ar ON ar.customer_id = v_customer_salename.AR_CODE "
+    . " WHERE 1 "
     . $searchQuery . $where_company . $where_manage_team
     . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
@@ -188,6 +190,7 @@ if ($_POST["action"] === 'GET_CUSTOMER') {
             $data[] = array(
                 "AR_CODE" => $row['AR_CODE'],
                 "AR_NAME" => $row['AR_NAME'],
+                "province" => $row['province'],
                 "SLMN_SLT" => $row['SLMN_SLT'],
                 "SLMN_NAME" => $row['SLMN_NAME']
 

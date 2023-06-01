@@ -46,6 +46,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <tr>
                                                     <th>รหัสลูกค้า</th>
                                                     <th>ชื่อลูกค้า</th>
+                                                    <th>จังหวัด</th>
                                                     <th>ชื่อพนักงานขาย</th>
                                                 </tr>
                                                 </thead>
@@ -53,6 +54,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <tr>
                                                     <th>รหัสลูกค้า</th>
                                                     <th>ชื่อลูกค้า</th>
+                                                    <th>จังหวัด</th>
                                                     <th>ชื่อพนักงานขาย</th>
                                                 </tr>
                                                 </tfoot>
@@ -282,6 +284,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 'columns': [
                     {data: 'AR_CODE'},
                     {data: 'AR_NAME'},
+                    {data: 'province'},
                     {data: 'SLMN_NAME'}
                 ]
             });

@@ -85,9 +85,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                       GROUP BY  SLMN_NAME
                                                       ORDER BY SLMN_NAME";
 
-                                        $myfile = fopen("qry_file_mysql.txt", "w") or die("Unable to open file!");
-                                        fwrite($myfile, $sql_daily);
-                                        fclose($myfile);
+                                        //$myfile = fopen("qry_file_mysql.txt", "w") or die("Unable to open file!");
+                                        //fwrite($myfile, $sql_daily);
+                                        //fclose($myfile);
 
                                         $statement_daily = $conn->query($sql_daily);
                                         $results_daily = $statement_daily->fetchAll(PDO::FETCH_ASSOC);

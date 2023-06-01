@@ -4,13 +4,9 @@ if (strlen($_SESSION['alogin']) == "") {
     header("Location: index");
 } else {
 
-    $company = ($_SESSION['company'] === '-') ? "%" : "%" . $_SESSION['company'] . "%" ;
-
-    $manage_team_id = ($_SESSION['manage_team_id'] === '-') ? "%" : "%" . $_SESSION['manage_team_id'] . "%" ;
-
     include("config/connect_db.php");
 
-    $month_num = str_replace('0','',date('m'));
+    $month_num = str_replace('0', '', date('m'));
 
     $sql_curr_month = " SELECT * FROM ims_month where month = '" . $month_num . "'";
 
@@ -31,11 +27,16 @@ if (strlen($_SESSION['alogin']) == "") {
     $MonthRecords = $stmt_month->fetchAll();
 
     $sql_year = " SELECT DISTINCT(DI_YEAR) AS DI_YEAR
- FROM ims_product_sale_sac WHERE DI_YEAR >= 2019
+ FROM ims_product_sale_cockpit WHERE DI_YEAR >= 2019
  order by DI_YEAR desc ";
     $stmt_year = $conn->prepare($sql_year);
     $stmt_year->execute();
     $YearRecords = $stmt_year->fetchAll();
+
+    $sql_branch = " SELECT * FROM ims_branch ";
+    $stmt_branch = $conn->prepare($sql_branch);
+    $stmt_branch->execute();
+    $BranchRecords = $stmt_branch->fetchAll();
 
 
     ?>
@@ -58,7 +59,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 <!-- Container Fluid-->
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) . " [ " . $_SESSION['SLT_CODE'] . "]" ?></h1>
+                        <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
                             </li>
@@ -80,7 +81,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <div class="panel">
                                                     <div class="panel-body">
 
-                                                        <form id="myform" name="myform" action="engine/chart_data_daily.php" method="post">
+                                                        <form id="from_data" method="post"
+                                                              action="export_process/export_process_data_sale_total_cp.php"
+                                                              enctype="multipart/form-data">
 
                                                             <input type="hidden" id="myCheckValue" name="myCheckValue">
 
@@ -99,10 +102,11 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                             <div class="row">
                                                                 <div class="col-sm-12">
-
                                                                     <label for="month">เลือกเดือน :</label>
-                                                                    <select name="month" id="month" class="form-control" required>
-                                                                        <option value="<?php echo $month_num;?>" selected><?php echo $month_name;?></option>
+                                                                    <select name="month" id="month" class="form-control"
+                                                                            required>
+                                                                        <option value="<?php echo $month_num; ?>"
+                                                                                selected><?php echo $month_name; ?></option>
                                                                         <?php foreach ($MonthRecords as $row) { ?>
                                                                             <option value="<?php echo $row["month"]; ?>">
                                                                                 <?php echo $row["month_name"]; ?>
@@ -110,19 +114,30 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <?php } ?>
                                                                     </select>
                                                                     <label for="year">เลือกปี :</label>
-                                                                    <select name="year" id="year" class="form-control" required>
+                                                                    <select name="year" id="year" class="form-control"
+                                                                            required>
                                                                         <?php foreach ($YearRecords as $row) { ?>
                                                                             <option value="<?php echo $row["DI_YEAR"]; ?>">
                                                                                 <?php echo $row["DI_YEAR"]; ?>
                                                                             </option>
                                                                         <?php } ?>
                                                                     </select>
-
+                                                                    <label for="branch">เลือกสาขา :</label>
+                                                                    <select name="branch" id="branch"
+                                                                            class="form-control" required>
+                                                                        <?php foreach ($BranchRecords as $row) { ?>
+                                                                            <option value="<?php echo $row["branch"]; ?>">
+                                                                                <?php echo $row["branch_name"]; ?>
+                                                                            </option>
+                                                                        <?php } ?>
+                                                                    </select>
                                                                     <br>
                                                                     <div class="row">
                                                                         <div class="col-sm-12">
-                                                                            <button type="button" id="BtnSale" name="BtnSale" class="btn btn-primary mb-3">แสดง
-                                                                                Chart ยอดขายเปรียบเทียบ
+                                                                            <button type="submit"
+                                                                                    class="btn btn-success"
+                                                                                    id="btnExport"> Export <i
+                                                                                        class="fa fa-check"></i>
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -191,17 +206,6 @@ if (strlen($_SESSION['alogin']) == "") {
     <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
 
     <script src="js/MyFrameWork/framework_util.js"></script>
-
-    <script>
-
-        $("#BtnSale").click(function () {
-            document.forms['myform'].action = 'chart_cockpit_by_pgroup_bar';
-            document.forms['myform'].target = '_blank';
-            document.forms['myform'].submit();
-            return true;
-        });
-
-    </script>
 
     <script>
         $(document).ready(function () {

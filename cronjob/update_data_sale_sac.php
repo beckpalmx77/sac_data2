@@ -33,16 +33,13 @@ $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','
 
 //$query_year = " AND DI_KEY >= " . "389724 AND DI_KEY <= 865494 " ;
 
-$query_year = " AND DI_KEY >= " . "724747 AND DI_KEY <= 865494 " ;
-
-
-
-
-
+//$query_year = " AND DI_KEY >= " . "724747 AND DI_KEY <= 865494 " ;
 
 
 //$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
-//$query_year = " AND DI_DATE BETWEEN '2014/12/23' AND '2018/12/31'";
+
+$query_year = " AND DI_DATE BETWEEN '2018/04/27' AND '2018/12/31'";
+
 //$query_year = " AND DI_DATE BETWEEN '2022/05/15' AND '" . date("Y/m/d") . "'";
 
 //$query_year = " AND DI_DATE BETWEEN '2022/08/21' AND '" . date("Y/m/d") . "'";

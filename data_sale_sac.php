@@ -353,9 +353,10 @@ if (strlen($_SESSION['alogin']) == "") {
 
 
     <script>
-        $( "select" ).change(function() {
-            let val= $(this).val();
-            $("#text").val(val);
+        $( "selCustomer" ).change(function() {
+            let cust= $(this).val($(selCustomer).val());
+            //$("#text").val(val);
+            alert("OK " + cust);
         });
     </script>
 

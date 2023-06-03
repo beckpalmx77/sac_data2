@@ -4,7 +4,7 @@ error_reporting(0);
 include '../config/connect_db.php';
 
 // Number of records fetch
-$numberofrecords = 20;
+$numberofrecords = 50000;
 
 $manage_team_id = ($_SESSION['manage_team_id'] === '-') ? "'%'" : "'%" . $_SESSION['manage_team_id'] . "%'";
 

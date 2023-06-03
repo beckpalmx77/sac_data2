@@ -353,7 +353,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
 
     <script>
-        $( "selCustomer" ).change(function() {
+        $( "year" ).change(function() {
             let cust= $(this).val($(selCustomer).val());
             //$("#text").val(val);
             alert("OK " + cust);

@@ -107,49 +107,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <form id="myform" name="myform"
                                                               action="engine/chart_data_daily.php" method="post">
 
-                                                            <!--div class="form-group row">
-                                                                <div class="col-sm-12">
-                                                                    <a data-toggle="modal" href="#SearchCusCrmModal"
-                                                                       class="btn btn-primary">
-                                                                        Click <i class="fa fa-search"
-                                                                                 aria-hidden="true"></i>
-                                                                    </a>
-                                                                    <br>
-                                                                    <label for="customer_id"
-                                                                           class="control-label">รหัสลูกค้า</label>
-                                                                    <input type="text" class="form-control"
-                                                                           id="customer_id"
-                                                                           name="customer_id"
-                                                                           readonly="true"
-                                                                           required="required"
-                                                                           placeholder="รหัสลูกค้า">
-                                                                    <label for="f_name"
-                                                                           class="control-label">ชื่อลูกค้า</label>
-                                                                    <input type="text" class="form-control"
-                                                                           id="f_name"
-                                                                           name="f_name"
-                                                                           readonly="true"
-                                                                           required="required"
-                                                                           placeholder="ชื่อลูกค้า">
-                                                                </div>
-                                                            </div-->
-
                                                             <div class="row">
                                                                 <div class="col-sm-12">
 
                                                                     <label for="AR_CODE">เลือกลูกค้า :</label>
                                                                     <input type ="hidden" name="AR_CODE" id="AR_CODE" class="form-control">
-                                                                    <!--select name="AR_CODE" id="AR_CODE" class="form-control"
-                                                                            required>
-                                                                        <option value="<?php echo $AR_CODE; ?>"
-                                                                                selected><?php echo $AR_NAME . " [ " . $row["AR_CODE"] . " ]" ; ?></option>
-                                                                        <?php foreach ($CustomerRecords as $row) { ?>
-                                                                            <option value="<?php echo $row["AR_CODE"]; ?>">
-                                                                                <?php echo $row["AR_NAME"] . " [ " . $row["AR_CODE"] . " ]" ; ?>
-                                                                            </option>
-                                                                        <?php } ?>
-                                                                    </select-->
-
                                                                     <select id='selCustomer' style='width: 600px;'>
                                                                         <option value='0'>- Search Customer -</option>
                                                                     </select>
@@ -179,48 +141,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             </div>
 
                                                         </form>
-
-
-                                                        <div class="modal fade" id="SearchCusCrmModal">
-                                                            <div class="modal-dialog modal-lg">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h4 class="modal-title">Modal title</h4>
-                                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                                aria-hidden="true">×
-                                                                        </button>
-                                                                    </div>
-
-                                                                    <div class="container"></div>
-                                                                    <div class="modal-body">
-
-                                                                        <div class="modal-body">
-
-                                                                            <table cellpadding="0" cellspacing="0" border="0"
-                                                                                   class="display"
-                                                                                   id="TableCustomerLists"
-                                                                                   width="100%">
-                                                                                <thead>
-                                                                                <tr>
-                                                                                    <th>รหัสลูกค้า</th>
-                                                                                    <th>ชื่อลูกค้า</th>
-                                                                                    <th>Action</th>
-                                                                                </tr>
-                                                                                </thead>
-                                                                                <tfoot>
-                                                                                <tr>
-                                                                                    <th>รหัสลูกค้า</th>
-                                                                                    <th>ชื่อลูกค้า</th>
-                                                                                    <th>Action</th>
-                                                                                </tr>
-                                                                                </tfoot>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
 
                                                     </div>
                                                 </div>
@@ -268,8 +188,6 @@ if (strlen($_SESSION['alogin']) == "") {
     <script src="js/util.js"></script>
     <script src="js/Calculate.js"></script>
     <!-- Javascript for this page -->
-
-    <script src="js/modal/show_customer_sale_modal.js"></script>
 
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

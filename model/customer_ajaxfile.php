@@ -37,8 +37,8 @@ $response = array();
 foreach($custsList as $cust){
 	$response[] = array(
 		"id" => $cust['AR_CODE'],
-		"text" => $cust['AR_NAME']
-	);
+		"text" => $cust['AR_NAME'] . " [" . $cust['AR_CODE'] . "]"
+    );
 }
 
 echo json_encode($response);

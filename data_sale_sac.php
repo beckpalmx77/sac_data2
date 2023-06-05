@@ -220,27 +220,19 @@ if (strlen($_SESSION['alogin']) == "") {
 
         $("#BtnData").click(function () {
             $('#AR_CODE').val($(selCustomer).val());
-            document.forms['myform'].action = 'data_sale_sac_display';
-            document.forms['myform'].target = '_blank';
-            document.forms['myform'].submit();
-            return true;
+            //alert($('#AR_CODE').val() + " | " +  $('#year').val());
+
+
+
+            if() {
+                document.forms['myform'].action = 'data_sale_sac_display';
+                document.forms['myform'].target = '_blank';
+                document.forms['myform'].submit();
+                return true;
+            }
+
         });
 
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('#myCheckValue').val('N');
-            $('#myCheck').click(function () {
-                if ($("#myCheck").is(":checked") == true) {
-                    $('#myCheckValue').val('Y');
-                    $("#month").prop("disabled", true);
-                } else {
-                    $('#myCheckValue').val('N');
-                    $("#month").prop("disabled", false);
-                }
-            });
-        });
     </script>
 
     <script>
@@ -268,16 +260,6 @@ if (strlen($_SESSION['alogin']) == "") {
         });
 
     </script>
-
-
-    <script>
-        $( "year" ).change(function() {
-            let cust= $(this).val($(selCustomer).val());
-            //$("#text").val(val);
-            alert("OK " + cust);
-        });
-    </script>
-
 
 
     </body>

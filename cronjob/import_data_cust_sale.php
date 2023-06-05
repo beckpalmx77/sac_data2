@@ -31,9 +31,9 @@ WHERE AR_CODE = '" . $customer_id . "'"
     . " GROUP BY SKU_CODE,SKU_NAME,DI_MONTH,DI_YEAR,TRD_U_PRC
 ORDER BY SKU_CODE ,  CONVERT(DI_YEAR, FLOAT),CONVERT(DI_MONTH, FLOAT) ";
 
-$myfile = fopen("param_post_sql.txt", "w") or die("Unable to open file!");
-fwrite($myfile, $sql_data);
-fclose($myfile);
+//$myfile = fopen("param_post_sql.txt", "w") or die("Unable to open file!");
+//fwrite($myfile, $sql_data);
+//fclose($myfile);
 
 $statement_data = $conn->query($sql_data);
 $results_data = $statement_data->fetchAll(PDO::FETCH_ASSOC);

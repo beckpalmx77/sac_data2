@@ -114,9 +114,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <input type="hidden" name="AR_CODE" id="AR_CODE"
                                                                            required
                                                                            class="form-control">
-                                                                    <select id='selCustomer' style='width: 600px;'  class="form-control">
+                                                                    <select id='selCustomer' class='form-control'>
                                                                         <option value='0'>- Search Customer -</option>
                                                                     </select>
+                                                                    <br>
                                                                     <br>
 
                                                                     <label for="year">เลือกปี :</label>

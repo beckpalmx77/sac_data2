@@ -260,7 +260,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     for (let i = 0; i < len; i++) {
 
                         if (response[i].rec_num <= 0) {
-                            alert("ไม่พบข้อมุูล");
+                            alertify.error("error : " + "ไม่พบข้อมุูล");
                         } else {
                             document.forms['myform'].action = 'data_sale_sac_display';
                             document.forms['myform'].target = '_blank';

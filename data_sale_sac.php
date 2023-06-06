@@ -245,13 +245,9 @@ if (strlen($_SESSION['alogin']) == "") {
         $("#BtnData").click(function () {
 
             $('#AR_CODE').val($(selCustomer).val());
-
             $('#year').val($(yearSel).val());
 
-            let AR_CODE = $('#AR_CODE').val();
-            let year = $('#year').val();
-
-            let formData = {action: "GET_DATA", year: year, AR_CODE: AR_CODE};
+            let formData = {action: "GET_DATA", year: $('#year').val(), AR_CODE: $('#AR_CODE').val()};
 
             $.ajax({
                 type: "POST",

@@ -115,7 +115,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            required
                                                                            class="form-control">
                                                                     <select id='selCustomer' class='form-control'>
-                                                                        <option value='0'>- Search Customer -</option>
+                                                                        <option value='0'>- ค้นหารายชื่อลูกค้า -</option>
                                                                     </select>
                                                                     <br>
                                                                     <br>
@@ -225,7 +225,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
 
-        $("#BtnData0").click(function () {
+        $("#BtnData-BAK").click(function () {
 
             $('#AR_CODE').val($(selCustomer).val());
 

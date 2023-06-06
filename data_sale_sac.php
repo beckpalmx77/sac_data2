@@ -111,9 +111,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <div class="col-sm-12">
 
                                                                     <label for="AR_CODE">เลือกลูกค้า :</label>
-                                                                    <input type="hidden" name="AR_CODE" id="AR_CODE" required
+                                                                    <input type="hidden" name="AR_CODE" id="AR_CODE"
+                                                                           required
                                                                            class="form-control">
-                                                                    <select id='selCustomer' style='width: 600px;'>
+                                                                    <select id='selCustomer' style='width: 600px;'  class="form-control">
                                                                         <option value='0'>- Search Customer -</option>
                                                                     </select>
                                                                     <br>
@@ -121,7 +122,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <label for="year">เลือกปี :</label>
                                                                     <input type="hidden" name="year" id="year" required
                                                                            class="form-control">
-                                                                    <select name="yearSel" id="yearSel" class="form-control"
+                                                                    <select name="yearSel" id="yearSel"
+                                                                            class="form-control"
                                                                             required>
                                                                         <?php foreach ($YearRecords as $row) { ?>
                                                                             <option value="<?php echo $row["DI_YEAR"]; ?>">
@@ -246,87 +248,39 @@ if (strlen($_SESSION['alogin']) == "") {
 
             $('#year').val($(yearSel).val());
 
-            let AR_CODE =  $('#AR_CODE').val();
-            let year =  $('#year').val();
+            let AR_CODE = $('#AR_CODE').val();
+            let year = $('#year').val();
 
-                let formData = {action: "GET_DATA", year: year, AR_CODE: AR_CODE};
+            let formData = {action: "GET_DATA", year: year, AR_CODE: AR_CODE};
 
-                $.ajax({
-                    type: "POST",
-                    url: 'model/get_data_sac.php',
-                    dataType: "json",
-                    data: formData,
-                    success: function (response) {
-                        let len = response.length;
-                        for (let i = 0; i < len; i++) {
+            $.ajax({
+                type: "POST",
+                url: 'model/get_data_sac.php',
+                dataType: "json",
+                data: formData,
+                success: function (response) {
+                    let len = response.length;
+                    for (let i = 0; i < len; i++) {
 
-                            if (response[i].rec_num <= 0) {
-                                alert("ไม่พบข้อมุูล");
-                            } else {
-                                document.forms['myform'].action = 'data_sale_sac_display';
-                                document.forms['myform'].target = '_blank';
-                                document.forms['myform'].submit();
-                                return true;
-                            }
-
+                        if (response[i].rec_num <= 0) {
+                            alert("ไม่พบข้อมุูล");
+                        } else {
+                            document.forms['myform'].action = 'data_sale_sac_display';
+                            document.forms['myform'].target = '_blank';
+                            document.forms['myform'].submit();
+                            return true;
                         }
-                    },
-                    error: function (response) {
-                        alertify.error("error : " + response);
+
                     }
-                });
+                },
+                error: function (response) {
+                    alertify.error("error : " + response);
+                }
+            });
 
         });
 
     </script>
-
-
-    <script type="text/javascript">
-
-
-
-            $("#BtnData1").click(function (e) {
-
-                e.preventDefault();
-
-                $.ajax({
-
-                    type: "POST",
-
-                    url: 'model/get_data_sac.php',
-
-                    data: $(this).serialize(),
-
-                    success: function (response) {
-
-                        let jsonData = JSON.parse(response);
-
-
-                        // user is logged in successfully in the back-end
-
-                        // let's redirect
-
-                        alert('Data  = ' + jsonData.success);
-
-                        if (jsonData.success == "1") {
-
-                            alert('Data  ' + jsonData.success);
-
-                        } else {
-
-                            alert('Invalid Credentials!');
-
-                        }
-
-                    }
-
-                });
-
-            });
-
-
-    </script>
-
 
     <script>
         $(document).ready(function () {

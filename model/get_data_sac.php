@@ -3,30 +3,29 @@ session_start();
 error_reporting(0);
 include '../config/connect_db.php';
 
-// Number of records fetch
-$numberofrecords = 500000;
+if ($_POST["action"] === 'GET_DATA') {
 
-$manage_team_id = ($_SESSION['manage_team_id'] === '-') ? "'%'" : "'%" . $_SESSION['manage_team_id'] . "%'";
-
-$year = $_POST["year"];
-$customer_id = $_POST["AR_CODE"];
+    $year = $_POST["year"];
+    $customer_id = $_POST["AR_CODE"];
 
 
-	// Fetch records
-    $stmt = $conn->prepare("SELECT count(*) as rec_num FROM ims_product_sale_sac WHERE AR_CODE LIKE '". $customer_id . "' AND DI_YEAR = " . $year);
-	$stmt->execute();
-	$RecList = $stmt->fetchAll();
+    // Fetch records
+    $stmt = $conn->prepare("SELECT count(*) as rec_num FROM ims_product_sale_sac WHERE AR_CODE LIKE '" . $customer_id . "' AND DI_YEAR = " . $year);
+    $stmt->execute();
+    $RecList = $stmt->fetchAll();
 
 
-	
-$response = array();
+    $response = array();
 
 // Read Data
-foreach($RecList as $Rec){
-	$response[] = array(
-		"rec_num" => $Rec['rec_num']
-    );
+    foreach ($RecList as $Rec) {
+        $response[] = array(
+            "rec_num" => $Rec['rec_num']
+        );
+    }
+
+    echo json_encode($response);
+    exit();
+
 }
 
-echo json_encode($response);
-exit();

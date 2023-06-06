@@ -16,25 +16,7 @@ foreach ($CustRecords as $row) {
     $customer_name = $row["AR_NAME"];
 }
 
-//$month = "4";
-//$year = "2022";
 
-/*
-$month_name = "";
-
-$sql_month = " SELECT * FROM ims_month where month = '" . $month . "'";
-$stmt_month = $conn->prepare($sql_month);
-$stmt_month->execute();
-$MonthRecords = $stmt_month->fetchAll();
-foreach ($MonthRecords as $row) {
-    $month_name = $row["month_name"];
-}
-*/
-
-
-//$myfile = fopen("param_post.txt", "w") or die("Unable to open file!");
-//fwrite($myfile, $customer_id . " | " . $customer_name . " | " . $year);
-//fclose($myfile);
 
 ?>
 <!DOCTYPE html>

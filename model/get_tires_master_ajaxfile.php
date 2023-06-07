@@ -31,10 +31,11 @@ if(!isset($_POST['searchTerm'])){
 
 }
 
-
+/*
 $myfile = fopen("qry_file_mysql_server.txt", "w") or die("Unable to open file!");
 fwrite($myfile, $sql_tires);
 fclose($myfile);
+*/
 
 	
 $response = array();

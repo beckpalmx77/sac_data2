@@ -22,7 +22,7 @@ if(!isset($_POST['searchTerm'])){
 	$search = $_POST['searchTerm'];// Search text
 	
 	// Fetch records
-    $sql_tires = "SELECT * FROM ims_tires_master WHERE detail like :detail GROUP BY SLMN_NAME ORDER BY brand,tires_code LIMIT :limit";
+    $sql_tires = "SELECT * FROM ims_tires_master WHERE detail like :detail ORDER BY brand,tires_code LIMIT :limit";
     $stmt = $conn->prepare($sql_tires);
 	$stmt->bindValue(':detail', '%'.$search.'%', PDO::PARAM_STR);
 	$stmt->bindValue(':limit', (int)$numberofrecords, PDO::PARAM_INT);

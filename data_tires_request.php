@@ -133,9 +133,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <label for="success" class="control-label">STOCK
                                                                         </label>
                                                                         <div class="">
-                                                                            <input type="text" name="stock_val"
+                                                                            <input type="text" name="remark"
                                                                                    class="form-control"
-                                                                                   required="required" id="stock_val">
+                                                                                   required="required" id="remark">
                                                                         </div>
                                                                     </div>
 

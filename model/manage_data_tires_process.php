@@ -6,6 +6,8 @@ include('../config/connect_db.php');
 include('../config/lang.php');
 include('../util/record_util.php');
 
+$user_id = $_SESSION['user_id'];
+
 if ($_POST["action"] === 'GET_DATA') {
     $id = $_POST["id"];
     $return_arr = array();
@@ -53,12 +55,13 @@ if ($_POST["action"] === 'SAVE') {
         if ($nRows > 0) {
 
             $sql_update = "UPDATE ims_tires_request SET qty_need=:qty_need
-            ,date_in=:date_in,remark=:remark
+            ,date_in=:date_in,remark=:remark,update_by=:update_by
             WHERE date_request =:date_request AND tires_id =:tires_id AND ar_code=:ar_code AND sale_name=:sale_name";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':qty_need', $qty_need, PDO::PARAM_STR);
             $query->bindParam(':date_in', $date_in, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
+            $query->bindParam(':update_by', $user_id, PDO::PARAM_STR);
             $query->bindParam(':date_request', $date_request, PDO::PARAM_STR);
             $query->bindParam(':tires_id', $tires_id, PDO::PARAM_STR);
             $query->bindParam(':ar_code', $ar_code, PDO::PARAM_STR);
@@ -67,8 +70,8 @@ if ($_POST["action"] === 'SAVE') {
             echo 2;
 
         } else {
-            $sql = "INSERT INTO ims_tires_request(date_request,tires_id,ar_code,sale_name,qty_need,date_in,remark) 
-            VALUES (:date_request,:tires_id,:ar_code,:sale_name,:qty_need,:date_in,:remark)";
+            $sql = "INSERT INTO ims_tires_request(date_request,tires_id,ar_code,sale_name,qty_need,date_in,remark,create_by) 
+            VALUES (:date_request,:tires_id,:ar_code,:sale_name,:qty_need,:date_in,:remark,:create_by)";
             $query = $conn->prepare($sql);
             $query->bindParam(':date_request', $date_request, PDO::PARAM_STR);
             $query->bindParam(':tires_id', $tires_id, PDO::PARAM_STR);
@@ -77,6 +80,7 @@ if ($_POST["action"] === 'SAVE') {
             $query->bindParam(':qty_need', $qty_need, PDO::PARAM_STR);
             $query->bindParam(':date_in', $date_in, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
+            $query->bindParam(':create_by', $user_id, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
 

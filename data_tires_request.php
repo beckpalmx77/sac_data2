@@ -325,7 +325,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
             $("#selSale").select2({
                 ajax: {
-                    url: "model/salename_ajaxfile.php",
+                    url: "model/get_salename_ajaxfile.php",
                     type: "post",
                     dataType: 'json',
                     delay: 250,
@@ -351,7 +351,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
             $("#selTires").select2({
                 ajax: {
-                    url: "model/tires_master_ajaxfile.php",
+                    url: "model/getg_tires_master_ajaxfile.php",
                     type: "post",
                     dataType: 'json',
                     delay: 250,

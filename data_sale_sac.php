@@ -55,7 +55,7 @@ if (strlen($_SESSION['alogin']) == "") {
     */
 
     $sql_year = " SELECT DISTINCT(DI_YEAR) AS DI_YEAR
-    FROM ims_product_sale_sac WHERE DI_YEAR >= 2019
+    FROM ims_product_sale_sac WHERE DI_YEAR >= 2017
     ORDER BY DI_YEAR desc ";
     $stmt_year = $conn->prepare($sql_year);
     $stmt_year->execute();
@@ -126,11 +126,13 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <select name="yearSel" id="yearSel"
                                                                             class="form-control"
                                                                             required>
+
                                                                         <?php foreach ($YearRecords as $row) { ?>
                                                                             <option value="<?php echo $row["DI_YEAR"]; ?>">
                                                                                 <?php echo $row["DI_YEAR"]; ?>
                                                                             </option>
                                                                         <?php } ?>
+
                                                                     </select>
 
                                                                     <br>
@@ -304,6 +306,9 @@ if (strlen($_SESSION['alogin']) == "") {
         });
 
     </script>
+
+
+
 
 
     </body>

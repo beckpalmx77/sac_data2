@@ -141,15 +141,16 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </select>
                                                                     <br>
                                                                     <br>
-                                                                    <div class="form-group has-success">
-                                                                        <label for="success" class="control-label">STOCK
-                                                                        </label>
-                                                                        <div class="">
-                                                                            <input type="text" name="remark"
-                                                                                   class="form-control"
-                                                                                   required="required" id="remark">
-                                                                        </div>
-                                                                    </div>
+
+                                                                    <label for="AR_CODE">STOCK :</label>
+                                                                    <input type="hidden" name="remark" id="remark"
+                                                                           class="form-control">
+                                                                    <select id='selRemark' class='form-control'>
+                                                                        <option value='0'>- เลือกเหตุผล -
+                                                                        </option>
+                                                                    </select>
+                                                                    <br>
+                                                                    <br>
 
                                                                     <label for="date_in"
                                                                            class="control-label">ของมาวันที่ :</label>
@@ -456,6 +457,33 @@ if (strlen($_SESSION['alogin']) == "") {
 
     </script>
 
+
+    <script>
+        $(document).ready(function () {
+
+            $("#selRemark").select2({
+                ajax: {
+                    url: "model/get_reason_ajaxfile.php",
+                    type: "post",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            searchTerm: params.term // search term
+                        };
+                    },
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+
+    </script>
+
     <script>
         $(document).ready(function () {
             $("form").on("submit", function (event) {
@@ -465,6 +493,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#tires_brand').val($(selTiresBrand).val());
                 $('#tires_class').val($(selTiresClass).val());
                 $('#sale_name').val($(selSale).val());
+                $('#remark').val($(selRemark).val());
                 $('#action').val("SAVE");
                 let formValues = $(this).serialize();
 

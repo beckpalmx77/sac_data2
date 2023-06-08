@@ -25,7 +25,8 @@ if (strlen($_SESSION['alogin']) == "") {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page']?>">Home</a></li>
+                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
+                            </li>
                             <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
                             <li class="breadcrumb-item active"
                                 aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
@@ -101,61 +102,59 @@ if (strlen($_SESSION['alogin']) == "") {
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h4 class="modal-title"><i class="fa fa-plus"></i> Edit Record</h4>
                                 </div>
+
                                 <div class="modal-body">
                                     <div class="form-group"
-                                    <label for="email" class="control-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="email"
-                                           required>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="first_name" class="control-label">ชื่อ</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name"
-                                           placeholder="First Name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="last_name" class="control-label">นามสกุล</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name"
-                                           placeholder="Last Name" required>
-                                </div>
-
-                                <div class=”form-group”>
-                                    <label for="status" class="control-label">Status</label>
-                                    <select id="status" name="status"
-                                            class="form-control" data-live-search="true"
-                                            title="Please select">
-                                        <option>Active</option>
-                                        <option>Inactive</option>
-                                    </select>
+                                    <label for="date_in"
+                                           class="control-label">ของมาวันที่ :</label>
+                                    <input type="text" class="form-control"
+                                           id="date_in"
+                                           name="date_in"
+                                           required="required"
+                                           readonly="true"
+                                           placeholder="ของมาวันที่">
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <input type="hidden" name="id" id="id"/>
-                                <input type="hidden" name="action" id="action" value=""/>
-                                <span class="icon-input-btn">
+                            <br>
+
+                            <div class="modal-body">
+                                <div class="form-group"
+                                <label for="qty_need" class="control-label">จำนวนที่ต้องการ</label>
+                                <input type="text" class="form-control" id="qty_need" name="qty_need"
+                                       placeholder="จำนวนที่ต้องการ"
+                                       required>
+                            </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="id" id="id"/>
+                        <input type="hidden" name="action" id="action" value=""/>
+                        <span class="icon-input-btn">
                                     <i class="fa fa-check"></i>
                                     <input type="submit" name="save" id="save" class="btn btn-primary" value="Save"/>
                                 </span>
-                                <button type="button" class="btn btn-danger"
-                                        data-dismiss="modal">Close <i
-                                            class="fa fa-window-close"></i>
-                                </button>
-                            </div>
+                        <button type="button" class="btn btn-danger"
+                                data-dismiss="modal">Close <i
+                                    class="fa fa-window-close"></i>
+                        </button>
                     </div>
-                    </form>
                 </div>
-
+                </form>
             </div>
-
-
-            <!---Container Fluid-->
 
         </div>
 
-        <?php
-        include('includes/Modal-Logout.php');
-        include('includes/Footer.php');
-        ?>
+
+        <!---Container Fluid-->
+
+    </div>
+
+    <?php
+    include('includes/Modal-Logout.php');
+    include('includes/Footer.php');
+    ?>
 
     </div>
     </div>
@@ -183,6 +182,19 @@ if (strlen($_SESSION['alogin']) == "") {
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 
+    <!-- Bootstrap Datepicker -->
+    <script src="vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <!-- Bootstrap Touchspin -->
+    <script src="vendor/bootstrap-touchspin/js/jquery.bootstrap-touchspin.js"></script>
+    <!-- ClockPicker -->
+    <script src="vendor/clock-picker/clockpicker.js"></script>
+
+
+    <script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
+    <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
+    <!--link href="vendor/date-picker-1.9/css/date_picker_style.css" rel="stylesheet"/-->
+    <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
+
     <style>
 
         .icon-input-btn {
@@ -207,6 +219,17 @@ if (strlen($_SESSION['alogin']) == "") {
                 let btnFont = $(this).find(".btn").css("font-size");
                 let btnColor = $(this).find(".btn").css("color");
                 $(this).find(".fa").css({'font-size': btnFont, 'color': btnColor});
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#date_in').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
             });
         });
     </script>

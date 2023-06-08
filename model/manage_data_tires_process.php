@@ -217,12 +217,12 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
                 "detail" => $row['detail'] . $row['other_tires_request'],
                 "other_tires_request" => $row['other_tires_request'],
                 "ar_code" => $row['ar_code'],
-                "customer_name" => $row['customer_name'],
-                "date_request" => $row['date_request'],
+                "date_request" => ($row['date_request'] === '' || $row['date_request'] === null) ? "-" : $row['date_request'],
+                "customer_name" => ($row['customer_name'] === '' || $row['customer_name'] === null) ? "-" : $row['customer_name'],
                 "sale_name" => $row['sale_name'],
                 "qty_need" => $row['qty_need'],
                 "remark" => $row['remark'],
-                "date_in" => $row['date_in'],
+                "date_in" => ($row['date_in'] === '' || $row['date_in'] === null) ? "-" : $row['date_in'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>"
             );
         } else {

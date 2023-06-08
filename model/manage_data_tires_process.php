@@ -103,28 +103,16 @@ if ($_POST["action"] === 'SAVE') {
 
 
 if ($_POST["action"] === 'UPDATE') {
-    if ($_POST["main_menu_id"] != '') {
+    if ($_POST["id"] != '') {
         $id = $_POST["id"];
-        $main_menu_id = $_POST["main_menu_id"];
-        $label = $_POST["label"];
-        $link = $_POST["link"];
-        $icon = $_POST["icon"];
-        $data_target = $_POST["data_target"];
-        $aria_controls = $_POST["aria_controls"];
-        $privilege = $_POST["privilege"];
-        $sql_find = "SELECT * FROM menu_main WHERE id = '" . $id . "'";
+        $date_in = $_POST["date_in"];
+        $sql_find = "SELECT * FROM ims_tires_request WHERE id = '" . $id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE menu_main SET label=:label
-            ,link=:link,icon=:icon,data_target=:data_target,aria_controls=:aria_controls,privilege=:privilege
+            $sql_update = "UPDATE ims_tires_request SET date_in=:date_in            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
-            $query->bindParam(':label', $label, PDO::PARAM_STR);
-            $query->bindParam(':link', $link, PDO::PARAM_STR);
-            $query->bindParam(':icon', $icon, PDO::PARAM_STR);
-            $query->bindParam(':data_target', $data_target, PDO::PARAM_STR);
-            $query->bindParam(':aria_controls', $aria_controls, PDO::PARAM_STR);
-            $query->bindParam(':privilege', $privilege, PDO::PARAM_STR);
+            $query->bindParam(':date_in', $date_in, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
             echo $save_success;

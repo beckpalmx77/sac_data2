@@ -135,7 +135,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="id" id="id"/>
+                        <input type="text" name="id" id="id"/>
                         <input type="hidden" name="action" id="action" value=""/>
                         <span class="icon-input-btn">
                                     <i class="fa fa-check"></i>
@@ -266,10 +266,11 @@ if (strlen($_SESSION['alogin']) == "") {
             <!-- *** FOR SUBMIT FORM *** -->
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();
+                $('#action').val("UPDATE");
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
                 $.ajax({
-                    url: 'model/manage_account_process.php',
+                    url: 'model/manage_data_tires_process.php',
                     method: "POST",
                     data: formData,
                     success: function (data) {

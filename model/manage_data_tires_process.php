@@ -155,6 +155,8 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
         or customer_name LIKE :customer_name
         or sale_name LIKE :sale_name
         or class LIKE :class
+        or date_request LIKE :date_request
+        or date_in LIKE :date_in
         or detail LIKE :detail ) ";
 
         $searchArray = array(
@@ -162,6 +164,8 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
             'customer_name' => "%$searchValue%",
             'sale_name' => "%$searchValue%",
             'class' => "%$searchValue%",
+            'date_request' => "%$searchValue%",
+            'date_in' => "%$searchValue%",
             'detail' => "%$searchValue%"
         );
     }

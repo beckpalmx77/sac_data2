@@ -1,5 +1,1 @@
-SELECT * FROM v_ims_tires_request WHERE 1  AND (brand LIKE :brand        
-        or customer_name LIKE :customer_name
-        or sale_name LIKE :sale_name
-        or class LIKE :class
-        or detail LIKE :detail )  ORDER BY date_request asc LIMIT :limit,:offset
+SELECT * FROM v_ims_tires_request WHERE 1   ORDER BY date_request asc LIMIT :limit,:offset

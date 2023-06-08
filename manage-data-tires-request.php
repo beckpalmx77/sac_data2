@@ -103,6 +103,17 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <div class="modal-body">
 
                                                             <div class="form-group">
+                                                                <label for="date_request"
+                                                                       class="control-label">วันที่ต้องการ :</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="date_request"
+                                                                       name="date_request"
+                                                                       required="required"
+                                                                       readonly="true"
+                                                                       placeholder="วันที่ต้องการ">
+                                                            </div>
+
+                                                            <div class="form-group">
                                                                 <label for="estimate_date"
                                                                        class="control-label">ประมาณการวันที่ของเข้า :</label>
                                                                 <input type="text" class="form-control"
@@ -128,7 +139,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <label for="brand" class="control-label">ยี่ห้อ</label>
                                                                 <input type="text" class="form-control"
                                                                        id="brand" name="brand"
-                                                                       readonly="true"
                                                                        placeholder="">
                                                             </div>
 
@@ -136,7 +146,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <label for="class" class="control-label">ลายดอกยาง</label>
                                                                 <input type="text" class="form-control"
                                                                        id="class" name="class"
-                                                                       readonly="true"
                                                                        placeholder="">
                                                             </div>
 
@@ -363,6 +372,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
+                        let date_request = response[i].date_request;
                         let estimate_date = response[i].estimate_date;
                         let date_in = response[i].date_in;
                         let brand = response[i].brand;
@@ -372,6 +382,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
+                        $('#date_request').val(date_request);
                         $('#estimate_date').val(estimate_date);
                         $('#date_in').val(date_in);
                         $('#brand').val(brand);

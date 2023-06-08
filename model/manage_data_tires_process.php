@@ -149,6 +149,8 @@ if ($_POST["action"] === 'UPDATE') {
         $id = $_POST["id"];
         $estimate_date= $_POST["estimate_date"];
         $date_in = $_POST["date_in"];
+        $tires_brand = $_POST["brand"];
+        $tires_class = $_POST["class"];
 
         //$myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
         //fwrite($myfile, $estimate_date , " | " . $date_in);
@@ -157,11 +159,14 @@ if ($_POST["action"] === 'UPDATE') {
         $sql_find = "SELECT * FROM ims_tires_request WHERE id = '" . $id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE ims_tires_request SET estimate_date=:estimate_date , date_in=:date_in            
+            $sql_update = "UPDATE ims_tires_request SET estimate_date=:estimate_date , date_in=:date_in   
+            ,tires_brand=:tires_brand,tires_class=:tires_class         
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':estimate_date', $estimate_date, PDO::PARAM_STR);
             $query->bindParam(':date_in', $date_in, PDO::PARAM_STR);
+            $query->bindParam(':tires_brand', $tires_brand, PDO::PARAM_STR);
+            $query->bindParam(':tires_class', $tires_class, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
             echo $save_success;

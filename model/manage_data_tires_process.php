@@ -40,6 +40,7 @@ if ($_POST["action"] === 'SAVE') {
         $date_request = $_POST["date_request"];
         $ar_code = $_POST["AR_CODE"];
         $tires_id = $_POST["tires_id"];
+        $tires_id = ($_POST['myCheckValue'] === 'Y') ? "0" : $_POST['tires_id'];
         $sale_name = $_POST["sale_name"];
         $qty_need = $_POST["qty_need"];
         $remark = $_POST["remark"];
@@ -51,6 +52,10 @@ if ($_POST["action"] === 'SAVE') {
         . " AND ar_code = '" . $ar_code . "'"
         . " AND tires_id = '" . $tires_id . "'"
         . " AND sale_name = '" . $sale_name . "'" ;
+
+        $my_file = fopen("SEARCH_DATA-1.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $sql_find . " | " . $other_tires_request . " | " . $_POST['myCheckValue']);
+        fclose($my_file);
 
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {

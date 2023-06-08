@@ -1,0 +1,2 @@
+SELECT * FROM ims_tires_request 
+        WHERE date_request = '08-06-2023' AND ar_code = 'BTC-0000033' AND tires_id = '0' AND sale_name = 'CP340/ดา' | FFFFF | Y

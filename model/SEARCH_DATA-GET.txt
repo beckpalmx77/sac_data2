@@ -1,2 +1,0 @@
-SELECT * FROM ims_tires_request 
-        WHERE date_request = '08-06-2023' AND ar_code = 'BTC-0000033' AND tires_id = '1' AND sale_name = 'CP340/ภา' | AT | HP | AT1757013-HP | 175/70R13 FORCE HP 82H AT ECE WR PCI

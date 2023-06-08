@@ -82,9 +82,9 @@ if ($_POST["action"] === 'SAVE') {
         . " AND sale_name = '" . $sale_name . "'" ;
 
 
-            $my_file = fopen("SEARCH_DATA-GET.txt", "w") or die("Unable to open file!");
-            fwrite($my_file, $sql_find . " | " . $tires_brand . " | " . $tires_class . " | " . $tires_code . " | " . $tires_detail);
-            fclose($my_file);
+           //$my_file = fopen("SEARCH_DATA-GET.txt", "w") or die("Unable to open file!");
+           //fwrite($my_file, $sql_find . " | " . $tires_brand . " | " . $tires_class . " | " . $tires_code . " | " . $tires_detail);
+           //fclose($my_file);
 
 
         $nRows = $conn->query($sql_find)->fetchColumn();
@@ -113,9 +113,9 @@ if ($_POST["action"] === 'SAVE') {
             VALUES (:date_request,:tires_id,:tires_brand,:tires_class,:tires_code,:tires_detail
             ,:ar_code,:sale_name,:qty_need,:date_in,:remark,:other_tires_request,:create_by)";
 
-            $my_file = fopen("SEARCH_DATA-GET-SQL.txt", "w") or die("Unable to open file!");
-            fwrite($my_file, $sql . " | " . $tires_brand . " | " . $tires_class . " | " . $tires_code . " | " . $tires_detail);
-            fclose($my_file);
+            //$my_file = fopen("SEARCH_DATA-GET-SQL.txt", "w") or die("Unable to open file!");
+            //fwrite($my_file, $sql . " | " . $tires_brand . " | " . $tires_class . " | " . $tires_code . " | " . $tires_detail);
+            //fclose($my_file);
 
             $query = $conn->prepare($sql);
             $query->bindParam(':date_request', $date_request, PDO::PARAM_STR);

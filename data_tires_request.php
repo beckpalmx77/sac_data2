@@ -288,6 +288,29 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
+
+    function SetDefault() {
+            let today = new Date();
+            let date_request = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
+            $('#date_request').val(date_request);
+
+            $('#AR_CODE').val("");
+            $('#tires_id').val("");
+            $('#tires_brand').val("");
+            $('#tires_class').val("");
+            $('#sale_name').val("");
+            $('#remark').val("");
+
+            $('#myCheckValue').val('N');
+            $( "#selTires" ).prop( "disabled", false );
+            $( "#other_tires_request" ).prop( "disabled", true );
+
+    }
+
+    </script>
+
+
+    <script>
         $(document).ready(function () {
             $('#date_request').datepicker({
                 format: "dd-mm-yyyy",
@@ -501,6 +524,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     if (response == 1) {
                         document.getElementById("from_data").reset();
                         alertify.success("บันทึกข้อมูลเรียบร้อย Save Data Success");
+                        SetDefault();
                     } else if (response == 2) {
                         document.getElementById("from_data").reset();
                         alertify.success("แก้ไขข้อมูลเรียบร้อย Edit Data Success");

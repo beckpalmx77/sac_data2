@@ -294,13 +294,14 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
 
+
     <script>
         $(document).ready(function () {
+            /* 'scrollX': true, */
             let formData = {action: "GET_TIRES_REQUEST", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
                 'processing': true,
                 'serverSide': true,
-                'scrollX': true,
                 'serverMethod': 'post',
                 'ajax': {
                     'url': 'model/manage_data_tires_process.php',
@@ -308,10 +309,10 @@ if (strlen($_SESSION['alogin']) == "") {
                 },
                 'columns': [
                     {data: 'date_request'},
-                    {data: 'brand'},
-                    {data: 'class'},
+                    {data: 'tires_brand'},
+                    {data: 'tires_class'},
                     {data: 'tires_code'},
-                    {data: 'detail'},
+                    {data: 'tires_detail'},
                     {data: 'customer_name'},
                     {data: 'sale_name'},
                     {data: 'remark'},

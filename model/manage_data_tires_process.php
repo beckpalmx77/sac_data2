@@ -231,7 +231,7 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
     $totalRecordwithFilter = $records['allcount'];
 
     $sql_get_data = "SELECT * FROM v_ims_tires_request WHERE 1 " . $searchQuery
-    . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
+    . " ORDER BY id DESC LIMIT :limit,:offset";
 
     //$myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
     //fwrite($myfile, $sql_get_data);
@@ -258,6 +258,9 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
                 "id" => $row['id'],
                 "tires_id" => ($row['tires_id'] === '' || $row['tires_id'] === null) ? "-" : $row['tires_id'],
                 "tires_code" => ($row['tires_code'] === '' || $row['tires_code'] === null) ? "-" : $row['tires_code'],
+                "tires_brand" => ($row['tires_brand'] === '' || $row['tires_brand'] === null) ? "-" : $row['tires_brand'],
+                "tires_class" => ($row['tires_class'] === '' || $row['tires_class'] === null) ? "-" : $row['tires_class'],
+                "tires_detail" => ($row['tires_detail'] === '' || $row['tires_detail'] === null) ? "-" : $row['tires_detail'],
                 "brand" => ($row['brand'] === '' || $row['brand'] === null) ? "-" : $row['brand'],
                 "class" => ($row['class'] === '' || $row['class'] === null) ? "-" : $row['class'],
                 "detail" => $row['detail'] . $row['other_tires_request'],

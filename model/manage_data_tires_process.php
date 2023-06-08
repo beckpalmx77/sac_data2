@@ -27,6 +27,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "detail" => $result['detail'] . $result['other_tires_request'],
             "sale_name" => $result['sale_name'],
             "qty_need" => $result['qty_need'],
+            "estimate_date" => $result['estimate_date'],
             "date_in" => $result['date_in'],
             "remark" => $result['remark']);
     }
@@ -106,6 +107,7 @@ if ($_POST["action"] === 'SAVE') {
 if ($_POST["action"] === 'UPDATE') {
     if ($_POST["id"] != '') {
         $id = $_POST["id"];
+        $estimate_date= $_POST["estimate_date"];
         $date_in = $_POST["date_in"];
         $sql_find = "SELECT * FROM ims_tires_request WHERE id = '" . $id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
@@ -113,6 +115,7 @@ if ($_POST["action"] === 'UPDATE') {
             $sql_update = "UPDATE ims_tires_request SET date_in=:date_in            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
+            $query->bindParam(':estimate_date', $estimate_date, PDO::PARAM_STR);
             $query->bindParam(':date_in', $date_in, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
@@ -220,6 +223,7 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
                 "sale_name" => $row['sale_name'],
                 "qty_need" => $row['qty_need'],
                 "remark" => $row['remark'],
+                "estimate_date" => ($row['estimate_date'] === '' || $row['estimate_date'] === null) ? "-" : $row['estimate_date'],
                 "date_in" => ($row['date_in'] === '' || $row['date_in'] === null) ? "-" : $row['date_in'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>"
             );

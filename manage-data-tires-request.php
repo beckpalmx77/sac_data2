@@ -47,25 +47,33 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                 <thead>
                                                 <tr>
-                                                    <th>วันที่ต้องการยาง</th>
+                                                    <th>วันที่ต้องการ</th>
+                                                    <th>ยี่ห้อ</th>
+                                                    <th>ลายดอก</th>
+                                                    <th>รหัสสินค้า</th>
                                                     <th>รายละเอียด</th>
                                                     <th>ร้านค้า</th>
                                                     <th>Sale/Take</th>
                                                     <th>STOCK</th>
                                                     <th>จำนวนที่ต้องการ</th>
-                                                    <th>ของมาวันที่</th>
+                                                    <th>ประมาณการวันที่ของเข้า</th>
+                                                    <th>วันที่ของเข้า</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
                                                 <tr>
-                                                    <th>วันที่ต้องการยาง</th>
+                                                    <th>วันที่ต้องการ</th>
+                                                    <th>ยี่ห้อ</th>
+                                                    <th>ลายดอก</th>
+                                                    <th>รหัสสินค้า</th>
                                                     <th>รายละเอียด</th>
                                                     <th>ร้านค้า</th>
                                                     <th>Sale/Take</th>
                                                     <th>STOCK</th>
                                                     <th>จำนวนที่ต้องการ</th>
-                                                    <th>ของมาวันที่</th>
+                                                    <th>ประมาณการวันที่ของเข้า</th>
+                                                    <th>วันที่ของเข้า</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -93,6 +101,17 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <form method="post" id="recordForm">
                                                     <div class="modal-body">
                                                         <div class="modal-body">
+
+                                                            <div class="form-group">
+                                                                <label for="estimate_date"
+                                                                       class="control-label">ประมาณการวันที่ของเข้า :</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="estimate_date"
+                                                                       name="estimate_date"
+                                                                       required="required"
+                                                                       readonly="true"
+                                                                       placeholder="ประมาณการวันที่ของเข้า">
+                                                            </div>
 
                                                             <div class="form-group">
                                                                 <label for="date_in"
@@ -265,10 +284,23 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
+            $('#estimate_date').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
             let formData = {action: "GET_TIRES_REQUEST", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
                 'processing': true,
                 'serverSide': true,
+                'scrollX': true,
                 'serverMethod': 'post',
                 'ajax': {
                     'url': 'model/manage_data_tires_process.php',
@@ -276,11 +308,15 @@ if (strlen($_SESSION['alogin']) == "") {
                 },
                 'columns': [
                     {data: 'date_request'},
+                    {data: 'brand'},
+                    {data: 'class'},
+                    {data: 'tires_code'},
                     {data: 'detail'},
                     {data: 'customer_name'},
                     {data: 'sale_name'},
                     {data: 'remark'},
-                    {data: 'qty_need'},
+                    {data: 'qty_need' , className: "text-right"},
+                    {data: 'estimate_date'},
                     {data: 'date_in'},
                     {data: 'update'}
                 ]
@@ -324,6 +360,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
+                        let estimate_date = response[i].estimate_date;
                         let date_in = response[i].date_in;
                         let brand = response[i].brand;
                         let tires_class = response[i].class;
@@ -332,6 +369,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
+                        $('#estimate_date').val(estimate_date);
                         $('#date_in').val(date_in);
                         $('#brand').val(brand);
                         $('#class').val(tires_class);

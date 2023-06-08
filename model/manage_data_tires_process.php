@@ -39,7 +39,7 @@ if ($_POST["action"] === 'SAVE') {
     if ($_POST["AR_CODE"] !== '') {
         $date_request = $_POST["date_request"];
         $ar_code = $_POST["AR_CODE"];
-        $tires_id = $_POST["tires_id"];
+        //$tires_id = $_POST["tires_id"];
         $tires_id = ($_POST['myCheckValue'] === 'Y') ? "0" : $_POST['tires_id'];
         $sale_name = $_POST["sale_name"];
         $qty_need = $_POST["qty_need"];
@@ -149,7 +149,7 @@ if ($_POST["action"] === 'DELETE') {
     }
 }
 
-if ($_POST["action"] === 'GET_MAIN_MENU') {
+if ($_POST["action"] === 'GET_TIRES_REQUEST') {
     ## Read value
     $draw = $_POST['draw'];
     $row = $_POST['start'];
@@ -163,29 +163,32 @@ if ($_POST["action"] === 'GET_MAIN_MENU') {
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (main_menu_id LIKE :main_menu_id or
-        label LIKE :label ) ";
+        $searchQuery = " AND (date_request LIKE :date_request or detail LIKE :detail or customer_name LIKE :customer_name or sale_name LIKE sale_name) ";
         $searchArray = array(
-            'main_menu_id' => "%$searchValue%",
-            'label' => "%$searchValue%",
+            'date_request' => "%$searchValue%",
+            'detail' => "%$searchValue%",
+            'customer_name' => "%$searchValue%",
+            'sale_name' => "%$searchValue%",
         );
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM menu_main ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_ims_tires_request ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM menu_main WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_ims_tires_request WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
+    $sql_get_data = "SELECT * FROM v_ims_tires_request WHERE 1 " . $searchQuery
+    . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
+
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM menu_main WHERE 1 " . $searchQuery
-        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+    $stmt = $conn->prepare($sql_get_data);
 
 // Bind values
     foreach ($searchArray as $key => $search) {
@@ -195,23 +198,32 @@ if ($_POST["action"] === 'GET_MAIN_MENU') {
     $stmt->bindValue(':limit', (int)$row, PDO::PARAM_INT);
     $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
     $stmt->execute();
-    $empRecords = $stmt->fetchAll();
+    $dataRecords = $stmt->fetchAll();
     $data = array();
 
-    foreach ($empRecords as $row) {
+    foreach ($dataRecords as $row) {
+
+        $myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $row['other_tires_request'] . " | "  . $row['detail']);
+        fclose($myfile);
 
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
                 "id" => $row['id'],
-                "main_menu_id" => $row['main_menu_id'],
-                "label" => $row['label'],
-                "link" => $row['link'],
-                "icon" => $row['icon'],
-                "data_target" => $row['data_target'],
-                "aria_controls" => $row['aria_controls'],
-                "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
-                "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
-                "privilege" => $row['privilege'] === 'Active' ? "<div class='text-success'>" . $row['privilege'] . "</div>" : "<div class='text-muted'> " . $row['privilege'] . "</div>"
+                "tires_id" => $row['tires_id'],
+                "tires_code" => $row['tires_code'],
+                "brand" => $row['brand'],
+                "class" => $row['class'],
+                "detail" => $row['detail'] . $row['other_tires_request'],
+                "other_tires_request" => $row['other_tires_request'],
+                "ar_code" => $row['ar_code'],
+                "customer_name" => $row['customer_name'],
+                "date_request" => $row['date_request'],
+                "sale_name" => $row['sale_name'],
+                "qty_need" => $row['qty_need'],
+                "remark" => $row['remark'],
+                "date_in" => $row['date_in'],
+                "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>"
             );
         } else {
             $data[] = array(
@@ -222,6 +234,7 @@ if ($_POST["action"] === 'GET_MAIN_MENU') {
 </button>",
             );
         }
+
 
     }
 

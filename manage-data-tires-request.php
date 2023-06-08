@@ -46,7 +46,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                 <thead>
                                                 <tr>
-                                                    <th>#</th>
                                                     <th>วันที่ต้องการยาง</th>
                                                     <th>รายละเอียด</th>
                                                     <th>ร้านค้า</th>
@@ -59,7 +58,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </thead>
                                                 <tfoot>
                                                 <tr>
-                                                    <th>#</th>
                                                     <th>วันที่ต้องการยาง</th>
                                                     <th>รายละเอียด</th>
                                                     <th>ร้านค้า</th>
@@ -120,27 +118,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                     <input type="text" class="form-control" id="last_name" name="last_name"
                                            placeholder="Last Name" required>
                                 </div>
-                                <div class=”form-group”>
-                                    <label for="account_type" class="control-label">ประเภทผู้ใช้
-                                        (Administrator=จัดการระบบ)</label>
-                                    <select id="account_type" name="account_type"
-                                            class="form-control" data-live-search="true"
-                                            title="Please select">
-                                        <option
-                                                value="<?php echo htmlentities($result->permission_id); ?>"
-                                                selected><?php echo htmlentities($result->permission_detail); ?></option>
-                                        <?php $sql1 = "SELECT * from ims_permission";
-                                        $query1 = $conn->prepare($sql1);
-                                        $query1->execute();
-                                        $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
-                                        if ($query1->rowCount() > 0) {
-                                            foreach ($results1 as $result1) { ?>
-                                                <option
-                                                        value="<?php echo htmlentities($result1->permission_id); ?>"><?php echo htmlentities($result1->permission_detail); ?></option>
-                                            <?php }
-                                        } ?>
-                                    </select>
-                                </div>
+
                                 <div class=”form-group”>
                                     <label for="status" class="control-label">Status</label>
                                     <select id="status" name="status"
@@ -235,24 +213,24 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_ACCOUNT", sub_action: "GET_MASTER"};
+            let formData = {action: "GET_TIRES_REQUEST", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
                 'processing': true,
                 'serverSide': true,
                 'serverMethod': 'post',
                 'ajax': {
-                    'url': 'model/manage_account_process.php',
+                    'url': 'model/manage_data_tires_process.php',
                     'data': formData
                 },
                 'columns': [
-                    {data: 'line_no'},
-                    {data: 'email'},
-                    {data: 'first_name'},
-                    {data: 'last_name'},
-                    {data: 'picture'},
-                    {data: 'status'},
-                    {data: 'update'},
-                    {data: 'delete'}
+                    {data: 'date_request'},
+                    {data: 'detail'},
+                    {data: 'customer_name'},
+                    {data: 'sale_name'},
+                    {data: 'remark'},
+                    {data: 'qty_need'},
+                    {data: 'date_in'},
+                    {data: 'update'}
                 ]
             });
 

@@ -23,6 +23,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "tires_id" => $result['tires_id'],
             "brand" => $result['brand'],
             "class" => $result['class'],
+            "tires_code" => $result['tires_code'],
             "detail" => $result['detail'] . $result['other_tires_request'],
             "sale_name" => $result['sale_name'],
             "qty_need" => $result['qty_need'],

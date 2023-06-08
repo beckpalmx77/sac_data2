@@ -81,6 +81,83 @@ if (strlen($_SESSION['alogin']) == "") {
                                     </section>
 
 
+                                    <div class="modal fade" id="recordModal">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Modal title</h4>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-hidden="true">×
+                                                    </button>
+                                                </div>
+                                                <form method="post" id="recordForm">
+                                                    <div class="modal-body">
+                                                        <div class="modal-body">
+
+                                                            <div class="form-group">
+                                                                <label for="date_in"
+                                                                       class="control-label">ของมาวันที่ :</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="date_in"
+                                                                       name="date_in"
+                                                                       required="required"
+                                                                       readonly="true"
+                                                                       placeholder="ของมาวันที่">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="brand" class="control-label">ยี่ห้อ</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="brand" name="brand"
+                                                                       readonly="true"
+                                                                       placeholder="">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="class" class="control-label">ลายดอกยาง</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="class" name="class"
+                                                                       readonly="true"
+                                                                       placeholder="">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="detail" class="control-label">รายละเอียด</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="detail" name="detail"
+                                                                       readonly="true"
+                                                                       placeholder="">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="qty_need" class="control-label">จำนวนที่ต้องการ</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="qty_need" name="qty_need"
+                                                                       readonly="true"
+                                                                       placeholder="">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="id" id="id"/>
+                                                        <input type="hidden" name="action" id="action" value=""/>
+                                                        <span class="icon-input-btn">
+                                                        <i class="fa fa-check"></i>
+                                                        <input type="submit" name="save" id="save" class="btn btn-primary" value="Save"/>
+                                                        </span>
+                                                        <button type="button" class="btn btn-danger"
+                                                                data-dismiss="modal">Close <i
+                                                                    class="fa fa-window-close"></i>
+                                                        </button>
+                                                    </div>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                 </div>
 
                             </div>
@@ -94,60 +171,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
                 </div>
 
-                <div id="recordModal" class="modal fade">
-                    <div class="modal-dialog">
-                        <form method="post" id="recordForm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title"><i class="fa fa-plus"></i> Edit Record</h4>
-                                </div>
-
-                                <div class="modal-body">
-                                    <div class="form-group"
-
-                                    <label for="date_in"
-                                           class="control-label">ของมาวันที่ :</label>
-                                    <input type="text" class="form-control"
-                                           id="date_in"
-                                           name="date_in"
-                                           required="required"
-                                           readonly="true"
-                                           placeholder="ของมาวันที่">
-                                </div>
-                            </div>
-                            <br>
-
-                            <div class="modal-body">
-                                <div class="form-group"
-                                <label for="detail" class="control-label">รายละเอียด</label>
-                                <input type="text" class="form-control" id="detail" name="detail"
-                                       placeholder="รายละเอียด" readonly="true">
-                            </div>
-
-                            <div class="modal-body">
-                                <div class="form-group"
-                                <label for="qty_need" class="control-label">จำนวนที่ต้องการ</label>
-                                <input type="text" class="form-control" id="qty_need" name="qty_need"
-                                       placeholder="จำนวนที่ต้องการ" readonly="true">
-                            </div>
-
-
-                    </div>
-                    <div class="modal-footer">
-                        <input type="hidden" name="id" id="id"/>
-                        <input type="hidden" name="action" id="action" value=""/>
-                        <span class="icon-input-btn">
-                                    <i class="fa fa-check"></i>
-                                    <input type="submit" name="save" id="save" class="btn btn-primary" value="Save"/>
-                                </span>
-                        <button type="button" class="btn btn-danger"
-                                data-dismiss="modal">Close <i
-                                    class="fa fa-window-close"></i>
-                        </button>
-                    </div>
-                </div>
-                </form>
             </div>
 
         </div>
@@ -302,12 +325,16 @@ if (strlen($_SESSION['alogin']) == "") {
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
                         let date_in = response[i].date_in;
-                        let qty_need = response[i].qty_need;
+                        let brand = response[i].brand;
+                        let tires_class = response[i].class;
                         let detail = response[i].detail;
+                        let qty_need = response[i].qty_need;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
                         $('#date_in').val(date_in);
+                        $('#brand').val(brand);
+                        $('#class').val(tires_class);
                         $('#detail').val(detail);
                         $('#qty_need').val(qty_need);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");

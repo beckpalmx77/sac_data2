@@ -58,6 +58,27 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            readonly="true"
                                                                            placeholder="วันที่">
                                                                     <br>
+
+                                                                    <label for="AR_CODE">เลือกยี่ห้อ :</label>
+                                                                    <input type="hidden" name="tires_brand"
+                                                                           id="tires_brand"
+                                                                           class="form-control">
+                                                                    <select id='selTiresBrand' class='form-control'>
+                                                                        <option value='0'>- ค้นหายี่ห้อ -</option>
+                                                                    </select>
+                                                                    <br>
+                                                                    <br>
+
+                                                                    <label for="AR_CODE">เลือกลายดอก :</label>
+                                                                    <input type="hidden" name="tires_class"
+                                                                           id="tires_class"
+                                                                           class="form-control">
+                                                                    <select id='selTiresClass' class='form-control'>
+                                                                        <option value='0'>- ค้นหาลายดอก -</option>
+                                                                    </select>
+                                                                    <br>
+                                                                    <br>
+
                                                                     <label for="AR_CODE">เลือกยาง :</label>
                                                                     <input type="hidden" name="tires_id"
                                                                            id="tires_id"
@@ -87,7 +108,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <div class="">
                                                                             <input type="text" name="other_tires_request"
                                                                                    class="form-control"
-                                                                                   required="required" id="other_tires_request">
+                                                                                   id="other_tires_request">
                                                                         </div>
                                                                     </div>
 
@@ -383,6 +404,57 @@ if (strlen($_SESSION['alogin']) == "") {
 
     </script>
 
+    <script>
+        $(document).ready(function () {
+
+            $("#selTiresBrand").select2({
+                ajax: {
+                    url: "model/get_tires_brand_ajaxfile.php",
+                    type: "post",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            searchTerm: params.term // search term
+                        };
+                    },
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            $("#selTiresClass").select2({
+                ajax: {
+                    url: "model/get_tires_class_ajaxfile.php",
+                    type: "post",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            searchTerm: params.term // search term
+                        };
+                    },
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+
+    </script>
 
     <script>
         $(document).ready(function () {
@@ -390,6 +462,8 @@ if (strlen($_SESSION['alogin']) == "") {
                 event.preventDefault();
                 $('#AR_CODE').val($(selCustomer).val());
                 $('#tires_id').val($(selTires).val());
+                $('#tires_brand').val($(selTiresBrand).val());
+                $('#tires_class').val($(selTiresClass).val());
                 $('#sale_name').val($(selSale).val());
                 $('#action').val("SAVE");
                 let formValues = $(this).serialize();

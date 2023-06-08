@@ -38,16 +38,42 @@ if ($_POST["action"] === 'GET_DATA') {
 
 
 if ($_POST["action"] === 'SAVE') {
-    if ($_POST["AR_CODE"] !== '') {
+
+    $tires_id = ($_POST['myCheckValue'] === 'Y') ? "0" : $_POST['tires_id'];
+
+    $tires_brand = $_POST["tires_brand"];
+    $tires_class = $_POST["tires_class"];
+    $tires_code = $_POST["tires_code"];
+    //$tires_detail = $_POST["tires_detail"] . " " . $other_tires_request = $_POST["other_tires_request"];
+    $other_tires_request = $_POST["other_tires_request"];
+    $tires_detail = ($_POST['$tires_detail'] === '' || $_POST['$tires_detail'] === null) ? $_POST['other_tires_request'] : "";
+
+
+    if ($_POST["myCheckValue"] !== 'Y') {
+        $sql_get = "SELECT * FROM ims_tires_master WHERE id = " . $tires_id;
+        $stm = $conn->query($sql_get);
+        $results = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($results as $result) {
+            $tires_brand = $result['brand'];
+            $tires_class = $result['class'];
+            $tires_code = $result['tires_code'];
+            $tires_detail = $result['detail'];
+        }
+    }
+
+/*
+        $my_file = fopen("SEARCH_DATA-GET.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $sql_get . " | " . $tires_brand . " | " . $tires_class . " | " . $tires_code . " | " . $tires_detail);
+        fclose($my_file);
+*/
+
         $date_request = $_POST["date_request"];
         $ar_code = $_POST["AR_CODE"];
-        //$tires_id = $_POST["tires_id"];
-        $tires_id = ($_POST['myCheckValue'] === 'Y') ? "0" : $_POST['tires_id'];
         $sale_name = $_POST["sale_name"];
         $qty_need = $_POST["qty_need"];
         $remark = $_POST["remark"];
         $date_in = $_POST["date_in"];
-        $other_tires_request = $_POST["other_tires_request"];
 
         $sql_find = "SELECT * FROM ims_tires_request 
         WHERE date_request = '" . $date_request . "'"
@@ -55,13 +81,15 @@ if ($_POST["action"] === 'SAVE') {
         . " AND tires_id = '" . $tires_id . "'"
         . " AND sale_name = '" . $sale_name . "'" ;
 
-        //$my_file = fopen("SEARCH_DATA-1.txt", "w") or die("Unable to open file!");
-        //fwrite($my_file, $sql_find . " | " . $other_tires_request . " | " . $_POST['myCheckValue']);
-        //fclose($my_file);
+
+            $my_file = fopen("SEARCH_DATA-GET.txt", "w") or die("Unable to open file!");
+            fwrite($my_file, $sql_find . " | " . $tires_brand . " | " . $tires_class . " | " . $tires_code . " | " . $tires_detail);
+            fclose($my_file);
+
 
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-
+/*
             $sql_update = "UPDATE ims_tires_request SET qty_need=:qty_need
             ,date_in=:date_in,remark=:remark,update_by=:update_by
             WHERE date_request =:date_request AND tires_id =:tires_id AND ar_code=:ar_code AND sale_name=:sale_name";
@@ -76,14 +104,26 @@ if ($_POST["action"] === 'SAVE') {
             $query->bindParam(':ar_code', $ar_code, PDO::PARAM_STR);
             $query->bindParam(':sale_name', $sale_name, PDO::PARAM_STR);
             $query->execute();
+*/
             echo 2;
 
         } else {
-            $sql = "INSERT INTO ims_tires_request(date_request,tires_id,ar_code,sale_name,qty_need,date_in,remark,other_tires_request,create_by) 
-            VALUES (:date_request,:tires_id,:ar_code,:sale_name,:qty_need,:date_in,:remark,:other_tires_request,:create_by)";
+            $sql = "INSERT INTO ims_tires_request(date_request,tires_id,tires_brand,tires_class,tires_code,tires_detail
+            ,ar_code,sale_name,qty_need,date_in,remark,other_tires_request,create_by) 
+            VALUES (:date_request,:tires_id,:tires_brand,:tires_class,:tires_code,:tires_detail
+            ,:ar_code,:sale_name,:qty_need,:date_in,:remark,:other_tires_request,:create_by)";
+
+            $my_file = fopen("SEARCH_DATA-GET-SQL.txt", "w") or die("Unable to open file!");
+            fwrite($my_file, $sql . " | " . $tires_brand . " | " . $tires_class . " | " . $tires_code . " | " . $tires_detail);
+            fclose($my_file);
+
             $query = $conn->prepare($sql);
             $query->bindParam(':date_request', $date_request, PDO::PARAM_STR);
             $query->bindParam(':tires_id', $tires_id, PDO::PARAM_STR);
+            $query->bindParam(':tires_brand', $tires_brand, PDO::PARAM_STR);
+            $query->bindParam(':tires_class', $tires_class, PDO::PARAM_STR);
+            $query->bindParam(':tires_code', $tires_code, PDO::PARAM_STR);
+            $query->bindParam(':tires_detail', $tires_detail, PDO::PARAM_STR);
             $query->bindParam(':ar_code', $ar_code, PDO::PARAM_STR);
             $query->bindParam(':sale_name', $sale_name, PDO::PARAM_STR);
             $query->bindParam(':qty_need', $qty_need, PDO::PARAM_STR);
@@ -100,7 +140,7 @@ if ($_POST["action"] === 'SAVE') {
                 echo 3;
             }
         }
-    }
+
 }
 
 

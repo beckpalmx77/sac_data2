@@ -1,0 +1,4 @@
+INSERT INTO ims_tires_request(date_request,tires_id,tires_brand,tires_class,tires_code,tires_detail
+            ,ar_code,sale_name,qty_need,date_in,remark,other_tires_request,create_by) 
+            VALUES (:date_request,:tires_id,:tires_brand,:tires_class,:tires_code,:tires_detail
+            ,:ar_code,:sale_name,:qty_need,:date_in,:remark,:other_tires_request,:create_by) | AT | HP | AT1757013-HP | 175/70R13 FORCE HP 82H AT ECE WR PCI

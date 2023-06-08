@@ -282,6 +282,17 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
+            $('#date_request').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
             $('#date_in').datepicker({
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
@@ -375,8 +386,8 @@ if (strlen($_SESSION['alogin']) == "") {
                         let date_request = response[i].date_request;
                         let estimate_date = response[i].estimate_date;
                         let date_in = response[i].date_in;
-                        let brand = response[i].brand;
-                        let tires_class = response[i].class;
+                        let tires_brand = response[i].tires_brand;
+                        let tires_class = response[i].tires_class;
                         let detail = response[i].detail;
                         let qty_need = response[i].qty_need;
 
@@ -385,7 +396,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#date_request').val(date_request);
                         $('#estimate_date').val(estimate_date);
                         $('#date_in').val(date_in);
-                        $('#brand').val(brand);
+                        $('#brand').val(tires_brand);
                         $('#class').val(tires_class);
                         $('#detail').val(detail);
                         $('#qty_need').val(qty_need);

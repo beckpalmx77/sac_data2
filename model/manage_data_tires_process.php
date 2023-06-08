@@ -24,6 +24,8 @@ if ($_POST["action"] === 'GET_DATA') {
             "brand" => $result['brand'],
             "class" => $result['class'],
             "tires_code" => $result['tires_code'],
+            "tires_brand" => $result['tires_brand'],
+            "tires_class" => $result['tires_class'],
             "detail" => $result['detail'] . $result['other_tires_request'],
             "sale_name" => $result['sale_name'],
             "qty_need" => $result['qty_need'],
@@ -147,6 +149,7 @@ if ($_POST["action"] === 'SAVE') {
 if ($_POST["action"] === 'UPDATE') {
     if ($_POST["id"] != '') {
         $id = $_POST["id"];
+        $date_request= $_POST["date_request"];
         $estimate_date= $_POST["estimate_date"];
         $date_in = $_POST["date_in"];
         $tires_brand = $_POST["brand"];
@@ -159,10 +162,12 @@ if ($_POST["action"] === 'UPDATE') {
         $sql_find = "SELECT * FROM ims_tires_request WHERE id = '" . $id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE ims_tires_request SET estimate_date=:estimate_date , date_in=:date_in   
+            $sql_update = "UPDATE ims_tires_request SET date_request=:date_request
+            ,estimate_date=:estimate_date,date_in=:date_in   
             ,tires_brand=:tires_brand,tires_class=:tires_class         
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
+            $query->bindParam(':date_request', $date_request, PDO::PARAM_STR);
             $query->bindParam(':estimate_date', $estimate_date, PDO::PARAM_STR);
             $query->bindParam(':date_in', $date_in, PDO::PARAM_STR);
             $query->bindParam(':tires_brand', $tires_brand, PDO::PARAM_STR);

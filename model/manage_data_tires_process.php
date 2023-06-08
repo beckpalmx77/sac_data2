@@ -53,9 +53,9 @@ if ($_POST["action"] === 'SAVE') {
         . " AND tires_id = '" . $tires_id . "'"
         . " AND sale_name = '" . $sale_name . "'" ;
 
-        $my_file = fopen("SEARCH_DATA-1.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $sql_find . " | " . $other_tires_request . " | " . $_POST['myCheckValue']);
-        fclose($my_file);
+        //$my_file = fopen("SEARCH_DATA-1.txt", "w") or die("Unable to open file!");
+        //fwrite($my_file, $sql_find . " | " . $other_tires_request . " | " . $_POST['myCheckValue']);
+        //fclose($my_file);
 
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {

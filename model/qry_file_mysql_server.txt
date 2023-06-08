@@ -1,1 +1,0 @@
-SELECT * FROM ims_tires_master ORDER BY brand,tires_code  LIMIT :limit

@@ -185,9 +185,9 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
     $sql_get_data = "SELECT * FROM v_ims_tires_request WHERE 1 " . $searchQuery
     . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
-    $myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_get_data);
-    fclose($myfile);
+    //$myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
+    //fwrite($myfile, $sql_get_data);
+    //fclose($myfile);
 
 ## Fetch records
     $stmt = $conn->prepare($sql_get_data);

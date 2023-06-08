@@ -1,1 +1,0 @@
-SELECT * FROM v_ims_tires_request WHERE 1   ORDER BY date_request asc LIMIT :limit,:offset

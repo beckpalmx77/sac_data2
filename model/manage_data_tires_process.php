@@ -44,6 +44,7 @@ if ($_POST["action"] === 'SAVE') {
         $qty_need = $_POST["qty_need"];
         $remark = $_POST["remark"];
         $date_in = $_POST["date_in"];
+        $other_tires_request = $_POST["other_tires_request"];
 
         $sql_find = "SELECT * FROM ims_tires_request 
         WHERE date_request = '" . $date_request . "'"
@@ -61,6 +62,7 @@ if ($_POST["action"] === 'SAVE') {
             $query->bindParam(':qty_need', $qty_need, PDO::PARAM_STR);
             $query->bindParam(':date_in', $date_in, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
+            $query->bindParam(':other_tires_request', $other_tires_request, PDO::PARAM_STR);
             $query->bindParam(':update_by', $user_id, PDO::PARAM_STR);
             $query->bindParam(':date_request', $date_request, PDO::PARAM_STR);
             $query->bindParam(':tires_id', $tires_id, PDO::PARAM_STR);
@@ -70,8 +72,8 @@ if ($_POST["action"] === 'SAVE') {
             echo 2;
 
         } else {
-            $sql = "INSERT INTO ims_tires_request(date_request,tires_id,ar_code,sale_name,qty_need,date_in,remark,create_by) 
-            VALUES (:date_request,:tires_id,:ar_code,:sale_name,:qty_need,:date_in,:remark,:create_by)";
+            $sql = "INSERT INTO ims_tires_request(date_request,tires_id,ar_code,sale_name,qty_need,date_in,remark,other_tires_request,create_by) 
+            VALUES (:date_request,:tires_id,:ar_code,:sale_name,:qty_need,:date_in,:remark,:other_tires_request,:create_by)";
             $query = $conn->prepare($sql);
             $query->bindParam(':date_request', $date_request, PDO::PARAM_STR);
             $query->bindParam(':tires_id', $tires_id, PDO::PARAM_STR);
@@ -80,6 +82,7 @@ if ($_POST["action"] === 'SAVE') {
             $query->bindParam(':qty_need', $qty_need, PDO::PARAM_STR);
             $query->bindParam(':date_in', $date_in, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
+            $query->bindParam(':other_tires_request', $other_tires_request, PDO::PARAM_STR);
             $query->bindParam(':create_by', $user_id, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();

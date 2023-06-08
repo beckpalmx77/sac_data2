@@ -67,6 +67,29 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </select>
                                                                     <br>
                                                                     <br>
+                                                                    <input type="hidden" id="myCheckValue" name="myCheckValue">
+
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12">
+                                                                            <!--div class="form-check"-->
+                                                                            <input type="checkbox" id="myCheck"
+                                                                                   name="myCheck" value="N">
+                                                                            <label class="form-check-label"
+                                                                                   for="flexCheckChecked">
+                                                                                กรณียางไม่เคยมีขาย
+                                                                            </label>
+                                                                            <!--/div-->
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group has-success">
+                                                                        <label for="success" class="control-label">
+                                                                        </label>
+                                                                        <div class="">
+                                                                            <input type="text" name="other_tires_request"
+                                                                                   class="form-control"
+                                                                                   required="required" id="other_tires_request">
+                                                                        </div>
+                                                                    </div>
 
                                                                     <div class="form-group has-success">
                                                                         <label for="success" class="control-label">จำนวนที่ต้องการ
@@ -260,6 +283,23 @@ if (strlen($_SESSION['alogin']) == "") {
                 todayHighlight: true,
                 language: "th",
                 autoclose: true
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#myCheckValue').val('N');
+            $('#myCheck').click(function () {
+                if ($("#myCheck").is(":checked") == true) {
+                    $('#myCheckValue').val('Y');
+                    $( "#selTires" ).prop( "disabled", true );
+                    $( "#other_tires_request" ).prop( "disabled", false );
+                } else {
+                    $('#myCheckValue').val('N');
+                    $( "#selTires" ).prop( "disabled", false );
+                    $( "#other_tires_request" ).prop( "disabled", true );
+                }
             });
         });
     </script>

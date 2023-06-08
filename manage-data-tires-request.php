@@ -135,7 +135,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                     </div>
                     <div class="modal-footer">
-                        <input type="text" name="id" id="id"/>
+                        <input type="hidden" name="id" id="id"/>
                         <input type="hidden" name="action" id="action" value=""/>
                         <span class="icon-input-btn">
                                     <i class="fa fa-check"></i>

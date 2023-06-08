@@ -23,7 +23,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "tires_id" => $result['tires_id'],
             "brand" => $result['brand'],
             "class" => $result['class'],
-            "detail" => $result['detail'],
+            "detail" => $result['detail'] . $result['other_tires_request'],
             "sale_name" => $result['sale_name'],
             "qty_need" => $result['qty_need'],
             "date_in" => $result['date_in'],
@@ -203,9 +203,9 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
 
     foreach ($dataRecords as $row) {
 
-        $myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
-        fwrite($myfile, $row['other_tires_request'] . " | "  . $row['detail']);
-        fclose($myfile);
+        //$myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
+        //fwrite($myfile, $row['other_tires_request'] . " | "  . $row['detail']);
+        //fclose($myfile);
 
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(

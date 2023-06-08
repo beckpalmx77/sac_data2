@@ -120,10 +120,16 @@ if (strlen($_SESSION['alogin']) == "") {
 
                             <div class="modal-body">
                                 <div class="form-group"
+                                <label for="detail" class="control-label">รายละเอียด</label>
+                                <input type="text" class="form-control" id="detail" name="detail"
+                                       placeholder="รายละเอียด" readonly="true">
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="form-group"
                                 <label for="qty_need" class="control-label">จำนวนที่ต้องการ</label>
                                 <input type="text" class="form-control" id="qty_need" name="qty_need"
-                                       placeholder="จำนวนที่ต้องการ"
-                                       required>
+                                       placeholder="จำนวนที่ต้องการ" readonly="true">
                             </div>
 
 
@@ -287,26 +293,22 @@ if (strlen($_SESSION['alogin']) == "") {
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_account_process.php',
+                url: 'model/manage_data_tires_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
-                        let email = response[i].email;
-                        let first_name = response[i].first_name;
-                        let last_name = response[i].last_name;
-                        let account_type = response[i].account_type;
-                        let status = response[i].status;
+                        let date_in = response[i].date_in;
+                        let qty_need = response[i].qty_need;
+                        let detail = response[i].detail;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
-                        $('#email').val(email);
-                        $('#first_name').val(first_name);
-                        $('#last_name').val(last_name);
-                        $('#account_type').val(account_type);
-                        $('#status').val(status);
+                        $('#date_in').val(date_in);
+                        $('#detail').val(detail);
+                        $('#qty_need').val(qty_need);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');

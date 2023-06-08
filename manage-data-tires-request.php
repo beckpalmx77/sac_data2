@@ -325,9 +325,11 @@ if (strlen($_SESSION['alogin']) == "") {
             <!-- *** FOR SUBMIT FORM *** -->
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();
+                //alert($('#estimate_date').val());
                 $('#action').val("UPDATE");
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
+                //alert(formData);
                 $.ajax({
                     url: 'model/manage_data_tires_process.php',
                     method: "POST",

@@ -124,11 +124,11 @@ if ($_POST["action"] === 'UPDATE') {
 
 if ($_POST["action"] === 'DELETE') {
     $id = $_POST["id"];
-    $sql_find = "SELECT * FROM menu_main WHERE id = " . $id;
+    $sql_find = "SELECT * FROM ims_tires_request WHERE id = " . $id;
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {
-            $sql = "DELETE FROM menu_main WHERE id = " . $id;
+            $sql = "DELETE FROM ims_tires_request WHERE id = " . $id;
             $query = $conn->prepare($sql);
             $query->execute();
             echo $del_success;
@@ -149,15 +149,20 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
     $searchValue = $_POST['search']['value']; // Search value
     $searchArray = array();
 
-## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (date_request LIKE :date_request or detail LIKE :detail or customer_name LIKE :customer_name or sale_name LIKE sale_name) ";
+        $searchQuery = " AND (brand LIKE :brand        
+        or customer_name LIKE :customer_name
+        or sale_name LIKE :sale_name
+        or class LIKE :class
+        or detail LIKE :detail ) ";
+
         $searchArray = array(
-            'date_request' => "%$searchValue%",
-            'detail' => "%$searchValue%",
+            'brand' => "%$searchValue%",
             'customer_name' => "%$searchValue%",
             'sale_name' => "%$searchValue%",
+            'class' => "%$searchValue%",
+            'detail' => "%$searchValue%"
         );
     }
 
@@ -176,6 +181,10 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
     $sql_get_data = "SELECT * FROM v_ims_tires_request WHERE 1 " . $searchQuery
     . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
+    $myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $sql_get_data);
+    fclose($myfile);
+
 ## Fetch records
     $stmt = $conn->prepare($sql_get_data);
 
@@ -192,17 +201,13 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
 
     foreach ($dataRecords as $row) {
 
-        //$myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
-        //fwrite($myfile, $row['other_tires_request'] . " | "  . $row['detail']);
-        //fclose($myfile);
-
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
                 "id" => $row['id'],
-                "tires_id" => $row['tires_id'],
-                "tires_code" => $row['tires_code'],
-                "brand" => $row['brand'],
-                "class" => $row['class'],
+                "tires_id" => ($row['tires_id'] === '' || $row['tires_id'] === null) ? "-" : $row['tires_id'],
+                "tires_code" => ($row['tires_code'] === '' || $row['tires_code'] === null) ? "-" : $row['tires_code'],
+                "brand" => ($row['brand'] === '' || $row['brand'] === null) ? "-" : $row['brand'],
+                "class" => ($row['class'] === '' || $row['class'] === null) ? "-" : $row['class'],
                 "detail" => $row['detail'] . $row['other_tires_request'],
                 "other_tires_request" => $row['other_tires_request'],
                 "ar_code" => $row['ar_code'],
@@ -217,9 +222,9 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
         } else {
             $data[] = array(
                 "id" => $row['id'],
-                "main_menu_id" => $row['main_menu_id'],
-                "label" => $row['label'],
-                "select" => "<button type='button' name='select' id='" . $row['main_menu_id'] . "@" . $row['label'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
+                "tires_id" => $row['tires_id'],
+                "detail" => $row['detail'],
+                "select" => "<button type='button' name='select' id='" . $row['tires_id'] . "@" . $row['detail'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
 </button>",
             );
         }
@@ -234,6 +239,10 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
         "iTotalDisplayRecords" => $totalRecordwithFilter,
         "aaData" => $data
     );
+
+    //$data = json_encode($response);
+    //file_put_contents("data.json", $data);
+
     echo json_encode($response);
 }
 

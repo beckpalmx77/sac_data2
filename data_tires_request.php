@@ -8,7 +8,7 @@ if (strlen($_SESSION['alogin']) == "") {
     <!DOCTYPE html>
     <html lang="th">
 
-    <body id="page-top">
+    <body id="page-top" onload="SetDefault();">
     <div id="wrapper">
         <?php
         include('includes/Side-Bar.php');
@@ -60,49 +60,70 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            placeholder="วันที่">
                                                                     <br>
 
-                                                                    <label for="AR_CODE">เลือกยี่ห้อ :</label>
-                                                                    <input type="hidden" name="tires_brand"
-                                                                           id="tires_brand"
-                                                                           class="form-control">
+                                                                    <label for="other_tires_brand">เลือกยี่ห้อ :</label>
+                                                                    <input type="hidden" id="myCheckValueBrand" name="myCheckValueBrand">
+                                                                    <input type="checkbox" id="myCheckBrand"
+                                                                           name="myCheckBrand" value="N">
+                                                                    <label class="form-check-label"
+                                                                           for="flexCheckChecked">
+                                                                        ยี่ห้ออื่นๆ
+                                                                    </label>
                                                                     <select id='selTiresBrand' class='form-control'>
                                                                         <option value='0'>- ค้นหายี่ห้อ -</option>
                                                                     </select>
                                                                     <br>
-                                                                    <br>
 
-                                                                    <label for="AR_CODE">เลือกลายดอก :</label>
-                                                                    <input type="hidden" name="tires_class"
-                                                                           id="tires_class"
-                                                                           class="form-control">
+                                                                    <div class="form-group has-success">
+                                                                        <label for="success" class="control-label">
+                                                                        </label>
+                                                                        <div class="">
+                                                                            <input type="text" name="other_tires_brand"
+                                                                                   class="form-control"
+                                                                                   id="other_tires_brand">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <label for="other_tires_class">เลือกลายยาง :</label>
+                                                                    <input type="hidden" id="myCheckValueClass" name="myCheckValueClass">
+                                                                    <input type="checkbox" id="myCheckClass"
+                                                                           name="myCheckClass" value="N">
+                                                                    <label class="form-check-label"
+                                                                           for="flexCheckChecked">
+                                                                        ลายอื่นๆ
+                                                                    </label>
                                                                     <select id='selTiresClass' class='form-control'>
                                                                         <option value='0'>- ค้นหาลายดอก -</option>
                                                                     </select>
                                                                     <br>
-                                                                    <br>
 
-                                                                    <label for="AR_CODE">เลือกยาง :</label>
+                                                                    <div class="form-group has-success">
+                                                                        <label for="success" class="control-label">
+                                                                        </label>
+                                                                        <div class="">
+                                                                            <input type="text" name="other_tires_class"
+                                                                                   class="form-control"
+                                                                                   id="other_tires_class">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <label for="tires_id">เลือกยาง :</label>
                                                                     <input type="hidden" name="tires_id"
                                                                            id="tires_id"
                                                                            class="form-control">
+                                                                    <input type="hidden" id="myCheckValue" name="myCheckValue">
+                                                                    <input type="checkbox" id="myCheck"
+                                                                           name="myCheck" value="N">
+                                                                    <label class="form-check-label"
+                                                                           for="flexCheckChecked">
+                                                                        กรณียางไม่เคยมีขาย
+                                                                    </label>
+
                                                                     <select id='selTires' class='form-control'>
                                                                         <option value='0'>- ค้นหายาง -</option>
                                                                     </select>
-                                                                    <br>
-                                                                    <br>
-                                                                    <input type="hidden" id="myCheckValue" name="myCheckValue">
 
-                                                                    <div class="row">
-                                                                        <div class="col-sm-12">
-                                                                            <!--div class="form-check"-->
-                                                                            <input type="checkbox" id="myCheck"
-                                                                                   name="myCheck" value="N">
-                                                                            <label class="form-check-label"
-                                                                                   for="flexCheckChecked">
-                                                                                กรณียางไม่เคยมีขาย
-                                                                            </label>
-                                                                            <!--/div-->
-                                                                        </div>
-                                                                    </div>
+                                                                    <br>
+
                                                                     <div class="form-group has-success">
                                                                         <label for="success" class="control-label">
                                                                         </label>
@@ -289,29 +310,6 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
-
-    function SetDefault() {
-            let today = new Date();
-            let date_request = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
-            $('#date_request').val(date_request);
-
-            $('#AR_CODE').val("");
-            $('#tires_id').val("");
-            $('#tires_brand').val("");
-            $('#tires_class').val("");
-            $('#sale_name').val("");
-            $('#remark').val("");
-
-            $('#myCheckValue').val('N');
-            $( "#selTires" ).prop( "disabled", false );
-            $( "#other_tires_request" ).prop( "disabled", true );
-
-    }
-
-    </script>
-
-
-    <script>
         $(document).ready(function () {
             $('#date_request').datepicker({
                 format: "dd-mm-yyyy",
@@ -334,6 +332,66 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
+
+    function SetDefault() {
+            let today = new Date();
+            let date_request = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
+            $('#date_request').val(date_request);
+
+            $('#AR_CODE').val("");
+            $('#tires_id').val("");
+            $('#tires_brand').val("");
+            $('#tires_class').val("");
+            $('#sale_name').val("");
+            $('#remark').val("");
+
+            $('#myCheckValue').val('N');
+            $( "#selTires" ).prop( "disabled", false );
+            $( "#other_tires_request" ).prop( "disabled", true );
+
+            $('#myCheckValueClass').val('N');
+            $( "#selTiresClass" ).prop( "disabled", false );
+            $( "#other_tires_class" ).prop( "disabled", true );
+
+            $('#myCheckValueBrand').val('N');
+            $( "#selTiresBrand" ).prop( "disabled", false );
+            $( "#other_tires_brand" ).prop( "disabled", true );
+
+    }
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("form").on("submit", function (event) {
+                event.preventDefault();
+                $('#AR_CODE').val($(selCustomer).val());
+                $('#tires_id').val($(selTires).val());
+                $('#tires_brand').val($(selTiresBrand).val());
+                $('#tires_class').val($(selTiresClass).val());
+                $('#sale_name').val($(selSale).val());
+                $('#remark').val($(selRemark).val());
+                $('#action').val("SAVE");
+                let formValues = $(this).serialize();
+
+                $.post("model/manage_data_tires_process.php", formValues, function (response) {
+                    if (response == 1) {
+                        document.getElementById("from_data").reset();
+                        alertify.success("บันทึกข้อมูลเรียบร้อย Save Data Success");
+                        SetDefault();
+                    } else if (response == 2) {
+                        document.getElementById("from_data").reset();
+                        alertify.success("แก้ไขข้อมูลเรียบร้อย Edit Data Success");
+                    } else {
+                        alertify.error("ไม่สามารถบันทึกข้อมูลได้ DB Error ");
+                    }
+                });
+
+            });
+        });
+    </script>
+
+    <script>
         $(document).ready(function () {
             $('#myCheckValue').val('N');
             $('#myCheck').click(function () {
@@ -345,6 +403,44 @@ if (strlen($_SESSION['alogin']) == "") {
                     $('#myCheckValue').val('N');
                     $( "#selTires" ).prop( "disabled", false );
                     $( "#other_tires_request" ).prop( "disabled", true );
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#myCheckValueBrand').val('N');
+
+            $('#myCheckBrand').click(function () {
+                if ($("#myCheckBrand").is(":checked") == true) {
+                    $('#myCheckValueBrand').val('Y');
+                    $( "#selTiresBrand" ).prop( "disabled", true );
+                    $( "#other_tires_brand" ).prop( "disabled", false );
+                } else {
+                    $('#myCheckValue').val('N');
+                    $( "#selTiresBrand" ).prop( "disabled", false );
+                    $( "#other_tires_brand" ).prop( "disabled", true );
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#myCheckValueClass').val('N');
+
+            $('#myCheckClass').click(function () {
+                if ($("#myCheckClass").is(":checked") == true) {
+                    $('#myCheckValueClass').val('Y');
+                    $( "#selTiresClass" ).prop( "disabled", true );
+                    $( "#other_tires_class" ).prop( "disabled", false );
+                } else {
+                    $('#myCheckValue').val('N');
+                    $( "#selTiresClass" ).prop( "disabled", false );
+                    $( "#other_tires_class" ).prop( "disabled", true );
                 }
             });
         });
@@ -506,36 +602,6 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
 
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $("form").on("submit", function (event) {
-                event.preventDefault();
-                $('#AR_CODE').val($(selCustomer).val());
-                $('#tires_id').val($(selTires).val());
-                $('#tires_brand').val($(selTiresBrand).val());
-                $('#tires_class').val($(selTiresClass).val());
-                $('#sale_name').val($(selSale).val());
-                $('#remark').val($(selRemark).val());
-                $('#action').val("SAVE");
-                let formValues = $(this).serialize();
-
-                $.post("model/manage_data_tires_process.php", formValues, function (response) {
-                    if (response == 1) {
-                        document.getElementById("from_data").reset();
-                        alertify.success("บันทึกข้อมูลเรียบร้อย Save Data Success");
-                        SetDefault();
-                    } else if (response == 2) {
-                        document.getElementById("from_data").reset();
-                        alertify.success("แก้ไขข้อมูลเรียบร้อย Edit Data Success");
-                    } else {
-                        alertify.error("ไม่สามารถบันทึกข้อมูลได้ DB Error ");
-                    }
-                });
-
-            });
-        });
     </script>
 
 

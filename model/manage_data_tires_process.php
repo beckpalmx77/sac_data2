@@ -50,7 +50,11 @@ if ($_POST["action"] === 'SAVE') {
     $tires_code = $_POST["tires_code"];
     //$tires_detail = $_POST["tires_detail"] . " " . $other_tires_request = $_POST["other_tires_request"];
     $other_tires_request = $_POST["other_tires_request"];
+
     $tires_detail = ($_POST['$tires_detail'] === '' || $_POST['$tires_detail'] === null) ? $_POST['other_tires_request'] : "";
+
+    $tires_class = ($_POST['tires_class'] === '' || $_POST['tires_class'] === null) ? $_POST['other_tires_class'] : "";
+    $tires_brand = ($_POST['tires_brand'] === '' || $_POST['tires_brand'] === null) ? $_POST['other_tires_brand'] : "";
 
 
     if ($_POST["myCheckValue"] !== 'Y') {
@@ -66,11 +70,11 @@ if ($_POST["action"] === 'SAVE') {
         }
     }
 
-/*
+
         $my_file = fopen("SEARCH_DATA-GET.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $sql_get . " | " . $tires_brand . " | " . $tires_class . " | " . $tires_code . " | " . $tires_detail);
+        fwrite($my_file, $sql_get . " | " . $tires_brand . " | " . $tires_class  . " | " . $tires_detail);
         fclose($my_file);
-*/
+
 
         $date_request = $_POST["date_request"];
         $ar_code = $_POST["AR_CODE"];

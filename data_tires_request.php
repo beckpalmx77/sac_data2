@@ -60,7 +60,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            placeholder="วันที่">
                                                                     <br>
 
-                                                                    <label for="tires_id">เลือกยาง :</label>
+                                                                    <label for="tires_id">เลือกยางตามรายการสินค้า (ป้อนตัวอักษรเพื่อค้นหาในช่องค้นหายาง) : </label>
                                                                     <input type="hidden" name="tires_id"
                                                                            id="tires_id"
                                                                            class="form-control">

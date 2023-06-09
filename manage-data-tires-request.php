@@ -165,7 +165,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                        placeholder="">
                                                             </div>
 
-
                                                                 <label for="complete_flag">สถานะ :</label>
                                                                 <input type="hidden" name="complete_flag" id="complete_flag"
                                                                    required

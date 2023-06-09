@@ -56,6 +56,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            id="date_request"
                                                                            name="date_request"
                                                                            readonly="true"
+                                                                           required="true"
                                                                            placeholder="วันที่">
                                                                     <br>
 

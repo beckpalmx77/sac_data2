@@ -27,7 +27,7 @@ if (strlen($_SESSION['alogin']) == "") {
     $MonthRecords = $stmt_month->fetchAll();
 
     $sql_year = " SELECT DISTINCT(DI_YEAR) AS DI_YEAR
- FROM ims_product_sale_sac WHERE DI_YEAR >= 2019
+ FROM ims_product_sale_cockpit WHERE DI_YEAR >= 2019
  order by DI_YEAR desc ";
     $stmt_year = $conn->prepare($sql_year);
     $stmt_year->execute();
@@ -87,6 +87,18 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                             <input type="hidden" id="myCheckValue" name="myCheckValue">
 
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <!--div class="form-check"-->
+                                                                    <input type="checkbox" id="myCheck"
+                                                                           name="myCheck" value="N">
+                                                                    <label class="form-check-label"
+                                                                           for="flexCheckChecked">
+                                                                        เลือกข้อมูลทุกเดือน
+                                                                    </label>
+                                                                    <!--/div-->
+                                                                </div>
+                                                            </div>
 
                                                             <div class="row">
                                                                 <div class="col-sm-12">
@@ -107,6 +119,15 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <?php foreach ($YearRecords as $row) { ?>
                                                                             <option value="<?php echo $row["DI_YEAR"]; ?>">
                                                                                 <?php echo $row["DI_YEAR"]; ?>
+                                                                            </option>
+                                                                        <?php } ?>
+                                                                    </select>
+                                                                    <label for="branch">เลือกสาขา :</label>
+                                                                    <select name="branch" id="branch"
+                                                                            class="form-control" required>
+                                                                        <?php foreach ($BranchRecords as $row) { ?>
+                                                                            <option value="<?php echo $row["branch"]; ?>">
+                                                                                <?php echo $row["branch_name"]; ?>
                                                                             </option>
                                                                         <?php } ?>
                                                                     </select>
@@ -186,6 +207,20 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script src="js/MyFrameWork/framework_util.js"></script>
 
+    <script>
+        $(document).ready(function () {
+            $('#myCheckValue').val('N');
+            $('#myCheck').click(function () {
+                if ($("#myCheck").is(":checked") == true) {
+                    $('#myCheckValue').val('Y');
+                    $( "#month" ).prop( "disabled", true );
+                } else {
+                    $('#myCheckValue').val('N');
+                    $( "#month" ).prop( "disabled", false );
+                }
+            });
+        });
+    </script>
 
     </body>
 

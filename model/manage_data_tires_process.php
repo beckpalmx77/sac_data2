@@ -8,6 +8,30 @@ include('../util/record_util.php');
 
 $user_id = $_SESSION['user_id'];
 
+if ($_POST["action"] === 'GET_DATA_TIRES') {
+    $p_tires_id = $_POST["p_tires_id"];
+
+    $return_arr = array();
+    $sql_get = "SELECT * FROM ims_tires_master WHERE id = " . $p_tires_id;
+    $statement = $conn->query($sql_get);
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    //$my_file = fopen("SEARCH_DATA-GET-TIRES.txt", "w") or die("Unable to open file!");
+    //fwrite($my_file, $_POST["action"] . " | " . $p_tires_id . " | " . $sql_get );
+    //fclose($my_file);
+
+    foreach ($results as $result) {
+        $return_arr[] = array("id" => $result['id'],
+            "tires_brand" => $result['brand'],
+            "tires_class" => $result['class'],
+            "tires_code" => $result['tires_code'],
+            "tires_detail" => $result['detail']);
+    }
+
+    echo json_encode($return_arr);
+
+}
+
 if ($_POST["action"] === 'GET_DATA') {
     $id = $_POST["id"];
     $return_arr = array();

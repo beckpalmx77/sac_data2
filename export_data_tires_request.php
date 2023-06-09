@@ -33,12 +33,6 @@ if (strlen($_SESSION['alogin']) == "") {
     $stmt_year->execute();
     $YearRecords = $stmt_year->fetchAll();
 
-    $sql_branch = " SELECT * FROM ims_branch ";
-    $stmt_branch = $conn->prepare($sql_branch);
-    $stmt_branch->execute();
-    $BranchRecords = $stmt_branch->fetchAll();
-
-
     ?>
 
     <!DOCTYPE html>
@@ -82,7 +76,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <div class="panel-body">
 
                                                         <form id="from_data" method="post"
-                                                              action="export_process/export_process_data_sale_total_cp.php"
+                                                              action="export_process/export_process_data_tires_request.php"
                                                               enctype="multipart/form-data">
 
                                                             <input type="hidden" id="myCheckValue" name="myCheckValue">

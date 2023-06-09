@@ -447,10 +447,8 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-
     <script>
         $(document).ready(function () {
-
             $("#selCustomer").select2({
                 ajax: {
                     url: "model/customer_ajaxfile.php",
@@ -640,6 +638,7 @@ if (strlen($_SESSION['alogin']) == "") {
         $(document).ready(function () {
 
             $("#selTiresClass").select2({
+
                 ajax: {
                     url: "model/get_tires_class_ajaxfile.php",
                     type: "post",

@@ -1,1 +1,0 @@
-SELECT * FROM ims_tires_master WHERE id = 565 | AP | ASPIRE | 225/50 R17 98 XL W ASPIRE 4G TL-E

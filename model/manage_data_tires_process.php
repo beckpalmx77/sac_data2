@@ -71,9 +71,9 @@ if ($_POST["action"] === 'SAVE') {
     }
 
 
-        $my_file = fopen("SEARCH_DATA-GET.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $sql_get . " | " . $tires_brand . " | " . $tires_class  . " | " . $tires_detail);
-        fclose($my_file);
+        //$my_file = fopen("SEARCH_DATA-GET.txt", "w") or die("Unable to open file!");
+        //fwrite($my_file, $sql_get . " | " . $tires_brand . " | " . $tires_class  . " | " . $tires_detail);
+        //fclose($my_file);
 
 
         $date_request = $_POST["date_request"];

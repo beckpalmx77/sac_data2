@@ -171,13 +171,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                    required
                                                                    class="form-control">
 
+                                                            <select id='Selcomplete_flag' class='form-control'>
+                                                                <option value='N'>- เลือกสถานะ -</option>
+                                                            </select>
+                                                            <br>
+
                                                             <input type="text" name="status_detail" id="status_detail"
                                                                    readonly = "true"
                                                                    class="form-control">
-
-                                                                <select id='Selcomplete_flag' class='form-control'>
-                                                                    <option value='N'>- เลือกสถานะ -</option>
-                                                                </select>
 
                                                         </div>
                                                     </div>
@@ -429,6 +430,13 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#detail').val(detail);
                         $('#qty_need').val(qty_need);
                         $('#complete_flag').val(complete_flag);
+
+                        if (complete_flag==='Y') {
+                            $('#save').attr('disabled', 'disabled');
+                        } else {
+                            $('#save').attr('disabled', false);
+                        }
+
                         $('#status_detail').val(status_detail);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');

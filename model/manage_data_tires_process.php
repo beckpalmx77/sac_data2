@@ -31,6 +31,8 @@ if ($_POST["action"] === 'GET_DATA') {
             "qty_need" => $result['qty_need'],
             "estimate_date" => $result['estimate_date'],
             "date_in" => $result['date_in'],
+            "complete_flag" => $result['complete_flag'],
+            "status_detail" => $result['status_detail'],
             "remark" => $result['remark']);
     }
 
@@ -154,6 +156,7 @@ if ($_POST["action"] === 'UPDATE') {
         $date_in = $_POST["date_in"];
         $tires_brand = $_POST["brand"];
         $tires_class = $_POST["class"];
+        $complete_flag = $_POST["complete_flag"];
 
         //$myfile = fopen("param_post_mysql.txt", "w") or die("Unable to open file!");
         //fwrite($myfile, $estimate_date , " | " . $date_in);
@@ -164,7 +167,7 @@ if ($_POST["action"] === 'UPDATE') {
         if ($nRows > 0) {
             $sql_update = "UPDATE ims_tires_request SET date_request=:date_request
             ,estimate_date=:estimate_date,date_in=:date_in   
-            ,tires_brand=:tires_brand,tires_class=:tires_class         
+            ,tires_brand=:tires_brand,tires_class=:tires_class,complete_flag=:complete_flag         
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':date_request', $date_request, PDO::PARAM_STR);
@@ -172,6 +175,7 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':date_in', $date_in, PDO::PARAM_STR);
             $query->bindParam(':tires_brand', $tires_brand, PDO::PARAM_STR);
             $query->bindParam(':tires_class', $tires_class, PDO::PARAM_STR);
+            $query->bindParam(':complete_flag', $complete_flag, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
             echo $save_success;
@@ -281,6 +285,8 @@ if ($_POST["action"] === 'GET_TIRES_REQUEST') {
                 "sale_name" => $row['sale_name'],
                 "qty_need" => $row['qty_need'],
                 "remark" => $row['remark'],
+                "complete_flag" => $row['complete_flag'],
+                "status_detail" => $row['status_detail'],
                 "estimate_date" => ($row['estimate_date'] === '' || $row['estimate_date'] === null) ? "-" : $row['estimate_date'],
                 "date_in" => ($row['date_in'] === '' || $row['date_in'] === null) ? "-" : $row['date_in'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>"

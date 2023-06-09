@@ -289,7 +289,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     url: "model/customer_ajaxfile.php",
                     type: "post",
                     dataType: 'json',
-                    delay: 250,
+                    delay: 100,
                     data: function (params) {
                         return {
                             searchTerm: params.term // search term

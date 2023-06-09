@@ -165,6 +165,16 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                        placeholder="">
                                                             </div>
 
+
+                                                                <label for="complete_flag">สถานะ :</label>
+                                                                <input type="hidden" name="complete_flag" id="complete_flag"
+                                                                   required
+                                                                   class="form-control">
+                                                                <select id='Selcomplete_flag' class='form-control'>
+                                                                    <option value='N'>- เลือกสถานะ -</option>
+                                                                </select>
+
+
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -251,6 +261,15 @@ if (strlen($_SESSION['alogin']) == "") {
     <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
     <!--link href="vendor/date-picker-1.9/css/date_picker_style.css" rel="stylesheet"/-->
     <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
+
+    <!-- Select2 -->
+    <script src="vendor/select2/dist/js/select2.min.js"></script>
+
+    <!-- select2 css -->
+    <link href='js/select2/dist/css/select2.min.css' rel='stylesheet' type='text/css'>
+
+    <!-- select2 script -->
+    <script src='js/select2/dist/js/select2.min.js'></script>
 
     <style>
 
@@ -348,9 +367,11 @@ if (strlen($_SESSION['alogin']) == "") {
                 event.preventDefault();
                 //alert($('#estimate_date').val());
                 $('#action').val("UPDATE");
+                $('#complete_flag').val($(Selcomplete_flag).val());
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
-                //alert(formData);
+                alert(formData);
+
                 $.ajax({
                     url: 'model/manage_data_tires_process.php',
                     method: "POST",
@@ -363,6 +384,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         dataRecords.ajax.reload();
                     }
                 })
+
             });
             <!-- *** FOR SUBMIT FORM *** -->
 
@@ -390,6 +412,8 @@ if (strlen($_SESSION['alogin']) == "") {
                         let tires_class = response[i].tires_class;
                         let detail = response[i].detail;
                         let qty_need = response[i].qty_need;
+                        let complete_flag = response[i].complete_flag;
+                        //let status_detail = response[i].status_detail;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
@@ -400,6 +424,8 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#class').val(tires_class);
                         $('#detail').val(detail);
                         $('#qty_need').val(qty_need);
+                        $('#complete_flag').val(complete_flag);
+                        $('#Selcomplete_flag').val(complete_flag);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
@@ -462,13 +488,29 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
-        $('#check').click(function () {
-            if ('password' == $('#test-input').attr('type')) {
-                $('#test-input').prop('type', 'text');
-            } else {
-                $('#test-input').prop('type', 'password');
-            }
+        $(document).ready(function () {
+
+            $("#Selcomplete_flag").select2({
+                ajax: {
+                    url: "model/status_ajaxfile.php",
+                    type: "post",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function (params) {
+                        return {
+                            searchTerm: params.term // search term
+                        };
+                    },
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
         });
+
     </script>
 
 

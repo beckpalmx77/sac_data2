@@ -170,10 +170,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <input type="hidden" name="complete_flag" id="complete_flag"
                                                                    required
                                                                    class="form-control">
+
+                                                            <input type="text" name="status_detail" id="status_detail"
+                                                                   readonly = "true"
+                                                                   class="form-control">
+
                                                                 <select id='Selcomplete_flag' class='form-control'>
                                                                     <option value='N'>- เลือกสถานะ -</option>
                                                                 </select>
-
 
                                                         </div>
                                                     </div>
@@ -370,7 +374,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#complete_flag').val($(Selcomplete_flag).val());
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
-                alert(formData);
+                //alert(formData);
 
                 $.ajax({
                     url: 'model/manage_data_tires_process.php',
@@ -413,7 +417,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let detail = response[i].detail;
                         let qty_need = response[i].qty_need;
                         let complete_flag = response[i].complete_flag;
-                        //let status_detail = response[i].status_detail;
+                        let status_detail = response[i].status_detail;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
@@ -425,7 +429,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#detail').val(detail);
                         $('#qty_need').val(qty_need);
                         $('#complete_flag').val(complete_flag);
-                        $('#Selcomplete_flag').val(complete_flag);
+                        $('#status_detail').val(status_detail);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');

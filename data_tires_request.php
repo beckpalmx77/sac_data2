@@ -119,7 +119,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            for="flexCheckChecked">
                                                                         ลายอื่นๆ
                                                                     </label>
-                                                                    <select id='selTiresClass' class='form-control'>
+                                                                    <select id='selTiresClass' class='form-control' onchange="Onchange_tires_class();">
                                                                         <option value='0'>- ค้นหาลายดอก -</option>
                                                                     </select>
                                                                     <br>
@@ -527,12 +527,16 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         function Onchange_tires_id() {
-            let p_tires_id = document.getElementById("selTires").value;
+            let p_tires_id = $('#selTires').val();
             let formData = {action: "GET_DATA_TIRES", p_tires_id: p_tires_id};
-            $( "#other_tires_brand" ).prop( "disabled", false );
-            $( "#other_tires_class" ).prop( "disabled", false );
+            //$( "#other_tires_brand" ).prop( "disabled", false );
+            //$( "#other_tires_class" ).prop( "disabled", false );
             $( "#selTiresBrand" ).prop( "disabled", true );
             $( "#selTiresClass" ).prop( "disabled", true );
+
+            $('#selTiresBrand').val(null).trigger('change');
+            $('#selTiresClass').val(null).trigger('change');
+
             $.ajax({
                 type: "POST",
                 url: 'model/manage_data_tires_process.php',
@@ -558,12 +562,53 @@ if (strlen($_SESSION['alogin']) == "") {
         }
 
         function Onchange_tires_brand() {
-            let x = document.getElementById("selTiresBrand").value;
+            let p_tires_brand = $('#selTiresBrand').val();
+            let formData = {action: "GET_DATA_TIRES_BRAND", p_tires_brand: p_tires_brand};
+            $.ajax({
+                type: "POST",
+                url: 'model/manage_data_tires_process.php',
+                dataType: "json",
+                data: formData,
+                success: function (response) {
+                    let len = response.length;
+                    for (let i = 0; i < len; i++) {
+                        let tires_brand = response[i].tires_brand;
+                        $('#selTiresBrand').val(tires_brand);
+                        $('#other_tires_brand').val(tires_brand);
+                    }
+                },
+                error: function (response) {
+                    alertify.error("error : " + response);
+                }
+            });
 
+        }
+
+        function Onchange_tires_class() {
+            let p_tires_class = $('#selTiresClass').val();
+            let formData = {action: "GET_DATA_TIRES_CLASS", p_tires_class: p_tires_class};
+            $.ajax({
+                type: "POST",
+                url: 'model/manage_data_tires_process.php',
+                dataType: "json",
+                data: formData,
+                success: function (response) {
+                    let len = response.length;
+                    for (let i = 0; i < len; i++) {
+                        let tires_class = response[i].tires_class;
+                        $('#selTiresClass').val(tires_class);
+                        $('#other_tires_class').val(tires_class);
+                    }
+                },
+                error: function (response) {
+                    alertify.error("error : " + response);
+                }
+            });
 
         }
 
     </script>
+
 
     <script>
         $(document).ready(function () {

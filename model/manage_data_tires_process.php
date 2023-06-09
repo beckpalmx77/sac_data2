@@ -32,6 +32,56 @@ if ($_POST["action"] === 'GET_DATA_TIRES') {
 
 }
 
+if ($_POST["action"] === 'GET_DATA_TIRES_BRAND') {
+    $p_tires_brand = $_POST["p_tires_brand"];
+
+    $return_arr = array();
+    $sql_get = "SELECT * FROM ims_tires_master WHERE brand = '" . $p_tires_brand . "' LIMIT 1" ;
+
+    //$my_file = fopen("SEARCH_DATA-GET-TIRES.txt", "w") or die("Unable to open file!");
+    //fwrite($my_file, $_POST["action"] . " | " . $p_tires_brand . " | " . $sql_get);
+    //fclose($my_file);
+
+    $statement = $conn->query($sql_get);
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($results as $result) {
+        $return_arr[] = array(
+            "tires_brand" => $result['brand'],
+            "tires_class" => $result['class'],
+            "tires_code" => $result['tires_code'],
+            "tires_detail" => $result['detail']);
+    }
+
+    echo json_encode($return_arr);
+
+}
+
+if ($_POST["action"] === 'GET_DATA_TIRES_CLASS') {
+    $p_tires_class = $_POST["p_tires_class"];
+
+    $return_arr = array();
+    $sql_get = "SELECT * FROM ims_tires_master WHERE class = '" . $p_tires_class . "' LIMIT 1" ;
+
+    //$my_file = fopen("SEARCH_DATA-GET-TIRES.txt", "w") or die("Unable to open file!");
+    //fwrite($my_file, $_POST["action"] . " | " . $p_tires_class . " | " . $sql_get);
+    //fclose($my_file);
+
+    $statement = $conn->query($sql_get);
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($results as $result) {
+        $return_arr[] = array(
+            "tires_brand" => $result['brand'],
+            "tires_class" => $result['class'],
+            "tires_code" => $result['tires_code'],
+            "tires_detail" => $result['detail']);
+    }
+
+    echo json_encode($return_arr);
+
+}
+
 if ($_POST["action"] === 'GET_DATA') {
     $id = $_POST["id"];
     $return_arr = array();

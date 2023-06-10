@@ -60,34 +60,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            placeholder="วันที่">
                                                                     <br>
 
-                                                                    <label for="tires_id">เลือกยางตามรายการสินค้า (ป้อนตัวอักษรเพื่อค้นหาในช่องค้นหายาง) : </label>
-                                                                    <input type="hidden" name="tires_id"
-                                                                           id="tires_id"
-                                                                           class="form-control">
-                                                                    <input type="hidden" id="myCheckValue" name="myCheckValue">
-                                                                    <input type="checkbox" id="myCheck"
-                                                                           name="myCheck" value="N">
-                                                                    <label class="form-check-label"
-                                                                           for="flexCheckChecked">
-                                                                        กรณียางไม่เคยมีขาย
-                                                                    </label>
-
-                                                                    <select id='selTires' class='form-control' onchange="Onchange_tires_id();">
-                                                                        <option value='0'>- ค้นหายาง -</option>
-                                                                    </select>
-
-                                                                    <br>
-
-                                                                    <div class="form-group has-success">
-                                                                        <label for="success" class="control-label">
-                                                                        </label>
-                                                                        <div class="">
-                                                                            <input type="text" name="other_tires_request"
-                                                                                   class="form-control"
-                                                                                   id="other_tires_request">
-                                                                        </div>
-                                                                    </div>
-
                                                                     <label for="other_tires_brand">เลือกยี่ห้อ :</label>
                                                                     <input type="hidden" id="myCheckValueBrand" name="myCheckValueBrand">
                                                                     <input type="checkbox" id="myCheckBrand"
@@ -96,7 +68,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            for="flexCheckChecked">
                                                                         ยี่ห้ออื่นๆ
                                                                     </label>
-                                                                    <select id='selTiresBrand' class='form-control' onchange="Onchange_tires_brand();">
+                                                                    <select id='selTiresBrand' class='form-control'>
                                                                         <option value='0'>- ค้นหายี่ห้อ -</option>
                                                                     </select>
                                                                     <br>
@@ -119,7 +91,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            for="flexCheckChecked">
                                                                         ลายอื่นๆ
                                                                     </label>
-                                                                    <select id='selTiresClass' class='form-control' onchange="Onchange_tires_class();">
+                                                                    <select id='selTiresClass' class='form-control'>
                                                                         <option value='0'>- ค้นหาลายดอก -</option>
                                                                     </select>
                                                                     <br>
@@ -134,6 +106,33 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </div>
                                                                     </div>
 
+                                                                    <label for="tires_id">เลือกยาง :</label>
+                                                                    <input type="hidden" name="tires_id"
+                                                                           id="tires_id"
+                                                                           class="form-control">
+                                                                    <input type="hidden" id="myCheckValue" name="myCheckValue">
+                                                                    <input type="checkbox" id="myCheck"
+                                                                           name="myCheck" value="N">
+                                                                    <label class="form-check-label"
+                                                                           for="flexCheckChecked">
+                                                                        กรณียางไม่เคยมีขาย
+                                                                    </label>
+
+                                                                    <select id='selTires' class='form-control'>
+                                                                        <option value='0'>- ค้นหายาง -</option>
+                                                                    </select>
+
+                                                                    <br>
+
+                                                                    <div class="form-group has-success">
+                                                                        <label for="success" class="control-label">
+                                                                        </label>
+                                                                        <div class="">
+                                                                            <input type="text" name="other_tires_request"
+                                                                                   class="form-control"
+                                                                                   id="other_tires_request">
+                                                                        </div>
+                                                                    </div>
 
                                                                     <div class="form-group has-success">
                                                                         <label for="success" class="control-label">จำนวนที่ต้องการ
@@ -192,7 +191,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             <span class="icon-input-btn">
                                                                                 <i class="fa fa-check"></i>
                                                                                 <input type="submit" name="save" id="save"
-                                                                                       class="btn btn-primary" value="Save"/>
+                                                                                       class="btn btn-primary" value="Save บันทึกข้อมูล"/>
                                                                             </span>
                                                                         </div>
                                                                     </div>
@@ -334,7 +333,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
 
-    function SetDefault() {
+        function SetDefault() {
             let today = new Date();
             let date_request = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
             $('#date_request').val(date_request);
@@ -358,7 +357,7 @@ if (strlen($_SESSION['alogin']) == "") {
             $( "#selTiresBrand" ).prop( "disabled", false );
             $( "#other_tires_brand" ).prop( "disabled", true );
 
-    }
+        }
 
     </script>
 
@@ -447,14 +446,16 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
+
     <script>
         $(document).ready(function () {
+
             $("#selCustomer").select2({
                 ajax: {
                     url: "model/customer_ajaxfile.php",
                     type: "post",
                     dataType: 'json',
-                    delay: 100,
+                    delay: 250,
                     data: function (params) {
                         return {
                             searchTerm: params.term // search term
@@ -480,7 +481,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     url: "model/get_salename_ajaxfile.php",
                     type: "post",
                     dataType: 'json',
-                    delay: 100,
+                    delay: 250,
                     data: function (params) {
                         return {
                             searchTerm: params.term // search term
@@ -500,12 +501,13 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
+
             $("#selTires").select2({
                 ajax: {
                     url: "model/get_tires_master_ajaxfile.php",
                     type: "post",
                     dataType: 'json',
-                    delay: 100,
+                    delay: 250,
                     data: function (params) {
                         return {
                             searchTerm: params.term // search term
@@ -522,91 +524,6 @@ if (strlen($_SESSION['alogin']) == "") {
         });
 
     </script>
-
-    <script>
-        function Onchange_tires_id() {
-            let p_tires_id = $('#selTires').val();
-            let formData = {action: "GET_DATA_TIRES", p_tires_id: p_tires_id};
-            //$( "#other_tires_brand" ).prop( "disabled", false );
-            //$( "#other_tires_class" ).prop( "disabled", false );
-            $( "#selTiresBrand" ).prop( "disabled", true );
-            $( "#selTiresClass" ).prop( "disabled", true );
-
-            $('#selTiresBrand').val(null).trigger('change');
-            $('#selTiresClass').val(null).trigger('change');
-
-            $.ajax({
-                type: "POST",
-                url: 'model/manage_data_tires_process.php',
-                dataType: "json",
-                data: formData,
-                success: function (response) {
-                    let len = response.length;
-                    for (let i = 0; i < len; i++) {
-                        let tires_brand = response[i].tires_brand;
-                        let tires_class = response[i].tires_class;
-                        $('#selTiresBrand').val(tires_brand);
-                        $('#selTiresClass').val(tires_brand);
-                        $('#other_tires_brand').val(tires_brand);
-                        $('#other_tires_class').val(tires_class);
-                    }
-                },
-                error: function (response) {
-                    alertify.error("error : " + response);
-                }
-            });
-
-
-        }
-
-        function Onchange_tires_brand() {
-            let p_tires_brand = $('#selTiresBrand').val();
-            let formData = {action: "GET_DATA_TIRES_BRAND", p_tires_brand: p_tires_brand};
-            $.ajax({
-                type: "POST",
-                url: 'model/manage_data_tires_process.php',
-                dataType: "json",
-                data: formData,
-                success: function (response) {
-                    let len = response.length;
-                    for (let i = 0; i < len; i++) {
-                        let tires_brand = response[i].tires_brand;
-                        $('#selTiresBrand').val(tires_brand);
-                        $('#other_tires_brand').val(tires_brand);
-                    }
-                },
-                error: function (response) {
-                    alertify.error("error : " + response);
-                }
-            });
-
-        }
-
-        function Onchange_tires_class() {
-            let p_tires_class = $('#selTiresClass').val();
-            let formData = {action: "GET_DATA_TIRES_CLASS", p_tires_class: p_tires_class};
-            $.ajax({
-                type: "POST",
-                url: 'model/manage_data_tires_process.php',
-                dataType: "json",
-                data: formData,
-                success: function (response) {
-                    let len = response.length;
-                    for (let i = 0; i < len; i++) {
-                        let tires_class = response[i].tires_class;
-                        $('#selTiresClass').val(tires_class);
-                        $('#other_tires_class').val(tires_class);
-                    }
-                },
-                error: function (response) {
-                    alertify.error("error : " + response);
-                }
-            });
-
-        }
-
-    </script>
-
 
     <script>
         $(document).ready(function () {
@@ -616,7 +533,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     url: "model/get_tires_brand_ajaxfile.php",
                     type: "post",
                     dataType: 'json',
-                    delay: 100,
+                    delay: 250,
                     data: function (params) {
                         return {
                             searchTerm: params.term // search term
@@ -638,12 +555,11 @@ if (strlen($_SESSION['alogin']) == "") {
         $(document).ready(function () {
 
             $("#selTiresClass").select2({
-
                 ajax: {
                     url: "model/get_tires_class_ajaxfile.php",
                     type: "post",
                     dataType: 'json',
-                    delay: 100,
+                    delay: 250,
                     data: function (params) {
                         return {
                             searchTerm: params.term // search term
@@ -670,7 +586,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     url: "model/get_reason_ajaxfile.php",
                     type: "post",
                     dataType: 'json',
-                    delay: 100,
+                    delay: 250,
                     data: function (params) {
                         return {
                             searchTerm: params.term // search term

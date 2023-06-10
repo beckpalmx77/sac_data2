@@ -122,6 +122,7 @@ if ($_POST["action"] === 'SAVE') {
     $tires_brand = $_POST["tires_brand"];
     $tires_class = $_POST["tires_class"];
     $tires_code = $_POST["tires_code"];
+
     //$tires_detail = $_POST["tires_detail"] . " " . $other_tires_request = $_POST["other_tires_request"];
     $other_tires_request = $_POST["other_tires_request"];
 
@@ -149,8 +150,8 @@ if ($_POST["action"] === 'SAVE') {
         //fwrite($my_file, $sql_get . " | " . $tires_brand . " | " . $tires_class  . " | " . $tires_detail);
         //fclose($my_file);
 
-
-        $date_request = $_POST["date_request"];
+        $current_date = $_POST["current_date"];
+        $date_request = ($_POST['date_request'] === '' || $_POST['date_request'] === null) ? $current_date : $_POST['date_request'];
         $ar_code = $_POST["AR_CODE"];
         $sale_name = $_POST["sale_name"];
         $qty_need = $_POST["qty_need"];

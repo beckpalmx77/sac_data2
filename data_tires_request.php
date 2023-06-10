@@ -48,7 +48,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                             <div class="row">
                                                                 <div class="col-sm-12">
-
+                                                                    <input type="hidden" name="current_date" id="current_date">
                                                                     <label for="date_request"
                                                                            class="control-label">วันที่ต้องการยาง
                                                                         :</label>
@@ -337,6 +337,7 @@ if (strlen($_SESSION['alogin']) == "") {
             let today = new Date();
             let date_request = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
             $('#date_request').val(date_request);
+            $('#current_date').val(date_request);
 
             $('#AR_CODE').val("");
             $('#tires_id').val("");
@@ -372,6 +373,11 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#sale_name').val($(selSale).val());
                 $('#remark').val($(selRemark).val());
                 $('#action').val("SAVE");
+
+                let today = new Date();
+                let current_date = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
+                $('#current_date').val(current_date);
+
                 let formValues = $(this).serialize();
 
                 $.post("model/manage_data_tires_process.php", formValues, function (response) {

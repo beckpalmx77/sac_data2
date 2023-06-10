@@ -47,68 +47,363 @@ foreach ($MonthCurr as $row_curr) {
 
 <p class="card">
 <div class="card-header bg-primary text-white">
-    <i class="fa fa-signal" aria-hidden="true"></i> ยอดขายเปรียบเทียบ
+    <i class="fa fa-signal" aria-hidden="true"></i> รายการยางที่ต้องการ
 </div>
 <input type="hidden" name="year" id="year" class="form-control" value="<?php echo $year; ?>">
 
-<!--div class="card-body">
+<div class="card-body">
     <a id="myLink" href="#" onclick="PrintPage();"><i class="fa fa-print"></i> พิมพ์</a>
-</div-->
+</div>
 
 
 <div class="card">
     <div class="card-body">
         <form id="myform" name="myform" method="post">
-            <input type="hidden" id="branch" name="branch">
-            <input type="hidden" name="product_group" id="product_group" class="form-control"
-                   value="<?php echo $customer_id; ?>">
-            <input type="hidden" name="product_group_name" id="product_group_name" class="form-control"
-                   value="<?php echo $customer_id; ?>">
-
             <div class="card-body">
                 <h4>
                     <span class="badge bg-success"><?php echo $month_name; ?> : <?php echo $year ?></span>
                 </h4>
-                <!--a id="myChartLink" href="#" onclick="Chart_Page('<?php echo $customer_id ?>');">
-                    <button type="button" class="btn btn-outline-primary">ดู Graph</button>
-                </a-->
             </div>
         </form>
+
+    </div>
+</div>
+
+
+
         <table id="example" class="display table table-striped table-bordered"
                cellspacing="0" width="100%">
             <thead>
             <tr>
-                <th>รายละเอียดสินค้า</th>
-                <th>ราคาขาย</th>
-                <th>มค</th>
-                <th>กพ</th>
-                <th>มีค</th>
-                <th>เมย</th>
-                <th>พค</th>
-                <th>มิย</th>
-                <th>กค</th>
-                <th>สค</th>
-                <th>กย</th>
-                <th>ตค</th>
-                <th>พย</th>
-                <th>ธค</th>
-                <th>รวม</th>
-                <th>มค</th>
-                <th>กพ</th>
-                <th>มีค</th>
-                <th>เมย</th>
-                <th>พค</th>
-                <th>มิย</th>
-                <th>กค</th>
-                <th>สค</th>
-                <th>กย</th>
-                <th>ตค</th>
-                <th>พย</th>
-                <th>ธค</th>
-                <th>รวม</th>
+                <th>ยี่ห้อ</th>
+                <th>ลาย</th>
+                <th>รหัส</th>
+                <th>รายการ</th>
+                <th>1</th>
+                <th>1</th>
+                <th>1</th>
+                <th>1</th>
+                <th>1</th>
+                <th>2</th>
+                <th>2</th>
+                <th>2</th>
+                <th>2</th>
+                <th>2</th>
+                <th>3</th>
+                <th>3</th>
+                <th>3</th>
+                <th>3</th>
+                <th>3</th>
+                <th>4</th>
+                <th>4</th>
+                <th>4</th>
+                <th>4</th>
+                <th>4</th>
+                <th>5</th>
+                <th>5</th>
+                <th>5</th>
+                <th>5</th>
+                <th>5</th>
+                <th>6</th>
+                <th>6</th>
+                <th>6</th>
+                <th>6</th>
+                <th>6</th>
+                <th>7</th>
+                <th>7</th>
+                <th>7</th>
+                <th>7</th>
+                <th>7</th>
+                <th>8</th>
+                <th>8</th>
+                <th>8</th>
+                <th>8</th>
+                <th>8</th>
+                <th>9</th>
+                <th>9</th>
+                <th>9</th>
+                <th>9</th>
+                <th>9</th>
+                <th>10</th>
+                <th>10</th>
+                <th>10</th>
+                <th>10</th>
+                <th>10</th>
+                <th>11</th>
+                <th>11</th>
+                <th>11</th>
+                <th>11</th>
+                <th>11</th>
+                <th>12</th>
+                <th>12</th>
+                <th>12</th>
+                <th>12</th>
+                <th>12</th>
+                <th>13</th>
+                <th>13</th>
+                <th>13</th>
+                <th>13</th>
+                <th>13</th>
+                <th>14</th>
+                <th>14</th>
+                <th>14</th>
+                <th>14</th>
+                <th>14</th>
+                <th>15</th>
+                <th>15</th>
+                <th>15</th>
+                <th>15</th>
+                <th>15</th>
+                <th>16</th>
+                <th>16</th>
+                <th>16</th>
+                <th>16</th>
+                <th>16</th>
+                <th>17</th>
+                <th>17</th>
+                <th>17</th>
+                <th>17</th>
+                <th>17</th>
+                <th>18</th>
+                <th>18</th>
+                <th>18</th>
+                <th>18</th>
+                <th>18</th>
+                <th>19</th>
+                <th>19</th>
+                <th>19</th>
+                <th>19</th>
+                <th>19</th>
+                <th>20</th>
+                <th>20</th>
+                <th>20</th>
+                <th>20</th>
+                <th>20</th>
+                <th>21</th>
+                <th>21</th>
+                <th>21</th>
+                <th>21</th>
+                <th>21</th>
+                <th>22</th>
+                <th>22</th>
+                <th>22</th>
+                <th>22</th>
+                <th>22</th>
+                <th>23</th>
+                <th>23</th>
+                <th>23</th>
+                <th>23</th>
+                <th>23</th>
+                <th>24</th>
+                <th>24</th>
+                <th>24</th>
+                <th>24</th>
+                <th>24</th>
+                <th>25</th>
+                <th>25</th>
+                <th>25</th>
+                <th>25</th>
+                <th>25</th>
+                <th>26</th>
+                <th>26</th>
+                <th>26</th>
+                <th>26</th>
+                <th>26</th>
+                <th>27</th>
+                <th>27</th>
+                <th>27</th>
+                <th>27</th>
+                <th>27</th>
+                <th>28</th>
+                <th>28</th>
+                <th>28</th>
+                <th>28</th>
+                <th>28</th>
+                <th>29</th>
+                <th>29</th>
+                <th>29</th>
+                <th>29</th>
+                <th>29</th>
+                <th>30</th>
+                <th>30</th>
+                <th>30</th>
+                <th>30</th>
+                <th>30</th>
+                <th>31</th>
+                <th>31</th>
+                <th>31</th>
+                <th>31</th>
+                <th>31</th>
+                <th>สรุป</th>
             </tr>
             </tr>
             </thead>
+            <thead>
+            <tr>
+                <th>สินค้า</th>
+                <th>ดอกยาง</th>
+                <th>สินค้า</th>
+                <th>สินค้า</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>Cust.</th>
+                <th>Take/Sale</th>
+                <th>Stock</th>
+                <th>Date In</th>
+                <th>Qty Need</th>
+                <th>ยอดรวม</th>
+            </tr>
+            </tr>
+            </thead>
+
             <tfoot>
             </tfoot>
             <tbody>
@@ -251,13 +546,7 @@ ORDER BY SKU_CODE ,  CONVERT(DI_YEAR, FLOAT),CONVERT(DI_MONTH, FLOAT) ";
 
             </tbody>
         </table>
-    </div>
-</div>
 
-
-<!--div class="card-body">
-    <a id="myLink" href="#" onclick="PrintPage();"><i class="fa fa-print"></i> พิมพ์</a>
-</div-->
 
 
 </body>

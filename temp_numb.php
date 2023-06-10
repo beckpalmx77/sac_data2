@@ -1,0 +1,5 @@
+IF(month_req='31',customer_name,'-') AS 31_CUST,
+IF(month_req='31',sale_name,'-') AS 31_SALE,
+IF(month_req='31',remark,'-') AS 31_STOCK,
+IF(month_req='31',date_in,'-') AS 31_DATE_IN,
+SUM(IF(month_req='31',qty_need,0)) AS 31_QTY,

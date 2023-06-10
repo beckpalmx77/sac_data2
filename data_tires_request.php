@@ -347,6 +347,7 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
 
         function SetDefault() {
+
             let today = new Date();
             let date_request = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
             $('#date_request').val(date_request);

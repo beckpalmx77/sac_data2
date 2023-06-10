@@ -60,6 +60,34 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            placeholder="วันที่">
                                                                     <br>
 
+                                                                    <label for="tires_id">เลือกยางตามรายการสินค้า (ป้อนตัวอักษรเพื่อค้นหาในช่องค้นหายาง) : </label>
+                                                                    <input type="hidden" name="tires_id"
+                                                                           id="tires_id"
+                                                                           class="form-control">
+                                                                    <input type="hidden" id="myCheckValue" name="myCheckValue">
+                                                                    <input type="checkbox" id="myCheck"
+                                                                           name="myCheck" value="N">
+                                                                    <label class="form-check-label"
+                                                                           for="flexCheckChecked">
+                                                                        กรณียางไม่เคยมีขาย
+                                                                    </label>
+
+                                                                    <select id='selTires' class='form-control' onchange="Onchange_tires_id();">
+                                                                        <option value='0'>- ค้นหายาง -</option>
+                                                                    </select>
+
+                                                                    <br>
+
+                                                                    <div class="form-group has-success">
+                                                                        <label for="success" class="control-label">
+                                                                        </label>
+                                                                        <div class="">
+                                                                            <input type="text" name="other_tires_request"
+                                                                                   class="form-control"
+                                                                                   id="other_tires_request">
+                                                                        </div>
+                                                                    </div>
+
                                                                     <label for="other_tires_brand">เลือกยี่ห้อ :</label>
                                                                     <input type="hidden" id="myCheckValueBrand" name="myCheckValueBrand">
                                                                     <input type="checkbox" id="myCheckBrand"
@@ -68,7 +96,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            for="flexCheckChecked">
                                                                         ยี่ห้ออื่นๆ
                                                                     </label>
-                                                                    <select id='selTiresBrand' class='form-control'>
+                                                                    <select id='selTiresBrand' class='form-control' onchange="Onchange_tires_brand();">
                                                                         <option value='0'>- ค้นหายี่ห้อ -</option>
                                                                     </select>
                                                                     <br>
@@ -91,7 +119,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            for="flexCheckChecked">
                                                                         ลายอื่นๆ
                                                                     </label>
-                                                                    <select id='selTiresClass' class='form-control'>
+                                                                    <select id='selTiresClass' class='form-control' onchange="Onchange_tires_class();">
                                                                         <option value='0'>- ค้นหาลายดอก -</option>
                                                                     </select>
                                                                     <br>
@@ -103,34 +131,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             <input type="text" name="other_tires_class"
                                                                                    class="form-control"
                                                                                    id="other_tires_class">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <label for="tires_id">เลือกยาง :</label>
-                                                                    <input type="hidden" name="tires_id"
-                                                                           id="tires_id"
-                                                                           class="form-control">
-                                                                    <input type="hidden" id="myCheckValue" name="myCheckValue">
-                                                                    <input type="checkbox" id="myCheck"
-                                                                           name="myCheck" value="N">
-                                                                    <label class="form-check-label"
-                                                                           for="flexCheckChecked">
-                                                                        กรณียางไม่เคยมีขาย
-                                                                    </label>
-
-                                                                    <select id='selTires' class='form-control'>
-                                                                        <option value='0'>- ค้นหายาง -</option>
-                                                                    </select>
-
-                                                                    <br>
-
-                                                                    <div class="form-group has-success">
-                                                                        <label for="success" class="control-label">
-                                                                        </label>
-                                                                        <div class="">
-                                                                            <input type="text" name="other_tires_request"
-                                                                                   class="form-control"
-                                                                                   id="other_tires_request">
                                                                         </div>
                                                                     </div>
 
@@ -607,6 +607,55 @@ if (strlen($_SESSION['alogin']) == "") {
                 }
             });
         });
+
+    </script>
+
+    <script>
+    function Onchange_tires_brand() {
+        let p_tires_brand = $('#selTiresBrand').val();
+        let formData = {action: "GET_DATA_TIRES_BRAND", p_tires_brand: p_tires_brand};
+        $.ajax({
+            type: "POST",
+            url: 'model/manage_data_tires_process.php',
+            dataType: "json",
+            data: formData,
+            success: function (response) {
+                let len = response.length;
+                for (let i = 0; i < len; i++) {
+                    let tires_brand = response[i].tires_brand;
+                    $('#selTiresBrand').val(tires_brand);
+                    $('#other_tires_brand').val(tires_brand);
+                }
+            },
+            error: function (response) {
+                alertify.error("error : " + response);
+            }
+        });
+
+    }
+
+    function Onchange_tires_class() {
+        let p_tires_class = $('#selTiresClass').val();
+        let formData = {action: "GET_DATA_TIRES_CLASS", p_tires_class: p_tires_class};
+        $.ajax({
+            type: "POST",
+            url: 'model/manage_data_tires_process.php',
+            dataType: "json",
+            data: formData,
+            success: function (response) {
+                let len = response.length;
+                for (let i = 0; i < len; i++) {
+                    let tires_class = response[i].tires_class;
+                    $('#selTiresClass').val(tires_class);
+                    $('#other_tires_class').val(tires_class);
+                }
+            },
+            error: function (response) {
+                alertify.error("error : " + response);
+            }
+        });
+
+    }
 
     </script>
 

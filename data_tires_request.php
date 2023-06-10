@@ -164,7 +164,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <br>
                                                                     <br>
 
-                                                                    <label for="AR_CODE">STOCK :</label>
+                                                                    <label for="AR_CODE">Stock : ส่วนงานจัดซื้อ</label>
                                                                     <input type="hidden" name="remark" id="remark"
                                                                            class="form-control">
                                                                     <select id='selRemark' class='form-control'>

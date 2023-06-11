@@ -47,15 +47,65 @@ foreach ($MonthCurr as $row_curr) {
 
 <body onload="">
 
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+</style>
+
+<style>
+    /* HOVER STYLES */
+
+    div#pop-up {
+        display: none;
+        position: absolute;
+        width: 280px;
+        padding: 10px;
+        background: #eeeeee;
+        color: #000000;
+        border: 1px solid #1a1a1a;
+        font-size: 90%;
+    }
+</style>
+
+<script>
+    $(function() {
+        var moveLeft = 20;
+        var moveDown = 10;
+
+        $('a.trigger').hover(function(e) {
+            $('div#pop-up').show();
+            //.css('top', e.pageY + moveDown)
+            //.css('left', e.pageX + moveLeft)
+            //.appendTo('body');
+        }, function() {
+            $('div#pop-up').hide();
+        });
+
+        $('a.trigger').mousemove(function(e) {
+            $("div#pop-up").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+        });
+
+    });
+</script>
+
 <p class="card">
 <div class="card-header bg-primary text-white">
     <i class="fa fa-signal" aria-hidden="true"></i> รายการยางที่ต้องการ
 </div>
 <input type="hidden" name="year" id="year" class="form-control" value="<?php echo $year; ?>">
 
-<div class="card-body">
+<!--div class="card-body">
     <a id="myLink" href="#" onclick="PrintPage();"><i class="fa fa-print"></i> พิมพ์</a>
-</div>
+</div-->
 
 
 <div class="card">
@@ -72,6 +122,7 @@ foreach ($MonthCurr as $row_curr) {
 </div>
 
 
+<div style="overflow-x:auto;">
 
         <table id="example" class="display table table-striped table-bordered"
                cellspacing="0" width="100%">
@@ -1067,16 +1118,24 @@ ORDER BY tires_detail ,  CONVERT(year_req, FLOAT),CONVERT(date_request, FLOAT) "
                 <td align="right"><p
                             class="number"><?php echo htmlentities(number_format($row_data['31_QTY'], 2)); ?></p>
                 </td>
-                <td align="left"><p
-                            class="text-center"><?php echo htmlentities($row_data['TOTAL_QTY_NEED']); ?></p>
+                <td align="right"><a href="#" class="trigger"><?php echo htmlentities(number_format($row_data['TOTAL_QTY_NEED'], 2)); ?></a>
+
+                        <div id="pop-up">
+                            <p>
+                                <?php echo htmlentities($row_data['tires_detail']); ?>
+                        </p>
+
+                    </div>
                 </td>
+
+
 
                 <?php } ?>
 
             </tbody>
         </table>
 
-
+</div>
 
 </body>
 </html>

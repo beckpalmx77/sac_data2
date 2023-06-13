@@ -22,9 +22,12 @@ try {
     echo $e->getMessage();
 }
 
-/*
-$stmt = $conn->query("SELECT * FROM SC_DOCINFO ORDER BY DI_REF DESC LIMIT 10  ");
+$table_name = "SC_DOCINFO";
+$field_sort = "DI_REF";
+
+$sql_Select = "SELECT * FROM " .  $table_name . " ORDER BY " . $field_sort . " LIMIT 10 " ;
+
+$stmt = $conn->query($sql_Select);
 while ($row = $stmt->fetch()) {
-    echo $row['DI_REF']."<br />\n";
+    echo $row['0']."<br />\n";
 }
-*/

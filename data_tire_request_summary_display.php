@@ -23,6 +23,7 @@ foreach ($MonthCurr as $row_curr) {
 
 <html>
 <head>
+    <title>สงวนออโต้คาร์ | SANGUAN AUTO CAR</title>
     <meta charset="UTF-8">
     <meta date="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
@@ -64,10 +65,10 @@ foreach ($MonthCurr as $row_curr) {
 
 <p class="card">
 <div class="card-header bg-primary text-white">
-    <i class="fa fa-signal" aria-hidden="true"></i> รายการยางที่ต้องการ
+    <i class="fa fa-signal" aria-hidden="true"></i> รายการยางที่ต้องการ <?php echo " : " . $month_name; ?> : <?php echo $year ?>
 </div>
 
-<div class="card">
+<!--div class="card">
     <div class="card-body">
         <form id="myform" name="myform" method="post">
             <div class="card-body">
@@ -78,7 +79,7 @@ foreach ($MonthCurr as $row_curr) {
         </form>
 
     </div>
-</div>
+</div-->
 
 <div class="card">
     <div class="card-body">

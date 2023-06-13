@@ -81,7 +81,7 @@ foreach ($CustRecords as $row) {
             <thead>
             <tr>
                 <th>รายละเอียดสินค้า</th>
-                <th>ราคาขาย</th>
+                <th><p style="color:rgb(8,153,23);">ราคาขาย</p></th>
                 <th>มค</th>
                 <th>กพ</th>
                 <th>มีค</th>
@@ -94,7 +94,7 @@ foreach ($CustRecords as $row) {
                 <th>ตค</th>
                 <th>พย</th>
                 <th>ธค</th>
-                <th>รวม</th>
+                <th><p style="color:rgb(255,0,0);">รวม</p></th>
                 <th>มค</th>
                 <th>กพ</th>
                 <th>มีค</th>
@@ -107,7 +107,7 @@ foreach ($CustRecords as $row) {
                 <th>ตค</th>
                 <th>พย</th>
                 <th>ธค</th>
-                <th>รวม</th>
+                <th><p style="color:rgb(255,0,0);">รวม</p></th>
             </tr>
             </tr>
             </thead>

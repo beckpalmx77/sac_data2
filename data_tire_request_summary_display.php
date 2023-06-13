@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-
+include('includes/Header.php');
 session_start();
 error_reporting(0);
 include("config/connect_db.php");
@@ -18,13 +18,6 @@ $MonthCurr = $stmt_curr_month->fetchAll();
 foreach ($MonthCurr as $row_curr) {
     $month_name = $row_curr["month_name"];
 }
-
-
-//$myfile = fopen("a_data-param.txt", "w") or die("Unable to open file!");
-//fwrite($myfile,  $sql_curr_month . " | month_str = " . $month_str . " | month_name = " . $month_name . " | month - " . $month . " | year = " . $year );
-//fclose($myfile);
-
-
 
 ?>
 
@@ -48,7 +41,20 @@ foreach ($MonthCurr as $row_curr) {
 
 <script>
     $(document).ready(function () {
-        let table = $('#example').DataTable({
+        let table = $('#data_tires_table').DataTable({
+            'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
+            'language': {
+                search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
+                info: 'หน้าที่ _PAGE_ จาก _PAGES_',
+                infoEmpty: 'ไม่มีข้อมูล',
+                zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
+                infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
+                paginate: {
+                    previous: 'ก่อนหน้า',
+                    last: 'สุดท้าย',
+                    next: 'ต่อไป'
+                }
+            },
             scrollY: "500px",
             scrollX: true,
             scrollCollapse: true,
@@ -89,7 +95,7 @@ foreach ($MonthCurr as $row_curr) {
 
 <div class="card">
     <div class="card-body">
-        <table id="example" class="stripe row-border order-column" style="width:100%">
+        <table id="data_tires_table" class="stripe row-border order-column" style="width:100%">
             <thead>
             <tr>
                 <th>ยี่ห้อ</th>
@@ -275,18 +281,15 @@ SUM(IF(date_req='31',qty_need,0)) AS 31_QTY,
 SUM(qty_need) AS TOTAL_QTY_NEED
 FROM v_ims_tires_request 
 WHERE month_req = '" . $month_str . "'"
-                . " AND year_req = '" . $year . "'"
-
-                . " GROUP BY date_request,date_in,customer_name,sale_name,tires_brand,tires_class,tires_detail,sale_name
-ORDER BY tires_detail ,  CONVERT(year_req, FLOAT),CONVERT(date_request, FLOAT) ";
+. " AND year_req = '" . $year . "'"
+. " GROUP BY date_request,date_in,customer_name,sale_name,tires_brand,tires_class,tires_detail,sale_name
+ORDER BY tires_detail , customer_name ,  CONVERT(year_req, FLOAT),CONVERT(date_request, FLOAT) ";
 
 
             $statement_data = $conn->query($sql_data);
             $results_data = $statement_data->fetchAll(PDO::FETCH_ASSOC);
 
-            foreach ($results_data
-
-                     as $row_data) { ?>
+            foreach ($results_data as $row_data) { ?>
 
                 <tr>
                     <td align="left"><p

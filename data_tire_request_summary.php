@@ -193,6 +193,8 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script src="js/MyFrameWork/framework_util.js"></script>
 
+    <script type="text/javascript" charset="utf-8"></script>
+
     <!--script>
         $(document).ready(function () {
             $('#myCheckValue').val('N');

@@ -39,6 +39,7 @@ foreach ($MonthCurr as $row_curr) {
 <script src="js/fix_data_table422.js"></script>
 <link rel="stylesheet" href="css/datatables.min.css"/>
 <link rel="stylesheet" href="css/fixcolumn_data_table422.css"/>
+<script type="text/javascript" charset="utf-8"></script>
 
 <script>
     $(document).ready(function () {

@@ -1,4 +1,6 @@
+<!DOCTYPE html>
 <?php
+
 session_start();
 error_reporting(0);
 include("config/connect_db.php");
@@ -18,95 +20,59 @@ foreach ($MonthCurr as $row_curr) {
 }
 
 
+//$myfile = fopen("a_data-param.txt", "w") or die("Unable to open file!");
+//fwrite($myfile,  $sql_curr_month . " | month_str = " . $month_str . " | month_name = " . $month_name . " | month - " . $month . " | year = " . $year );
+//fclose($myfile);
+
+
+
 ?>
-<!DOCTYPE html>
-<html lang="en">
+
+<html>
 <head>
     <meta charset="UTF-8">
     <meta date="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-    <script src="js/jquery-3.6.0.js"></script>
-    <!--script src="js/chartjs-2.9.0.js"></script-->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="fontawesome/css/font-awesome.css">
-
-    <link href='vendor/calendar/main.css' rel='stylesheet'/>
-    <script src='vendor/calendar/main.js'></script>
-    <script src='vendor/calendar/locales/th.js'></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-
-    <script src='js/util.js'></script>
-
-    <title>สงวนออโต้คาร์</title>
-
-
+    <title>Title of the document</title>
 </head>
+<body>
 
-<body onload="">
-
-
-<style>
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    th, td {
-        text-align: left;
-        padding: 8px;
-    }
-
-</style>
-
-<style>
-    /* HOVER STYLES */
-
-    div#pop-up {
-        display: none;
-        position: absolute;
-        width: 280px;
-        padding: 10px;
-        background: #eeeeee;
-        color: #000000;
-        border: 1px solid #1a1a1a;
-        font-size: 90%;
-    }
-</style>
+<script src="js/jquery-3.5.1.js"></script>
+<script src="js/datatables.min.js"></script>
+<script src="js/fix_data_table422.js"></script>
+<link rel="stylesheet" href="css/datatables.min.css"/>
+<link rel="stylesheet" href="css/fixcolumn_data_table422.css"/>
 
 <script>
-    $(function () {
-        var moveLeft = 20;
-        var moveDown = 10;
-
-        $('a.trigger').hover(function (e) {
-            $('div#pop-up').show();
-            //.css('top', e.pageY + moveDown)
-            //.css('left', e.pageX + moveLeft)
-            //.appendTo('body');
-        }, function () {
-            $('div#pop-up').hide();
+    $(document).ready(function () {
+        let table = $('#example').DataTable({
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            fixedColumns: {
+                left: 4,
+                right: 1
+            }
         });
-
-        $('a.trigger').mousemove(function (e) {
-            $("div#pop-up").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
-        });
-
     });
 </script>
+
+<style>
+
+    div.container {
+        width: 70%;
+    }
+
+</style>
 
 <p class="card">
 <div class="card-header bg-primary text-white">
     <i class="fa fa-signal" aria-hidden="true"></i> รายการยางที่ต้องการ
 </div>
-<input type="hidden" name="year" id="year" class="form-control" value="<?php echo $year; ?>">
-
-<!--div class="card-body">
-    <a id="myLink" href="#" onclick="PrintPage();"><i class="fa fa-print"></i> พิมพ์</a>
-</div-->
-
 
 <div class="card">
     <div class="card-body">
@@ -121,62 +87,35 @@ foreach ($MonthCurr as $row_curr) {
     </div>
 </div>
 
+<div class="card">
+    <div class="card-body">
+        <table id="example" class="stripe row-border order-column" style="width:100%">
+            <thead>
+            <tr>
+                <th>ยี่ห้อ</th>
+                <th>ลายดอกยาง</th>
+                <th>รหัสสินค้า</th>
+                <th>รายการสินค้า</th>
+                <?php
 
-<div style="overflow-x:auto;">
+                for ($day = 1; $day <= 31; $day++) {
 
-    <table id="example" class="display table table-striped table-bordered"
-           cellspacing="0" width="100%">
-        <thead>
-        <tr>
-            <th>ยี่ห้อ</th>
-            <th>ลาย</th>
-            <th>รหัส</th>
-            <th>รายการ</th>
-            <?php
-
-            for ($day = 1; $day <= 31; $day++) {
-
-                echo "  <th>" . $day . " </th>
+                    echo "  <th>" . $day . " </th>
                 <th>" . $day . " </th>
                 <th>" . $day . " </th>
                 <th>" . $day . " </th>
                 <th>" . $day . " </th>";
 
-            }
-            ?>
-            <th>สรุป</th>
-        </tr>
-
-        </thead>
-        <thead>
-        <tr>
-            <th>สินค้า</th>
-            <th>ดอกยาง</th>
-            <th>สินค้า</th>
-            <th>สินค้า</th>
+                }
+                ?>
+                <th>สรุป</th>
+            </tr>
+            </thead>
+            <tbody>
             <?php
-
-            for ($day = 1; $day <= 31; $day++) {
-
-                echo "  <th>Cust.</th>
-                <th>Take/Sale</th>
-                <th>Stock</th>
-                <th>Date In</th>
-                <th>Qty Need</th>";
-            }
-            ?>
-            <th>ยอดรวม</th>
-        </tr>
-
-        </thead>
-
-        <tfoot>
-        </tfoot>
-        <tbody>
-        <?php
-        $date = date("d/m/Y");
-        $total = 0;
-        $sql_data = " SELECT date_request,tires_brand,tires_class,tires_code,tires_detail,customer_name,sale_name,remark 
+            $date = date("d/m/Y");
+            $total = 0;
+            $sql_data = " SELECT date_request,tires_brand,tires_class,tires_code,tires_detail,customer_name,sale_name,remark 
  ,date_in ,date_req,month_req,year_req,
 IF(date_req='01',customer_name,'-') AS 1_CUST,
 IF(date_req='01',sale_name,'-') AS 1_SALE,
@@ -336,522 +275,510 @@ SUM(IF(date_req='31',qty_need,0)) AS 31_QTY,
 SUM(qty_need) AS TOTAL_QTY_NEED
 FROM v_ims_tires_request 
 WHERE month_req = '" . $month_str . "'"
-            . " AND year_req = '" . $year . "'"
+                . " AND year_req = '" . $year . "'"
 
-            . " GROUP BY date_request,date_in,customer_name,sale_name,tires_brand,tires_class,tires_detail,sale_name
+                . " GROUP BY date_request,date_in,customer_name,sale_name,tires_brand,tires_class,tires_detail,sale_name
 ORDER BY tires_detail ,  CONVERT(year_req, FLOAT),CONVERT(date_request, FLOAT) ";
 
-        //$myfile = fopen("param_post_sql.txt", "w") or die("Unable to open file!");
-        //fwrite($myfile, $sql_data);
-        //fclose($myfile);
 
-        $statement_data = $conn->query($sql_data);
-        $results_data = $statement_data->fetchAll(PDO::FETCH_ASSOC);
+            $statement_data = $conn->query($sql_data);
+            $results_data = $statement_data->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($results_data
+            foreach ($results_data
 
-        as $row_data) { ?>
+                     as $row_data) { ?>
 
-        <tr>
+                <tr>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['tires_brand']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['tires_class']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['tires_code']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['tires_detail']); ?></p>
+                    </td>
 
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['tires_brand']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['tires_class']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['tires_code']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['tires_detail']); ?></p>
-            </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['1_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['1_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['1_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['1_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['1_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['2_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['2_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['2_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['2_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['2_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['3_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['3_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['3_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['3_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['3_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['4_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['4_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['4_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['4_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['4_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['5_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['5_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['5_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['5_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['5_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['6_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['6_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['6_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['6_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['6_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['7_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['7_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['7_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['7_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['7_QTY'], 2)); ?></p>
+                    </td>
 
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['1_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['1_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['1_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['1_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['1_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['2_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['2_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['2_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['2_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['2_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['3_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['3_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['3_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['3_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['3_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['4_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['4_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['4_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['4_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['4_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['5_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['5_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['5_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['5_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['5_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['6_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['6_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['6_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['6_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['6_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['7_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['7_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['7_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['7_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['7_QTY'], 2)); ?></p>
-            </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['8_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['8_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['8_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['8_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['8_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['9_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['9_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['9_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['9_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['9_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['10_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['10_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['10_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['10_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['10_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['11_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['11_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['11_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['11_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['11_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['12_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['12_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['12_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['12_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['12_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['13_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['13_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['13_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['13_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['13_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['14_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['14_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['14_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['14_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['14_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['15_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['15_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['15_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['15_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['15_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['16_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['16_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['16_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['16_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['16_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['17_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['17_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['17_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['17_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['17_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['18_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['18_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['18_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['18_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['18_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['19_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['19_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['19_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['19_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['19_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['20_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['20_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['20_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['20_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['20_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['21_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['21_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['21_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['21_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['21_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['22_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['22_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['22_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['22_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['22_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['23_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['23_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['23_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['23_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['23_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['24_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['24_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['24_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['24_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['24_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['25_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['25_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['25_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['25_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['25_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['26_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['26_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['26_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['26_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['26_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['27_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['27_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['27_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['27_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['27_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['28_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['28_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['28_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['28_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['28_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['29_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['29_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['29_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['29_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['29_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['30_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['30_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['30_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['30_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['30_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['31_CUST']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['31_SALE']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['31_STOCK']); ?></p>
+                    </td>
+                    <td align="left"><p
+                                class="text-center"><?php echo htmlentities($row_data['31_DATE_IN']); ?></p>
+                    </td>
+                    <td align="right"><p
+                                class="number"><?php echo htmlentities(number_format($row_data['31_QTY'], 2)); ?></p>
+                    </td>
+                    <td align="right">
+                        <a href="#" class="trigger"><?php echo htmlentities(number_format($row_data['TOTAL_QTY_NEED'], 2)); ?>
+                        </a>
+                    </td>
+                </tr>
 
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['8_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['8_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['8_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['8_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['8_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['9_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['9_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['9_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['9_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['9_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['10_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['10_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['10_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['10_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['10_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['11_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['11_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['11_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['11_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['11_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['12_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['12_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['12_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['12_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['12_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['13_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['13_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['13_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['13_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['13_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['14_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['14_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['14_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['14_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['14_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['15_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['15_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['15_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['15_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['15_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['16_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['16_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['16_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['16_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['16_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['17_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['17_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['17_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['17_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['17_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['18_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['18_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['18_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['18_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['18_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['19_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['19_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['19_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['19_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['19_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['20_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['20_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['20_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['20_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['20_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['21_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['21_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['21_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['21_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['21_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['22_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['22_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['22_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['22_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['22_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['23_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['23_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['23_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['23_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['23_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['24_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['24_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['24_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['24_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['24_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['25_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['25_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['25_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['25_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['25_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['26_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['26_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['26_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['26_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['26_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['27_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['27_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['27_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['27_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['27_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['28_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['28_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['28_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['28_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['28_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['29_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['29_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['29_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['29_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['29_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['30_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['30_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['30_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['30_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['30_QTY'], 2)); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['31_CUST']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['31_SALE']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['31_STOCK']); ?></p>
-            </td>
-            <td align="left"><p
-                        class="text-center"><?php echo htmlentities($row_data['31_DATE_IN']); ?></p>
-            </td>
-            <td align="right"><p
-                        class="number"><?php echo htmlentities(number_format($row_data['31_QTY'], 2)); ?></p>
-            </td>
-            <td align="right"><a href="#"
-                                 class="trigger"><?php echo htmlentities(number_format($row_data['TOTAL_QTY_NEED'], 2)); ?></a>
+            <?php } ?>
 
-
+            </tbody>
+        </table>
+    </div>
 </div>
-</td>
-
-<td align="right"><p
-            class="text-center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-</td>
-
-
-<?php } ?>
-
-</tbody>
-</table>
-
-</div>
-
 </body>
 </html>
-

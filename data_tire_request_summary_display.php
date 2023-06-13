@@ -59,7 +59,7 @@ foreach ($MonthCurr as $row_curr) {
 <style>
 
     div.container {
-        width: 70%;
+        width: 80%;
     }
 
 </style>

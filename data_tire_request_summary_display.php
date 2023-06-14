@@ -69,19 +69,6 @@ foreach ($MonthCurr as $row_curr) {
     <i class="fa fa-signal" aria-hidden="true"></i> รายการยางที่ต้องการ <?php echo " : " . $month_name; ?> : <?php echo $year ?>
 </div>
 
-<!--div class="card">
-    <div class="card-body">
-        <form id="myform" name="myform" method="post">
-            <div class="card-body">
-                <h4>
-                    <span class="badge bg-success"><?php echo $month_name; ?> : <?php echo $year ?></span>
-                </h4>
-            </div>
-        </form>
-
-    </div>
-</div-->
-
 <div class="card">
     <div class="card-body">
         <table id="data_tires_table" class="stripe row-border order-column" style="width:100%">

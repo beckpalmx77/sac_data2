@@ -2,9 +2,11 @@
 
 
 $host = 'sac.cckwqocv7kfy.ap-southeast-1.rds.amazonaws.com';
-$db = 'MADB_PRODUCT_2564';
-$username = 'sac';
-$password = "l;ovvF9h8kiN";
+$db = 'sac';
+$username = 'sacdbm';
+$password = "Sac123456";
+//$username = 'sac';
+//$password = "l;ovvF9h8kiN";
 
 $dsn = "pgsql:host=$host;port=5432;dbname=$db;user=$username;password=$password";
 

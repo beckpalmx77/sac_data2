@@ -44,6 +44,19 @@ foreach ($MonthCurr as $row_curr) {
 <script>
     $(document).ready(function () {
         let table = $('#data_tires_table').DataTable({
+            'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
+            'language': {
+                search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
+                info: 'หน้าที่ _PAGE_ จาก _PAGES_',
+                infoEmpty: 'ไม่มีข้อมูล',
+                zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
+                infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
+                paginate: {
+                    previous: 'ก่อนหน้า',
+                    last: 'สุดท้าย',
+                    next: 'ต่อไป'
+                }
+            },
             scrollY: "500px",
             scrollX: true,
             scrollCollapse: true,

@@ -57,7 +57,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/mycalendar/list" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mycalendar/timegrid" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/constant_time_encoding" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-amqplib/php-amqplib" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpseclib/phpseclib" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/setasign/fpdi" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/tcpdf/config" />

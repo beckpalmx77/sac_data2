@@ -6,32 +6,34 @@ require_once '../vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
+for ($loop=0;$loop<=99999999999999999999999999;$loop++) {
+
     $current_date = date("Y-m-d");
     //$current_date = "2023-07-04";
 
-    echo $current_date . "\n\r" ;
+    echo "Loop = " . $loop . " " . $current_date . "\n\r";
 
     $sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_customers.owner FROM sac_orders
     LEFT JOIN sac_customers ON sac_customers.id = sac_orders.customer_id  
     WHERE date >= '" . $current_date . "'";
 
-    echo $sql_pg . "\n\r" ;
+    echo $sql_pg . "\n\r";
 
     $stmt = $conn_pg->prepare($sql_pg);
     $stmt->execute();
     $orders = $stmt->fetchAll();
     foreach ($orders as $order) {
-        $sql_find = " SELECT code_id FROM ims_sac_orders WHERE code_id = " . $order['id'] ;
-        echo $sql_find . "\n\r" ;
+        $sql_find = " SELECT code_id FROM ims_sac_orders WHERE code_id = " . $order['id'];
+        echo $sql_find . "\n\r";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            echo "Dup id = " . $order['id'] . "\n\r" ;
+            echo "Dup id = " . $order['id'] . "\n\r";
             $data = "";
         } else {
             $data = $order['id'];
-            echo "Insert id = " . $data . "\n\r" ;
+            echo "Insert id = " . $data . "\n\r";
             $sql = " INSERT INTO ims_sac_orders (code_id,date,customer_id,customer_code,customer_name,owner,address,contract_name,contract_phone) 
-            VALUE (:code_id,:date,:customer_id,:customer_code,:customer_name,:owner,:address,:contract_name,:contract_phone) " ;
+            VALUE (:code_id,:date,:customer_id,:customer_code,:customer_name,:owner,:address,:contract_name,:contract_phone) ";
             $query = $conn->prepare($sql);
             $query->bindParam(':code_id', $order["id"], PDO::PARAM_STR);
             $query->bindParam(':date', $order["date"], PDO::PARAM_STR);
@@ -64,4 +66,4 @@ use PhpAmqpLib\Message\AMQPMessage;
         }
     }
 
-
+}

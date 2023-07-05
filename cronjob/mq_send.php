@@ -6,8 +6,8 @@ require_once '../vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-    //$current_date = date("Y-m-d");
-    $current_date = "2023-07-04";
+    $current_date = date("Y-m-d");
+    //$current_date = "2023-07-04";
 
     echo $current_date . "\n\r" ;
 

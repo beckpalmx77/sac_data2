@@ -6,12 +6,14 @@ require_once '../vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
+$maxvalue = 999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999;
 
+for ($loop=0;$loop<=$maxvalue;$loop++) {
 
     $current_date = date("Y-m-d");
     //$current_date = "2023-07-04";
 
-    echo "Date = " . $current_date . "\n\r";
+    echo "Loop = " . $loop . " " . $current_date . "\n\r";
 
     $sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_customers.owner FROM sac_orders
     LEFT JOIN sac_customers ON sac_customers.id = sac_orders.customer_id  
@@ -66,4 +68,4 @@ use PhpAmqpLib\Message\AMQPMessage;
         }
     }
 
-
+}

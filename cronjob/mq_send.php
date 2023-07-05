@@ -6,7 +6,10 @@ require_once '../vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-
+echo "Time in Bangkok\n";
+$date2 = new DateTime();
+$date2->setTimezone(new DateTimeZone('Asia/Bangkok'));
+echo $date2->format(DateTime::RFC1123) . "\n";
 
 $current_date = date("Y-m-d");
 //$current_date = "2023-07-04";

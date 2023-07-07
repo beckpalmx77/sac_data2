@@ -2,7 +2,6 @@
 date_default_timezone_set("Asia/Bangkok");
 include('../config/db_value.inc');
 include '../config/config_rabbit.inc';
-include '../util/send_message.php';
 require_once '../vendor/autoload.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -38,20 +37,15 @@ $callback = function ($msg) {
         $stmt->execute();
         echo 'Update data into MySQL: ' . $data . "\n";
 
+/*
         $sql_find = "SELECT date,customer_code,customer_name FROM ims_sac_orders WHERE code_id = " . $data ;
-
         $row = $conn->query($sql_find)->fetch();
         if (!empty($row["1"])) {
             $date = $row["0"];
             $customer_code = $row["1"];
             $customer_name = $row["2"];
         }
-
-
-        $sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
-        $sMessage = "มีรายการสั่งซื้อเข้า เลขที่เอกสาร = " . $data . " " . $date . " " . $customer_code . " " . $customer_name ;
-        echo $sMessage ;
-        //sendLineNotify($sMessage,$sToken);
+*/
 
     } catch (PDOException $e) {
         echo 'Error inserting data: ' . $e->getMessage() . "\n";

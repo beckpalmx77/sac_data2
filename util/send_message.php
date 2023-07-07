@@ -1,5 +1,7 @@
 <?php
 
+//https://notify-bot.line.me/en/
+
 function sendLineNotify($message,$token)
 {
 

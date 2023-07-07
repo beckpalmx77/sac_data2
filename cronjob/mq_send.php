@@ -2,6 +2,7 @@
 include '../config_pg/connect_pg_db.php';
 include '../config/connect_db.php';
 include '../config/config_rabbit.inc';
+include '../util/send_message.php';
 require_once '../vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -52,6 +53,12 @@ foreach ($orders as $order) {
         $lastInsertId = $conn->lastInsertId();
 
         if ($lastInsertId) {
+
+            $sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
+            $sMessage = "มีรายการสั่งซื้อเข้า เลขที่เอกสาร = " . $order["id"] . " " . $order["date"] . " " . $order["code"] . " " . $order["name"] ;
+            echo $sMessage ;
+            sendLineNotify($sMessage,$sToken);
+
             $connection = new AMQPStreamConnection($rabbitmqHost, $rabbitmqPort, $rabbitmqUser, $rabbitmqPass);
             $channel = $connection->channel();
 

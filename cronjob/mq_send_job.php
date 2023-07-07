@@ -51,10 +51,10 @@ for ($loop=0;$loop<=$maxvalue;$loop++) {
             $lastInsertId = $conn->lastInsertId();
 
             if ($lastInsertId) {
-                $connection = new AMQPStreamConnection($rabbitmqHost, $rabbitmqPort, $rabbitmqUser, $rabbitmqPass);
+                $connection = new AMQPStreamConnection($rabbitmqHost2, $rabbitmqPort2, $rabbitmqUser2, $rabbitmqPass2);
                 $channel = $connection->channel();
 
-                $channel->queue_declare($rabbitmqQueue, false, false, false, false);
+                $channel->queue_declare($rabbitmqQueue2, false, false, false, false);
 
                 $msg = new AMQPMessage($data);
                 $channel->basic_publish($msg, '', $rabbitmqQueue);

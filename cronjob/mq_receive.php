@@ -51,7 +51,7 @@ $callback = function ($msg) {
         $sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
         $sMessage = "มีรายการสั่งซื้อเข้า เลขที่เอกสาร = " . $data . " " . $date . " " . $customer_code . " " . $customer_name ;
         echo $sMessage ;
-        sendLineNotify($sMessage,$sToken);
+        //sendLineNotify($sMessage,$sToken);
 
     } catch (PDOException $e) {
         echo 'Error inserting data: ' . $e->getMessage() . "\n";

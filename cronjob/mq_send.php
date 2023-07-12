@@ -17,8 +17,11 @@ $current_date = date("Y-m-d");
 
 echo "Date = " . $current_date . "\n\r";
 
-$sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_customers.owner FROM sac_orders
-    LEFT JOIN sac_customers ON sac_customers.id = sac_orders.customer_id  
+$sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_customers.owner,sac_users.username,sac_users.name  as take_name  
+    FROM sac_orders 
+    FROM sac_orders
+    LEFT JOIN sac_customers ON sac_customers.id = sac_orders.customer_id  		
+    LEFT JOIN sac_users ON sac_users.id = sac_customers.taker_id    
     WHERE date >= '" . $current_date . "'";
 
 echo $sql_pg . "\n\r";
@@ -56,7 +59,8 @@ foreach ($orders as $order) {
 
             $sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
             $sMessage = "มีรายการสั่งซื้อเข้า เลขที่เอกสาร = " . $order["id"] . " " . $order["date"] . " " . $order["code"] . " " . $order["name"]
-            . "\n\r" . "ผู้ติดต่อ " . $order["contract_name"] . " โทรฯ " .$order["contract_phone"] ;
+            . "\n\r" . "ผู้ติดต่อ " . $order["contract_name"] . " โทรฯ " .$order["contract_phone"]
+            . "\n\r" . "ผู้รับผิดชอบ " . $order["take_name"] ;
             echo $sMessage ;
             sendLineNotify($sMessage,$sToken);
 

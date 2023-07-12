@@ -17,8 +17,7 @@ $current_date = date("Y-m-d");
 
 echo "Date = " . $current_date . "\n\r";
 
-$sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_customers.owner,sac_users.username,sac_users.name  as take_name  
-    FROM sac_orders 
+$sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_customers.owner,sac_users.username,sac_users.name  as take_name    
     FROM sac_orders
     LEFT JOIN sac_customers ON sac_customers.id = sac_orders.customer_id  		
     LEFT JOIN sac_users ON sac_users.id = sac_customers.taker_id    

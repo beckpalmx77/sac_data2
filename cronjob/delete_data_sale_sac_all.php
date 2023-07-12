@@ -12,7 +12,7 @@ $sql_sqlsvr = " SELECT DOCINFO.DI_KEY,DOCINFO.DI_REF,DI_DATE,DOCINFO.DI_ACTIVE F
 
 //$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 
-$query_year = " AND DI_DATE BETWEEN '1990/01/01 ' AND '2023/06/01'";
+$query_year = " AND DI_DATE BETWEEN '1990/01/01 ' AND '2023/07/12'";
 
 $sql_sqlsvr = $sql_sqlsvr . $query_year ;
 

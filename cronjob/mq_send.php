@@ -58,8 +58,8 @@ foreach ($orders as $order) {
 
             $sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
             $sMessage = "มีรายการสั่งซื้อเข้า เลขที่เอกสาร = " . $order["id"] . " " . $order["date"] . " " . $order["code"] . " " . $order["name"]
-            . "\n\r" . "ผู้ติดต่อ " . $order["contract_name"] . " โทรฯ " .$order["contract_phone"]
-            . "\n\r" . "ผู้รับผิดชอบ " . $order["take_name"] ;
+            . "\n\r" . "ผู้ติดต่อ : " . $order["contract_name"] . " โทรฯ : " .$order["contract_phone"]
+            . "\n\r" . "ผู้รับผิดชอบ : " . $order["take_name"] ;
             echo $sMessage ;
             sendLineNotify($sMessage,$sToken);
 

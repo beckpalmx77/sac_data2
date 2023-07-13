@@ -8,13 +8,14 @@ include("../config/connect_db.php");
 
 $delete_data = "";
 
-$sql_sqlsvr = " SELECT DOCINFO.DI_KEY,DOCINFO.DI_REF,DI_DATE,DOCINFO.DI_ACTIVE FROM DOCINFO WHERE DOCINFO.DI_ACTIVE = 1 ";
+$day = substr(date("Y/m/d"),8,2);
+$month = substr(date("Y/m/d"),5,2);
+$year = substr(date("Y/m/d"),0,4);
 
-//$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
+echo $year . " | " . $month . " | " . $day;
 
-$query_year = " AND DI_DATE BETWEEN '1990/01/01 ' AND '2023/07/12'";
-
-$sql_sqlsvr = $sql_sqlsvr . $query_year ;
+$sql_sqlsvr = "SELECT DOCINFO.DI_KEY,DOCINFO.DI_REF,DI_DATE,DOCINFO.DI_ACTIVE FROM DOCINFO 
+WHERE DOCINFO.DI_ACTIVE = 1 AND DI_DATE >= DATEADD(month, -2, GETDATE()) AND DI_DATE <= GETDATE();";
 
 echo " MSSQL DATA " . $sql_sqlsvr;
 

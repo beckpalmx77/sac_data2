@@ -21,7 +21,8 @@ $sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_custome
     FROM sac_orders
     LEFT JOIN sac_customers ON sac_customers.id = sac_orders.customer_id  		
     LEFT JOIN sac_users ON sac_users.id = sac_customers.taker_id    
-    WHERE date >= '" . $current_date . "'";
+    WHERE date >= '" . $current_date . "'
+    ORDER BY id ";
 
 echo $sql_pg . "\n\r";
 

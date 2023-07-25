@@ -17,6 +17,28 @@ $current_date = date("Y-m-d");
 
 echo "Date = " . $current_date . "\n\r";
 
+$date_create = $date2->format('Y-m-d-H-i-s');
+
+echo "Date = " . $current_date . "\n\r";
+
+$data_create = "Q_MSG Create = " . $date_create ;
+
+echo "Before Loop = " . $data_create ;
+
+$connection = new AMQPStreamConnection($rabbitmqHost, $rabbitmqPort, $rabbitmqUser, $rabbitmqPass);
+$channel = $connection->channel();
+
+$channel->queue_declare($rabbitmqQueue, false, false, false, false);
+
+$msg = new AMQPMessage($data_create);
+$channel->basic_publish($msg, '', $rabbitmqQueue);
+
+echo " [x] Sent 'Send Data'\n\r";
+
+$channel->close();
+$connection->close();
+
+
 $sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_customers.owner,sac_users.username,sac_users.name  as take_name    
     FROM sac_orders
     LEFT JOIN sac_customers ON sac_customers.id = sac_orders.customer_id  		

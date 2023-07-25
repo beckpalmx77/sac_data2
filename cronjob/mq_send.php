@@ -12,13 +12,7 @@ $date2 = new DateTime();
 $date2->setTimezone(new DateTimeZone('Asia/Bangkok'));
 echo $date2->format(DateTime::RFC1123) . "\n";
 
-//$current_date = date("Y-m-d");
-$current_date = "2023-07-04";
-
 $date_create = $date2->format('Y-m-d-H-i-s');
-
-echo "Date = " . $current_date . "\n\r";
-
 $data_create = "Q_MSG Create = " . $date_create ;
 
 echo "Before Loop = " . $data_create ;
@@ -35,6 +29,8 @@ echo " [x] Sent 'Send Data'\n\r";
 
 $channel->close();
 $connection->close();
+
+
 
 $current_date = date("Y-m-d");
 //$current_date = "2023-07-04";

@@ -61,10 +61,6 @@ switch ($BRN_CODE) {
         $IMG = "product-yk.png";
         $BRN_NAME = "Yokohama";
         break;
-    case "BK":
-        $IMG = "product_bkt.png";
-        $BRN_NAME = "BKT";
-        break;
     default:
         $IMG = "product.png";
         $BRN_NAME = "Other Brand";

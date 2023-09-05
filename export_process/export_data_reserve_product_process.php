@@ -149,6 +149,8 @@ $String_Sql = $sql_reserve . " AND DI_DATE BETWEEN '" . $doc_date_start . "' AND
 //fwrite($my_file, $String_Sql);
 //fclose($my_file);
 
+
+
 $data = "วันที่,ประเภท,รหัสสินค้า,รายละเอียดสินค้า,จำนวน,คลัง/ปี,LOCATION,เลขที่เอกสาร,คันที่,เทค,ชื่อลูกค้า,คงเหลือใน LO\n";
 
 $query = $conn_sqlsvr->prepare($String_Sql);

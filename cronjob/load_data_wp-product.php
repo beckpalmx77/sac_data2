@@ -64,7 +64,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
         $post_name = str_replace("/", "-", $result_sqlsvr['SKU_CODE']);
 
-        $post_name = trim($post_name);
+        $post_name = str_replace(" ", "-", $post_name);
 
         $query_ins = $conn->prepare($sql_insert);
         $query_ins->bindParam(':post_author', $author, PDO::PARAM_STR);

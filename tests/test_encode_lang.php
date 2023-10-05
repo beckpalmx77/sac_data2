@@ -1,15 +1,30 @@
-<?
 
-$message = "รับทำเว็บ รับเขียนเว็บ เรียนเขียนโปรแกรม";
+<?php
 
-$tis620 = iconv("utf-8", "tis-620", $message );
-$utf8 = iconv("tis-620", "utf-8", $tis620 );
+//$tab = array("UTF-8", "ASCII", "Windows-1252", "ISO-8859-15", "ISO-8859-1", "ISO-8859-6", "CP1256");
 
-echo "Page charset=utf-8";
-echo "<br/>";
-echo "Convert from UTF-8 to TIS-620 = ".$tis620;
-echo "<br/>";
-echo "Convert from TIS-620 to UTF-8 = ".$utf8;
+$tab = array("windows-874" , "windows-874");
 
-?>
+$chain = "";
+
+$my_string = "ทดสอบ Test";
+
+
+foreach ($tab as $i)
+
+{
+
+    foreach ($tab as $j)
+
+    {
+
+        $chain .= " $i$j ".iconv($i, $j, $my_string) . "<br>";
+
+    }
+
+}
+
+
+
+echo $chain;
 

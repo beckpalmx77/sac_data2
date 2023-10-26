@@ -2,24 +2,15 @@
 session_start();
 error_reporting(0);
 
-include('../config/connect_sqlserver.php');
+include('../config/connect_db.php');
 include('../config/lang.php');
 include('../util/record_util.php');
 
 if ($_POST["action"] === 'GET_DATA_DUE_DATE') {
 
-    $sql_query_count = " SELECT COUNT(*) AS allcount 
-FROM DOCINFO 
-LEFT JOIN ARDETAIL ON DOCINFO.DI_KEY = ARDETAIL.ARD_DI
-LEFT JOIN ARFILE ON ARDETAIL.ARD_AR = ARFILE.AR_KEY ";
+    $sql_query_count = " SELECT COUNT(*) AS allcount FROM ims_document_bill where DI_ACTIVE = 0 ";
 
-    $sql_query_data = " SELECT DOCTYPE.DT_DOCCODE,DOCTYPE.DT_THAIDESC,DOCINFO.DI_REF,DOCINFO.DI_DATE,DOCINFO.DI_AMOUNT,ARFILE.AR_CODE,ARFILE.AR_NAME
-,ARDETAIL.ARD_BIL_DA,ARDETAIL.ARD_DUE_DA,ARDETAIL.ARD_CHQ_DA,ARFILE.AR_SLMNCODE,SALESMAN.SLMN_NAME,ARFILE.AR_REMARK ,DOCINFO.DI_REMARK 
-FROM DOCINFO 
-LEFT JOIN ARDETAIL ON DOCINFO.DI_KEY = ARDETAIL.ARD_DI
-LEFT JOIN ARFILE ON ARDETAIL.ARD_AR = ARFILE.AR_KEY 
-LEFT JOIN SALESMAN ON SALESMAN.SLMN_CODE = ARFILE.AR_SLMNCODE
-LEFT JOIN DOCTYPE ON DOCTYPE.DT_KEY = DOCINFO.DI_DT ";
+    $sql_query_data = " SELECT * FROM ims_document_bill where DI_ACTIVE = 0 ";
 
     ## Read value
     $draw = $_POST['draw'];
@@ -39,10 +30,6 @@ LEFT JOIN DOCTYPE ON DOCTYPE.DT_KEY = DOCINFO.DI_DT ";
         );
     }
 
-    $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_query_data . " | " . $searchQuery);
-    fclose($myfile);
-
 ## Total number of records without filtering
     $stmt = $conn->prepare($sql_query_count);
     $stmt->execute();
@@ -56,12 +43,13 @@ LEFT JOIN DOCTYPE ON DOCTYPE.DT_KEY = DOCINFO.DI_DT ";
     $totalRecordwithFilter = $records['allcount'];
 
     $sql_get_data = $sql_query_data . $searchQuery
-    // . " ORDER BY DI_REF  LIMIT :limit,:offset";
-       . " ORDER BY DI_REF  ";
+       . " ORDER BY DI_REF  LIMIT :limit,:offset";
 
-    $myfile = fopen("param_post_mssql.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_get_data);
+/*
+    $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $sql_query_data . " | " . $searchQuery);
     fclose($myfile);
+*/
 
 ## Fetch records
     $stmt = $conn->prepare($sql_get_data);
@@ -71,8 +59,9 @@ LEFT JOIN DOCTYPE ON DOCTYPE.DT_KEY = DOCINFO.DI_DT ";
         $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
     }
 
-    //$stmt->bindValue(':limit', (int)$row, PDO::PARAM_INT);
-    //$stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', (int)$row, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
+    $stmt->execute();
     $stmt->execute();
     $dataRecords = $stmt->fetchAll();
     $data = array();
@@ -82,14 +71,13 @@ LEFT JOIN DOCTYPE ON DOCTYPE.DT_KEY = DOCINFO.DI_DT ";
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
                 "DI_REF" => $row['DI_REF'],
-                "DI_DATE" => $row['DI_DATE'],
+                "DI_DATE" => $row['DI_DATE']=="" ? "-" : substr($row['DI_DATE'],8,2) . "/" . substr($row['DI_DATE'],5,2) . "/" . substr($row['DI_DATE'],0,4),
                 "AR_NAME" => $row['AR_NAME'],
                 "DI_AMOUNT" => $row['DI_AMOUNT'],
                 "AR_REMARK" => $row['AR_REMARK'],
                 "AR_SLMNCODE" => $row['AR_SLMNCODE'],
                 "SLMN_NAME" => $row['SLMN_NAME'],
-                "ARD_DUE_DA" => $row['ARD_DUE_DA'],
-                "update" => "<button type='button' name='update' id='" . $row['DI_REF'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>"
+                "ARD_DUE_DA" => $row['ARD_DUE_DA']=="" ? "-" : substr($row['ARD_DUE_DA'],8,2) . "/" . substr($row['ARD_DUE_DA'],5,2) . "/" . substr($row['ARD_DUE_DA'],0,4)
             );
         } else {
             $data[] = array(

@@ -9,10 +9,11 @@ include('../util/month_util.php');
 
 
 $sql_query_data = " SELECT DOCTYPE.DT_DOCCODE,DOCTYPE.DT_THAIDESC,DOCINFO.DI_REF,DOCINFO.DI_DATE,DOCINFO.DI_AMOUNT,ARFILE.AR_CODE,ARFILE.AR_NAME
-,ARDETAIL.ARD_BIL_DA,ARDETAIL.ARD_DUE_DA,ARDETAIL.ARD_CHQ_DA,ARFILE.AR_SLMNCODE,ARFILE.AR_REMARK ,DOCINFO.DI_REMARK,DOCINFO.DI_ACTIVE 
+,ARDETAIL.ARD_BIL_DA,ARDETAIL.ARD_DUE_DA,ARDETAIL.ARD_CHQ_DA,ARFILE.AR_SLMNCODE,SALESMAN.SLMN_NAME,ARFILE.AR_REMARK ,DOCINFO.DI_REMARK 
 FROM DOCINFO 
 LEFT JOIN ARDETAIL ON DOCINFO.DI_KEY = ARDETAIL.ARD_DI
 LEFT JOIN ARFILE ON ARDETAIL.ARD_AR = ARFILE.AR_KEY 
+LEFT JOIN SALESMAN ON SALESMAN.SLMN_CODE = ARFILE.AR_SLMNCODE
 LEFT JOIN DOCTYPE ON DOCTYPE.DT_KEY = DOCINFO.DI_DT ";
 
 
@@ -62,12 +63,14 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
 
-        $sql_update = " UPDATE ims_document_bill  SET DI_AMOUNT=:DI_AMOUNT,DI_ACTIVE=:DI_ACTIVE                 
+        $sql_update = " UPDATE ims_document_bill  SET DI_AMOUNT=:DI_AMOUNT,DI_ACTIVE=:DI_ACTIVE,AR_SLMNCODE=:AR_SLMNCODE,SLMN_NAME=:SLMN_NAME                 
         WHERE DI_REF  = :DI_REF ";
 
         $query = $conn->prepare($sql_update);
         $query->bindParam(':DI_AMOUNT', $result_sqlsvr["DI_AMOUNT"], PDO::PARAM_STR);
         $query->bindParam(':DI_ACTIVE', $result_sqlsvr["DI_ACTIVE"], PDO::PARAM_STR);
+        $query->bindParam(':AR_SLMNCODE', $result_sqlsvr["AR_SLMNCODE"], PDO::PARAM_STR);
+        $query->bindParam(':SLMN_NAME', $result_sqlsvr["SLMN_NAME"], PDO::PARAM_STR);
         $query->bindParam(':DI_REF', $result_sqlsvr["DI_REF"], PDO::PARAM_STR);
         $query->execute();
 
@@ -82,9 +85,9 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     } else {
 
         $sql = " INSERT INTO ims_document_bill (DT_DOCCODE,DT_THAIDESC,DI_REF,DI_DATE,DI_AMOUNT,AR_CODE,AR_NAME
-                 ,ARD_BIL_DA,ARD_DUE_DA,ARD_CHQ_DA,AR_SLMNCODE,AR_REMARK ,DI_REMARK,DI_ACTIVE)
+                 ,ARD_BIL_DA,ARD_DUE_DA,ARD_CHQ_DA,AR_SLMNCODE,SLMN_NAME,AR_REMARK ,DI_REMARK,DI_ACTIVE)
                  VALUES (:DT_DOCCODE,:DT_THAIDESC,:DI_REF,:DI_DATE,:DI_AMOUNT,:AR_CODE,:AR_NAME
-                 ,:ARD_BIL_DA,:ARD_DUE_DA,:ARD_CHQ_DA,:AR_SLMNCODE,:AR_REMARK ,:DI_REMARK,:DI_ACTIVE) ";
+                 ,:ARD_BIL_DA,:ARD_DUE_DA,:ARD_CHQ_DA,:AR_SLMNCODE,:SLMN_NAME,:AR_REMARK ,:DI_REMARK,:DI_ACTIVE) ";
         $query = $conn->prepare($sql);
         $query->bindParam(':DT_DOCCODE', $result_sqlsvr["DT_DOCCODE"], PDO::PARAM_STR);
         $query->bindParam(':DT_THAIDESC', $result_sqlsvr["DT_THAIDESC"], PDO::PARAM_STR);
@@ -97,6 +100,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':ARD_DUE_DA', $result_sqlsvr["ARD_DUE_DA"], PDO::PARAM_STR);
         $query->bindParam(':ARD_CHQ_DA', $result_sqlsvr["ARD_CHQ_DA"], PDO::PARAM_STR);
         $query->bindParam(':AR_SLMNCODE', $result_sqlsvr["AR_SLMNCODE"], PDO::PARAM_STR);
+        $query->bindParam(':SLMN_NAME', $result_sqlsvr["SLMN_NAME"], PDO::PARAM_STR);
         $query->bindParam(':AR_REMARK', $result_sqlsvr["AR_REMARK"], PDO::PARAM_STR);
         $query->bindParam(':DI_REMARK', $result_sqlsvr["DI_REMARK"], PDO::PARAM_STR);
         $query->bindParam(':DI_ACTIVE', $result_sqlsvr["DI_ACTIVE"], PDO::PARAM_STR);

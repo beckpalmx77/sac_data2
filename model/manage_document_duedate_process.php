@@ -8,6 +8,11 @@ include('../util/record_util.php');
 
 if ($_POST["action"] === 'GET_DATA_DUE_DATE') {
 
+
+    $cnt_date = $_POST['searchCnt_date'];
+
+    //select DI_REF , ARD_DUE_DA , CURDATE() AS CurrentDate , DATEDIFF(ARD_DUE_DA, CURDATE()) AS DateDueDiff  from ims_document_bill order by id desc
+
     $sql_query_count = " SELECT COUNT(*) AS allcount FROM ims_document_bill where DI_ACTIVE = 0 ";
 
     $sql_query_data = " SELECT * FROM ims_document_bill where DI_ACTIVE = 0 ";
@@ -43,13 +48,13 @@ if ($_POST["action"] === 'GET_DATA_DUE_DATE') {
     $totalRecordwithFilter = $records['allcount'];
 
     $sql_get_data = $sql_query_data . $searchQuery
-       . " ORDER BY DI_REF  LIMIT :limit,:offset";
+       . " ORDER BY id DESC  LIMIT :limit,:offset";
 
-/*
+
     $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_query_data . " | " . $searchQuery);
+    fwrite($myfile, $sql_query_data . " | " . $searchQuery . " | cnt_date = " . $cnt_date);
     fclose($myfile);
-*/
+
 
 ## Fetch records
     $stmt = $conn->prepare($sql_get_data);

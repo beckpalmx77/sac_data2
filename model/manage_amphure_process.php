@@ -48,9 +48,11 @@ if ($_POST["action"] === 'GET_AMPHURE') {
     ## Read value
     $province = $_POST['province'];
 
+/*
     $my_file = fopen("province.txt", "w") or die("Unable to open file!");
     fwrite($my_file, "Prov = " . $province);
     fclose($my_file);
+*/
 
     $draw = $_POST['draw'];
     $row = $_POST['start'];

@@ -1,0 +1,1 @@
+ SELECT * FROM ims_document_bill where DI_ACTIVE = 0  |   | cnt_date = 

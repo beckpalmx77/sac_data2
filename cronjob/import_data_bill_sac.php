@@ -7,9 +7,8 @@ include("../config/connect_sqlserver.php");
 include("../config/connect_db.php");
 include('../util/month_util.php');
 
-
 $sql_query_data = " SELECT DOCTYPE.DT_DOCCODE,DOCTYPE.DT_THAIDESC,DOCINFO.DI_REF,DOCINFO.DI_DATE,DOCINFO.DI_AMOUNT,ARFILE.AR_CODE,ARFILE.AR_NAME
-,ARDETAIL.ARD_BIL_DA,ARDETAIL.ARD_DUE_DA,ARDETAIL.ARD_CHQ_DA,ARFILE.AR_SLMNCODE,SALESMAN.SLMN_NAME,ARFILE.AR_REMARK ,DOCINFO.DI_REMARK 
+,ARDETAIL.ARD_BIL_DA,ARDETAIL.ARD_DUE_DA,ARDETAIL.ARD_CHQ_DA,ARFILE.AR_SLMNCODE,SALESMAN.SLMN_NAME,ARFILE.AR_REMARK ,DOCINFO.DI_REMARK,DOCINFO.DI_ACTIVE 
 FROM DOCINFO 
 LEFT JOIN ARDETAIL ON DOCINFO.DI_KEY = ARDETAIL.ARD_DI
 LEFT JOIN ARFILE ON ARDETAIL.ARD_AR = ARFILE.AR_KEY 
@@ -35,7 +34,6 @@ $myfile = fopen("qry_file_mssql_server.txt", "w") or die("Unable to open file!")
 fwrite($myfile, $sql_sqlsvr);
 fclose($myfile);
 */
-
 
 /*
  select * from ims_product_sale_sac
@@ -74,7 +72,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':DI_REF', $result_sqlsvr["DI_REF"], PDO::PARAM_STR);
         $query->execute();
 
-        $update_data = $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["DI_AMOUNT"] . $result_sqlsvr["SLMN_NAME"] . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
+        $update_data = $result_sqlsvr["DI_DATE"] . " : " . $result_sqlsvr["DI_REF"] . " | " . $result_sqlsvr["DI_AMOUNT"] . " | " . $result_sqlsvr["SLMN_NAME"] . " | " . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
 
         echo "UPDATE DATA " . $update_data;
 
@@ -104,13 +102,10 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':AR_REMARK', $result_sqlsvr["AR_REMARK"], PDO::PARAM_STR);
         $query->bindParam(':DI_REMARK', $result_sqlsvr["DI_REMARK"], PDO::PARAM_STR);
         $query->bindParam(':DI_ACTIVE', $result_sqlsvr["DI_ACTIVE"], PDO::PARAM_STR);
-
         $query->execute();
-
         $lastInsertId = $conn->lastInsertId();
-
         if ($lastInsertId) {
-            $insert_data = $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["DI_AMOUNT"] . $result_sqlsvr["SLMN_NAME"] . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
+            $insert_data = $result_sqlsvr["DI_DATE"] . " : " . $result_sqlsvr["DI_REF"] . " | " . $result_sqlsvr["DI_AMOUNT"] . " | " . $result_sqlsvr["SLMN_NAME"]  . " | " . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
             echo "INSERT DATA " . $insert_data;
         } else {
             echo " Error ";

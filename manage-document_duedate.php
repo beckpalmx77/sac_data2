@@ -38,6 +38,16 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <section class="container-fluid">
                                         <div class="col-md-12 col-md-offset-2">
+                                            <!--div class="form-group row">
+                                                <div class="col-sm-2">
+                                                    <label for="cnt_date"
+                                                           class="control-label">ระบุจำนวนวัน</label>
+                                                    <input type="text" class="form-control"
+                                                           id="cnt_date"
+                                                           name="cnt_date"
+                                                           placeholder="ระบุจำนวนวัน">
+                                                </div>
+                                            </div-->
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
@@ -136,7 +146,8 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_DATA_DUE_DATE", sub_action: "GET_MASTER"};
+            let cnt_date = $('#cnt_date').val();
+            let formData = {action: "GET_DATA_DUE_DATE", sub_action: "GET_MASTER" , cnt_date: cnt_date};
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[10, 20, 50, 100], [10, 20, 50, 100]],
                 'language': {
@@ -170,6 +181,45 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
     </script>
+
+    <!--script>
+        $(document).ready(function(){
+            let dataTable = $('#TableRecordList').DataTable({
+                'processing': true,
+                'serverSide': true,
+                'serverMethod': 'post',
+                //'searching': false, // Remove default Search Control
+                'ajax': {
+                    'url':'model/manage_document_duedate_process.php',
+                    'data': function(data){
+                        // Read values
+                        let cnt_date = $('#cnt_date').val();
+                        // Append to data
+                        data.searchCnt_date = cnt_date;
+                        data.action = "GET_DATA_DUE_DATE";
+                        data.sub_action = "GET_MASTER";
+                    }
+                },
+                'columns': [
+                    {data: 'DI_REF'},
+                    {data: 'DI_DATE'},
+                    {data: 'ARD_DUE_DA'},
+                    {data: 'AR_NAME'},
+                    {data: 'DI_AMOUNT'},
+                    {data: 'SLMN_NAME'},
+                    {data: 'AR_REMARK'},
+                ]
+            });
+
+        });
+
+        $('#cnt_date').keyup(function(){
+            dataTable.draw();
+        });
+
+    </script-->
+
+
 
     </body>
     </html>

@@ -74,7 +74,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':DI_REF', $result_sqlsvr["DI_REF"], PDO::PARAM_STR);
         $query->execute();
 
-        $update_data = $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["DI_AMOUNT"] . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
+        $update_data = $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["DI_AMOUNT"] . $result_sqlsvr["SLMN_NAME"] . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
 
         echo "UPDATE DATA " . $update_data;
 
@@ -110,7 +110,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $lastInsertId = $conn->lastInsertId();
 
         if ($lastInsertId) {
-            $insert_data = $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["DI_AMOUNT"] . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
+            $insert_data = $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["DI_AMOUNT"] . $result_sqlsvr["SLMN_NAME"] . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
             echo "INSERT DATA " . $insert_data;
         } else {
             echo " Error ";

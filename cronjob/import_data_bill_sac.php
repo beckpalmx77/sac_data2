@@ -23,9 +23,9 @@ echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 $query_daily_cond_doc_type = " WHERE (DOCTYPE.DT_DOCCODE in ('DS','DS1','IV01','DS02','30','DS4','DDS5','IV3','/SAC','S.1','S.2','S.3','S.4','S.5','S.6')) ";
 
-$select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '2023/06/01' AND '" . date("Y/m/d") . "'";
+//$select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '2023/06/01' AND '" . date("Y/m/d") . "'";
 
-//$select_query_daily_cond = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
+$select_query_daily_cond = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 
 $sql_sqlsvr = $sql_query_data . $query_daily_cond_doc_type . $select_query_daily_cond . " ORDER BY DOCINFO.DI_DATE , DOCINFO.DI_REF ";
 

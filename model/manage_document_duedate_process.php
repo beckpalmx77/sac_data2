@@ -51,9 +51,11 @@ if ($_POST["action"] === 'GET_DATA_DUE_DATE') {
        . " ORDER BY id DESC  LIMIT :limit,:offset";
 
 
+/*
     $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
     fwrite($myfile, $sql_query_data . " | " . $searchQuery . " | cnt_date = " . $cnt_date);
     fclose($myfile);
+*/
 
 
 ## Fetch records

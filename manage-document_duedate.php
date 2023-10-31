@@ -1,12 +1,22 @@
 <?php
+
 include('includes/Header.php');
+
 if (strlen($_SESSION['alogin']) == "") {
     header("Location: index.php");
 } else {
     ?>
 
     <!DOCTYPE html>
+
     <html lang="th">
+    <body>
+
+    <style>
+        body, h1, h2, h3, h4, h5, h6 {
+            font-family: 'Prompt', sans-serif !important;
+        }
+    </style>
     <body id="page-top">
     <div id="wrapper">
         <?php
@@ -38,16 +48,25 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <section class="container-fluid">
                                         <div class="col-md-12 col-md-offset-2">
-                                            <!--div class="form-group row">
-                                                <div class="col-sm-2">
-                                                    <label for="cnt_date"
-                                                           class="control-label">ระบุจำนวนวัน</label>
-                                                    <input type="text" class="form-control"
-                                                           id="cnt_date"
-                                                           name="cnt_date"
-                                                           placeholder="ระบุจำนวนวัน">
-                                                </div>
-                                            </div-->
+                                            <!--table>
+                                                <tr>
+                                                    <td>
+                                                        <input type='text' id='searchByName' placeholder='ชื่อลูกค้า'>
+                                                    </td>
+                                                    <td> วันที่ครบกำหนดชำระ
+                                                        <select id='searchByDueDate'>
+                                                            <option value='7' selected>7</option>
+                                                            <?php for ($day=1;$day<=31;$day++) {?>
+                                                                <option <?php echo "value='" . $day ."'"?>><?php echo $day ?></option>
+                                                            <?php } ?>
+                                                            <option value='32'>31++</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <br-->
+
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
@@ -193,12 +212,22 @@ if (strlen($_SESSION['alogin']) == "") {
                     'url':'model/manage_document_duedate_process.php',
                     'data': function(data){
                         // Read values
-                        let cnt_date = $('#cnt_date').val();
+
+                        let duedate = $('#searchByDueDate').val();
+                        let name = $('#searchByName').val();
                         // Append to data
-                        data.searchCnt_date = cnt_date;
+                        data.$searchByDueDate = duedate;
+                        data.$searchByName = name;
+
+                        //alert($('#searchByDueDate').val());
+
                         data.action = "GET_DATA_DUE_DATE";
                         data.sub_action = "GET_MASTER";
+
+
                     }
+
+
                 },
                 'columns': [
                     {data: 'DI_REF'},
@@ -213,8 +242,11 @@ if (strlen($_SESSION['alogin']) == "") {
 
         });
 
-        $('#cnt_date').keyup(function(){
-            let cnt_date = $('#cnt_date').val();
+        $('#searchByName').keyup(function () {
+            dataTable.draw();
+        });
+
+        $('#searchByDueDate').change(function () {
             dataTable.draw();
         });
 

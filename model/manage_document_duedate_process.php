@@ -24,7 +24,12 @@ if ($_POST["action"] === 'GET_DATA_DUE_DATE') {
 
     $sql_query_count = " SELECT COUNT(*) AS allcount FROM ims_document_bill where DI_ACTIVE = 0 ";
 
-    $sql_query_data = " SELECT * FROM ims_document_bill where DI_ACTIVE = 0 ";
+    $sql_query_data = " SELECT ims_document_bill.* , b.DI_REF AS BILL_DI_REF , b.DI_DATE AS BILL_DI_DATE
+                        , b.TPA_REFER_REF , b.TPA_REFER_DATE , b.ARD_BIL_DA  AS BILL_ARD_BIL_DA , b.ARD_DUE_DA AS BILL_ARD_DUE_DA
+                        , b.ARD_A_SV , b.ARD_A_VAT  , b.ARD_A_AMT 
+                        FROM ims_document_bill
+                        LEFT JOIN ims_document_bill_load b ON b.TPA_REFER_REF = ims_document_bill.DI_REF 
+                        WHERE ims_document_bill.DI_ACTIVE = 0 ";
 
     ## Read value
     $draw = $_POST['draw'];

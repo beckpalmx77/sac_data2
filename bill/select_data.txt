@@ -1,6 +1,0 @@
-select ims_document_bill.* , b.DI_REF AS BILL_DI_REF , b.DI_DATE AS BILL_DI_DATE
-, b.TPA_REFER_REF , b.TPA_REFER_DATE , b.ARD_BIL_DA  AS BILL_ARD_BIL_DA , b.ARD_DUE_DA AS BILL_ARD_DUE_DA
-, b.ARD_A_SV , b.ARD_A_VAT  , b.ARD_A_AMT 
-from ims_document_bill
-left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF   
-WHERE 1   and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) = 1 order by DI_REF asc limit 0,10

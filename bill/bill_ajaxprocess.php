@@ -12,6 +12,7 @@ $searchValue = $_POST['search']['value']; // Search value
 
 ## Custom Field value
 $searchByName = $_POST['searchByName'];
+$searchBySale = $_POST['searchBySale'];
 $searchByDueDate = $_POST['searchByDueDate'] =='' ? "7" : $_POST['searchByDueDate'];
 
 ## Search 
@@ -28,11 +29,19 @@ if($searchByName != ''){
     $searchQuery .= " and (ims_document_bill.AR_NAME like '%".$searchByName."%' ) ";
 }
 
+if($searchBySale != ''){
+    $searchQuery .= " and (ims_document_bill.SLMN_NAME like '%".$searchBySale."%' ) ";
+}
+
+$searchQuery .= " and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) = " . $searchByDueDate;
+
+/*
 if($searchByDueDate != ''){
     $searchQuery .= " and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) = " . $searchByDueDate;
 } else if($searchByDueDate > 31){
     $searchQuery .= " and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) > " . $searchByDueDate;
 }
+*/
 
 
 /*
@@ -72,6 +81,7 @@ fclose($myfile);
 */
 
 
+
 $empRecords = mysqli_query($con, $billQuery);
 $data = array();
 
@@ -85,7 +95,8 @@ while ($row = mysqli_fetch_assoc($empRecords)) {
         "AR_REMARK" => $row['AR_REMARK'],
         "AR_SLMNCODE" => $row['AR_SLMNCODE'],
         "SLMN_NAME" => $row['SLMN_NAME'],
-        "ARD_DUE_DA" => $row['ARD_DUE_DA']=="" ? "-" : substr($row['ARD_DUE_DA'],8,2) . "/" . substr($row['ARD_DUE_DA'],5,2) . "/" . substr($row['ARD_DUE_DA'],0,4)
+        "ARD_DUE_DA" => $row['ARD_DUE_DA']=="" ? "-" : substr($row['ARD_DUE_DA'],8,2) . "/" . substr($row['ARD_DUE_DA'],5,2) . "/" . substr($row['ARD_DUE_DA'],0,4),
+        "detail" => "<button type='button' name='detail' id='" . $row['DI_REF'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Detail'>Detail</button>"
     	);
 }
 

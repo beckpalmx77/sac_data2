@@ -1,7 +1,15 @@
 <!doctype html>
 <html>
 <head>
-    <title>How to add Custom Filter in DataTable - AJAX and PHP</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <link href="../img/logo/logo.png" rel="icon">
+    <title>สงวนออโต้คาร์ | SANGUAN AUTO CAR</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <!-- Datatable CSS -->
@@ -42,10 +50,13 @@
                                 <td>
                                     <input type='text' id='searchByName' placeholder='ชื่อลูกค้า'>
                                 </td>
+                                <td>
+                                    <input type='text' id='searchBySale' placeholder='ชื่อ Sale'>
+                                </td>
                                 <td> วันที่ครบกำหนดชำระ
                                     <select id='searchByDueDate'>
                                         <option value='7' selected>7</option>
-                                        <?php for ($day=1;$day<=31;$day++) {?>
+                                        <?php for ($day=-31;$day<=60;$day++) {?>
                                         <option <?php echo "value='" . $day ."'"?>><?php echo $day ?></option>
                                         <?php } ?>
                                         <option value='32'>31++</option>
@@ -66,6 +77,7 @@
                                 <th>จำนวนเงิน</th>
                                 <th>Sale</th>
                                 <th>หมายเหตุ</th>
+                                <th>การวางบิล</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -77,6 +89,7 @@
                                 <th>จำนวนเงิน</th>
                                 <th>Sale</th>
                                 <th>หมายเหตุ</th>
+                                <th>การวางบิล</th>
                             </tr>
                             </tfoot>
                         </table>
@@ -115,10 +128,13 @@
                     // Read values
                     let duedate = $('#searchByDueDate').val();
                     let name = $('#searchByName').val();
+                    let sale = $('#searchBySale').val();
+
 
                     // Append to data
                     data.searchByDueDate = duedate;
                     data.searchByName = name;
+                    data.searchBySale = sale;
                 }
             },
             'columns': [
@@ -128,11 +144,16 @@
                 {data: 'AR_NAME'},
                 {data: 'DI_AMOUNT'},
                 {data: 'SLMN_NAME'},
-                {data: 'AR_REMARK'}
+                {data: 'AR_REMARK'},
+                {data: 'detail'}
             ]
         });
 
         $('#searchByName').keyup(function () {
+            dataTable.draw();
+        });
+
+        $('#searchBySale').keyup(function () {
             dataTable.draw();
         });
 

@@ -57,21 +57,21 @@ $records = mysqli_fetch_assoc($sel);
 $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-$empQuery = "select ims_document_bill.* , b.DI_REF AS BILL_DI_REF , b.DI_DATE AS BILL_DI_DATE
+$billQuery = "select ims_document_bill.* , b.DI_REF AS BILL_DI_REF , b.DI_DATE AS BILL_DI_DATE
 , b.TPA_REFER_REF , b.TPA_REFER_DATE , b.ARD_BIL_DA  AS BILL_ARD_BIL_DA , b.ARD_DUE_DA AS BILL_ARD_DUE_DA
 , b.ARD_A_SV , b.ARD_A_VAT  , b.ARD_A_AMT 
 from ims_document_bill
 left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF   
 WHERE 1 ".$searchQuery." order by ".$columnName." ".$columnSortOrder." limit ".$row.",".$rowperpage;
 
-/*
-$myfile = fopen("select_data.txt", "w") or die("Unable to open file!");
-$data_select = " | " . $empQuery;
-fwrite($myfile, $empQuery);
-fclose($myfile);
-*/
 
-$empRecords = mysqli_query($con, $empQuery);
+$myfile = fopen("select_data.txt", "w") or die("Unable to open file!");
+$data_select = " | " . $billQuery;
+fwrite($myfile, $billQuery);
+fclose($myfile);
+
+
+$empRecords = mysqli_query($con, $billQuery);
 $data = array();
 
 while ($row = mysqli_fetch_assoc($empRecords)) {

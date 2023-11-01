@@ -64,11 +64,12 @@ from ims_document_bill
 left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF   
 WHERE 1 ".$searchQuery." order by ".$columnName." ".$columnSortOrder." limit ".$row.",".$rowperpage;
 
-
+/*
 $myfile = fopen("select_data.txt", "w") or die("Unable to open file!");
 $data_select = " | " . $billQuery;
 fwrite($myfile, $billQuery);
 fclose($myfile);
+*/
 
 
 $empRecords = mysqli_query($con, $billQuery);

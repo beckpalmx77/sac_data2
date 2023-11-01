@@ -163,7 +163,7 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-    <!--script>
+    <script>
         $(document).ready(function () {
             let cnt_date = $('#cnt_date').val();
             let formData = {action: "GET_DATA_DUE_DATE", sub_action: "GET_MASTER" , cnt_date: cnt_date};
@@ -184,6 +184,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 'processing': true,
                 'serverSide': true,
                 'serverMethod': 'post',
+                'searching':true,
                 'ajax': {
                     'url': 'model/manage_document_duedate_process.php',
                     'data': formData
@@ -199,9 +200,9 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
         });
-    </script-->
+    </script>
 
-    <script>
+    <!--script>
         $(document).ready(function(){
             let dataTable = $('#TableRecordList').DataTable({
                 'processing': true,
@@ -213,11 +214,14 @@ if (strlen($_SESSION['alogin']) == "") {
                     'data': function(data){
                         // Read values
 
+
                         let duedate = $('#searchByDueDate').val();
                         let name = $('#searchByName').val();
                         // Append to data
                         data.$searchByDueDate = duedate;
                         data.$searchByName = name;
+
+
 
                         //alert($('#searchByDueDate').val());
 
@@ -250,7 +254,7 @@ if (strlen($_SESSION['alogin']) == "") {
             dataTable.draw();
         });
 
-    </script>
+    </script-->
 
 
 

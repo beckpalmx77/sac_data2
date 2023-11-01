@@ -9,15 +9,9 @@ include('../util/record_util.php');
 if ($_POST["action"] === 'GET_DATA_DUE_DATE') {
 
 
-    $searchByName = $_POST['searchByName'];
-    $searchByDueDate = $_POST['searchByDueDate'] =='' ? "7" : $_POST['searchByDueDate'];
+    //$searchByName = $_POST['searchByName'];
+    //$searchByDueDate = $_POST['searchByDueDate'] =='' ? "7" : $_POST['searchByDueDate'];
 
-
-/*
-        $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
-        fwrite($myfile, $sql_query_data . " | " . $searchByDueDate . " | cnt_date = " . $searchByName);
-        fclose($myfile);
-*/
 
 
     //select DI_REF , ARD_DUE_DA , CURDATE() AS CurrentDate , DATEDIFF(ARD_DUE_DA, CURDATE()) AS DateDueDiff  from ims_document_bill order by id desc
@@ -41,11 +35,14 @@ if ($_POST["action"] === 'GET_DATA_DUE_DATE') {
     $searchValue = $_POST['search']['value']; // Search value
     $searchArray = array();
 
+## Search
     $searchQuery = " ";
-
     if ($searchValue != '') {
-        $searchQuery = " ";
+        $searchQuery = " AND (ims_document_bill.AR_NAME LIKE :AR_NAME or
+        ims_document_bill.DI_REF LIKE :DI_REF) ";
         $searchArray = array(
+            'AR_NAME' => "%$searchValue%",
+            'DI_REF' => "%$searchValue%",
         );
     }
 
@@ -66,8 +63,8 @@ if ($_POST["action"] === 'GET_DATA_DUE_DATE') {
 
 
 /*
-    $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_query_data . " | " . $searchQuery . " | cnt_date = " . $cnt_date);
+    $myfile = fopen("param_qry_data.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $sql_get_data . " | " . $searchValue);
     fclose($myfile);
 */
 

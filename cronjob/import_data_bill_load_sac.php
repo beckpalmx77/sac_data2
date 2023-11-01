@@ -77,7 +77,7 @@ ORDER BY DOCINFO.DI_DATE ASC, DOCINFO.DI_REF ASC ";
 echo "Today is " . date("Y/m/d");
 echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
-//$select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '2023/06/01' AND '" . date("Y/m/d") . "'";
+//$select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '2023/01/01' AND '" . date("Y/m/d") . "'";
 
 $select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 

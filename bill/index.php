@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-    <link href="../img/logo/logo.png" rel="icon">
+    <link href="img/logo/Logo-01.png" rel="icon">
     <title>สงวนออโต้คาร์ | SANGUAN AUTO CAR</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">

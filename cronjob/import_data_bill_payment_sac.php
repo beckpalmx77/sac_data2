@@ -81,7 +81,7 @@ echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 //$select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 
-$select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '" . date('Y/m/d', strtotime("-10 month")) . "' AND '" . date("Y/m/d") . "'";
+$select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '" . date('Y/m/d', strtotime("-4 month")) . "' AND '" . date("Y/m/d") . "'";
 
 $sql_sqlsvr = $sql_query_data . $select_query_daily_cond . $order_by ;
 

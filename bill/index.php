@@ -129,12 +129,14 @@
                     let duedate = $('#searchByDueDate').val();
                     let name = $('#searchByName').val();
                     let sale = $('#searchBySale').val();
+                    let action = "GET_BILL_DATA";
 
 
                     // Append to data
                     data.searchByDueDate = duedate;
                     data.searchByName = name;
                     data.searchBySale = sale;
+                    data.action = action;
                 }
             },
             'columns': [
@@ -162,6 +164,52 @@
         });
     });
 </script>
+
+<script>
+
+    $("#TableRecordList").on('click', '.detail', function () {
+        let id = $(this).attr("id");
+        //alert(id);
+        let formData = {action: "GET_DATA", id: id};
+        $.ajax({
+            type: "POST",
+            url: 'bill_ajaxprocess.php',
+            dataType: "json",
+            data: formData,
+            success: function (response) {
+                let len = response.length;
+                for (let i = 0; i < len; i++) {
+                    let id = response[i].id;
+                    let main_menu_id = response[i].main_menu_id;
+                    let label = response[i].label;
+                    let link = response[i].link;
+                    let icon = response[i].icon;
+                    let data_target = response[i].data_target;
+                    let aria_controls = response[i].aria_controls;
+                    let privilege = response[i].privilege;
+
+                    $('#recordModal').modal('show');
+                    $('#id').val(id);
+                    $('#main_menu_id').val(main_menu_id);
+                    $('#label').val(label);
+                    $('#link').val(link);
+                    $('#icon').val(icon);
+                    $('#data_target').val(data_target);
+                    $('#aria_controls').val(aria_controls);
+                    $('#privilege').val(privilege);
+                    $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
+                    $('#action').val('UPDATE');
+                    $('#save').val('Save');
+                }
+            },
+            error: function (response) {
+                alertify.error("error : " + response);
+            }
+        });
+    });
+
+</script>
+
 </body>
 
 </html>

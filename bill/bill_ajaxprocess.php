@@ -19,6 +19,7 @@ if ($_POST["action"] === 'GET_DATA') {
     fclose($myfile);
 */
 
+
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -54,14 +55,9 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
     $searchBySale = $_POST['searchBySale'];
     $searchByDueDate = $_POST['searchByDueDate'] == '' ? "7" : $_POST['searchByDueDate'];
 
-## Search 
+## Search
     $searchQuery = " ";
 
-/*
-    $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, "searchByName | " . $searchByName . " | ". $searchBySale . " | searchByDueDate " . $searchByDueDate . " | searchQuery = " . $searchQuery);
-    fclose($myfile);
-*/
 
     if ($searchByBillDoc != '') {
         $searchQuery .= " and (ims_document_bill.DI_REF like '%" . $searchByBillDoc . "%' ) ";
@@ -82,6 +78,12 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
         $searchQuery .= " and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) = " . $searchByDueDate;
     }
 
+/*
+    $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, "searchByName | " . $searchByName . " | ". $searchBySale . " | searchByDueDate " . $searchByDueDate . " | searchQuery = " . $searchQuery);
+    fclose($myfile);
+*/
+
 
 
     /*
@@ -101,7 +103,7 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $sel = mysqli_query($con, "select count(*) as allcount from ims_document_bill WHERE WHERE PAYMENT_STATUS = 'N'  " . $searchQuery);
+    $sel = mysqli_query($con, "select count(*) as allcount from ims_document_bill WHERE PAYMENT_STATUS = 'N'  " . $searchQuery);
     $records = mysqli_fetch_assoc($sel);
     $totalRecordwithFilter = $records['allcount'];
 
@@ -115,11 +117,12 @@ WHERE PAYMENT_STATUS = 'N' " . $searchQuery . " order by ims_document_bill.id DE
 
 
 /*
-    $myfile = fopen("select_data.txt", "w") or die("Unable to open file!");
-    $data_select = " | " . $billQuery;
-    fwrite($myfile, $billQuery);
-    fclose($myfile);
+        $myfile = fopen("select_data.txt", "w") or die("Unable to open file!");
+        $data_select = " | " . $billQuery;
+        fwrite($myfile, $billQuery);
+        fclose($myfile);
 */
+
 
 
 

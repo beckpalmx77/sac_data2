@@ -42,10 +42,11 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
 ## Search 
     $searchQuery = " ";
 
-
+/*
     $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
     fwrite($myfile, "searchByName | " . $searchByName . " | ". $searchBySale . " | searchByDueDate " . $searchByDueDate . " | searchQuery = " . $searchQuery);
     fclose($myfile);
+*/
 
 
 

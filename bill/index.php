@@ -131,10 +131,6 @@
                     let sale = $('#searchBySale').val();
                     let action = "GET_BILL_DATA";
 
-
-                    alert(action);
-
-
                     // Append to data
                     data.searchByDueDate = duedate;
                     data.searchByName = name;

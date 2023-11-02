@@ -96,12 +96,12 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
     */
 
 ## Total number of records without filtering
-    $sel = mysqli_query($con, "select count(*) as allcount from ims_document_bill");
+    $sel = mysqli_query($con, "select count(*) as allcount from ims_document_bill WHERE PAYMENT_STATUS = 'N' ");
     $records = mysqli_fetch_assoc($sel);
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $sel = mysqli_query($con, "select count(*) as allcount from ims_document_bill WHERE 1 " . $searchQuery);
+    $sel = mysqli_query($con, "select count(*) as allcount from ims_document_bill WHERE WHERE PAYMENT_STATUS = 'N'  " . $searchQuery);
     $records = mysqli_fetch_assoc($sel);
     $totalRecordwithFilter = $records['allcount'];
 
@@ -111,7 +111,7 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
 , b.ARD_A_SV , b.ARD_A_VAT  , b.ARD_A_AMT 
 from ims_document_bill
 left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF   
-WHERE 1 " . $searchQuery . " order by ims_document_bill.id DESC " . " limit " . $row . "," . $rowperpage;
+WHERE PAYMENT_STATUS = 'N' " . $searchQuery . " order by ims_document_bill.id DESC " . " limit " . $row . "," . $rowperpage;
 
 
 /*

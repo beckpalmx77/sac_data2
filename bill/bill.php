@@ -138,7 +138,7 @@ header("Location: index.php");
                                                         <input type="text" class="form-control"
                                                                id="DI_DATE"
                                                                name="DI_DATE"
-                                                               required="required"
+                                                               readonly="true"
                                                                placeholder="วันที่เอกสาร">
                                                     </div>
                                                 </div>
@@ -157,7 +157,7 @@ header("Location: index.php");
                                                         <input type="text" class="form-control"
                                                                id="ARD_DUE_DA"
                                                                name="ARD_DUE_DA"
-                                                               required="required"
+                                                               readonly="true"
                                                                placeholder="วันที่ครบกำหนดชำระ">
                                                     </div>
                                                 </div>
@@ -167,6 +167,7 @@ header("Location: index.php");
                                                         <label for="DI_AMOUNT" class="control-label">จำนวนเงิน</label>
                                                         <input type="text" class="form-control"
                                                                id="DI_AMOUNT" name="DI_AMOUNT"
+                                                               readonly="true"
                                                                placeholder="DI_AMOUNT">
                                                     </div>
                                                 </div>
@@ -185,7 +186,7 @@ header("Location: index.php");
                                                         <input type="text" class="form-control"
                                                                id="BILL_DI_DATE"
                                                                name="BILL_DI_DATE"
-                                                               required="required"
+                                                               readonly="true"
                                                                placeholder="วันที่เอกสารการวางบิล">
                                                     </div>
                                                 </div>

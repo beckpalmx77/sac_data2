@@ -14,7 +14,7 @@ $username = $_POST['username'];
 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 $remember = $_POST['remember'];
 
-$dashboard_page = "bill.php";
+$dashboard_page = "bill";
 
 $sql = "SELECT *,pm.dashboard_page as dashboard_page,slt.SLT_CODE,slt.SLT_NAME FROM ims_user  
         left join ims_slteam slt  on slt.SLT_KEY = ims_user.manage_team_id         

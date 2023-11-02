@@ -216,7 +216,7 @@ header("Location: index.php");
                                         <input type="hidden" name="action" id="action" value=""/>
                                         <span class="icon-input-btn">
                                                                 <i class="fa fa-check"></i>
-                                                            <input type="submit" name="save" id="save"
+                                                            <input type="submit" name="btnSubmit" id="btnSubmit"
                                                                    class="btn btn-primary" value="Save"/>
                                                             </span>
                                         <button type="button" class="btn btn-danger"
@@ -241,7 +241,7 @@ include('../includes/Modal-Logout.php');
 include('../includes/Footer.php');
 ?>
 
-
+<script src="js/myadmin.min.js"></script>
 <script src="vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
 <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
@@ -371,6 +371,7 @@ include('../includes/Footer.php');
                     let DI_AMOUNT = response[i].DI_AMOUNT;
                     let BILL_DI_REF = response[i].BILL_DI_REF;
                     let BILL_DI_DATE = response[i].BILL_DI_DATE;
+                    let BILL_NOTE_DATE = response[i].BILL_NOTE_DATE;
 
                     $('#recordModal').modal('show');
                     $('#id').val(id);
@@ -381,8 +382,10 @@ include('../includes/Footer.php');
                     $('#DI_AMOUNT').val(DI_AMOUNT);
                     $('#BILL_DI_REF').val(BILL_DI_REF);
                     $('#BILL_DI_DATE').val(BILL_DI_DATE);
+                    $('#BILL_NOTE_DATE').val(BILL_NOTE_DATE);
                     $('.modal-title').html("<i class='fa fa-plus'></i> Detail Record");
-                    $('#action').val('DETAIL');
+                    $('#action').val('UPDATE');
+                    $('#save').val('Save');
                 }
             },
             error: function (response) {
@@ -399,6 +402,33 @@ include('../includes/Footer.php');
         $("#recordModal").modal('hide');
     });
 
+</script>
+
+<script>
+    $(document).on('click','#btnSubmit',function(){
+
+        let id = $('#id').val();
+        let BILL_NOTE_DATE = $('#BILL_NOTE_DATE').val();
+        let formData = {action: "UPDATE", id: id ,bill_note_date: BILL_NOTE_DATE};
+/*
+        alert(id);
+
+        alert(BILL_NOTE_DATE);
+*/
+            $.ajax({
+                url: 'bill_ajaxprocess.php',
+                method: "POST",
+                data: formData,
+                success: function (data) {
+                    alertify.success(data);
+                    $('#recordForm')[0].reset();
+                    $('#recordModal').modal('hide');
+                    // dataRecords.ajax.reload();
+                }
+            })
+
+
+});
 </script>
 
 <script>

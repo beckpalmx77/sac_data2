@@ -1,6 +1,7 @@
 <?php
 include 'config_dbs.php';
 include '../config/connect_db.php';
+include '../config/lang.php';
 
 if ($_POST["action"] === 'GET_DATA') {
     $id = $_POST["id"];
@@ -30,6 +31,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "BILL_DI_REF" => $result['BILL_DI_REF'] == "" ? "-" : $result['BILL_DI_REF'],
             "BILL_DI_DATE" => $result['BILL_DI_DATE'] == "" ? "-" : substr($result['BILL_DI_DATE'], 8, 2) . "/" . substr($result['BILL_DI_DATE'], 5, 2) . "/" . substr($result['BILL_DI_DATE'], 0, 4),
             "AR_NAME" => $result['AR_NAME'],
+            "BILL_NOTE_DATE" => $result['BILL_NOTE_DATE'],
             "ARD_DUE_DA" => $result['ARD_DUE_DA'] == "" ? "-" : substr($result['ARD_DUE_DA'], 8, 2) . "/" . substr($result['ARD_DUE_DA'], 5, 2) . "/" . substr($result['ARD_DUE_DA'], 0, 4),
             "DI_AMOUNT" => $result['DI_AMOUNT']);
     }
@@ -37,6 +39,28 @@ if ($_POST["action"] === 'GET_DATA') {
     echo json_encode($return_arr);
 
 }
+
+
+if ($_POST["action"] === 'UPDATE') {
+
+/*
+    $myfile = fopen("param_post_update_data.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, "Action = ". $_POST["action"] . " id = " . $_POST["id"] . " bill = " . $_POST["bill_note_date"]);
+    fclose($myfile);
+*/
+
+    $id = $_POST["id"];
+    $BILL_NOTE_DATE = $_POST["bill_note_date"];
+
+    $sql_update = "UPDATE ims_document_bill SET BILL_NOTE_DATE=:BILL_NOTE_DATE
+            WHERE id = :id";
+    $query = $conn->prepare($sql_update);
+    $query->bindParam(':BILL_NOTE_DATE', $BILL_NOTE_DATE, PDO::PARAM_STR);
+    $query->bindParam(':id', $id, PDO::PARAM_STR);
+    $query->execute();
+    echo $save_success;
+}
+
 
 if ($_POST["action"] === 'GET_BILL_DATA') {
 

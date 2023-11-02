@@ -1,22 +1,36 @@
 <?php
 include 'config_dbs.php';
+include '../config/connect_db.php';
 
 if ($_POST["action"] === 'GET_DATA') {
     $id = $_POST["id"];
     $return_arr = array();
-    $sql_get = "SELECT * FROM menu_main WHERE id = " . $id;
+
+    $sql_get = "select ims_document_bill.* , b.DI_REF AS BILL_DI_REF , b.DI_DATE AS BILL_DI_DATE
+    , b.TPA_REFER_REF , b.TPA_REFER_DATE , b.ARD_BIL_DA  AS BILL_ARD_BIL_DA , b.ARD_DUE_DA AS BILL_ARD_DUE_DA
+    , b.ARD_A_SV , b.ARD_A_VAT  , b.ARD_A_AMT 
+    from ims_document_bill
+    left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF   
+    WHERE ims_document_bill.id = " . $id;
+
+/*
+    $myfile = fopen("param_post_get_data.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, "sql_get = " . $sql_get . " | Action = ". $_POST["action"]);
+    fclose($myfile);
+*/
+
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $result) {
         $return_arr[] = array("id" => $result['id'],
-            "main_menu_id" => $result['main_menu_id'],
-            "label" => $result['label'],
-            "link" => $result['link'],
-            "icon" => $result['icon'],
-            "data_target" => $result['data_target'],
-            "aria_controls" => $result['aria_controls'],
-            "privilege" => $result['privilege']);
+            "DI_REF" => $result['DI_REF'],
+            "DI_DATE" => $result['DI_DATE'] == "" ? "-" : substr($result['DI_DATE'], 8, 2) . "/" . substr($result['DI_DATE'], 5, 2) . "/" . substr($result['DI_DATE'], 0, 4),
+            "BILL_DI_REF" => $result['BILL_DI_REF'] == "" ? "-" : $result['BILL_DI_REF'],
+            "BILL_DI_DATE" => $result['BILL_DI_DATE'] == "" ? "-" : substr($result['BILL_DI_DATE'], 8, 2) . "/" . substr($result['BILL_DI_DATE'], 5, 2) . "/" . substr($result['BILL_DI_DATE'], 0, 4),
+            "AR_NAME" => $result['AR_NAME'],
+            "ARD_DUE_DA" => $result['ARD_DUE_DA'] == "" ? "-" : substr($result['ARD_DUE_DA'], 8, 2) . "/" . substr($result['ARD_DUE_DA'], 5, 2) . "/" . substr($result['ARD_DUE_DA'], 0, 4),
+            "DI_AMOUNT" => $result['DI_AMOUNT']);
     }
 
     echo json_encode($return_arr);
@@ -35,6 +49,7 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
     $searchValue = $_POST['search']['value']; // Search value
 
 ## Custom Field value
+    $searchByBillDoc = $_POST['searchByBillDoc'];
     $searchByName = $_POST['searchByName'];
     $searchBySale = $_POST['searchBySale'];
     $searchByDueDate = $_POST['searchByDueDate'] == '' ? "7" : $_POST['searchByDueDate'];
@@ -48,7 +63,9 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
     fclose($myfile);
 */
 
-
+    if ($searchByBillDoc != '') {
+        $searchQuery .= " and (ims_document_bill.DI_REF like '%" . $searchByBillDoc . "%' ) ";
+    }
 
     if ($searchByName != '') {
         $searchQuery .= " and (ims_document_bill.AR_NAME like '%" . $searchByName . "%' ) ";
@@ -98,12 +115,13 @@ from ims_document_bill
 left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF   
 WHERE 1 " . $searchQuery . " order by " . $columnName . " " . $columnSortOrder . " limit " . $row . "," . $rowperpage;
 
-    /*
+/*
     $myfile = fopen("select_data.txt", "w") or die("Unable to open file!");
     $data_select = " | " . $billQuery;
     fwrite($myfile, $billQuery);
     fclose($myfile);
-    */
+*/
+
 
 
     $empRecords = mysqli_query($con, $billQuery);
@@ -112,6 +130,7 @@ WHERE 1 " . $searchQuery . " order by " . $columnName . " " . $columnSortOrder .
     while ($row = mysqli_fetch_assoc($empRecords)) {
 
         $data[] = array(
+            "id" => $row['id'],
             "DI_REF" => $row['DI_REF'],
             "DI_DATE" => $row['DI_DATE'] == "" ? "-" : substr($row['DI_DATE'], 8, 2) . "/" . substr($row['DI_DATE'], 5, 2) . "/" . substr($row['DI_DATE'], 0, 4),
             "AR_NAME" => $row['AR_NAME'],
@@ -120,7 +139,7 @@ WHERE 1 " . $searchQuery . " order by " . $columnName . " " . $columnSortOrder .
             "AR_SLMNCODE" => $row['AR_SLMNCODE'],
             "SLMN_NAME" => $row['SLMN_NAME'],
             "ARD_DUE_DA" => $row['ARD_DUE_DA'] == "" ? "-" : substr($row['ARD_DUE_DA'], 8, 2) . "/" . substr($row['ARD_DUE_DA'], 5, 2) . "/" . substr($row['ARD_DUE_DA'], 0, 4),
-            "detail" => "<button type='button' name='detail' id='" . $row['DI_REF'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Detail'>Detail</button>"
+            "detail" => "<button type='button' name='detail' id='" . $row['id'] . "' class='btn btn-info btn-xs detail' data-toggle='tooltip' title='Detail'>Detail</button>"
         );
     }
 

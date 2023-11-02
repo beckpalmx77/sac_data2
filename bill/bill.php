@@ -35,7 +35,7 @@ header("Location: index.php");
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 
 </head>
-<body>
+<body id="page-top">
 
 <style>
     body, h1, h2, h3, h4, h5, h6 {
@@ -58,13 +58,16 @@ header("Location: index.php");
                         <table>
                             <tr>
                                 <td>
-                                    <input type='text' id='searchByName' placeholder='ชื่อลูกค้า'>
+                                    <input type='text' id='searchByBillDoc'  name='searchByBillDoc' placeholder='เลขที่เอกสาร'>
                                 </td>
                                 <td>
-                                    <input type='text' id='searchBySale' placeholder='ชื่อ Sale'>
+                                    <input type='text' id='searchByName' name='searchByName' placeholder='ชื่อลูกค้า'>
+                                </td>
+                                <td>
+                                    <input type='text' id='searchBySale' name='searchBySale' placeholder='ชื่อ Sale'>
                                 </td>
                                 <td> วันที่ครบกำหนดชำระ
-                                    <select id='searchByDueDate'>
+                                    <select id='searchByDueDate' name='searchByDueDate' >
                                         <option value='7' selected>7</option>
                                         <?php for ($day=-31;$day<=60;$day++) {?>
                                         <option <?php echo "value='" . $day ."'"?>><?php echo $day ?></option>
@@ -106,12 +109,149 @@ header("Location: index.php");
                             </tr>
                             </tfoot>
                         </table>
+
+                        <div class="modal fade" id="recordModal">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Modal title</h4>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">×
+                                        </button>
+                                    </div>
+
+                                    <form method="post" id="recordForm">
+                                        <div class="modal-body">
+                                            <div class="modal-body">
+
+                                                <div class="form-group row">
+                                                    <div class="col-sm-6">
+                                                        <label for="DI_REF" class="control-label">เลขที่เอกสาร</label>
+                                                        <input type="text" class="form-control"
+                                                               id="DI_REF" name="DI_REF"
+                                                               readonly="true"
+                                                               placeholder="เลขที่เอกสาร">
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label for="DI_DATE"
+                                                               class="control-label">วันที่เอกสาร</label>
+                                                        <input type="text" class="form-control"
+                                                               id="DI_DATE"
+                                                               name="DI_DATE"
+                                                               required="required"
+                                                               placeholder="วันที่เอกสาร">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <div class="col-sm-6">
+                                                        <label for="AR_NAME" class="control-label">ชื่อลูกค้า</label>
+                                                        <input type="AR_NAME" class="form-control"
+                                                               id="AR_NAME" name="AR_NAME"
+                                                               readonly="true"
+                                                               placeholder="ชื่อลูกค้า">
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label for="ARD_DUE_DA"
+                                                               class="control-label">วันที่ครบกำหนดชำระ</label>
+                                                        <input type="text" class="form-control"
+                                                               id="ARD_DUE_DA"
+                                                               name="ARD_DUE_DA"
+                                                               required="required"
+                                                               placeholder="วันที่ครบกำหนดชำระ">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <div class="col-sm-6">
+                                                        <label for="DI_AMOUNT" class="control-label">จำนวนเงิน</label>
+                                                        <input type="text" class="form-control"
+                                                               id="DI_AMOUNT" name="DI_AMOUNT"
+                                                               placeholder="DI_AMOUNT">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <div class="col-sm-6">
+                                                        <label for="BILL_DI_REF" class="control-label">เลขที่เอกสารการวางบิล</label>
+                                                        <input type="text" class="form-control"
+                                                               id="BILL_DI_REF" name="BILL_DI_REF"
+                                                               readonly="true"
+                                                               placeholder="เลขที่เอกสารการวางบิล">
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label for="BILL_DI_DATE"
+                                                               class="control-label">วันที่เอกสารการวางบิล</label>
+                                                        <input type="text" class="form-control"
+                                                               id="BILL_DI_DATE"
+                                                               name="BILL_DI_DATE"
+                                                               required="required"
+                                                               placeholder="วันที่เอกสารการวางบิล">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <div class="modal-footer">
+                                        <input type="hidden" name="id" id="id"/>
+                                        <input type="hidden" name="action" id="action" value=""/>
+                                        <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal">Close <i
+                                                    class="fa fa-window-close"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<?php
+include('../includes/Modal-Logout.php');
+include('../includes/Footer.php');
+?>
+
+<style>
+
+    .icon-input-btn {
+        display: inline-block;
+        position: relative;
+    }
+
+    .icon-input-btn input[type="submit"] {
+        padding-left: 2em;
+    }
+
+    .icon-input-btn .fa {
+        display: inline-block;
+        position: absolute;
+        left: 0.65em;
+        top: 30%;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $(".icon-input-btn").each(function () {
+            let btnFont = $(this).find(".btn").css("font-size");
+            let btnColor = $(this).find(".btn").css("color");
+            $(this).find(".fa").css({'font-size': btnFont, 'color': btnColor});
+        });
+    });
+</script>
+
+
+<!-- Scroll to top -->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
 
 <!-- Script -->
 <script>
@@ -139,12 +279,14 @@ header("Location: index.php");
                 'lengthMenu': [[10, 20, 50, 100], [10, 20, 50, 100]],
                 'data': function (data) {
                     // Read values
+                    let billdoc = $('#searchByBillDoc').val();
                     let duedate = $('#searchByDueDate').val();
                     let name = $('#searchByName').val();
                     let sale = $('#searchBySale').val();
                     let action = "GET_BILL_DATA";
 
                     // Append to data
+                    data.searchByBillDoc = billdoc;
                     data.searchByDueDate = duedate;
                     data.searchByName = name;
                     data.searchBySale = sale;
@@ -192,32 +334,39 @@ header("Location: index.php");
                 let len = response.length;
                 for (let i = 0; i < len; i++) {
                     let id = response[i].id;
-                    let main_menu_id = response[i].main_menu_id;
-                    let label = response[i].label;
-                    let link = response[i].link;
-                    let icon = response[i].icon;
-                    let data_target = response[i].data_target;
-                    let aria_controls = response[i].aria_controls;
-                    let privilege = response[i].privilege;
+                    let DI_REF = response[i].DI_REF;
+                    let DI_DATE = response[i].DI_DATE;
+                    let AR_NAME = response[i].AR_NAME;
+                    let ARD_DUE_DA = response[i].ARD_DUE_DA;
+                    let DI_AMOUNT = response[i].DI_AMOUNT;
+                    let BILL_DI_REF = response[i].BILL_DI_REF;
+                    let BILL_DI_DATE = response[i].BILL_DI_DATE;
 
                     $('#recordModal').modal('show');
                     $('#id').val(id);
-                    $('#main_menu_id').val(main_menu_id);
-                    $('#label').val(label);
-                    $('#link').val(link);
-                    $('#icon').val(icon);
-                    $('#data_target').val(data_target);
-                    $('#aria_controls').val(aria_controls);
-                    $('#privilege').val(privilege);
-                    $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
-                    $('#action').val('UPDATE');
-                    $('#save').val('Save');
+                    $('#DI_REF').val(DI_REF);
+                    $('#DI_DATE').val(DI_DATE);
+                    $('#AR_NAME').val(AR_NAME);
+                    $('#ARD_DUE_DA').val(ARD_DUE_DA);
+                    $('#DI_AMOUNT').val(DI_AMOUNT);
+                    $('#BILL_DI_REF').val(BILL_DI_REF);
+                    $('#BILL_DI_DATE').val(BILL_DI_DATE);
+                    $('.modal-title').html("<i class='fa fa-plus'></i> Detail Record");
+                    $('#action').val('DETAIL');
                 }
             },
             error: function (response) {
                 alertify.error("error : " + response);
             }
         });
+    });
+
+</script>
+
+<script>
+
+    $(".btn").click(function(){
+        $("#recordModal").modal('hide');
     });
 
 </script>

@@ -323,7 +323,7 @@ include('../includes/Footer.php');
 
     $("#TableRecordList").on('click', '.detail', function () {
         let id = $(this).attr("id");
-        alert(id);
+        //alert(id);
         let formData = {action: "GET_DATA", id: id};
         $.ajax({
             type: "POST",

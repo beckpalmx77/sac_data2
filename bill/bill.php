@@ -68,7 +68,7 @@ header("Location: index.php");
                                 </td>
                                 <td> วันที่ครบกำหนดชำระ
                                     <select id='searchByDueDate' name='searchByDueDate' >
-                                        <option value='7' selected>7</option>
+                                        <option value='-' selected>-</option>
                                         <?php for ($day=-31;$day<=60;$day++) {?>
                                         <option <?php echo "value='" . $day ."'"?>><?php echo $day ?></option>
                                         <?php } ?>

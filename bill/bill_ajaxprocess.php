@@ -75,15 +75,13 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
         $searchQuery .= " and (ims_document_bill.SLMN_NAME like '%" . $searchBySale . "%' ) ";
     }
 
-    $searchQuery .= " and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) = " . $searchByDueDate;
+    // $searchQuery .= " and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) = " . $searchByDueDate;
 
-    /*
-    if($searchByDueDate != ''){
+
+    if($searchByDueDate != '-'){
         $searchQuery .= " and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) = " . $searchByDueDate;
-    } else if($searchByDueDate > 31){
-        $searchQuery .= " and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) > " . $searchByDueDate;
     }
-    */
+
 
 
     /*
@@ -113,7 +111,8 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
 , b.ARD_A_SV , b.ARD_A_VAT  , b.ARD_A_AMT 
 from ims_document_bill
 left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF   
-WHERE 1 " . $searchQuery . " order by " . $columnName . " " . $columnSortOrder . " limit " . $row . "," . $rowperpage;
+WHERE 1 " . $searchQuery . " order by ims_document_bill.id DESC " . " limit " . $row . "," . $rowperpage;
+
 
 /*
     $myfile = fopen("select_data.txt", "w") or die("Unable to open file!");
@@ -121,6 +120,7 @@ WHERE 1 " . $searchQuery . " order by " . $columnName . " " . $columnSortOrder .
     fwrite($myfile, $billQuery);
     fclose($myfile);
 */
+
 
 
 

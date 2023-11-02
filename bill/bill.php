@@ -191,6 +191,22 @@ header("Location: index.php");
                                                     </div>
                                                 </div>
 
+                                                <div class="form-group row">
+                                                    <div class="col-sm-6">
+                                                        <label for="BILL_NOTE_DATE"
+                                                               class="control-label"><b>* วันที่ต้องวางบิล</b></label>
+                                                        <i class="fa fa-calendar"
+                                                           aria-hidden="true"></i>
+                                                        <input type="text" class="form-control"
+                                                               id="BILL_NOTE_DATE"
+                                                               name="BILL_NOTE_DATE"
+                                                               value=""
+                                                               readonly="true"
+                                                               placeholder="วันที่ต้องวางบิล">
+                                                    </div>
+
+                                                </div>
+
                                             </div>
                                         </div>
                                     </form>
@@ -198,6 +214,11 @@ header("Location: index.php");
                                     <div class="modal-footer">
                                         <input type="hidden" name="id" id="id"/>
                                         <input type="hidden" name="action" id="action" value=""/>
+                                        <span class="icon-input-btn">
+                                                                <i class="fa fa-check"></i>
+                                                            <input type="submit" name="save" id="save"
+                                                                   class="btn btn-primary" value="Save"/>
+                                                            </span>
                                         <button type="button" class="btn btn-danger"
                                                 data-dismiss="modal">Close <i
                                                     class="fa fa-window-close"></i>
@@ -219,6 +240,14 @@ header("Location: index.php");
 include('../includes/Modal-Logout.php');
 include('../includes/Footer.php');
 ?>
+
+
+<script src="vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
+<script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
+<link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.min.js"></script>
 
 <style>
 
@@ -370,6 +399,17 @@ include('../includes/Footer.php');
         $("#recordModal").modal('hide');
     });
 
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#BILL_NOTE_DATE').datepicker({
+            format: "dd/mm/yyyy",
+            todayHighlight: true,
+            language: "th",
+            autoclose: true
+        });
+    });
 </script>
 
 </body>

@@ -335,6 +335,10 @@ include('../includes/Footer.php');
             ]
         });
 
+        $('#searchByBillDoc').keyup(function () {
+            dataTable.draw();
+        });
+
         $('#searchByName').keyup(function () {
             dataTable.draw();
         });

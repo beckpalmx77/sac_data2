@@ -442,7 +442,8 @@ include('../includes/Footer.php');
                     if (data==='1') {
                     alertify.success("Complete : บันทึกข้อมูลเรียบร้อยแล้ว");
                     //$('#recordForm')[0].reset();
-                    //$('#recordModal').modal('hide');
+                    $('#recordModal').modal('hide');
+                    $('#TableRecordList').DataTable().ajax.reload();
                  } else {
                         alertify.error("กรุณาป้อนข้อมูลให้ครบถ้วน");
                     }

@@ -58,6 +58,9 @@ header("Location: index.php");
                         <table>
                             <tr>
                                 <td>
+                                    เงื่อนไขในการค้นหา
+                                </td>
+                                <td>
                                     <input type='text' id='searchByBillDoc'  name='searchByBillDoc' placeholder='เลขที่เอกสาร'>
                                 </td>
                                 <td>
@@ -76,9 +79,21 @@ header("Location: index.php");
                                     </select>
                                 </td>
                                 <td>
+                                    วันที่ต้องวางบิล
+                                    <input type="text"
+                                           id="searchByBillNoteDate"
+                                           name="searchByBillNoteDate"
+                                           value=""
+                                           readonly="true"
+                                           placeholder="วันที่ต้องวางบิล">
                                 </td>
                                 <td>
-                                    <a href="login.php" class="btn btn-danger">Logout</a>
+                                </td>
+                                <td>
+                                    <a href="bill" class="btn btn-success">Clear</a>
+                                </td>
+                                <td>
+                                    <a href="login" class="btn btn-danger">Logout</a>
                                 </td>
                             </tr>
                         </table>
@@ -92,6 +107,7 @@ header("Location: index.php");
                                 <th>ชื่อลูกค้า</th>
                                 <th>จำนวนเงิน</th>
                                 <th>Sale</th>
+                                <th>วันที่ต้องวางบิล</th>
                                 <th>หมายเหตุ</th>
                                 <th>การวางบิล</th>
                             </tr>
@@ -104,6 +120,7 @@ header("Location: index.php");
                                 <th>ชื่อลูกค้า</th>
                                 <th>จำนวนเงิน</th>
                                 <th>Sale</th>
+                                <th>วันที่ต้องวางบิล</th>
                                 <th>หมายเหตุ</th>
                                 <th>การวางบิล</th>
                             </tr>
@@ -204,7 +221,6 @@ header("Location: index.php");
                                                                readonly="true"
                                                                placeholder="วันที่ต้องวางบิล">
                                                     </div>
-
                                                 </div>
 
                                             </div>
@@ -302,17 +318,19 @@ include('../includes/Footer.php');
                 'lengthMenu': [[10, 20, 50, 100], [10, 20, 50, 100]],
                 'data': function (data) {
                     // Read values
-                    let billdoc = $('#searchByBillDoc').val();
-                    let duedate = $('#searchByDueDate').val();
+                    let bill_doc = $('#searchByBillDoc').val();
+                    let due_date = $('#searchByDueDate').val();
                     let name = $('#searchByName').val();
                     let sale = $('#searchBySale').val();
+                    let bill_note_date = $('#searchByBillNoteDate').val();
                     let action = "GET_BILL_DATA";
 
                     // Append to data
-                    data.searchByBillDoc = billdoc;
-                    data.searchByDueDate = duedate;
+                    data.searchByBillDoc = bill_doc;
+                    data.searchByDueDate = due_date;
                     data.searchByName = name;
                     data.searchBySale = sale;
+                    data.searchByBillNoteDate = bill_note_date;
                     data.action = action;
                 }
             },
@@ -323,6 +341,7 @@ include('../includes/Footer.php');
                 {data: 'AR_NAME'},
                 {data: 'DI_AMOUNT'},
                 {data: 'SLMN_NAME'},
+                {data: 'BILL_NOTE_DATE'},
                 {data: 'AR_REMARK'},
                 {data: 'detail'}
             ]
@@ -343,6 +362,11 @@ include('../includes/Footer.php');
         $('#searchByDueDate').change(function () {
             dataTable.draw();
         });
+
+        $('#searchByBillNoteDate').change(function () {
+            dataTable.draw();
+        });
+
     });
 </script>
 
@@ -441,6 +465,18 @@ include('../includes/Footer.php');
         });
     });
 </script>
+
+<script>
+    $(document).ready(function () {
+        $('#searchByBillNoteDate').datepicker({
+            format: "dd/mm/yyyy",
+            todayHighlight: true,
+            language: "th",
+            autoclose: true
+        });
+    });
+</script>
+
 
 </body>
 

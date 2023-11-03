@@ -86,6 +86,8 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
     $searchByName = $_POST['searchByName'];
     $searchBySale = $_POST['searchBySale'];
     $searchByDueDate = $_POST['searchByDueDate'] == '' ? "7" : $_POST['searchByDueDate'];
+    $searchByBillNoteDate = $_POST['searchByBillNoteDate'];
+
 
 ## Search
     $searchQuery = " ";
@@ -108,6 +110,10 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
 
     if($searchByDueDate != '-'){
         $searchQuery .= " and DATEDIFF(ims_document_bill.ARD_DUE_DA, CURDATE()) = " . $searchByDueDate;
+    }
+
+    if ($searchByBillNoteDate != '') {
+        $searchQuery .= " and (ims_document_bill.BILL_NOTE_DATE like '%" . $searchByBillNoteDate . "%' ) ";
     }
 
 /*
@@ -173,6 +179,7 @@ WHERE PAYMENT_STATUS = 'N' " . $searchQuery . " order by ims_document_bill.id DE
             "AR_REMARK" => $row['AR_REMARK'],
             "AR_SLMNCODE" => $row['AR_SLMNCODE'],
             "SLMN_NAME" => $row['SLMN_NAME'],
+            "BILL_NOTE_DATE" => $row['BILL_NOTE_DATE'],
             "ARD_DUE_DA" => $row['ARD_DUE_DA'] == "" ? "-" : substr($row['ARD_DUE_DA'], 8, 2) . "/" . substr($row['ARD_DUE_DA'], 5, 2) . "/" . substr($row['ARD_DUE_DA'], 0, 4),
             "detail" => "<button type='button' name='detail' id='" . $row['id'] . "' class='btn btn-info btn-xs detail' data-toggle='tooltip' title='Detail'>รายละเอียด</button>"
         );

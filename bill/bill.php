@@ -54,7 +54,10 @@ header("Location: index.php");
 
                     <div>
                         <!-- Custom Filter -->
-                        <h5>เอกสารบิลที่ครบกำหนดการชำระ</h5>
+                        <div class="card-header bg-primary text-white">
+                            <i class="fa fa-tags" aria-hidden="true"></i> เอกสารบิลที่ครบกำหนดการชำระ
+                        </div>
+
                         <table>
                             <tr>
                                 <td>

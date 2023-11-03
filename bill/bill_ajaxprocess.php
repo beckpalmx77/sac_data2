@@ -174,7 +174,7 @@ WHERE PAYMENT_STATUS = 'N' " . $searchQuery . " order by ims_document_bill.id DE
             "AR_SLMNCODE" => $row['AR_SLMNCODE'],
             "SLMN_NAME" => $row['SLMN_NAME'],
             "ARD_DUE_DA" => $row['ARD_DUE_DA'] == "" ? "-" : substr($row['ARD_DUE_DA'], 8, 2) . "/" . substr($row['ARD_DUE_DA'], 5, 2) . "/" . substr($row['ARD_DUE_DA'], 0, 4),
-            "detail" => "<button type='button' name='detail' id='" . $row['id'] . "' class='btn btn-info btn-xs detail' data-toggle='tooltip' title='Detail'>Detail</button>"
+            "detail" => "<button type='button' name='detail' id='" . $row['id'] . "' class='btn btn-info btn-xs detail' data-toggle='tooltip' title='Detail'>รายละเอียด</button>"
         );
     }
 

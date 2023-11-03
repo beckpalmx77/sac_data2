@@ -214,15 +214,8 @@ header("Location: index.php");
                                     <div class="modal-footer">
                                         <input type="hidden" name="id" id="id"/>
                                         <input type="hidden" name="action" id="action" value=""/>
-                                        <span class="icon-input-btn">
-                                                                <i class="fa fa-check"></i>
-                                                            <input type="submit" name="btnSubmit" id="btnSubmit"
-                                                                   class="btn btn-primary" value="Save"/>
-                                                            </span>
-                                        <button type="button" class="btn btn-danger"
-                                                data-dismiss="modal">Close <i
-                                                    class="fa fa-window-close"></i>
-                                        </button>
+                                        <button type="button" class="btn btn-primary" id="btnSubmit">Save <i class="fa fa-check"></i></button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close <i class="fa fa-window-close"></i></button>
                                     </div>
 
                                 </div>

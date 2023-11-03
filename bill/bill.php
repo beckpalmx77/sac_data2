@@ -46,18 +46,12 @@ header("Location: index.php");
 <div class="row">
     <div class="col-lg-12">
         <div class="card mb-12">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <div class="card-header bg-primary text-white">
+                <i class="fa fa-tags" aria-hidden="true"></i> เอกสารบิลที่ครบกำหนดการชำระ
             </div>
             <div class="card-body">
-
                 <div class="col-md-12 col-md-offset-2">
-
                     <div>
-                        <!-- Custom Filter -->
-                        <div class="card-header bg-primary text-white">
-                            <i class="fa fa-tags" aria-hidden="true"></i> เอกสารบิลที่ครบกำหนดการชำระ
-                        </div>
-
                         <table>
                             <tr>
                                 <td>

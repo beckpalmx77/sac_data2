@@ -409,6 +409,7 @@ include('../includes/Footer.php');
 </script>
 
 <script>
+
     $(document).on('click','#btnSubmit',function(){
 
         let id = $('#id').val();
@@ -416,23 +417,25 @@ include('../includes/Footer.php');
         let formData = {action: "UPDATE", id: id ,bill_note_date: BILL_NOTE_DATE};
 /*
         alert(id);
-
         alert(BILL_NOTE_DATE);
 */
+
             $.ajax({
                 url: 'bill_ajaxprocess.php',
                 method: "POST",
                 data: formData,
                 success: function (data) {
-                    alertify.success(data);
-                    $('#recordForm')[0].reset();
-                    $('#recordModal').modal('hide');
-                    // dataRecords.ajax.reload();
+                    if (data==='1') {
+                    alertify.success("Complete : บันทึกข้อมูลเรียบร้อยแล้ว");
+                    //$('#recordForm')[0].reset();
+                    //$('#recordModal').modal('hide');
+                 } else {
+                        alertify.error("กรุณาป้อนข้อมูลให้ครบถ้วน");
+                    }
                 }
             })
-
-
 });
+
 </script>
 
 <script>

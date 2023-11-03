@@ -52,13 +52,21 @@ if ($_POST["action"] === 'UPDATE') {
     $id = $_POST["id"];
     $BILL_NOTE_DATE = $_POST["bill_note_date"];
 
-    $sql_update = "UPDATE ims_document_bill SET BILL_NOTE_DATE=:BILL_NOTE_DATE
+    if ($BILL_NOTE_DATE != '') {
+
+        $sql_update = "UPDATE ims_document_bill SET BILL_NOTE_DATE=:BILL_NOTE_DATE
             WHERE id = :id";
-    $query = $conn->prepare($sql_update);
-    $query->bindParam(':BILL_NOTE_DATE', $BILL_NOTE_DATE, PDO::PARAM_STR);
-    $query->bindParam(':id', $id, PDO::PARAM_STR);
-    $query->execute();
-    echo $save_success;
+        $query = $conn->prepare($sql_update);
+        $query->bindParam(':BILL_NOTE_DATE', $BILL_NOTE_DATE, PDO::PARAM_STR);
+        $query->bindParam(':id', $id, PDO::PARAM_STR);
+        $query->execute();
+        //echo $save_success;
+        echo 1;
+    } else {
+        //echo $empty;
+        echo 4;
+    }
+
 }
 
 

@@ -1,106 +1,45 @@
 <?php
-include '../config_pg/connect_pg_db.php';
 include '../config/connect_db.php';
 include '../config/config_rabbit.inc';
 include '../util/send_message.php';
-require_once '../vendor/autoload.php';
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-use PhpAmqpLib\Message\AMQPMessage;
+include '../config/lang.php';
 
 echo "Time in Bangkok\n";
 $date2 = new DateTime();
 $date2->setTimezone(new DateTimeZone('Asia/Bangkok'));
 echo $date2->format(DateTime::RFC1123) . "\n";
 
-$date_create = $date2->format('Y-m-d-H-i-s');
-$data_create = "Q_MSG Create = " . $date_create ;
+$sql_read_data = "select ims_document_bill.* , b.DI_REF AS BILL_DI_REF , b.DI_DATE AS BILL_DI_DATE
+, b.TPA_REFER_REF , b.TPA_REFER_DATE , b.ARD_BIL_DA  AS BILL_ARD_BIL_DA 
+, b.ARD_DUE_DA AS BILL_ARD_DUE_DA
+, b.ARD_A_SV , b.ARD_A_VAT  , b.ARD_A_AMT 
+from ims_document_bill
+left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF   
+WHERE PAYMENT_STATUS = 'N' AND  SEND_ALERT_BILL <> 'Y' AND DATEDIFF(STR_TO_DATE(BILL_NOTE_DATE, '%d/%m/%Y'),NOW())  = " . $bill_alert_days;
 
-echo "Before Loop = " . $data_create ;
+echo $sql_read_data . "\n\r";
 
-$connection = new AMQPStreamConnection($rabbitmqHost, $rabbitmqPort, $rabbitmqUser, $rabbitmqPass);
-$channel = $connection->channel();
-
-$channel->queue_declare($rabbitmqQueue, false, false, false, false);
-
-$msg = new AMQPMessage($data_create);
-$channel->basic_publish($msg, '', $rabbitmqQueue);
-
-echo " [x] Sent 'Send Data'\n\r";
-
-$channel->close();
-$connection->close();
-
-
-
-$current_date = date("Y-m-d");
-//$current_date = "2023-07-04";
-
-echo "Date = " . $current_date . "\n\r";
-
-$sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_customers.owner,sac_users.username,sac_users.name  as take_name    
-    FROM sac_orders
-    LEFT JOIN sac_customers ON sac_customers.id = sac_orders.customer_id  		
-    LEFT JOIN sac_users ON sac_users.id = sac_customers.taker_id    
-    WHERE date >= '" . $current_date . "'
-    ORDER BY id ";
-
-echo $sql_pg . "\n\r";
-
-$stmt = $conn_pg->prepare($sql_pg);
+$stmt = $conn->prepare($sql_read_data);
 $stmt->execute();
-$orders = $stmt->fetchAll();
-foreach ($orders as $order) {
-    $sql_find = " SELECT code_id FROM ims_sac_orders WHERE code_id = " . $order['id'];
-    echo $sql_find . "\n\r";
-    $nRows = $conn->query($sql_find)->fetchColumn();
-    if ($nRows > 0) {
-        echo "Dup id = " . $order['id'] . "\n\r";
-        $data = "";
-    } else {
-        $data = $order['id'];
-        echo "Insert id = " . $data . "\n\r";
-        $sql = " INSERT INTO ims_sac_orders (code_id,date,customer_id,customer_code,customer_name,owner,address,contract_name,contract_phone) 
-            VALUE (:code_id,:date,:customer_id,:customer_code,:customer_name,:owner,:address,:contract_name,:contract_phone) ";
-        $query = $conn->prepare($sql);
-        $query->bindParam(':code_id', $order["id"], PDO::PARAM_STR);
-        $query->bindParam(':date', $order["date"], PDO::PARAM_STR);
-        $query->bindParam(':customer_id', $order["customer_id"], PDO::PARAM_STR);
-        $query->bindParam(':customer_code', $order["code"], PDO::PARAM_STR);
-        $query->bindParam(':customer_name', $order["name"], PDO::PARAM_STR);
-        $query->bindParam(':owner', $order["owner"], PDO::PARAM_STR);
-        $query->bindParam(':address', $order["address"], PDO::PARAM_STR);
-        $query->bindParam(':contract_name', $order["contract_name"], PDO::PARAM_STR);
-        $query->bindParam(':contract_phone', $order["contract_phone"], PDO::PARAM_STR);
-        $query->execute();
+$bills = $stmt->fetchAll();
 
-        $lastInsertId = $conn->lastInsertId();
+foreach ($bills as $bill) {
 
-        if ($lastInsertId) {
+    $sql = " UPDATE ims_document_bill SET SEND_ALERT_BILL = 'Y' 
+             WHERE id = :id ";
+    $query = $conn->prepare($sql);
+    $query->bindParam(':id', $bill["id"], PDO::PARAM_STR);
+    $query->execute();
 
-            $sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
-            $sMessage = "มีรายการสั่งซื้อเข้า เลขที่เอกสาร = " . $order["id"] . " " . $order["date"] . " " . $order["code"] . " " . $order["name"]
-            . "\n\r" . "ผู้ติดต่อ : " . $order["contract_name"] . " โทรฯ : " .$order["contract_phone"]
-            . "\n\r" . "ผู้รับผิดชอบ : " . $order["take_name"]
-            . "\n\r" . "https://app.sanguanautocar.co.th/orders/" . $order["id"] ;
+    $sToken = "UyToa0gKmU0BvMsh5nTIAjKIaooXxoUAO1CASWnbIES";
+    $sMessage = "แจ้งเตือนการวางบิล เลขที่เอกสาร = " . $bill["DI_REF"]
+        . "\n\r" . "ชื่อลูกค้า : " . $bill["AR_NAME"]
+        . "\n\r" . "ผู้รับผิดชอบ : " . $bill["SLMN_NAME"]
+        . "\n\r" . "ต้องวางบิลวันที่ี : " . $bill["BILL_NOTE_DATE"] ;
 
-            echo $sMessage ;
-            sendLineNotify($sMessage,$sToken);
+    echo $sMessage;
+    sendLineNotify($sMessage, $sToken);
 
-            $connection = new AMQPStreamConnection($rabbitmqHost, $rabbitmqPort, $rabbitmqUser, $rabbitmqPass);
-            $channel = $connection->channel();
-
-            $channel->queue_declare($rabbitmqQueue, false, false, false, false);
-
-            $msg = new AMQPMessage($data);
-            $channel->basic_publish($msg, '', $rabbitmqQueue);
-
-            echo " [x] Sent 'Send Data'\n\r";
-
-            $channel->close();
-            $connection->close();
-
-        }
-    }
 }
 
 

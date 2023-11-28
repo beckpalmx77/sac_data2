@@ -13,3 +13,5 @@ $pwd = '-->$2y$10$C0z1CwgBGUcCqIqlhcz65O1Zdi1H1YIiuqw/oGlzlj5IDdX/jHluC<--';
 
 $contact_y = "ติดต่อแล้ว";
 $contact_n = "ยังไม่ได้ติดต่อ";
+
+$bill_alert_days = 7 ;

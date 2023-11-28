@@ -109,7 +109,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                     </table>
                                 </div>
 
-
                                 <div class="card-header">
                                     สถิติ ยอดขายรายวัน เดือน
                                     <?php echo $month_name . " " . date("Y"); ?>
@@ -151,7 +150,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                         foreach ($results_daily
 
                                         as $row_daily) { ?>
-
+0
                                         <tr>
                                             <td><?php echo htmlentities($row_daily['SLMN_NAME']); ?></td>
                                             <td>

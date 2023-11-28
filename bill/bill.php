@@ -322,8 +322,6 @@ include('../includes/Footer.php');
                     let bill_note_date = $('#searchByBillNoteDate').val();
                     let action = "GET_BILL_DATA";
 
-                    alert("OK" + action);
-
                     // Append to data
                     data.searchByBillDoc = bill_doc;
                     data.searchByDueDate = due_date;

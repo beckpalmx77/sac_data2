@@ -117,10 +117,12 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
     }
 
 /*
-    $myfile = fopen("param_post_mssql_data.txt", "w") or die("Unable to open file!");
+    $filename = "d:\\temp_app\\param_post_mssql_data.txt";
+    $myfile = fopen($filename, "w") or die("Unable to open file!");
     fwrite($myfile, "searchByName | " . $searchByName . " | ". $searchBySale . " | searchByDueDate " . $searchByDueDate . " | searchQuery = " . $searchQuery);
     fclose($myfile);
 */
+
 
 
 
@@ -154,12 +156,10 @@ left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF
 WHERE PAYMENT_STATUS = 'N' " . $searchQuery . " order by ims_document_bill.id DESC " . " limit " . $row . "," . $rowperpage;
 
 
-/*
-        $myfile = fopen("select_data.txt", "w") or die("Unable to open file!");
-        $data_select = " | " . $billQuery;
-        fwrite($myfile, $billQuery);
-        fclose($myfile);
-*/
+    $filename = "d:\\temp_app\\sel_data.txt";
+    $myfile = fopen($filename, "w") or die("Unable to open file!");
+    fwrite($myfile, "searchByName | " . $searchByName . " | ". $searchBySale . " | searchByDueDate " . $searchByDueDate . " | searchQuery = " . $searchQuery);
+    fclose($myfile);
 
 
 

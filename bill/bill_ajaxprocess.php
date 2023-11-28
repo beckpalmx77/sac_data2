@@ -88,6 +88,11 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
     $searchByDueDate = $_POST['searchByDueDate'] == '' ? "7" : $_POST['searchByDueDate'];
     $searchByBillNoteDate = $_POST['searchByBillNoteDate'];
 
+    $filename = "d:\\temp_app\\post_data_from_front.txt";
+    $myfile = fopen($filename, "w") or die("Unable to open file!");
+    fwrite($myfile, $_POST["action"]);
+    fclose($myfile);
+
 
 ## Search
     $searchQuery = " ";
@@ -116,12 +121,12 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
         $searchQuery .= " and (ims_document_bill.BILL_NOTE_DATE like '%" . $searchByBillNoteDate . "%' ) ";
     }
 
-/*
+
     $filename = "d:\\temp_app\\param_post_mssql_data.txt";
     $myfile = fopen($filename, "w") or die("Unable to open file!");
     fwrite($myfile, "searchByName | " . $searchByName . " | ". $searchBySale . " | searchByDueDate " . $searchByDueDate . " | searchQuery = " . $searchQuery);
     fclose($myfile);
-*/
+
 
 
 
@@ -155,15 +160,10 @@ from ims_document_bill
 left join ims_document_bill_load b on b.TPA_REFER_REF = ims_document_bill.DI_REF   
 WHERE PAYMENT_STATUS = 'N' " . $searchQuery . " order by ims_document_bill.id DESC " . " limit " . $row . "," . $rowperpage;
 
-
     $filename = "d:\\temp_app\\sel_data.txt";
     $myfile = fopen($filename, "w") or die("Unable to open file!");
-    fwrite($myfile, "searchByName | " . $searchByName . " | ". $searchBySale . " | searchByDueDate " . $searchByDueDate . " | searchQuery = " . $searchQuery);
+    fwrite($myfile, $billQuery);
     fclose($myfile);
-
-
-
-
 
     $empRecords = mysqli_query($con, $billQuery);
     $data = array();

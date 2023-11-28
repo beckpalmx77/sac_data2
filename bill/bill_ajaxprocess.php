@@ -90,10 +90,10 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
 
 
     //$filename = "D:\\temp_app\\post_data_from_front.txt";
-    $filename = "post_data_from_front.txt";
-    $myfile = fopen($filename, "w") or die("Unable to open file!");
-    fwrite($myfile, $_POST["action"]);
-    fclose($myfile);
+    //$filename = "post_data_from_front.txt";
+    //$myfile = fopen($filename, "w") or die("Unable to open file!");
+    //fwrite($myfile, $_POST["action"]);
+    //fclose($myfile);
 
 
 

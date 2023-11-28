@@ -88,12 +88,12 @@ if ($_POST["action"] === 'GET_BILL_DATA') {
     $searchByDueDate = $_POST['searchByDueDate'] == '' ? "7" : $_POST['searchByDueDate'];
     $searchByBillNoteDate = $_POST['searchByBillNoteDate'];
 
-    /*
-    $filename = "d:\\temp_app\\post_data_from_front.txt";
+
+    $filename = "D:\\temp_app\\post_data_from_front.txt";
     $myfile = fopen($filename, "w") or die("Unable to open file!");
     fwrite($myfile, $_POST["action"]);
     fclose($myfile);
-    */
+    
 
 
 ## Search

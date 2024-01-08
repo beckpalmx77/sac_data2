@@ -150,7 +150,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                         foreach ($results_daily
 
                                         as $row_daily) { ?>
-
+0
                                         <tr>
                                             <td><?php echo htmlentities($row_daily['SLMN_NAME']); ?></td>
                                             <td>

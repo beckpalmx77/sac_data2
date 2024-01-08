@@ -5,11 +5,10 @@
 
 // header('Location: login');
 
-
 header('Location: http://171.100.56.194:8999/sac_data2/bill/login');
 
-
 exit;
+
 ?>
 
 

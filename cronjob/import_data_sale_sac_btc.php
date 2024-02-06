@@ -10,26 +10,25 @@ include('../cond_file/doc_info_sale_daily_cp.php');
 include('../util/month_util.php');
 
 
-$DT_DOCCODE_MINUS = "IS";
+$DT_DOCCODE_MINUS1 = "IC";
+$DT_DOCCODE_MINUS2 = "IIS";
 
-$str_doc1 = array("DS02", "IS01", "IS02", "IV01");
-$str_doc2 = array("2");
-$str_doc3 = array("IV3","CCS6","CCS7","DDS5");
+$str_doc1 = array("CCS6","CCS7","DDS5","IC5","IC6","IIS5","IIS6","IV3");
 
-$str_group1 = array("1SAC01","1SAC02","1SAC03","1SAC04","1SAC05","1SAC06","1SAC07","1SAC08","1SAC09","1SAC10","1SAC11","1SAC12","1SAC13","1SAC14","2SAC01","2SAC02","2SAC03","2SAC04","2SAC05","2SAC06","2SAC07","2SAC08","2SAC09","2SAC10","2SAC11","2SAC12","2SAC13","2SAC14","2SAC15","3SAC01","3SAC02","3SAC03","3SAC04","3SAC05","3SAC06","4SAC01","4SAC02","4SAC03","4SAC04","4SAC05","4SAC06");
-$str_group2 = array("5SAC01","5SAC02","6SAC08","8CPA01-001","8CPA01-002","8SAC09","8BTCA01-002","8BTCA01-001");
-$str_group3 = array("TATA-004","999-08","999-07","999-14");
-$str_group4 = array("SAC08","TATA-003","10SAC12");
+$str_group1 = array("1SAC03","3SAC02","4SAC02","1SAC04","1SAC02","5SAC02","1SAC12","1SAC13","2SAC02","1SAC01","1SAC14","1SAC07","3SAC03","4SAC03","1SAC08","3SAC05","4SAC05","4SAC01","3SAC04","3SAC01","1SAC11","2SAC03","2SAC08","2SAC10","2SAC06");
+$str_group2 = array("8SAC11","TA01-001","8CPA01-001","8CPA01-002","8SAC09","8BTCA01-001","8BTCA01-002");
+$str_group3 = array("9SA01","999-07","999-14","999-08");
+$str_group4 = array("SAC08");
 
 echo "Today is " . date("Y/m/d");
 echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
+$query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('CCS6','CCS7','DDS5','IC5','IC6','IIS5','IIS6','IV3')) ";
 
-$query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3')) ";
+//$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 
-$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 //$query_year = " AND DI_DATE BETWEEN '2018/01/01' AND '2023/12/31'";
-//$query_year = " AND DI_DATE BETWEEN '2022/05/15' AND '" . date("Y/m/d") . "'";
+$query_year = " AND DI_DATE BETWEEN '2022/01/01' AND '" . date("Y/m/d") . "'";
 
 //$query_year = " AND DI_DATE BETWEEN '2022/08/21' AND '" . date("Y/m/d") . "'";
 
@@ -66,14 +65,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $branch = "";
 
     if (in_array($DT_DOCCODE, $str_doc1)) {
-        $branch = "SAC";
-    }
-
-    if (in_array($DT_DOCCODE, $str_doc2)) {
-        $branch = "RQ";
-    }
-
-    if (in_array($DT_DOCCODE, $str_doc3)) {
         $branch = "BTC";
     }
 
@@ -84,14 +75,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $TRD_B_SELL = (double)$result_sqlsvr["TRD_B_SELL"]>0 ? "-" . $result_sqlsvr["TRD_B_SELL"] : $result_sqlsvr["TRD_B_SELL"];
         $TRD_B_VAT = (double)$result_sqlsvr["TRD_B_VAT"]>0 ? "-" . $result_sqlsvr["TRD_B_VAT"] : $result_sqlsvr["TRD_B_VAT"];
         $TRD_G_KEYIN = (double)$result_sqlsvr["TRD_G_KEYIN"]>0 ? "-" . $result_sqlsvr["TRD_G_KEYIN"] : $result_sqlsvr["TRD_G_KEYIN"];
-/*
-        $TRD_U_PRC = "-" . $result_sqlsvr["TRD_U_PRC"];
-        $TRD_DSC_KEYINV = "-" . $result_sqlsvr["TRD_DSC_KEYINV"];
-        $TRD_B_SELL = "-" . $result_sqlsvr["TRD_B_SELL"];
-        $TRD_B_VAT = "-" . $result_sqlsvr["TRD_B_VAT"];
-        $TRD_G_KEYIN = "-" . $result_sqlsvr["TRD_G_KEYIN"];
-*/
-
     } else {
         $TRD_QTY =  $result_sqlsvr["TRD_QTY"];
         $TRD_U_PRC =  $result_sqlsvr["TRD_U_PRC"];

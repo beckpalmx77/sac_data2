@@ -25,7 +25,7 @@ echo "Today is " . date("Y/m/d");
 echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 
-$query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3')) ";
+$query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3','DDS5','CCS6','CCS7','IC5','IC6','IIS5','IIS6')) ";
 
 $query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d") . "' AND '" . date("Y/m/d") . "'";
 //$query_year = " AND DI_DATE BETWEEN '2018/01/01' AND '2023/12/31'";
@@ -77,7 +77,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $branch = "BTC";
     }
 
-    if(strpos($result_sqlsvr['DT_DOCCODE'], $DT_DOCCODE_MINUS) !== false){
+    if (($result_sqlsvr['DT_PROPERTIES'] == 308) || ($result_sqlsvr['DT_PROPERTIES'] == 337)) {
         $TRD_QTY = (double)$result_sqlsvr["TRD_QTY"]>0 ? "-" . $result_sqlsvr["TRD_QTY"] : $result_sqlsvr["TRD_QTY"];
         $TRD_U_PRC = (double)$result_sqlsvr["TRD_U_PRC"]>0 ? "-" . $result_sqlsvr["TRD_U_PRC"] : $result_sqlsvr["TRD_U_PRC"];
         $TRD_DSC_KEYINV = (double)$result_sqlsvr["TRD_DSC_KEYINV"]>0 ? "-" . $result_sqlsvr["TRD_DSC_KEYINV"] : $result_sqlsvr["TRD_DSC_KEYINV"];

@@ -84,13 +84,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $TRD_B_SELL = (double)$result_sqlsvr["TRD_B_SELL"] > 0 ? "-" . $result_sqlsvr["TRD_B_SELL"] : $result_sqlsvr["TRD_B_SELL"];
         $TRD_B_VAT = (double)$result_sqlsvr["TRD_B_VAT"] > 0 ? "-" . $result_sqlsvr["TRD_B_VAT"] : $result_sqlsvr["TRD_B_VAT"];
         $TRD_G_KEYIN = (double)$result_sqlsvr["TRD_G_KEYIN"] > 0 ? "-" . $result_sqlsvr["TRD_G_KEYIN"] : $result_sqlsvr["TRD_G_KEYIN"];
-        /*
-                $TRD_U_PRC = "-" . $result_sqlsvr["TRD_U_PRC"];
-                $TRD_DSC_KEYINV = "-" . $result_sqlsvr["TRD_DSC_KEYINV"];
-                $TRD_B_SELL = "-" . $result_sqlsvr["TRD_B_SELL"];
-                $TRD_B_VAT = "-" . $result_sqlsvr["TRD_B_VAT"];
-                $TRD_G_KEYIN = "-" . $result_sqlsvr["TRD_G_KEYIN"];
-        */
 
     } else {
         $TRD_QTY = $result_sqlsvr["TRD_QTY"];

@@ -21,8 +21,9 @@ $str_group2 = array("5SAC01", "5SAC02", "6SAC08", "8CPA01-001", "8CPA01-002", "8
 $str_group3 = array("TATA-004", "999-08", "999-07", "999-14");
 $str_group4 = array("SAC08", "TATA-003", "10SAC12");
 
-echo "Today is " . date("Y/m/d");
-echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
+echo "Today is " . date("Y/m/d") . "\n\r" ;
+echo "Yesterday is " . date("Y/m/d", strtotime("yesterday")) . "\n\r" ;
+echo "Host - " . $host . "\n\r";
 
 
 $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3','DDS5','CCS6','CCS7','IC5','IC6','IIS5','IIS6')) ";

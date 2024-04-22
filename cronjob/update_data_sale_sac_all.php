@@ -3,7 +3,7 @@
 ini_set('display_errors', 1);
 error_reporting(~0);
 
-include("../config/connect_sqlserver.php");
+include("../config/connect_sqlserver40.php");
 include("../config/connect_db.php");
 
 include('../cond_file/doc_info_sale_daily_sac_all.php');
@@ -21,8 +21,9 @@ $str_group2 = array("5SAC01", "5SAC02", "6SAC08", "8CPA01-001", "8CPA01-002", "8
 $str_group3 = array("TATA-004", "999-08", "999-07", "999-14");
 $str_group4 = array("SAC08", "TATA-003", "10SAC12");
 
+echo "Host DB =  " . $host . "\n\r";
 echo "Today is " . date("Y/m/d") . "\n\r";
-echo "Yesterday is " . date("Y/m/d", strtotime("yesterday")) . "\n\r";
+echo "Before is " . date("Y/m/d", strtotime("yesterday")) . "\n\r";
 
 
 $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','IV01','IV3','DDS5','CCS6','CCS7','IC5','IC6','IIS5','IIS6')) ";
@@ -36,9 +37,7 @@ $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','
 
 // $query_year = " AND DI_DATE BETWEEN '1900/01/01' AND '2023/12/31' ";
 
-$query_year = " AND DI_DATE BETWEEN '2022/11/01' AND '2023/12/31'";
-
-echo "Host = " . $host . "\n\r";
+$query_year = " AND DI_DATE BETWEEN '2020/05/28' AND '2020/05/31'";
 
 $sql_sqlsvr = $select_query_daily . $select_query_daily_cond . $query_daily_cond_ext . $query_year . $select_query_daily_order;
 

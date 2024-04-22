@@ -21,8 +21,8 @@ function sendLineNotify($message,$token)
         echo 'error:' . curl_error($ch);
     } else {
         $res = json_decode($result, true);
-        echo "status : " . $res['status'];
-        echo "message : " . $res['message'];
+        echo "\n\r". "status : " . $res['status'];
+        echo "\n\r". "message : " . $res['message'];
     }
     curl_close($ch);
 }

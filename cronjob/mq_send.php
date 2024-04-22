@@ -7,6 +7,14 @@ require_once '../vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
+//mobile app production token
+$sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
+
+//test token
+//$sToken = "kd3qbLvsSJY4EQyNHf4Re7lPLmiID6QQ3teTpAgJsqM";
+
+echo "\n\r" . "Line Token = " . $sToken ;
+
 echo "Time in Bangkok\n";
 $date2 = new DateTime();
 $date2->setTimezone(new DateTimeZone('Asia/Bangkok'));
@@ -30,10 +38,8 @@ echo " [x] Sent 'Send Data'\n\r";
 $channel->close();
 $connection->close();
 
-
-
 $current_date = date("Y-m-d");
-//$current_date = "2023-07-04";
+//$current_date = "2024-04-09";
 
 echo "Date = " . $current_date . "\n\r";
 
@@ -45,6 +51,10 @@ $sql_pg = "SELECT sac_orders.*,sac_customers.code,sac_customers.name,sac_custome
     ORDER BY id ";
 
 echo $sql_pg . "\n\r";
+
+//$myfile = fopen("sql_get_DATA.txt", "w") or die("Unable to open file!");
+//fwrite($myfile, "[" . $sql_pg) ;
+//fclose($myfile);
 
 $stmt = $conn_pg->prepare($sql_pg);
 $stmt->execute();
@@ -77,7 +87,6 @@ foreach ($orders as $order) {
 
         if ($lastInsertId) {
 
-            $sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
             $sMessage = "มีรายการสั่งซื้อเข้า เลขที่เอกสาร = " . $order["id"] . " " . $order["date"] . " " . $order["code"] . " " . $order["name"]
             . "\n\r" . "ผู้ติดต่อ : " . $order["contract_name"] . " โทรฯ : " .$order["contract_phone"]
             . "\n\r" . "ผู้รับผิดชอบ : " . $order["take_name"]

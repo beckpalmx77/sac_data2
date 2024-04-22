@@ -20,8 +20,9 @@ $str_group2 = array("8SAC11","TA01-001","8CPA01-001","8CPA01-002","8SAC09","8BTC
 $str_group3 = array("9SA01","999-07","999-14","999-08");
 $str_group4 = array("SAC08");
 
-echo "Today is " . date("Y/m/d");
-echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
+echo "Today is " . date("Y/m/d") . "\n\r" ;
+echo "Yesterday is " . date("Y/m/d", strtotime("yesterday")) . "\n\r" ;
+echo "Host - " . $host . "\n\r";
 
 $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('CCS6','CCS7','DDS5','IC5','IC6','IIS5','IIS6','IV3')) ";
 

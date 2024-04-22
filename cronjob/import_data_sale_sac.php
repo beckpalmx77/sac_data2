@@ -30,12 +30,12 @@ $query_daily_cond_ext = " AND (DOCTYPE.DT_DOCCODE in ('2','DS02','IS01','IS02','
 
 //$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 
-$query_year = " AND DI_DATE BETWEEN '2018/08/28' AND '2018/08/28'";
+//$query_year = " AND DI_DATE BETWEEN '2018/08/28' AND '2018/08/28'";
 
 //$query_year = " AND DI_DATE BETWEEN '2020/05/15' AND '" . date("Y/m/d") . "'";
 //$query_year = " AND DI_DATE BETWEEN '2020/01/01' AND '" . date("Y/m/d") . "'";
 
-//$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
+$query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 
 $sql_sqlsvr = $select_query_daily . $select_query_daily_cond . $query_daily_cond_ext . $query_year . $select_query_daily_order;
 

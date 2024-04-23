@@ -4,6 +4,7 @@ include '../config/connect_db.php';
 include '../config/config_rabbit.inc';
 include '../util/send_message.php';
 require_once '../vendor/autoload.php';
+
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -13,7 +14,7 @@ $sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
 //test token
 //$sToken = "kd3qbLvsSJY4EQyNHf4Re7lPLmiID6QQ3teTpAgJsqM";
 
-echo "\n\r" . "Line Token = " . $sToken ;
+echo "\n\r" . "Line Token = " . $sToken;
 
 echo "Time in Bangkok\n";
 $date2 = new DateTime();
@@ -21,9 +22,9 @@ $date2->setTimezone(new DateTimeZone('Asia/Bangkok'));
 echo $date2->format(DateTime::RFC1123) . "\n";
 
 $date_create = $date2->format('Y-m-d-H-i-s');
-$data_create = "Q_MSG Create = " . $date_create ;
+$data_create = "Q_MSG Create = " . $date_create;
 
-echo "Before Loop = " . $data_create ;
+echo "Before Loop = " . $data_create;
 
 $connection = new AMQPStreamConnection($rabbitmqHost, $rabbitmqPort, $rabbitmqUser, $rabbitmqPass);
 $channel = $connection->channel();
@@ -88,12 +89,12 @@ foreach ($orders as $order) {
         if ($lastInsertId) {
 
             $sMessage = "มีรายการสั่งซื้อเข้า เลขที่เอกสาร = " . $order["id"] . " " . $order["date"] . " " . $order["code"] . " " . $order["name"]
-            . "\n\r" . "ผู้ติดต่อ : " . $order["contract_name"] . " โทรฯ : " .$order["contract_phone"]
-            . "\n\r" . "ผู้รับผิดชอบ : " . $order["take_name"]
-            . "\n\r" . "https://app.sanguanautocar.co.th/orders/" . $order["id"] ;
+                . "\n\r" . "ผู้ติดต่อ : " . $order["contract_name"] . " โทรฯ : " . $order["contract_phone"]
+                . "\n\r" . "ผู้รับผิดชอบ : " . $order["take_name"]
+                . "\n\r" . "https://app.sanguanautocar.co.th/orders/" . $order["id"];
 
-            echo $sMessage ;
-            sendLineNotify($sMessage,$sToken);
+            echo $sMessage;
+            sendLineNotify($sMessage, $sToken);
 
             $connection = new AMQPStreamConnection($rabbitmqHost, $rabbitmqPort, $rabbitmqUser, $rabbitmqPass);
             $channel = $connection->channel();

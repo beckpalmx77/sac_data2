@@ -16,7 +16,7 @@ $sToken = "fEdAZErH6afcT2QEZBZ8J17bz3QpBrYCZUYyK3v40ob";
 
 echo "\n\r" . "Line Token = " . $sToken;
 
-echo "Time in Bangkok\n";
+echo "\n\r" . "Time in Bangkok\n";
 $date2 = new DateTime();
 $date2->setTimezone(new DateTimeZone('Asia/Bangkok'));
 echo $date2->format(DateTime::RFC1123) . "\n";

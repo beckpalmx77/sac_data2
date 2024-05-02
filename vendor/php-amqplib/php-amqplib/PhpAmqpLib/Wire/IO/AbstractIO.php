@@ -6,6 +6,7 @@ use PhpAmqpLib\Connection\AMQPConnectionConfig;
 use PhpAmqpLib\Exception\AMQPConnectionClosedException;
 use PhpAmqpLib\Exception\AMQPHeartbeatMissedException;
 use PhpAmqpLib\Exception\AMQPIOWaitException;
+use PhpAmqpLib\Exception\AMQPRuntimeException;
 use PhpAmqpLib\Wire\AMQPWriter;
 
 abstract class AbstractIO
@@ -45,7 +46,7 @@ abstract class AbstractIO
     /** @var int|float */
     protected $last_write;
 
-    /** @var array|null */
+    /** @var array<string, mixed>|null */
     protected $last_error;
 
     /** @var bool */
@@ -55,7 +56,7 @@ abstract class AbstractIO
      * @param int $len
      * @return string
      * @throws \PhpAmqpLib\Exception\AMQPIOException
-     * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
+     * @throws AMQPRuntimeException
      * @throws \PhpAmqpLib\Exception\AMQPSocketException
      * @throws \PhpAmqpLib\Exception\AMQPTimeoutException
      * @throws \PhpAmqpLib\Exception\AMQPConnectionClosedException
@@ -80,8 +81,9 @@ abstract class AbstractIO
      * @param int|null $sec
      * @param int $usec
      * @return int
-     * @throws \PhpAmqpLib\Exception\AMQPIOException
-     * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
+     * @throws AMQPIOWaitException
+     * @throws AMQPRuntimeException
+     * @throws AMQPConnectionClosedException
      */
     public function select(?int $sec, int $usec = 0)
     {
@@ -120,7 +122,7 @@ abstract class AbstractIO
      * Set ups the connection.
      * @return void
      * @throws \PhpAmqpLib\Exception\AMQPIOException
-     * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
+     * @throws AMQPRuntimeException
      */
     abstract public function connect();
 
@@ -137,7 +139,7 @@ abstract class AbstractIO
     /**
      * Heartbeat logic: check connection health here
      * @return void
-     * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
+     * @throws AMQPRuntimeException
      */
     public function check_heartbeat()
     {
@@ -157,7 +159,7 @@ abstract class AbstractIO
     /**
      * @throws \PhpAmqpLib\Exception\AMQPHeartbeatMissedException
      */
-    protected function checkBrokerHeartbeat()
+    protected function checkBrokerHeartbeat(): void
     {
         if ($this->heartbeat > 0 && ($this->last_read > 0 || $this->last_write > 0)) {
             $lastActivity = $this->getLastActivity();
@@ -250,20 +252,16 @@ abstract class AbstractIO
      * @param  string $errstr
      * @param  string $errfile
      * @param  int $errline
-     * @param  array $errcontext
      * @return void
      */
-    public function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null)
+    public function error_handler($errno, $errstr, $errfile, $errline): void
     {
         // throwing an exception in an error handler will halt execution
         //   set the last error and continue
-        $this->last_error = compact('errno', 'errstr', 'errfile', 'errline', 'errcontext');
+        $this->last_error = compact('errno', 'errstr', 'errfile', 'errline');
     }
 
-    /**
-     * @return bool
-     */
-    protected function isPcntlSignalEnabled()
+    protected function isPcntlSignalEnabled(): bool
     {
         return extension_loaded('pcntl')
             && function_exists('pcntl_signal_dispatch')

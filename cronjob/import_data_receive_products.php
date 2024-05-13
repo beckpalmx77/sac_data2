@@ -13,7 +13,7 @@ echo "Today is " . date("Y/m/d");
 echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 $query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
-//$query_year = " AND DI_DATE BETWEEN '2024/01/01' AND '2024/05/31'";
+//$query_year = " AND DI_DATE BETWEEN '2024/05/01' AND '2024/05/31'";
 //$query_year = " AND DI_DATE BETWEEN '2000/01/01' AND '" . date("Y/m/d") . "'";
 
 $sql_sqlsvr = $str_query_select . $str_query_from . $str_query_where . $query_year . $str_query_order;
@@ -43,11 +43,11 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         . "' AND DI_DATE = '" . $result_sqlsvr["DI_DATE"]
         . "' AND DT_DOCCODE = '" . $result_sqlsvr["DT_DOCCODE"]
         . "' AND TRD_SEQ = '" . $result_sqlsvr["TRD_SEQ"] . "'";
-/*
-    $myfile = fopen("qry_file_mssql_server1.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_find);
-    fclose($myfile);
-*/
+    /*
+        $myfile = fopen("qry_file_mssql_server1.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $sql_find);
+        fclose($myfile);
+    */
 
     $nRows = $conn_sac->query($sql_find)->fetchColumn();
 
@@ -60,7 +60,8 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         ,VAT_RATE=:VAT_RATE,VAT_REF=:VAT_REF,VAT_DATE=:VAT_DATE        
         ,APD_G_SV=:APD_G_SV,APD_G_SNV=:APD_G_SNV,APD_G_VAT=:APD_G_VAT
         ,APD_B_SV=:APD_B_SV,APD_B_SNV=:APD_B_SNV,APD_B_VAT=:APD_B_VAT,APD_B_AMT=:APD_B_AMT        
-        ,APD_G_KEYIN=:APD_G_KEYIN,TRH_N_QTY=:TRH_N_QTY,TRH_N_ITEMS=:TRH_N_ITEMS,APD_TDSC_KEYIN=:APD_TDSC_KEYIN,APD_TDSC_KEYINV=:APD_TDSC_KEYINV        
+        ,APD_G_KEYIN=:APD_G_KEYIN,TRH_N_QTY=:TRH_N_QTY,TRH_N_ITEMS=:TRH_N_ITEMS,APD_TDSC_KEYIN=:APD_TDSC_KEYIN,APD_TDSC_KEYINV=:APD_TDSC_KEYINV       
+        ,WH_CODE=:WH_CODE,WH_NAME=:WH_NAME,WL_CODE=:WL_CODE,WL_NAME=:WL_NAME   
         ,DI_ACTIVE=:DI_ACTIVE 
         WHERE DI_KEY = :DI_KEY         
         AND DI_REF  = :DI_REF
@@ -109,6 +110,11 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':APD_TDSC_KEYIN', $result_sqlsvr["APD_TDSC_KEYIN"],  PDO::PARAM_STR);
         $query->bindParam(':APD_TDSC_KEYINV', $result_sqlsvr["APD_TDSC_KEYINV"],  PDO::PARAM_STR);
 
+        $query->bindParam(':WH_CODE', $result_sqlsvr["WH_CODE"],  PDO::PARAM_STR);
+        $query->bindParam(':WH_NAME', $result_sqlsvr["WH_NAME"],  PDO::PARAM_STR);
+        $query->bindParam(':WL_CODE', $result_sqlsvr["WL_CODE"],  PDO::PARAM_STR);
+        $query->bindParam(':WL_NAME', $result_sqlsvr["WL_NAME"],  PDO::PARAM_STR);
+
         $query->bindParam(':DI_ACTIVE', $result_sqlsvr["DI_ACTIVE"],  PDO::PARAM_STR);
         $query->bindParam(':DI_KEY', $result_sqlsvr["DI_KEY"],  PDO::PARAM_STR);
         $query->bindParam(':DI_REF', $result_sqlsvr["DI_REF"],  PDO::PARAM_STR);
@@ -119,10 +125,10 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->execute();
 
         $update_data .= "Update OK = " . $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["TRD_SH_CODE"]
-                     . " |- " . $result_sqlsvr["TRD_SH_UPRC"] . " |- " . $result_sqlsvr["TRD_QTY"]
-                     . " |- " . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
+            . " |- " . $result_sqlsvr["TRD_SH_UPRC"] . " |- " . $result_sqlsvr["TRD_QTY"]
+            . " |- " . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
 
-        echo " UPDATE DATA " . $update_data;
+        echo " UPDATE DATA " . $update_data . "\n\r";
 
         //$myfile = fopen("update_chk.txt", "w") or die("Unable to open file!");
         //fwrite($myfile, $update_data);
@@ -230,7 +236,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
             $insert_data .= "Insert = " . $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["TRD_SH_CODE"]
                 . " |- " . $result_sqlsvr["TRD_SH_UPRC"] . " |- " . $result_sqlsvr["TRD_QTY"]
                 . " |- " . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
-            echo "  INSERT OK = " . $insert_data;
+            echo "  INSERT OK = " . $insert_data . "\n\r";
         } else {
             echo " Error ";
         }

@@ -53,7 +53,8 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     if ($nRows > 0) {
 
-        $sql_update = " UPDATE ims_product_receive_sac  SET TRD_QTY=:TRD_QTY,TRD_SH_QTY=:TRD_SH_QTY,TRD_Q_FREE=:TRD_Q_FREE,TRD_SH_UPRC=:TRD_SH_UPRC
+        $sql_update = " UPDATE ims_product_receive_sac  SET DI_DAY=:DI_DAY,DI_MONTH=:DI_MONTH,DI_MONTH_NAME=:DI_MONTH_NAME,DI_YEAR=:DI_YEAR
+        ,TRD_QTY=:TRD_QTY,TRD_SH_QTY=:TRD_SH_QTY,TRD_Q_FREE=:TRD_Q_FREE,TRD_SH_UPRC=:TRD_SH_UPRC
         ,TRD_G_KEYIN=:TRD_G_KEYIN,TRD_DSC_KEYIN=:TRD_DSC_KEYIN,TRD_DSC_KEYINV=:TRD_DSC_KEYINV,TRD_TDSC_KEYINV=:TRD_TDSC_KEYINV,TRD_U_PRC=:TRD_U_PRC        
         ,TRD_G_SELL=:TRD_G_SELL,TRD_G_VAT=:TRD_G_VAT,TRD_G_AMT=:TRD_G_AMT,TRD_B_SELL=:TRD_B_SELL,TRD_B_VAT=:TRD_B_VAT,TRD_B_AMT=:TRD_B_AMT,TRD_VAT_TY=:TRD_VAT_TY        
         ,TRD_UTQNAME=:TRD_UTQNAME,TRD_UTQQTY=:TRD_UTQQTY,TRD_VAT_R=:TRD_VAT_R,TRD_REFER_REF=:TRD_REFER_REF
@@ -70,6 +71,11 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         AND TRD_SEQ = :TRD_SEQ ";
 
         $query = $conn_sac->prepare($sql_update);
+
+        $query->bindParam(':DI_DAY', $result_sqlsvr["DI_DAY"], PDO::PARAM_STR);
+        $query->bindParam(':DI_MONTH', $result_sqlsvr["DI_MONTH"], PDO::PARAM_STR);
+        $query->bindParam(':DI_MONTH_NAME', $month_arr[$result_sqlsvr["DI_MONTH"]], PDO::PARAM_STR);
+        $query->bindParam(':DI_YEAR', $result_sqlsvr["DI_YEAR"], PDO::PARAM_STR);
 
         $query->bindParam(':TRD_QTY', $result_sqlsvr["TRD_QTY"],  PDO::PARAM_STR);
         $query->bindParam(':TRD_SH_QTY', $result_sqlsvr["TRD_SH_QTY"],  PDO::PARAM_STR);
@@ -136,13 +142,13 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     } else {
 
-        $sql = " INSERT INTO ims_product_receive_sac (DI_REF,DI_DATE,DI_CRE_BY,AP_CODE,AP_NAME,APCAT_CODE,APCAT_NAME,APCD_NAME,APD_DUE_DA,APD_CHQ_DA
+        $sql = " INSERT INTO ims_product_receive_sac (DI_REF,DI_DATE,DI_DAY,DI_MONTH,DI_MONTH_NAME,DI_YEAR,DI_CRE_BY,AP_CODE,AP_NAME,APCAT_CODE,APCAT_NAME,APCD_NAME,APD_DUE_DA,APD_CHQ_DA
  ,TRH_SHIP_DATE,SB_NAME,DEPT_CODE,DEPT_THAIDESC,DEPT_ENGDESC,PRJ_CODE,PRJ_NAME,TRD_SH_CODE,TRD_SH_NAME,BRN_CODE,BRN_NAME,TRD_LOT_NO,TRD_SERIAL,TRD_QTY
  ,TRD_SH_QTY,TRD_Q_FREE,TRD_SH_UPRC,TRD_G_KEYIN,TRD_DSC_KEYIN,TRD_DSC_KEYINV,TRD_TDSC_KEYINV,TRD_U_PRC,TRD_G_SELL,TRD_G_VAT,TRD_G_AMT,TRD_B_SELL,TRD_B_VAT
  ,TRD_B_AMT,TRD_VAT_TY,TRD_UTQNAME,TRD_UTQQTY,TRD_VAT_R,TRD_REFER_REF,VAT_RATE,VAT_REF,VAT_DATE,APD_G_SV,APD_G_SNV,APD_G_VAT,APD_B_SV,APD_B_SNV,APD_B_VAT
  ,APD_B_AMT,APD_G_KEYIN,TRH_N_QTY,TRH_N_ITEMS,APD_TDSC_KEYIN,APD_TDSC_KEYINV
  ,WH_CODE,WH_NAME,WL_CODE,WL_NAME,TRD_SH_REMARK,APD_BIL_DA,BR_CODE,DI_ACTIVE,TRD_SEQ,DI_KEY,DT_DOCCODE)
-        VALUES (:DI_REF,:DI_DATE,:DI_CRE_BY,:AP_CODE,:AP_NAME,:APCAT_CODE,:APCAT_NAME,:APCD_NAME,:APD_DUE_DA,:APD_CHQ_DA,:TRH_SHIP_DATE
+        VALUES (:DI_REF,:DI_DATE,:DI_DAY,:DI_MONTH,:DI_MONTH_NAME,:DI_YEAR,:DI_CRE_BY,:AP_CODE,:AP_NAME,:APCAT_CODE,:APCAT_NAME,:APCD_NAME,:APD_DUE_DA,:APD_CHQ_DA,:TRH_SHIP_DATE
         ,:SB_NAME,:DEPT_CODE,:DEPT_THAIDESC,:DEPT_ENGDESC,:PRJ_CODE,:PRJ_NAME,:TRD_SH_CODE,:TRD_SH_NAME,:BRN_CODE,:BRN_NAME,:TRD_LOT_NO,:TRD_SERIAL
         ,:TRD_QTY,:TRD_SH_QTY,:TRD_Q_FREE,:TRD_SH_UPRC,:TRD_G_KEYIN,:TRD_DSC_KEYIN,:TRD_DSC_KEYINV,:TRD_TDSC_KEYINV,:TRD_U_PRC,:TRD_G_SELL,:TRD_G_VAT
         ,:TRD_G_AMT,:TRD_B_SELL,:TRD_B_VAT,:TRD_B_AMT,:TRD_VAT_TY,:TRD_UTQNAME,:TRD_UTQQTY,:TRD_VAT_R,:TRD_REFER_REF,:VAT_RATE,:VAT_REF,:VAT_DATE
@@ -159,6 +165,10 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
         $query->bindParam(':DI_REF', $result_sqlsvr["DI_REF"],  PDO::PARAM_STR);
         $query->bindParam(':DI_DATE', $result_sqlsvr["DI_DATE"],  PDO::PARAM_STR);
+        $query->bindParam(':DI_DAY', $result_sqlsvr["DI_DAY"], PDO::PARAM_STR);
+        $query->bindParam(':DI_MONTH', $result_sqlsvr["DI_MONTH"], PDO::PARAM_STR);
+        $query->bindParam(':DI_MONTH_NAME', $month_arr[$result_sqlsvr["DI_MONTH"]], PDO::PARAM_STR);
+        $query->bindParam(':DI_YEAR', $result_sqlsvr["DI_YEAR"], PDO::PARAM_STR);
         $query->bindParam(':DI_CRE_BY', $result_sqlsvr["DI_CRE_BY"],  PDO::PARAM_STR);
         $query->bindParam(':AP_CODE', $result_sqlsvr["AP_CODE"],  PDO::PARAM_STR);
         $query->bindParam(':AP_NAME', $result_sqlsvr["AP_NAME"],  PDO::PARAM_STR);

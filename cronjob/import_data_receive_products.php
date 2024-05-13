@@ -13,7 +13,7 @@ echo "Today is " . date("Y/m/d");
 echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 $query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
-//$query_year = " AND DI_DATE BETWEEN '2017/01/01' AND '2021/12/31'";
+//$query_year = " AND DI_DATE BETWEEN '2024/01/01' AND '2024/05/31'";
 //$query_year = " AND DI_DATE BETWEEN '2000/01/01' AND '" . date("Y/m/d") . "'";
 
 $sql_sqlsvr = $str_query_select . $str_query_from . $str_query_where . $query_year . $str_query_order;
@@ -53,8 +53,15 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     if ($nRows > 0) {
 
-        $sql_update = " UPDATE ims_product_receive_sac  SET DI_ACTIVE=:DI_ACTIVE 
-
+        $sql_update = " UPDATE ims_product_receive_sac  SET TRD_QTY=:TRD_QTY,TRD_SH_QTY=:TRD_SH_QTY,TRD_Q_FREE=:TRD_Q_FREE,TRD_SH_UPRC=:TRD_SH_UPRC
+        ,TRD_G_KEYIN=:TRD_G_KEYIN,TRD_DSC_KEYIN=:TRD_DSC_KEYIN,TRD_DSC_KEYINV=:TRD_DSC_KEYINV,TRD_TDSC_KEYINV=:TRD_TDSC_KEYINV,TRD_U_PRC=:TRD_U_PRC        
+        ,TRD_G_SELL=:TRD_G_SELL,TRD_G_VAT=:TRD_G_VAT,TRD_G_AMT=:TRD_G_AMT,TRD_B_SELL=:TRD_B_SELL,TRD_B_VAT=:TRD_B_VAT,TRD_B_AMT=:TRD_B_AMT,TRD_VAT_TY=:TRD_VAT_TY        
+        ,TRD_UTQNAME=:TRD_UTQNAME,TRD_UTQQTY=:TRD_UTQQTY,TRD_VAT_R=:TRD_VAT_R,TRD_REFER_REF=:TRD_REFER_REF
+        ,VAT_RATE=:VAT_RATE,VAT_REF=:VAT_REF,VAT_DATE=:VAT_DATE        
+        ,APD_G_SV=:APD_G_SV,APD_G_SNV=:APD_G_SNV,APD_G_VAT=:APD_G_VAT
+        ,APD_B_SV=:APD_B_SV,APD_B_SNV=:APD_B_SNV,APD_B_VAT=:APD_B_VAT,APD_B_AMT=:APD_B_AMT        
+        ,APD_G_KEYIN=:APD_G_KEYIN,TRH_N_QTY=:TRH_N_QTY,TRH_N_ITEMS=:TRH_N_ITEMS,APD_TDSC_KEYIN=:APD_TDSC_KEYIN,APD_TDSC_KEYINV=:APD_TDSC_KEYINV        
+        ,DI_ACTIVE=:DI_ACTIVE 
         WHERE DI_KEY = :DI_KEY         
         AND DI_REF  = :DI_REF
         AND DI_DATE = :DI_DATE
@@ -62,6 +69,45 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         AND TRD_SEQ = :TRD_SEQ ";
 
         $query = $conn_sac->prepare($sql_update);
+
+        $query->bindParam(':TRD_QTY', $result_sqlsvr["TRD_QTY"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_SH_QTY', $result_sqlsvr["TRD_SH_QTY"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_Q_FREE', $result_sqlsvr["TRD_Q_FREE"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_SH_UPRC', $result_sqlsvr["TRD_SH_UPRC"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_G_KEYIN', $result_sqlsvr["TRD_G_KEYIN"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_DSC_KEYIN', $result_sqlsvr["TRD_DSC_KEYIN"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_DSC_KEYINV', $result_sqlsvr["TRD_DSC_KEYINV"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_TDSC_KEYINV', $result_sqlsvr["TRD_TDSC_KEYINV"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_U_PRC', $result_sqlsvr["TRD_U_PRC"],  PDO::PARAM_STR);
+
+        $query->bindParam(':TRD_G_SELL', $result_sqlsvr["TRD_G_SELL"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_G_VAT', $result_sqlsvr["TRD_G_VAT"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_G_AMT', $result_sqlsvr["TRD_G_AMT"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_B_SELL', $result_sqlsvr["TRD_B_SELL"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_B_VAT', $result_sqlsvr["TRD_B_VAT"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_B_AMT', $result_sqlsvr["TRD_B_AMT"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_VAT_TY', $result_sqlsvr["TRD_VAT_TY"],  PDO::PARAM_STR);
+
+        $query->bindParam(':TRD_UTQNAME', $result_sqlsvr["TRD_UTQNAME"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_UTQQTY', $result_sqlsvr["TRD_UTQQTY"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_VAT_R', $result_sqlsvr["TRD_VAT_R"],  PDO::PARAM_STR);
+        $query->bindParam(':TRD_REFER_REF', $result_sqlsvr["TRD_REFER_REF"],  PDO::PARAM_STR);
+
+        $query->bindParam(':VAT_RATE', $result_sqlsvr["VAT_RATE"],  PDO::PARAM_STR);
+        $query->bindParam(':VAT_REF', $result_sqlsvr["VAT_REF"],  PDO::PARAM_STR);
+        $query->bindParam(':VAT_DATE', $result_sqlsvr["VAT_DATE"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_G_SV', $result_sqlsvr["APD_G_SV"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_G_SNV', $result_sqlsvr["APD_G_SNV"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_G_VAT', $result_sqlsvr["APD_G_VAT"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_B_SV', $result_sqlsvr["APD_B_SV"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_B_SNV', $result_sqlsvr["APD_B_SNV"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_B_VAT', $result_sqlsvr["APD_B_VAT"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_B_AMT', $result_sqlsvr["APD_B_AMT"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_G_KEYIN', $result_sqlsvr["APD_G_KEYIN"],  PDO::PARAM_STR);
+        $query->bindParam(':TRH_N_QTY', $result_sqlsvr["TRH_N_QTY"],  PDO::PARAM_STR);
+        $query->bindParam(':TRH_N_ITEMS', $result_sqlsvr["TRH_N_ITEMS"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_TDSC_KEYIN', $result_sqlsvr["APD_TDSC_KEYIN"],  PDO::PARAM_STR);
+        $query->bindParam(':APD_TDSC_KEYINV', $result_sqlsvr["APD_TDSC_KEYINV"],  PDO::PARAM_STR);
 
         $query->bindParam(':DI_ACTIVE', $result_sqlsvr["DI_ACTIVE"],  PDO::PARAM_STR);
         $query->bindParam(':DI_KEY', $result_sqlsvr["DI_KEY"],  PDO::PARAM_STR);
@@ -72,7 +118,9 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
         $query->execute();
 
-        $update_data .= "Update = " . $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["TRD_SH_CODE"] . "\n\r";
+        $update_data .= "Update OK = " . $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["TRD_SH_CODE"]
+                     . " |- " . $result_sqlsvr["TRD_SH_UPRC"] . " |- " . $result_sqlsvr["TRD_QTY"]
+                     . " |- " . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
 
         echo " UPDATE DATA " . $update_data;
 
@@ -179,8 +227,10 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $lastInsertId = $conn_sac->lastInsertId();
 
         if ($lastInsertId) {
-            $insert_data .= "Insert = " . $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " | " . $result_sqlsvr["TRD_SH_CODE"] . "\n\r";
-            echo " Save OK " . $insert_data;
+            $insert_data .= "Insert = " . $result_sqlsvr["DI_DATE"] . ":" . $result_sqlsvr["DI_REF"] . " |- " . $result_sqlsvr["TRD_SH_CODE"]
+                . " |- " . $result_sqlsvr["TRD_SH_UPRC"] . " |- " . $result_sqlsvr["TRD_QTY"]
+                . " |- " . $result_sqlsvr["DI_ACTIVE"] . "\n\r";
+            echo "  INSERT OK = " . $insert_data;
         } else {
             echo " Error ";
         }

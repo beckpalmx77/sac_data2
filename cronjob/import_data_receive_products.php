@@ -13,7 +13,7 @@ echo "Today is " . date("Y/m/d");
 echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
 $query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
-//$query_year = " AND DI_DATE BETWEEN '2024/05/01' AND '2024/05/31'";
+//$query_year = " AND DI_DATE BETWEEN '2023/01/01' AND '2024/05/31'";
 //$query_year = " AND DI_DATE BETWEEN '2000/01/01' AND '" . date("Y/m/d") . "'";
 
 $sql_sqlsvr = $str_query_select . $str_query_from . $str_query_where . $query_year . $str_query_order;

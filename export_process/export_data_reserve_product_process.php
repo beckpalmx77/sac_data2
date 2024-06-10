@@ -19,6 +19,7 @@ $sql_reserve = " SELECT
  DOCINFO.DI_REF,
  DOCINFO.DI_DATE,
  DOCINFO.DI_ACTIVE,
+ DOCINFO.DI_REMARK,
  ARFILE.AR_CODE,
  ARFILE.AR_NAME,
  AROE.AROE_B_AMT,
@@ -145,10 +146,11 @@ WHERE
 
 $String_Sql = $sql_reserve . " AND DI_DATE BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "' ";
 
-//$my_file = fopen("exp_qry_reserve.txt", "w") or die("Unable to open file!");
-//fwrite($my_file, $String_Sql);
-//fclose($my_file);
-
+/*
+$my_file = fopen("exp_qry_reserve.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $String_Sql);
+fclose($my_file);
+*/
 
 
 $data = "วันที่,ประเภท,รหัสสินค้า,รายละเอียดสินค้า,จำนวน,คลัง/ปี,LOCATION,เลขที่เอกสาร,คันที่,เทค,ชื่อลูกค้า,คงเหลือใน LO\n";
@@ -157,6 +159,13 @@ $query = $conn_sqlsvr->prepare($String_Sql);
 $query->execute();
 
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
+    //SAC.0001405=Ready Quick
+    if ($row['AR_CODE']==="SAC.0001405") {
+        $customer_name = preg_replace("/\s+/", " ", $row['DI_REMARK']);
+    } else {
+        $customer_name = $row['AR_NAME'];
+    }
 
     $doc_date = substr($row['DI_DATE'],8,2) . "/" . substr($row['DI_DATE'],5,2) . "/" . substr($row['DI_DATE'],0,4);
 
@@ -170,7 +179,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     $data .= $row['DI_REF'] . ",";
     $data .= " ,";
     $data .= str_replace(",", "^", $row['SLMN_NAME']) . ",";
-    $data .= str_replace(",", "^", $row['AR_NAME']) . ",";
+    $data .= str_replace(",", "^", $customer_name) . ",";
     $data .= " " . "\n";
 
 }

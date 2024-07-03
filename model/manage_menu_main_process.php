@@ -56,8 +56,16 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO menu_main(main_menu_id,label,link,icon,data_target,aria_controls,privilege) 
-            VALUES (:main_menu_id,:label,:link,:icon,:data_target,:aria_controls,:privilege)";
+
+            $sql_get = "SELECT MAX(sort) AS last_sort FROM menu_main ";
+            $statement = $conn->query($sql_get);
+            $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($results as $result) {
+                $last_sort = intval($result['last_sort']) + 1 ;
+            }
+
+            $sql = "INSERT INTO menu_main(main_menu_id,label,link,icon,data_target,aria_controls,sort,privilege) 
+            VALUES (:main_menu_id,:label,:link,:icon,:data_target,:aria_controls,:last_sort,:privilege)";
             $query = $conn->prepare($sql);
             $query->bindParam(':main_menu_id', $main_menu_id, PDO::PARAM_STR);
             $query->bindParam(':label', $label, PDO::PARAM_STR);
@@ -66,6 +74,7 @@ if ($_POST["action"] === 'ADD') {
             $query->bindParam(':data_target', $data_target, PDO::PARAM_STR);
             $query->bindParam(':aria_controls', $aria_controls, PDO::PARAM_STR);
             $query->bindParam(':icon', $icon, PDO::PARAM_STR);
+            $query->bindParam(':last_sort', $last_sort, PDO::PARAM_STR);
             $query->bindParam(':privilege', $privilege, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();

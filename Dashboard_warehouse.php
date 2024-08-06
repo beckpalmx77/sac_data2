@@ -212,7 +212,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             $
             let formData = {action: "GET_RESERVE_PRODUCT", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[10,20,50,100], [10,20,50,100]],
+                'lengthMenu': [[12,20,50,100], [12,20,50,100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
                     info: 'หน้าที่ _PAGE_ จาก _PAGES_',

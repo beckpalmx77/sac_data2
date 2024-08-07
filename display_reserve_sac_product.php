@@ -210,7 +210,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script>
         $(document).ready(function () {
             $
-            let formData = {action: "GET_RESERVE_PRODUCT", sub_action: "GET_MASTER"};
+            let formData = {action: "GET_RESERVE_PRODUCT", sub_action: "GET_MASTER", screen_action: "DISPLAY"};
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[12,20,50,100], [12,20,50,100]],
                 'language': {

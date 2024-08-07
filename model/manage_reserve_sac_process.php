@@ -24,14 +24,16 @@ if ($_POST["action"] === 'GET_RESERVE_PRODUCT') {
     $searchQuery = " ";
     if ($searchValue != '') {
         $searchQuery = " AND (SKU_NAME LIKE :SKU_NAME or
-        AR_NAME LIKE :AR_NAME ) ";
+        AR_NAME LIKE :AR_NAME) ";
         $searchArray = array(
             'SKU_NAME' => "%$searchValue%",
             'AR_NAME' => "%$searchValue%",
         );
     }
 
-    $searchQuery .= " AND DI_DATE = '" . date("Y-m-d") . "'";
+    if ($_POST["screen_action"] === 'DASHBOARD') {
+        $searchQuery .= " AND DI_DATE = '" . date("Y-m-d") . "'";
+    }
 
 ## Total number of records without filtering
     $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_reserve_product_sac WHERE 1 " . $searchQuery);
@@ -50,11 +52,13 @@ if ($_POST["action"] === 'GET_RESERVE_PRODUCT') {
     . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
     $stmt = $conn->prepare($sql_get_data);
-/*
+
+    /*
     $myfile = fopen("getdata-param.txt", "w") or die("Unable to open file!");
     fwrite($myfile,  $sql_get_data);
     fclose($myfile);
-*/
+    */
+
 
 // Bind values
     foreach ($searchArray as $key => $search) {

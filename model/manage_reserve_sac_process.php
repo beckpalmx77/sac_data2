@@ -49,7 +49,7 @@ if ($_POST["action"] === 'GET_RESERVE_PRODUCT') {
 
 ## Fetch records
     $sql_get_data = "SELECT * FROM ims_reserve_product_sac WHERE 1 " . $searchQuery
-    . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
+    . " ORDER BY id DESC, " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
     $stmt = $conn->prepare($sql_get_data);
 
@@ -88,7 +88,7 @@ if ($_POST["action"] === 'GET_RESERVE_PRODUCT') {
                 "DI_DATE" => $row['DI_DATE'],
                 "SKU_CODE" => $row['SKU_CODE'],
                 "SKU_NAME" => $row['SKU_NAME'],
-                "TRD_QTY" => $row['TRD_QTY'],
+                "TRD_QTY" => substr($row['TRD_QTY'], 0, strpos($row['TRD_QTY'], ".")),
                 "WL_CODE" => $row['WL_CODE'],
                 "SLMN_NAME" => $row['SLMN_NAME'],
                 "AR_NAME" => $customer_name

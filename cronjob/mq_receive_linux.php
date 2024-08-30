@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Bangkok");
-include '/var/www/html/sac_data2/config/db_value.inc';
+include '/var/www/html/sac_data2/config/connect_db.php';
 include '/var/www/html/sac_data2/config/config_rabbit_linux.inc';
 require_once '/var/www/html/sac_data2/vendor/autoload.php';
 

@@ -3,6 +3,7 @@
 
 <?php
 include('includes/Header.php');
+include('includes/CheckDevice.php');
 ?>
 
 <style>

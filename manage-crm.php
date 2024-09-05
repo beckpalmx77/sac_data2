@@ -423,7 +423,7 @@ if (strlen($_SESSION['alogin']) == "") {
         // เมื่อคลิกที่ปุ่มลบข้อมูล
         $("#TableRecordList").on('click', '.delete', function () {
             // ยืนยันการลบข้อมูล
-            if (confirm('Are you sure you want to delete this data?')) {
+            if (confirm('ต้องการลบข้อมูลนี้ใช่หรือไม่ ?')) {
                 let id = $(this).attr("id"); // ดึงค่า id ของข้อมูลที่จะลบ
                 let formData = { action: "DELETE", id: id }; // เตรียมข้อมูลสำหรับส่งไปที่เซิร์ฟเวอร์
 

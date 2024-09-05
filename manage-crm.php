@@ -63,6 +63,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>วันที่</th>
                                                     <th>ชื่อผู้ลูกค้า</th>
                                                     <th>Action</th>
+                                                    <th>Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
@@ -70,6 +71,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>เลขที่เอกสาร</th>
                                                     <th>วันที่</th>
                                                     <th>ชื่อผู้ลูกค้า</th>
+                                                    <th>Action</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -341,7 +343,8 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'doc_id'},
                     {data: 'doc_date'},
                     {data: 'customer_name'},
-                    {data: 'update'}
+                    {data: 'update'},
+                    {data: 'delete'}
                 ]
             });
 
@@ -415,6 +418,41 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
     </script>
+
+    <script>
+        // เมื่อคลิกที่ปุ่มลบข้อมูล
+        $("#TableRecordList").on('click', '.delete', function () {
+            // ยืนยันการลบข้อมูล
+            if (confirm('Are you sure you want to delete this data?')) {
+                let id = $(this).attr("id"); // ดึงค่า id ของข้อมูลที่จะลบ
+                let formData = { action: "DELETE", id: id }; // เตรียมข้อมูลสำหรับส่งไปที่เซิร์ฟเวอร์
+
+                // เรียกใช้ AJAX เพื่อลบข้อมูล
+                $.ajax({
+                    type: "POST",
+                    url: 'model/manage_crm_process.php',
+                    dataType: "json",
+                    data: formData,
+                    success: function (response) {
+                        // ตรวจสอบว่าคำตอบจากเซิร์ฟเวอร์เป็น success หรือไม่
+                        if (response.status === 'success') {
+                            ReloadDataTable();
+                            alertify.success("ลบข้อมูลเรียบร้อย");
+                            // คุณสามารถเพิ่มโค้ดที่ต้องการเพื่ออัปเดต UI หลังจากลบข้อมูลสำเร็จ เช่น โหลดข้อมูลใหม่
+                            // location.reload(); // โหลดหน้าใหม่ทั้งหมด
+                        } else {
+                            alertify.error("ไม่สามารถลบข้อมูลได้: " + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // แสดงข้อความแจ้งเตือนเมื่อเกิดข้อผิดพลาด
+                        alertify.error("Error: " + xhr.responseText);
+                    }
+                });
+            }
+        });
+    </script>
+
 
     <script>
         function Load_Data_Detail(doc_id, table_name) {

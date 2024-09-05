@@ -94,10 +94,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             class='btn btn-primary btn-xs'>Add เพิ่มรายการคำถาม-คำตอบ
                                                         <i class="fa fa-plus"></i>
                                                     </button>
-                                                    <button type='button' name='btnRefresh' id='btnRefresh'
+                                                    <!--button type='button' name='btnRefresh' id='btnRefresh'
                                                             class='btn btn-success btn-xs' onclick="RefreshDataTable();">Refresh
                                                         <i class="fa fa-refresh"></i>
-                                                    </button>
+                                                    </button-->
 
                                                     <table cellpadding="0" cellspacing="0" border="0"
                                                            class="display"
@@ -491,8 +491,8 @@ if (strlen($_SESSION['alogin']) == "") {
                             if ($('#KeyAddData').val() !== '') {
                                 let KeyAddData = $('#KeyAddData').val();
                                 Save_Detail(KeyAddData);
+                                ReloadDataTable(KeyAddData);
                             }
-                            ReloadDataTable(KeyAddData);
                             alertify.success(data);
                             $('#save_status').val("save");
                         }
@@ -626,10 +626,32 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         function RefreshDataTable() {
-            if ($('#KeyAddData').val()==='')) {
-                $('#TableCRMDetailList').DataTable().ajax.reload();
+            // ตรวจสอบว่า #KeyAddData เป็นค่าว่าง หรือ #doc_id ไม่ใช่ค่าว่าง
+            if ($('#KeyAddData').val() === '' || $('#doc_id').val() !== '') {
+                $('#TableCRMDetailList').DataTable().ajax.reload(); // รีโหลด DataTable
             }
         }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // ตรวจสอบค่า action เมื่อโหลดหน้าเว็บ
+            if ($('#action').val() === 'UPDATE') {
+                // ปิดการใช้งานปุ่มเมื่อค่าเป็น 'UPDATE'
+                $('#btnAdd').prop('disabled', true);
+            } else {
+                $('#btnAdd').prop('disabled', false);
+            }
+
+            // กรณีต้องการให้มีการตรวจสอบใหม่ทุกครั้งที่ค่า action เปลี่ยน
+            $('#action').on('change', function() {
+                if ($(this).val() === 'UPDATE') {
+                    $('#btnAdd').prop('disabled', true);
+                } else {
+                    $('#btnAdd').prop('disabled', false);
+                }
+            });
+        });
     </script>
 
 

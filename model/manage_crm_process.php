@@ -5,6 +5,7 @@ date_default_timezone_set("Asia/Bangkok");
 include('../config/connect_db.php');
 include('../config/lang.php');
 include('../util/record_util.php');
+include('../util/getdata_field.php');
 
 if ($_POST["action"] === 'GET_DATA') {
 
@@ -37,11 +38,11 @@ if ($_POST["action"] === 'GET_DATA_KEY') {
     $return_arr = array();
 
     $sql_get = "SELECT * FROM v_ims_customer_crm_header_quest WHERE KeyAddData = '" . $KeyAddData . "'";
-
+/*
     $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
     fwrite($myfile,  $KeyAddData . " | " . $sql_get);
     fclose($myfile);
-
+*/
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -144,16 +145,33 @@ if ($_POST["action"] === 'DELETE') {
 
     $id = $_POST["id"];
 
+    $sql_get_doc_id = "SELECT ims_customer_crm_quest_header.doc_id AS doc_id FROM ims_customer_crm_quest_header WHERE id = " . $id;
+
+    $doc_id = GetDataValue($conn,$sql_get_doc_id);
+
     $sql_find = "SELECT * FROM ims_customer_crm_quest_header WHERE id = " . $id;
+
+/*
+    $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
+    fwrite($myfile,  $doc_id . " | " . $sql_get_doc_id);
+    fclose($myfile);
+*/
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {
-            $sql = "DELETE FROM ims_customer_crm_quest_header WHERE id = " . $id;
-            $query = $conn->prepare($sql);
-            $query->execute();
-            echo $del_success;
+
+            $sql_header = "DELETE FROM ims_customer_crm_quest_header WHERE id = " . $id;
+            $query_header = $conn->prepare($sql_header);
+            $query_header->execute();
+
+            $sql_detail = "DELETE FROM ims_customer_crm_quest_detail WHERE doc_id = '" . $doc_id . "'";
+            $query_detail = $conn->prepare($sql_detail);
+            $query_detail->execute();
+
+            echo json_encode(['status' => 'success']);
+
         } catch (Exception $e) {
-            echo 'Message: ' . $e->getMessage();
+            echo json_encode(['status' => 'error', 'message' => 'Failed to delete data.']);
         }
     }
 }

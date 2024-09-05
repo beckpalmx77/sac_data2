@@ -17,6 +17,11 @@ if ($_POST["action"] === 'GET_DATA') {
     $return_arr = array();
 
     $sql_get = "SELECT * FROM " . $table_name . " WHERE id = " . $id;
+
+    //$myfile = fopen("crm-get-date-param.txt", "w") or die("Unable to open file!");
+    //fwrite($myfile, $doc_id  . " | " . " | " . $id . " | " . $table_name . " | " .$_POST["action"] . " | " . $sql_get);
+    //fclose($myfile);
+
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -97,8 +102,11 @@ if ($_POST["action_detail"] === 'UPDATE') {
         $id = $_POST["detail_id"];
         $faq_id = $_POST["faq_id"];
         $faq_anwser = $_POST["faq_anwser"];
-
-
+/*
+        $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $_POST["$faq_id"]  . " | " . $_POST["action_detail"] . " | " . " | " . $id . " | " . $faq_anwser );
+        fclose($myfile);
+*/
         $sql_update = "UPDATE " . $table_name
             . " SET faq_anwser=:faq_anwser "
             . " WHERE id = :id ";

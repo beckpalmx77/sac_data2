@@ -94,10 +94,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             class='btn btn-primary btn-xs'>Add เพิ่มรายการคำถาม-คำตอบ
                                                         <i class="fa fa-plus"></i>
                                                     </button>
-                                                    <!--button type='button' name='btnRefresh' id='btnRefresh'
+                                                    <button type='button' name='btnRefresh' id='btnRefresh'
                                                             class='btn btn-success btn-xs' onclick="RefreshDataTable();">Refresh
                                                         <i class="fa fa-refresh"></i>
-                                                    </button-->
+                                                    </button>
 
                                                     <table cellpadding="0" cellspacing="0" border="0"
                                                            class="display"
@@ -118,8 +118,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <div class="modal-footer">
                                                 <input type="hidden" name="id" id="id"/>
                                                 <input type="hidden" name="save_status" id="save_status"/>
-                                                <input type="hidden" name="action" id="action"
-                                                       value=""/>
+                                                <input type="hidden" name="action" id="action" value=""/>
                                                 <!--button type="button" class="btn btn-primary"
                                                         id="btnSave">Save <i
                                                             class="fa fa-check"></i>
@@ -222,26 +221,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                readonly="true"
                                                                                placeholder="คำถาม">
                                                                     </div>
-                                                                    <!--div class="col-sm-2">
-                                                                        <label for="quantity"
-                                                                               class="control-label">เลือก</label>
-                                                                        <a data-toggle="modal"
-                                                                           href="#SearchProductModal"
-                                                                           class="btn btn-primary">
-                                                                            Click <i class="fa fa-search"
-                                                                                     aria-hidden="true"></i>
-                                                                        </a>
-                                                                    </div-->
                                                                 </div>
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-12">
-                                                                        <label for="faq_answer" class="control-label">คำตอบ</label>
-                                                                        <textarea class="form-control"
-                                                                                  id="faq_answer"
-                                                                                  name="faq_answer"
-                                                                                  required="required"
-                                                                                  placeholder=""
-                                                                                  rows="4"></textarea>
+                                                                        <label for="faq_anwser" class="control-label">คำตอบ</label>
+                                                                        <textarea class="form-control"  id="faq_anwser" name="faq_anwser"
+                                                                                  required="required" rows="4"></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -250,8 +235,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <input type="hidden" name="id" id="id"/>
                                                                 <input type="hidden" name="detail_id"
                                                                        id="detail_id"/>
-                                                                <input type="hidden" name="action_detail"
-                                                                       id="action_detail" value=""/>
+                                                                <input type="hidden" name="action_detail" id="action_detail" value=""/>
                                                                 <span class="icon-input-btn">
                                                                 <i class="fa fa-check"></i>
                                                             <input type="submit" name="save" id="save"
@@ -506,8 +490,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
         $("#TableCRMDetailList").on('click', '.update', function () {
 
-            let rec_id = $(this).attr("id");
-
+            let id = $(this).attr("id");
             let doc_id = "";
             let table_name = "";
 
@@ -519,7 +502,10 @@ if (strlen($_SESSION['alogin']) == "") {
                 table_name = "v_ims_customer_crm_quest_detail";
             }
 
-            let formData = {action: "GET_DATA", id: rec_id, doc_id: doc_id, table_name: table_name};
+            //alert(id + " | " + doc_id + " | " + table_name);
+
+            let formData = {action: "GET_DATA", id: id, doc_id: doc_id, table_name: table_name};
+
             $.ajax({
                 type: "POST",
                 url: 'model/manage_crm_detail_process.php',
@@ -535,14 +521,16 @@ if (strlen($_SESSION['alogin']) == "") {
                         let faq_desc = response[i].faq_desc;
                         let faq_anwser = response[i].faq_anwser;
 
+                        //alert(id + " | " + faq_id + " | " + faq_desc + " | " + faq_anwser);
+
                         $('#recordModal').modal('show');
                         $('#id').val(id);
-                        $('#detail_id').val(rec_id);
+                        $('#detail_id').val(id);
                         $('#doc_id_detail').val(doc_id);
                         $('#doc_date_detail').val(doc_date);
                         $('#faq_id').val(faq_id);
                         $('#faq_desc').val(faq_desc);
-                        $('#faq_answer').val(faq_anwser);
+                        $('#faq_anwser').val(faq_anwser);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action_detail').val('UPDATE');
                         $('#save').val('Save');
@@ -577,14 +565,16 @@ if (strlen($_SESSION['alogin']) == "") {
             $('#recordForm').on('submit', function (event) {
                 let doc_id = $('#doc_id_detail').val();
                 let table_name = "v_ims_customer_crm_quest_detail";
-                //alert(doc_id + table_name);
+                let data = $(this).serialize();
+                //alert(doc_id + " | " + table_name + " | " + data);
                 event.preventDefault(); // ป้องกันการส่งฟอร์มแบบปกติ
                 $.ajax({
                     url: 'model/manage_crm_detail_process.php',
                     method: "POST",
-                    data: $(this).serialize(),
+                    data: data,
                     success: function (data) {
                         alertify.success(data);
+                        RefreshDataTable();
                         $('#recordModal').modal('hide'); // ปิด modal หลังบันทึกสำเร็จ
                     }
                 })
@@ -639,8 +629,10 @@ if (strlen($_SESSION['alogin']) == "") {
             if ($('#action').val() === 'UPDATE') {
                 // ปิดการใช้งานปุ่มเมื่อค่าเป็น 'UPDATE'
                 $('#btnAdd').prop('disabled', true);
+                $('#btnRefresh').prop('disabled', false);
             } else {
                 $('#btnAdd').prop('disabled', false);
+                $('#btnRefresh').prop('disabled', true);
             }
 
             // กรณีต้องการให้มีการตรวจสอบใหม่ทุกครั้งที่ค่า action เปลี่ยน

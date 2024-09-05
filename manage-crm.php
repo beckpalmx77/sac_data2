@@ -378,7 +378,17 @@ if (strlen($_SESSION['alogin']) == "") {
             let url = "manage_crm_data.php?title=รายการแบบสอบถาม (FAQ)"
                 + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
                 + '&action=ADD';
-            window.open(url, "", "");
+
+            let popup = window.open(url, "PopupWindow", "");
+            // ตรวจสอบการปิดหน้าต่าง POPUP
+            let checkPopupClosed = setInterval(function () {
+                if (popup.closed) {
+                    clearInterval(checkPopupClosed);
+                    // รีโหลด DataTable เมื่อหน้าต่าง POPUP ถูกปิด
+                    ReloadDataTable();
+                }
+            }, 1000);
+
         });
 
     </script>
@@ -409,7 +419,16 @@ if (strlen($_SESSION['alogin']) == "") {
                             + '&customer_id=' + customer_id
                             + '&customer_name=' + customer_name
                             + '&action=UPDATE';
-                        window.open(url, "", "");
+
+                        let popup = window.open(url, "PopupWindow", "");
+                        // ตรวจสอบการปิดหน้าต่าง POPUP
+                        let checkPopupClosed = setInterval(function () {
+                            if (popup.closed) {
+                                clearInterval(checkPopupClosed);
+                                // รีโหลด DataTable เมื่อหน้าต่าง POPUP ถูกปิด
+                                ReloadDataTable();
+                            }
+                        }, 1000);
                     }
                 },
                 error: function (response) {

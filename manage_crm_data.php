@@ -95,7 +95,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <i class="fa fa-plus"></i>
                                                     </button>
                                                     <button type='button' name='btnRefresh' id='btnRefresh'
-                                                            class='btn btn-success btn-xs' onclick="RefreshDataTable();">Refresh
+                                                            class='btn btn-success btn-xs'
+                                                            onclick="RefreshDataTable();">Refresh
                                                         <i class="fa fa-refresh"></i>
                                                     </button>
 
@@ -225,8 +226,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-12">
                                                                         <label for="faq_anwser" class="control-label">คำตอบ</label>
-                                                                        <textarea class="form-control"  id="faq_anwser" name="faq_anwser"
-                                                                                  required="required" rows="4"></textarea>
+                                                                        <textarea class="form-control" id="faq_anwser"
+                                                                                  name="faq_anwser"
+                                                                                  required="required"
+                                                                                  rows="4"></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -235,7 +238,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <input type="hidden" name="id" id="id"/>
                                                                 <input type="hidden" name="detail_id"
                                                                        id="detail_id"/>
-                                                                <input type="hidden" name="action_detail" id="action_detail" value=""/>
+                                                                <input type="hidden" name="action_detail"
+                                                                       id="action_detail" value=""/>
                                                                 <span class="icon-input-btn">
                                                                 <i class="fa fa-check"></i>
                                                             <input type="submit" name="save" id="save"
@@ -476,6 +480,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 let KeyAddData = $('#KeyAddData').val();
                                 Save_Detail(KeyAddData);
                                 ReloadDataTable(KeyAddData);
+                                $('#action').val("UPDATE");
                             }
                             alertify.success(data);
                             $('#save_status').val("save");
@@ -491,16 +496,8 @@ if (strlen($_SESSION['alogin']) == "") {
         $("#TableCRMDetailList").on('click', '.update', function () {
 
             let id = $(this).attr("id");
-            let doc_id = "";
-            let table_name = "";
-
-            if ($('#KeyAddData').val() !== '') {
-                doc_id = $('#KeyAddData').val();
-                table_name = "v_ims_customer_crm_quest_detail_temp";
-            } else {
-                doc_id = $('#doc_id').val();
-                table_name = "v_ims_customer_crm_quest_detail";
-            }
+            let doc_id = $('#doc_id').val();
+            let table_name = "v_ims_customer_crm_quest_detail";
 
             //alert(id + " | " + doc_id + " | " + table_name);
 
@@ -604,6 +601,9 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#doc_date').val(doc_date);
                         //$('#customer_id').val(customer_id);
                         $('#customer_name').val(customer_name);
+
+                        Load_Data_Detail($('#doc_id').val(), "v_ims_customer_crm_quest_detail");
+
                     }
                 },
                 error: function (response) {
@@ -624,7 +624,7 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // ตรวจสอบค่า action เมื่อโหลดหน้าเว็บ
             if ($('#action').val() === 'UPDATE') {
                 // ปิดการใช้งานปุ่มเมื่อค่าเป็น 'UPDATE'
@@ -636,7 +636,7 @@ if (strlen($_SESSION['alogin']) == "") {
             }
 
             // กรณีต้องการให้มีการตรวจสอบใหม่ทุกครั้งที่ค่า action เปลี่ยน
-            $('#action').on('change', function() {
+            $('#action').on('change', function () {
                 if ($(this).val() === 'UPDATE') {
                     $('#btnAdd').prop('disabled', true);
                 } else {
@@ -645,7 +645,6 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
     </script>
-
 
 
     </body>

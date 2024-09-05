@@ -11,7 +11,37 @@ if ($_POST["action"] === 'GET_DATA') {
     $id = $_POST["id"];
 
     $return_arr = array();
+
     $sql_get = "SELECT * FROM v_ims_customer_crm_header_quest WHERE id = " . $id;
+
+    $statement = $conn->query($sql_get);
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($results as $result) {
+        $return_arr[] = array("id" => $result['id'],
+            "doc_id" => $result['doc_id'],
+            "doc_date" => $result['doc_date'],
+            "customer_id" => $result['customer_id'],
+            "customer_name" => $result['customer_name'],
+            "status" => $result['status']);
+    }
+
+    echo json_encode($return_arr);
+
+}
+
+if ($_POST["action"] === 'GET_DATA_KEY') {
+
+    $KeyAddData = $_POST["KeyAddData"];
+
+    $return_arr = array();
+
+    $sql_get = "SELECT * FROM v_ims_customer_crm_header_quest WHERE KeyAddData = '" . $KeyAddData . "'";
+
+    $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
+    fwrite($myfile,  $KeyAddData . " | " . $sql_get);
+    fclose($myfile);
+
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 

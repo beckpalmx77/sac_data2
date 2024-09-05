@@ -49,6 +49,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     class='btn btn-primary btn-xs'>Add
                                                 <i class="fa fa-plus"></i>
                                             </button>
+                                            <button type='button' name='btnRefresh' id='btnRefresh'
+                                                    class='btn btn-success btn-xs' onclick="ReloadDataTable();">Refresh
+                                                <i class="fa fa-refresh"></i>
+                                            </button>
                                         </div>
 
                                         <div class="col-md-12 col-md-offset-2">
@@ -125,20 +129,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                placeholder="ชื่อลูกค้า">
                                                                     </div>
                                                                 </div>
-
-                                                                <table cellpadding="0" cellspacing="0" border="0"
-                                                                       class="display"
-                                                                       id="TableCRMDetailList"
-                                                                       width="100%">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <th>#</th>
-                                                                        <th>สินค้า</th>
-                                                                        <th>จำนวน</th>
-                                                                        <th>หน่วยนับ</th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                </table>
 
                                                                 <div class="form-group">
                                                                     <label for="status"
@@ -470,6 +460,12 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'update'}
                 ]
             });
+        }
+    </script>
+
+    <script>
+        function ReloadDataTable() {
+            $('#TableRecordList').DataTable().ajax.reload();
         }
     </script>
 

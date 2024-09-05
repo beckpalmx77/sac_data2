@@ -94,6 +94,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             class='btn btn-primary btn-xs'>Add เพิ่มรายการคำถาม-คำตอบ
                                                         <i class="fa fa-plus"></i>
                                                     </button>
+                                                    <button type='button' name='btnRefresh' id='btnRefresh'
+                                                            class='btn btn-success btn-xs' onclick="RefreshDataTable();">Refresh
+                                                        <i class="fa fa-refresh"></i>
+                                                    </button>
 
                                                     <table cellpadding="0" cellspacing="0" border="0"
                                                            class="display"
@@ -488,8 +492,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                 let KeyAddData = $('#KeyAddData').val();
                                 Save_Detail(KeyAddData);
                             }
+                            ReloadDataTable(KeyAddData);
                             alertify.success(data);
-                            window.opener.location.reload();
                             $('#save_status').val("save");
                         }
                     })
@@ -562,7 +566,6 @@ if (strlen($_SESSION['alogin']) == "") {
                 data: formData,
                 success: function (data) {
                     alertify.success(data);
-                    location.reload();
                 }
             })
 
@@ -589,31 +592,47 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-    <!--script>
-        $(document).ready(function () {
-            $('#recordForm').on('submit', function (event) {
-                event.preventDefault(); // ป้องกันการส่งฟอร์มแบบปกติ
-
-                $.ajax({
-                    url: 'model/manage_crm_detail_process.php',
-                    method: 'POST',
-                    data: $(this).serialize(), // ส่งข้อมูลฟอร์มทั้งหมด
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status == "success") {
-                            alert(response.message);
-                            $('#recordModal').modal('hide'); // ปิด modal หลังบันทึกสำเร็จ
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function () {
-                        alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
+    <script>
+        function ReloadDataTable() {
+            let KeyAddData = $('#KeyAddData').val();
+            let formData = {action: "GET_DATA_KEY", KeyAddData: KeyAddData};
+            $.ajax({
+                type: "POST",
+                url: 'model/manage_crm_process.php',
+                dataType: "json",
+                data: formData,
+                success: function (response) {
+                    let len = response.length;
+                    for (let i = 0; i < len; i++) {
+                        //let id = response[i].id;
+                        let doc_id = response[i].doc_id;
+                        let doc_date = response[i].doc_date;
+                        //let customer_id = response[i].customer_id;
+                        let customer_name = response[i].customer_name;
+                        //$('#id').val(id);
+                        $('#doc_id').val(doc_id);
+                        $('#doc_date').val(doc_date);
+                        //$('#customer_id').val(customer_id);
+                        $('#customer_name').val(customer_name);
                     }
-                });
+                },
+                error: function (response) {
+                    alertify.error("error : " + response);
+                }
             });
-        });
-    </script-->
+
+        }
+    </script>
+
+    <script>
+        function RefreshDataTable() {
+            if ($('#KeyAddData').val()==='')) {
+                $('#TableCRMDetailList').DataTable().ajax.reload();
+            }
+        }
+    </script>
+
+
 
     </body>
 

@@ -213,7 +213,7 @@ if ($_POST["action"] === 'GET_CRM_DETAIL') {
 
 
     $query_str = "SELECT * FROM " . $table_name . " WHERE doc_id = '" . $_POST["doc_id"] . "'"
-        . " ORDER BY faq_id ";
+        . " ORDER BY line_no ";
 
     $stmt = $conn->prepare($query_str);
     $stmt->execute();

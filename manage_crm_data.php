@@ -594,15 +594,15 @@ if (strlen($_SESSION['alogin']) == "") {
                 success: function (response) {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
-                        //let id = response[i].id;
+                        let id = response[i].id;
                         let doc_id = response[i].doc_id;
                         let doc_date = response[i].doc_date;
-                        //let customer_id = response[i].customer_id;
+                        let customer_id = response[i].customer_id;
                         let customer_name = response[i].customer_name;
-                        //$('#id').val(id);
+                        $('#id').val(id);
                         $('#doc_id').val(doc_id);
                         $('#doc_date').val(doc_date);
-                        //$('#customer_id').val(customer_id);
+                        $('#customer_id').val(customer_id);
                         $('#customer_name').val(customer_name);
 
                         Load_Data_Detail($('#doc_id').val(), "v_ims_customer_crm_quest_detail");

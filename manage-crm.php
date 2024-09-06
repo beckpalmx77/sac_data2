@@ -335,6 +335,11 @@ if (strlen($_SESSION['alogin']) == "") {
                 'processing': true,
                 'serverSide': true,
                 'serverMethod': 'post',
+                'autoWidth': true,
+                'searching': true,
+                <?php  if ($_SESSION['deviceType'] !== 'computer') {
+                    echo "'scrollX': true,";
+                }?>
                 'ajax': {
                     'url': 'model/manage_crm_process.php',
                     'data': formData
@@ -348,27 +353,9 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
-            <!-- *** FOR SUBMIT FORM *** -->
-            $("#recordModal").on('submit', '#recordForm', function (event) {
-                event.preventDefault();
-                $('#save').attr('disabled', 'disabled');
-                let formData = $(this).serialize();
-                $.ajax({
-                    url: 'model/manage_crm_process.php',
-                    method: "POST",
-                    data: formData,
-                    success: function (data) {
-                        alertify.success(data);
-                        $('#recordForm')[0].reset();
-                        $('#recordModal').modal('hide');
-                        $('#save').attr('disabled', false);
-                        dataRecords.ajax.reload();
-                    }
-                })
-            });
-            <!-- *** FOR SUBMIT FORM *** -->
         });
     </script>
+
 
     <script>
 
@@ -470,54 +457,6 @@ if (strlen($_SESSION['alogin']) == "") {
                 });
             }
         });
-    </script>
-
-
-    <script>
-        function Load_Data_Detail(doc_id, table_name) {
-
-            $('#TableCRMDetailList').DataTable().clear().destroy();
-
-            let formData = {
-                action: "GET_CRM_DETAIL",
-                sub_action: "GET_MASTER",
-                doc_id: doc_id,
-                table_name: table_name
-            };
-            let dataRecords = $('#TableCRMDetailList').DataTable({
-                'processing': true,
-                'serverSide': true,
-                'serverMethod': 'post',
-                "paging": false,
-                "ordering": false,
-                'info': false,
-                "searching": false,
-                'autoWidth': true,
-                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
-                'language': {
-                    search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
-                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
-                    infoEmpty: 'ไม่มีข้อมูล',
-                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
-                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
-                    paginate: {
-                        previous: 'ก่อนหน้า',
-                        last: 'สุดท้าย',
-                        next: 'ต่อไป'
-                    }
-                },
-                'ajax': {
-                    'url': 'model/manage_crm_detail_process.php',
-                    'data': formData
-                },
-                'columns': [
-                    {data: 'line_no'},
-                    {data: 'faq_desc'},
-                    {data: 'faq_anwser'},
-                    {data: 'update'}
-                ]
-            });
-        }
     </script>
 
     <script>

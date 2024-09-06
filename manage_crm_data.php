@@ -437,6 +437,9 @@ if (strlen($_SESSION['alogin']) == "") {
                 'info': false,
                 "searching": false,
                 'autoWidth': true,
+                <?php  if ($_SESSION['deviceType'] !== 'computer') {
+                    echo "'scrollX': true,";
+                }?>
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',

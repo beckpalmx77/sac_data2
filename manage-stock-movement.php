@@ -23,7 +23,8 @@ if (strlen($_SESSION['alogin']) == "") {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page']?>">Home</a></li>
+                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
+                            </li>
                             <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
                             <li class="breadcrumb-item active"
                                 aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
@@ -85,42 +86,50 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     </div>
                                                     <form method="post" id="recordForm">
                                                         <div class="modal-body">
-                                                            <div class="modal-body">
-
-                                                                <div class="form-group">
-                                                                    <label for="product_id" class="control-label">รหัสคำถาม</label>
-                                                                    <input type="product_id" class="form-control"
-                                                                           id="product_id" name="product_id"
-                                                                           readonly="true"
-                                                                           placeholder="สร้างอัตโนมัติ">
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="doc_date" class="control-label">วันที่</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="doc_date" name="doc_date"
+                                                                                   readonly="true" placeholder="">
+                                                                            <div class="input-group-addon">
+                                                                                <span class="glyphicon glyphicon-th"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-
-                                                                <div class="form-group">
-                                                                    <label for="name_t"
-                                                                           class="control-label">คำถาม</label>
-                                                                    <input type="text" class="form-control"
-                                                                           id="doc_date"
-                                                                           name="doc_date"
-                                                                           required="required"
-                                                                           placeholder="คำถาม">
-                                                                </div>
-
-                                                                <div class="form-group">
-                                                                    <label for="status" class="control-label">Status</label>
-                                                                    <select id="status" name="status"
-                                                                            class="form-control" data-live-search="true"
-                                                                            title="Please select">
-                                                                        <option>Active</option>
-                                                                        <option>Inactive</option>
-                                                                    </select>
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="product_id"
+                                                                                   class="control-label">รหัสสินค้า</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="product_id" name="product_id"
+                                                                                   readonly="true"
+                                                                                   required="required"
+                                                                                   placeholder="รหัสสินค้า">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="product_name"
+                                                                                   class="control-label">รายละเอียด</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="product_name" name="product_name"
+                                                                                   required="required"
+                                                                                   readonly="true"
+                                                                                   placeholder="รายละเอียด">
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
-                                                            <span class="icon-input-btn">
-                                                                <i class="fa fa-check"></i>
+                                                            <span class="icon-input-btn"><i class="fa fa-check"></i>
                                                             <input type="submit" name="save" id="save"
                                                                    class="btn btn-primary" value="Save"/>
                                                             </span>

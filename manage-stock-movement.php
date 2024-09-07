@@ -53,19 +53,24 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
-                                                    <th>รหัสคำถาม</th>
-                                                    <th>คำถาม</th>
-                                                    <th>Status</th>
+                                                    <th>วันที่</th>
+                                                    <th>รหัสสินค้า</th>
+                                                    <th>จำนวน</th>
+                                                    <th>คลังปี</th>
+                                                    <th>จากตำแหน่ง</th>
+                                                    <th>ไปตำแหน่ง</th>
                                                     <th>Action</th>
-                                                    <th>Action</th>
+
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
                                                 <tr>
-                                                    <th>รหัสคำถาม</th>
-                                                    <th>คำถาม</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
+                                                    <th>วันที่</th>
+                                                    <th>รหัสสินค้า</th>
+                                                    <th>จำนวน</th>
+                                                    <th>คลังปี</th>
+                                                    <th>จากตำแหน่ง</th>
+                                                    <th>ไปตำแหน่ง</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -87,6 +92,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <form method="post" id="recordForm">
                                                         <div class="modal-body">
                                                             <div class="container">
+
                                                                 <div class="row">
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
@@ -100,6 +106,39 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="product_id" class="control-label">รหัสสินค้า</label>
+                                                                            <select class="form-control" id="product_id" name="product_id" required>
+                                                                                <option value="">เลือกรหัสสินค้า</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="product_name"
+                                                                                   class="control-label">รายละเอียด</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="product_name" name="product_name"
+                                                                                   required="required"
+                                                                                   readonly="true"
+                                                                                   placeholder="รายละเอียด">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <div class="form-group">
+                                                                            <label for="qty"
+                                                                                   class="control-label">จำนวน</label>
+                                                                            <input type="number" class="form-control"
+                                                                                   id="qty" name="qty"
+                                                                                   required="required"
+                                                                                   placeholder="">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
                                                                 <div class="row">
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
@@ -126,7 +165,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <div class="col-sm-2">
                                                                         <label for="quantity"
                                                                                class="control-label">เลือก</label>
-
                                                                         <a data-toggle="modal" href="#Search-PG-Modal"
                                                                            class="btn btn-primary">
                                                                             Click <i class="fa fa-search"
@@ -134,6 +172,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </a>
                                                                     </div>
                                                                 </div>
+
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -314,11 +353,13 @@ if (strlen($_SESSION['alogin']) == "") {
                     'data': formData
                 },
                 'columns': [
-                    {data: 'doc_id'},
                     {data: 'doc_date'},
                     {data: 'product_id'},
+                    {data: 'qty'},
+                    {data: 'wh_org'},
+                    {data: 'location_org'},
+                    {data: 'location_to'},
                     {data: 'update'},
-                    {data: 'delete'}
                 ]
             });
 

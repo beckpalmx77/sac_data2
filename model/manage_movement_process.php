@@ -173,14 +173,14 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
                 "doc_id" => $row['doc_id'],
                 "doc_date" => $row['doc_date'],
                 "product_id" => $row['product_id'],
+                "qty" => $row['qty'],
                 "wh_org" => $row['wh_org'],
                 "location_org" => $row['location_org'],
                 "wh_to" => $row['wh_to'],
                 "location_to" => $row['location_to'],
                 "create_by" => $row['create_by'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
-                "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
-                "status" => $row['status'] === 'Active' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"
+                "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"
             );
         } else {
             $data[] = array(

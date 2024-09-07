@@ -13,14 +13,14 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM ims_faq_master WHERE id = " . $id;
+    $sql_get = "SELECT * FROM wh_stock_movement WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $result) {
         $return_arr[] = array("id" => $result['id'],
-            "faq_id" => $result['faq_id'],
-            "faq_desc" => $result['faq_desc'],
+            "doc_date" => $result['doc_date'],
+            "product_id" => $result['product_id'],
             "status" => $result['status']);
     }
 
@@ -30,10 +30,10 @@ if ($_POST["action"] === 'GET_DATA') {
 
 if ($_POST["action"] === 'SEARCH') {
 
-    if ($_POST["faq_desc"] !== '') {
+    if ($_POST["product_id"] !== '') {
 
-        $faq_desc = $_POST["faq_desc"];
-        $sql_find = "SELECT * FROM ims_faq_master WHERE faq_desc = '" . $faq_desc . "'";
+        $product_id = $_POST["product_id"];
+        $sql_find = "SELECT * FROM wh_stock_movement WHERE product_id = '" . $product_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo 2;
@@ -44,19 +44,19 @@ if ($_POST["action"] === 'SEARCH') {
 }
 
 if ($_POST["action"] === 'ADD') {
-    if ($_POST["faq_desc"] !== '') {
-        $faq_id = "Q-" . sprintf('%04s', LAST_ID($conn, "ims_faq_master", 'id'));
-        $faq_desc = $_POST["faq_desc"];
+    if ($_POST["product_id"] !== '') {
+        $doc_date = "Q-" . sprintf('%04s', LAST_ID($conn, "wh_stock_movement", 'id'));
+        $product_id = $_POST["product_id"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM ims_faq_master WHERE faq_desc = '" . $faq_desc . "'";
+        $sql_find = "SELECT * FROM wh_stock_movement WHERE product_id = '" . $product_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO ims_faq_master(faq_id,faq_desc,status) VALUES (:faq_id,:faq_desc,:status)";
+            $sql = "INSERT INTO wh_stock_movement(doc_date,product_id,status) VALUES (:doc_date,:product_id,:status)";
             $query = $conn->prepare($sql);
-            $query->bindParam(':faq_id', $faq_id, PDO::PARAM_STR);
-            $query->bindParam(':faq_desc', $faq_desc, PDO::PARAM_STR);
+            $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
+            $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
@@ -73,20 +73,20 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["faq_desc"] != '') {
+    if ($_POST["product_id"] != '') {
 
         $id = $_POST["id"];
-        $faq_id = $_POST["faq_id"];
-        $faq_desc = $_POST["faq_desc"];
+        $doc_date = $_POST["doc_date"];
+        $product_id = $_POST["product_id"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM ims_faq_master WHERE faq_id = '" . $faq_id . "'";
+        $sql_find = "SELECT * FROM wh_stock_movement WHERE doc_date = '" . $doc_date . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE ims_faq_master SET faq_id=:faq_id,faq_desc=:faq_desc,status=:status            
+            $sql_update = "UPDATE wh_stock_movement SET doc_date=:doc_date,product_id=:product_id,status=:status            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
-            $query->bindParam(':faq_id', $faq_id, PDO::PARAM_STR);
-            $query->bindParam(':faq_desc', $faq_desc, PDO::PARAM_STR);
+            $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
+            $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
@@ -100,11 +100,11 @@ if ($_POST["action"] === 'DELETE') {
 
     $id = $_POST["id"];
 
-    $sql_find = "SELECT * FROM ims_faq_master WHERE id = " . $id;
+    $sql_find = "SELECT * FROM wh_stock_movement WHERE id = " . $id;
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {
-            $sql = "DELETE FROM ims_faq_master WHERE id = " . $id;
+            $sql = "DELETE FROM wh_stock_movement WHERE id = " . $id;
             $query = $conn->prepare($sql);
             $query->execute();
             echo $del_success;
@@ -114,7 +114,7 @@ if ($_POST["action"] === 'DELETE') {
     }
 }
 
-if ($_POST["action"] === 'GET_FAQ') {
+if ($_POST["action"] === 'GET_MOVEMENT') {
 
     ## Read value
     $draw = $_POST['draw'];
@@ -130,28 +130,28 @@ if ($_POST["action"] === 'GET_FAQ') {
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (faq_id LIKE :faq_id or
-        faq_desc LIKE :faq_desc ) ";
+        $searchQuery = " AND (doc_date LIKE :doc_date or
+        product_id LIKE :product_id ) ";
         $searchArray = array(
-            'faq_id' => "%$searchValue%",
-            'faq_desc' => "%$searchValue%",
+            'doc_date' => "%$searchValue%",
+            'product_id' => "%$searchValue%",
         );
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_faq_master ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_stock_movement ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_faq_master WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_stock_movement WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM ims_faq_master WHERE 1 " . $searchQuery
+    $stmt = $conn->prepare("SELECT * FROM wh_stock_movement WHERE 1 " . $searchQuery
         . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
 
 // Bind values
@@ -170,8 +170,14 @@ if ($_POST["action"] === 'GET_FAQ') {
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
                 "id" => $row['id'],
-                "faq_id" => $row['faq_id'],
-                "faq_desc" => $row['faq_desc'],
+                "doc_id" => $row['doc_id'],
+                "doc_date" => $row['doc_date'],
+                "product_id" => $row['product_id'],
+                "wh_org" => $row['wh_org'],
+                "location_org" => $row['location_org'],
+                "wh_to" => $row['wh_to'],
+                "location_to" => $row['location_to'],
+                "create_by" => $row['create_by'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
                 "status" => $row['status'] === 'Active' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"
@@ -179,9 +185,9 @@ if ($_POST["action"] === 'GET_FAQ') {
         } else {
             $data[] = array(
                 "id" => $row['id'],
-                "faq_id" => $row['faq_id'],
-                "faq_desc" => $row['faq_desc'],
-                "select" => "<button type='button' name='select' id='" . $row['faq_id'] . "@" . $row['faq_desc'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
+                "doc_date" => $row['doc_date'],
+                "product_id" => $row['product_id'],
+                "select" => "<button type='button' name='select' id='" . $row['doc_date'] . "@" . $row['product_id'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
 </button>",
             );
         }

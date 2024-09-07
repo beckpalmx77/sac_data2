@@ -112,7 +112,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                    placeholder="รหัสสินค้า">
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-6">
+                                                                    <div class="col-md-4">
                                                                         <div class="form-group">
                                                                             <label for="product_name"
                                                                                    class="control-label">รายละเอียด</label>
@@ -122,6 +122,16 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                    readonly="true"
                                                                                    placeholder="รายละเอียด">
                                                                         </div>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                        <label for="quantity"
+                                                                               class="control-label">เลือก</label>
+
+                                                                        <a data-toggle="modal" href="#Search-PG-Modal"
+                                                                           class="btn btn-primary">
+                                                                            Click <i class="fa fa-search"
+                                                                                     aria-hidden="true"></i>
+                                                                        </a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -276,7 +286,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_FAQ", sub_action: "GET_MASTER"};
+            let formData = {action: "GET_MOVEMENT", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
@@ -304,9 +314,9 @@ if (strlen($_SESSION['alogin']) == "") {
                     'data': formData
                 },
                 'columns': [
-                    {data: 'product_id'},
+                    {data: 'doc_id'},
                     {data: 'doc_date'},
-                    {data: 'status'},
+                    {data: 'product_id'},
                     {data: 'update'},
                     {data: 'delete'}
                 ]

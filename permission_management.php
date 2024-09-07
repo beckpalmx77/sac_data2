@@ -91,6 +91,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                 <option value="Dashboard_warehouse">
                                                                                     Dashboard_warehouse
                                                                                 </option>
+                                                                                <option value="Dashboard_stock">
+                                                                                    Dashboard_stock
+                                                                                </option>
                                                                             </select>
                                                                         </div>
 

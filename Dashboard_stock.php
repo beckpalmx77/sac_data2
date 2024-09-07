@@ -552,6 +552,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 },
                 'processing': true,
                 'serverSide': true,
+                'autoWidth': true,
+                'searching': true,
+                <?php  if ($_SESSION['deviceType'] !== 'computer') {
+                    echo "'scrollX': true,";
+                }?>
                 'serverMethod': 'post',
                 'ajax': {
                     'url': 'model/manage_customer_event_checkin_process.php',

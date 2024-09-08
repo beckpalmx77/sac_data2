@@ -27,6 +27,7 @@ if ($query->rowCount() == 1) {
         if (password_verify($_POST['password'], $result->password)) {
             $_SESSION['alogin'] = $result->email;
             $_SESSION['user_id'] = $result->user_id;
+            $_SESSION['doc_user_id'] = $result->doc_user_id;
             $_SESSION['login_id'] = $result->id;
             $_SESSION['username'] = $result->email;
             $_SESSION['first_name'] = $result->first_name;

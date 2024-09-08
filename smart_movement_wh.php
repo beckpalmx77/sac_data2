@@ -20,6 +20,11 @@ if (strlen($_SESSION['alogin']) == "") {
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6 mb-3"> <!-- เพิ่ม mb-3 ที่นี่ -->
+                <span><b>รายการย้ายสินค้า</b></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3"> <!-- เพิ่ม mb-3 ที่นี่ -->
                 <button type='button' name='btnAdd' id='btnAdd' class='btn btn-primary btn-xs'>Add
                     <i class="fa fa-plus"></i>
                 </button>
@@ -65,7 +70,7 @@ if (strlen($_SESSION['alogin']) == "") {
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Modal title</h4>
+                        <h4 class="modal-title">รายการย้ายสินค้า</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
                     </div>
                     <form method="post" id="recordForm">
@@ -169,7 +174,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                     class="btn btn-primary"><i class="fa fa-check"></i>
                                 Save
                             </button>
-                            <button type="button" class="btn btn-danger" onclick="closeModal()">Close <i class="fa fa-window-close"></i></button>
+                            <button type="button" class="btn btn-danger" onclick="closeModal()">Close <i
+                                        class="fa fa-window-close"></i></button>
                         </div>
                     </form>
                 </div>
@@ -290,6 +296,12 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
+        document.getElementById('qty').addEventListener('input', function (e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+
+    <script>
         // ฟังก์ชันในการปิด modal ด้วย JavaScript
         function closeModal() {
             $('#recordModal').modal('hide');
@@ -373,13 +385,12 @@ if (strlen($_SESSION['alogin']) == "") {
             $("#btnAdd").click(function () {
                 $('#recordModal').modal('show');
                 $('#id').val("");
-                //$('#doc_date').val("");
-                $('#product_id').val("");
-                $('#wh_org').val("");
-                $('#location_org').val("");
-                $('#wh_to').val("");
-                $('#location_to').val("");
-                $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
+                $('#product_id').val(null).trigger('change');
+                $('#qty').val("");
+                $('#wh_org').val(null).trigger('change');
+                $('#location_org').val(null).trigger('change');
+                $('#location_to').val(null).trigger('change');
+                $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record ย้ายสินค้า");
                 $('#action').val('ADD');
                 $('#save').val('Save');
             });
@@ -418,7 +429,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#wh_org').val(wh_org).trigger('change');
                         $('#location_org').val(location_org).trigger('change');
                         $('#location_to').val(location_to).trigger('change');
-                        $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
+                        $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record ย้ายสินค้า");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
                     }
@@ -605,7 +616,6 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
     </script>
-
 
 
     </body>

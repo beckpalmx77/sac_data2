@@ -52,8 +52,14 @@ if ($_POST["action"] === 'SEARCH') {
 if ($_POST["action"] === 'ADD') {
     if ($_POST["product_id"] !== '') {
         $create_by = $_SESSION['username'];
+        $doc_user_id = $_SESSION['doc_user_id'];
         $doc_date = $_POST["doc_date"];
-        $doc_id = "WH-" . $doc_date . "-" . sprintf('%06s', LAST_ID($conn, "wh_stock_movement", 'id'));
+
+        $cond = "WHERE doc_date = '" . $doc_date . "' AND doc_user_id = '" . $doc_user_id . "'" ;
+
+        //$doc_id = "MV-" . $create_by . "-" . $doc_date . "-" . sprintf('%06s', LAST_ID($conn, "wh_stock_movement", 'id'));
+        $doc_id = "MV-" . $doc_user_id . "-" . $doc_date . "-" . sprintf('%06s', LAST_DOCUMENT_COND($conn, "wh_stock_movement",$cond));
+
         $product_id = $_POST["product_id"];
         $qty = $_POST["qty"];
         $wh_org = $_POST["wh_org"];

@@ -354,6 +354,12 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
+        document.getElementById('qty').addEventListener('input', function (e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+
+    <script>
         $(document).ready(function () {
             let formData = {action: "GET_MOVEMENT", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
@@ -421,12 +427,11 @@ if (strlen($_SESSION['alogin']) == "") {
             $("#btnAdd").click(function () {
                 $('#recordModal').modal('show');
                 $('#id').val("");
-                //$('#doc_date').val("");
-                $('#product_id').val("");
-                $('#wh_org').val("");
-                $('#location_org').val("");
-                $('#wh_to').val("");
-                $('#location_to').val("");
+                $('#product_id').val(null).trigger('change');
+                $('#qty').val("");
+                $('#wh_org').val(null).trigger('change');
+                $('#location_org').val(null).trigger('change');
+                $('#location_to').val(null).trigger('change');
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');

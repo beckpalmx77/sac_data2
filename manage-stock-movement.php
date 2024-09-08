@@ -90,9 +90,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <form method="post" id="recordForm">
                                                         <div class="modal-body">

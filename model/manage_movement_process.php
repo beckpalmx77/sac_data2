@@ -13,15 +13,21 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM wh_stock_movement WHERE id = " . $id;
+    $sql_get = "SELECT * FROM v_wh_stock_movement WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $result) {
         $return_arr[] = array("id" => $result['id'],
+            "doc_id" => $result['doc_id'],
             "doc_date" => $result['doc_date'],
             "product_id" => $result['product_id'],
-            "status" => $result['status']);
+            "product_name" => $result['product_name'],
+            "qty" => $result['qty'],
+            "wh_org" => $result['wh_org'],
+            "location_org" => $result['location_org'],
+            "location_to" => $result['location_to'],
+            "create_by" => $result['create_by']);
     }
 
     echo json_encode($return_arr);
@@ -33,7 +39,7 @@ if ($_POST["action"] === 'SEARCH') {
     if ($_POST["product_id"] !== '') {
 
         $product_id = $_POST["product_id"];
-        $sql_find = "SELECT * FROM wh_stock_movement WHERE product_id = '" . $product_id . "'";
+        $sql_find = "SELECT * FROM v_wh_stock_movement WHERE product_id = '" . $product_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo 2;
@@ -139,19 +145,19 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_stock_movement ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_stock_movement WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM wh_stock_movement WHERE 1 " . $searchQuery
+    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement WHERE 1 " . $searchQuery
         . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
 
 // Bind values
@@ -173,6 +179,7 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
                 "doc_id" => $row['doc_id'],
                 "doc_date" => $row['doc_date'],
                 "product_id" => $row['product_id'],
+                "product_name" => $row['product_name'],
                 "qty" => $row['qty'],
                 "wh_org" => $row['wh_org'],
                 "location_org" => $row['location_org'],

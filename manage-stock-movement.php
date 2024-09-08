@@ -1,5 +1,8 @@
 <?php
+
 include('includes/Header.php');
+$curr_date = date("d-m-Y");
+
 if (strlen($_SESSION['alogin']) == "") {
     header("Location: index.php");
 } else {
@@ -55,6 +58,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <tr>
                                                     <th>วันที่</th>
                                                     <th>รหัสสินค้า</th>
+                                                    <th>รายละเอียด</th>
                                                     <th>จำนวน</th>
                                                     <th>คลังปี</th>
                                                     <th>จากตำแหน่ง</th>
@@ -67,6 +71,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <tr>
                                                     <th>วันที่</th>
                                                     <th>รหัสสินค้า</th>
+                                                    <th>รายละเอียด</th>
                                                     <th>จำนวน</th>
                                                     <th>คลังปี</th>
                                                     <th>จากตำแหน่ง</th>
@@ -91,28 +96,37 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     </div>
                                                     <form method="post" id="recordForm">
                                                         <div class="modal-body">
-                                                            <div class="container">
-
+                                                            <div class="container-fluid">
+                                                                <!-- ใช้ container-fluid เพื่อให้เต็มความกว้างของ modal -->
+                                                                <!-- กลุ่มฟอร์มที่ 1 -->
                                                                 <div class="row">
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
                                                                             <label for="doc_date" class="control-label">วันที่</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   id="doc_date" name="doc_date"
-                                                                                   readonly="true" placeholder="">
-                                                                            <div class="input-group-addon">
-                                                                                <span class="glyphicon glyphicon-th"></span>
+                                                                            <div class="input-group">
+                                                                                <input type="text" class="form-control"
+                                                                                       id="doc_date" name="doc_date"
+                                                                                       readonly="true"
+                                                                                       value="<?php echo $curr_date; ?>">
+                                                                                <div class="input-group-append">
+                                                                                    <span class="input-group-text"><i
+                                                                                                class="glyphicon glyphicon-th"></i></span>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
 
+                                                                <!-- กลุ่มฟอร์มที่ 2 -->
                                                                 <div class="row">
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
-                                                                            <label for="product_id" class="control-label">รหัสสินค้า</label>
-                                                                            <select class="form-control" id="product_id" name="product_id" required>
-                                                                                <option value="">เลือกรหัสสินค้า</option>
+                                                                            <label for="product_id"
+                                                                                   class="control-label">รหัสสินค้า</label>
+                                                                            <select class="form-control" id="product_id"
+                                                                                    name="product_id" required>
+                                                                                <option value="">เลือกรหัสสินค้า
+                                                                                </option>
                                                                             </select>
                                                                         </div>
                                                                     </div>
@@ -122,54 +136,53 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                    class="control-label">รายละเอียด</label>
                                                                             <input type="text" class="form-control"
                                                                                    id="product_name" name="product_name"
-                                                                                   required="required"
-                                                                                   readonly="true"
-                                                                                   placeholder="รายละเอียด">
+                                                                                   readonly placeholder="รายละเอียด"
+                                                                                   required>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-2">
+                                                                    <div class="col-md-4">
                                                                         <div class="form-group">
                                                                             <label for="qty"
                                                                                    class="control-label">จำนวน</label>
-                                                                            <input type="number" class="form-control"
-                                                                                   id="qty" name="qty"
-                                                                                   required="required"
-                                                                                   placeholder="">
+                                                                            <input type="text" class="form-control"
+                                                                                   id="qty" name="qty" placeholder=""
+                                                                                   required>
                                                                         </div>
                                                                     </div>
                                                                 </div>
 
+                                                                <!-- กลุ่มฟอร์มที่ 3 -->
                                                                 <div class="row">
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
-                                                                            <label for="product_id"
-                                                                                   class="control-label">รหัสสินค้า</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   id="product_id" name="product_id"
-                                                                                   readonly="true"
-                                                                                   required="required"
-                                                                                   placeholder="รหัสสินค้า">
+                                                                            <label for="wh_org" class="control-label">คลังปี</label>
+                                                                            <select class="form-control" id="wh_org"
+                                                                                    name="wh_org" required>
+                                                                                <option value="">เลือกคลังปี</option>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
-                                                                            <label for="product_name"
-                                                                                   class="control-label">รายละเอียด</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   id="product_name" name="product_name"
-                                                                                   required="required"
-                                                                                   readonly="true"
-                                                                                   placeholder="รายละเอียด">
+                                                                            <label for="location_org"
+                                                                                   class="control-label">จากตำแหน่ง</label>
+                                                                            <select class="form-control"
+                                                                                    id="location_org"
+                                                                                    name="location_org" required>
+                                                                                <option value="">จากตำแหน่ง</option>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-sm-2">
-                                                                        <label for="quantity"
-                                                                               class="control-label">เลือก</label>
-                                                                        <a data-toggle="modal" href="#Search-PG-Modal"
-                                                                           class="btn btn-primary">
-                                                                            Click <i class="fa fa-search"
-                                                                                     aria-hidden="true"></i>
-                                                                        </a>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="location_to"
+                                                                                   class="control-label">ไปตำแหน่ง</label>
+                                                                            <select class="form-control"
+                                                                                    id="location_to" name="location_to"
+                                                                                    required>
+                                                                                <option value="">ไปตำแหน่ง</option>
+                                                                            </select>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
@@ -178,17 +191,15 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
-                                                            <span class="icon-input-btn"><i class="fa fa-check"></i>
-                                                            <input type="submit" name="save" id="save"
-                                                                   class="btn btn-primary" value="Save"/>
-                                                            </span>
+                                                            <button type="submit" name="save" id="save"
+                                                                    class="btn btn-primary"><i class="fa fa-check"></i>
+                                                                Save
+                                                            </button>
                                                             <button type="button" class="btn btn-danger"
                                                                     data-dismiss="modal">Close <i
-                                                                        class="fa fa-window-close"></i>
-                                                            </button>
+                                                                        class="fa fa-window-close"></i></button>
                                                         </div>
                                                     </form>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -262,15 +273,18 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <!-- Page level plugins -->
 
-    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.min.css"/>
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"/-->
-
     <script src="vendor/datatables/v11/bootbox.min.js"></script>
     <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
+    <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
+    <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
+
 
     <style>
 
@@ -290,6 +304,28 @@ if (strlen($_SESSION['alogin']) == "") {
             top: 30%;
         }
     </style>
+
+    <style>
+        /* กำหนดความสูงของ select ให้เท่ากับ input text */
+        .form-control {
+            height: calc(1.5em + 0.75rem + 2px); /* ใช้ขนาดเดียวกันกับ input */
+        }
+
+        /* สำหรับ Select2 เพื่อให้ช่อง select มีขนาดสูงเท่ากับ input */
+        .select2-container .select2-selection--single {
+            height: calc(1.5em + 0.75rem + 2px) !important;
+            padding: 0.375rem 0.75rem; /* ใช้ padding เดียวกันกับ input */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: calc(1.5em + 0.75rem + 2px) !important; /* จัดแนวข้อความกลาง */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: calc(1.5em + 0.75rem + 2px) !important; /* ปรับขนาดลูกศรให้สูงเท่ากับ select */
+        }
+    </style>
+
     <script>
         $(document).ready(function () {
             $(".icon-input-btn").each(function () {
@@ -301,26 +337,22 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
-
-        $("#doc_date").blur(function () {
-            let method = $('#action').val();
-            if (method === "ADD") {
-                let product_id = $('#product_id').val();
-                let doc_date = $('#doc_date').val();
-                let formData = {action: "SEARCH", product_id: product_id, doc_date: doc_date};
-                $.ajax({
-                    url: 'model/manage_movement_process.php',
-                    method: "POST",
-                    data: formData,
-                    success: function (data) {
-                        if (data == 2) {
-                            alert("Duplicate มีข้อมูลนี้แล้วในระบบ กรุณาตรวจสอบ");
-                        }
-                    }
-                })
-            }
+        $(document).ready(function () {
+            let today = new Date();
+            let doc_date = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
+            $('#doc_date').val(doc_date);
         });
+    </script>
 
+    <script>
+        $(document).ready(function () {
+            $('#doc_date').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+        });
     </script>
 
     <script>
@@ -355,6 +387,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 'columns': [
                     {data: 'doc_date'},
                     {data: 'product_id'},
+                    {data: 'product_name'},
                     {data: 'qty'},
                     {data: 'wh_org'},
                     {data: 'location_org'},
@@ -390,7 +423,7 @@ if (strlen($_SESSION['alogin']) == "") {
             $("#btnAdd").click(function () {
                 $('#recordModal').modal('show');
                 $('#id').val("");
-                $('#doc_date').val("");
+                //$('#doc_date').val("");
                 $('#product_id').val("");
                 $('#wh_org').val("");
                 $('#location_org').val("");
@@ -418,15 +451,23 @@ if (strlen($_SESSION['alogin']) == "") {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
-                        let product_id = response[i].product_id;
                         let doc_date = response[i].doc_date;
-                        let status = response[i].status;
+                        let product_id = response[i].product_id;
+                        let product_name = response[i].product_name;
+                        let qty = response[i].qty;
+                        let wh_org = response[i].wh_org;
+                        let location_org = response[i].location_org;
+                        let location_to = response[i].location_to;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
-                        $('#product_id').val(product_id);
                         $('#doc_date').val(doc_date);
-                        $('#status').val(status);
+                        $('#product_id').val(product_id).trigger('change');
+                        $('#product_name').val(product_name);
+                        $('#qty').val(qty);
+                        $('#wh_org').val(wh_org).trigger('change');
+                        $('#location_org').val(location_org).trigger('change');
+                        $('#location_to').val(location_to).trigger('change');
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
@@ -454,15 +495,23 @@ if (strlen($_SESSION['alogin']) == "") {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
-                        let product_id = response[i].product_id;
                         let doc_date = response[i].doc_date;
-                        let status = response[i].status;
+                        let product_id = response[i].product_id;
+                        let product_name = response[i].product_name;
+                        let qty = response[i].qty;
+                        let wh_org = response[i].wh_org;
+                        let location_org = response[i].location_org;
+                        let location_to = response[i].location_to;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
-                        $('#product_id').val(product_id);
                         $('#doc_date').val(doc_date);
-                        $('#status').val(status);
+                        $('#product_id').val(product_id).trigger('change');
+                        $('#product_name').val(product_name);
+                        $('#qty').val(qty);
+                        $('#wh_org').val(wh_org).trigger('change');
+                        $('#location_org').val(location_org).trigger('change');
+                        $('#location_to').val(location_to).trigger('change');
                         $('.modal-title').html("<i class='fa fa-minus'></i> Delete Record");
                         $('#action').val('DELETE');
                         $('#save').val('Confirm Delete');
@@ -474,6 +523,137 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
 
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_products.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#product_id');
+                    $.each(data, function (index, product) {
+                        select.append($('<option>', {
+                            value: product.product_id,
+                            text: product.product_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': product.product_name // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#product_id').select2({
+                        placeholder: "เลือกรหัสสินค้า",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+
+            // เมื่อมีการเปลี่ยนแปลงค่าใน select
+            $('#product_id').on('change', function () {
+                let selectedOption = $(this).find('option:selected');
+                let productName = selectedOption.data('name'); // ดึงข้อมูล product_name จาก attribute
+                $('#product_name').val(productName); // กำหนดค่าให้กับ input ของ product_name
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_warehouse.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#wh_org');
+                    $.each(data, function (index, warehouse) {
+                        select.append($('<option>', {
+                            value: warehouse.warehouse_id,
+                            text: warehouse.warehouse_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': warehouse.warehouse_id // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#wh_org').select2({
+                        placeholder: "เลือกคลังปี",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_wh_location.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#location_org');
+                    $.each(data, function (index, wh_location) {
+                        select.append($('<option>', {
+                            value: wh_location.location_id,
+                            text: wh_location.location_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': wh_location.location_id // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#location_org').select2({
+                        placeholder: "เลือกตำแหน่ง",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_wh_location.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#location_to');
+                    $.each(data, function (index, wh_location) {
+                        select.append($('<option>', {
+                            value: wh_location.location_id,
+                            text: wh_location.location_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': wh_location.location_id // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#location_to').select2({
+                        placeholder: "เลือกตำแหน่ง",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
     </script>
 
     </body>

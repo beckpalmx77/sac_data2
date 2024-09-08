@@ -51,19 +51,31 @@ if ($_POST["action"] === 'SEARCH') {
 
 if ($_POST["action"] === 'ADD') {
     if ($_POST["product_id"] !== '') {
-        $doc_date = "Q-" . sprintf('%04s', LAST_ID($conn, "wh_stock_movement", 'id'));
+        $create_by = $_SESSION['username'];
+        $doc_date = $_POST["doc_date"];
+        $doc_id = "WH-" . $doc_date . "-" . sprintf('%06s', LAST_ID($conn, "wh_stock_movement", 'id'));
         $product_id = $_POST["product_id"];
-        $status = $_POST["status"];
-        $sql_find = "SELECT * FROM wh_stock_movement WHERE product_id = '" . $product_id . "'";
+        $qty = $_POST["qty"];
+        $wh_org = $_POST["wh_org"];
+        $location_org = $_POST["location_org"];
+        $location_to = $_POST["location_to"];
+        $sql_find = "SELECT * FROM wh_stock_movement WHERE doc_id = '" . $doc_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_stock_movement(doc_date,product_id,status) VALUES (:doc_date,:product_id,:status)";
+            $sql = "INSERT INTO wh_stock_movement(doc_id,doc_date,product_id,qty,wh_org,wh_to,location_org,location_to,create_by) 
+            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_to,:location_org,:location_to,:create_by)";
             $query = $conn->prepare($sql);
+            $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
             $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
             $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
-            $query->bindParam(':status', $status, PDO::PARAM_STR);
+            $query->bindParam(':qty', $qty, PDO::PARAM_STR);
+            $query->bindParam(':wh_org', $wh_org, PDO::PARAM_STR);
+            $query->bindParam(':wh_to', $wh_org, PDO::PARAM_STR);
+            $query->bindParam(':location_org', $location_org, PDO::PARAM_STR);
+            $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
+            $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
 
@@ -80,20 +92,30 @@ if ($_POST["action"] === 'ADD') {
 if ($_POST["action"] === 'UPDATE') {
 
     if ($_POST["product_id"] != '') {
-
+        $update_by = $_SESSION['username'];
         $id = $_POST["id"];
         $doc_date = $_POST["doc_date"];
         $product_id = $_POST["product_id"];
-        $status = $_POST["status"];
-        $sql_find = "SELECT * FROM wh_stock_movement WHERE doc_date = '" . $doc_date . "'";
+        $qty = $_POST["qty"];
+        $wh_org = $_POST["wh_org"];
+        $wh_to = $_POST["wh_org"];
+        $location_org = $_POST["location_org"];
+        $location_to = $_POST["location_to"];
+
+        $sql_find = "SELECT * FROM wh_stock_movement WHERE id = " . $id;
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE wh_stock_movement SET doc_date=:doc_date,product_id=:product_id,status=:status            
+            $sql_update = "UPDATE wh_stock_movement SET product_id=:product_id,qty=:qty            
+            ,wh_org=:wh_org,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
-            $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
             $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
-            $query->bindParam(':status', $status, PDO::PARAM_STR);
+            $query->bindParam(':qty', $qty, PDO::PARAM_STR);
+            $query->bindParam(':wh_org', $wh_org, PDO::PARAM_STR);
+            $query->bindParam(':wh_to', $wh_org, PDO::PARAM_STR);
+            $query->bindParam(':location_org', $location_org, PDO::PARAM_STR);
+            $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
+            $query->bindParam(':update_by', $update_by, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
             echo $save_success;

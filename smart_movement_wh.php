@@ -19,13 +19,13 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-6">
-                <!--form class="d-flex mb-3"-->
-                <button type='button' name='btnAdd' id='btnAdd'
-                        class='btn btn-primary btn-xs'>Add
+            <div class="col-md-6 mb-3"> <!-- เพิ่ม mb-3 ที่นี่ -->
+                <button type='button' name='btnAdd' id='btnAdd' class='btn btn-primary btn-xs'>Add
                     <i class="fa fa-plus"></i>
                 </button>
-                <!--/form-->
+                <button type='button' name='backBtn' id='backBtn' class='btn btn-danger btn-xs'>กลับหน้าแรก
+                    <i class="fa fa-plus"></i>
+                </button>
             </div>
         </div>
 
@@ -43,7 +43,6 @@ if (strlen($_SESSION['alogin']) == "") {
                         <th>จากตำแหน่ง</th>
                         <th>ไปตำแหน่ง</th>
                         <th>Action</th>
-
                     </tr>
                     </thead>
                     <tfoot>
@@ -295,6 +294,14 @@ if (strlen($_SESSION['alogin']) == "") {
         function closeModal() {
             $('#recordModal').modal('hide');
         }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#backBtn").click(function () {
+                window.location.href = "Dashboard_stock";
+            });
+        });
     </script>
 
     <script>
@@ -598,6 +605,8 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
     </script>
+
+
 
     </body>
     </html>

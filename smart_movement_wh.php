@@ -492,6 +492,13 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
+            // แปลง select เป็น select2 ก่อน
+            $('#product_id').select2({
+                placeholder: "เลือกรหัสสินค้า",
+                allowClear: true,
+                width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+            });
+
             // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
             $.ajax({
                 url: 'model/get_products.php', // หน้า PHP ที่จะดึงข้อมูล
@@ -499,6 +506,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 dataType: 'json',
                 success: function (data) {
                     let select = $('#product_id');
+                    select.empty(); // ล้างข้อมูลเก่าออกก่อน
                     $.each(data, function (index, product) {
                         select.append($('<option>', {
                             value: product.product_id,
@@ -507,12 +515,8 @@ if (strlen($_SESSION['alogin']) == "") {
                         }));
                     });
 
-                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
-                    $('#product_id').select2({
-                        placeholder: "เลือกรหัสสินค้า",
-                        allowClear: true,
-                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
-                    });
+                    // รีเฟรช select2 เพื่อให้ข้อมูลที่เพิ่มขึ้นใหม่สามารถค้นหาได้
+                    $('#product_id').trigger('change');
                 },
                 error: function (xhr, status, error) {
                     console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);

@@ -180,33 +180,38 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
     $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
     $searchValue = $_POST['search']['value']; // Search value
 
+    if ($_SESSION['account_type']==='stock') {
+        $where_doc_user_id = " AND doc_user_id = '" . $_SESSION['doc_user_id'] . "' ";
+    }
+
     $searchArray = array();
 
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
         $searchQuery = " AND (doc_date LIKE :doc_date or
-        product_id LIKE :product_id ) ";
+        product_id LIKE :product_id or create_by LIKE :create_by) ";
         $searchArray = array(
             'doc_date' => "%$searchValue%",
             'product_id' => "%$searchValue%",
+            'create_by' => "%$searchValue%",
         );
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id);
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " .$where_doc_user_id . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement WHERE 1 " . $searchQuery
+    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id . $searchQuery
         . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
 
 // Bind values

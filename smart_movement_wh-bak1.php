@@ -9,261 +9,193 @@ if (strlen($_SESSION['alogin']) == "") {
     ?>
 
     <!DOCTYPE html>
-    <html lang="th">
-    <body id="page-top">
-    <div id="wrapper">
-        <?php
-        include('includes/Side-Bar.php');
-        ?>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    </head>
+    <body>
 
-        <div id="content-wrapper" class="d-flex flex-column">
-            <div id="content">
-                <?php
-                include('includes/Top-Bar.php');
-                ?>
-                <!-- Container Fluid-->
-                <div class="container-fluid" id="container-wrapper">
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
-                            </li>
-                            <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
-                            <li class="breadcrumb-item active"
-                                aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
-                        </ol>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 mb-3"> <!-- เพิ่ม mb-3 ที่นี่ -->
+                <span><b>รายการย้ายสินค้า</b></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3"> <!-- เพิ่ม mb-3 ที่นี่ -->
+                <button type='button' name='btnAdd' id='btnAdd' class='btn btn-primary btn-xs'>Add
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button type='button' name='backBtn' id='backBtn' class='btn btn-danger btn-xs'>กลับหน้าแรก
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- DataTables Section -->
+        <div class="row">
+            <div class="col-12">
+                <table id='TableRecordList' class='display dataTable'>
+                    <thead>
+                    <tr>
+                        <th>วันที่</th>
+                        <th>รหัสสินค้า</th>
+                        <th>รายละเอียด</th>
+                        <th>จำนวน</th>
+                        <th>คลังปี</th>
+                        <th>สัปดาห์</th>
+                        <th>จากตำแหน่ง</th>
+                        <th>ไปตำแหน่ง</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>วันที่</th>
+                        <th>รหัสสินค้า</th>
+                        <th>รายละเอียด</th>
+                        <th>จำนวน</th>
+                        <th>คลังปี</th>
+                        <th>สัปดาห์</th>
+                        <th>จากตำแหน่ง</th>
+                        <th>ไปตำแหน่ง</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="modal fade" id="recordModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">รายการย้ายสินค้า</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
                     </div>
-
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card mb-12">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                </div>
-                                <div class="card-body">
-                                    <section class="container-fluid">
-
-                                        <div class="col-md-12 col-md-offset-2">
-                                            <label for="name_t"
-                                                   class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
-
-                                            <button type='button' name='btnAdd' id='btnAdd'
-                                                    class='btn btn-primary btn-xs'>Add
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-
-                                        <div class="col-md-12 col-md-offset-2">
-                                            <table id='TableRecordList' class='display dataTable'>
-                                                <thead>
-                                                <tr>
-                                                    <th>วันที่</th>
-                                                    <th>รหัสสินค้า</th>
-                                                    <th>รายละเอียด</th>
-                                                    <th>จำนวน</th>
-                                                    <th>คลังปี</th>
-                                                    <th>สัปดาห์</th>
-                                                    <th>จากตำแหน่ง</th>
-                                                    <th>ไปตำแหน่ง</th>
-                                                    <th>Action</th>
-
-                                                </tr>
-                                                </thead>
-                                                <tfoot>
-                                                <tr>
-                                                    <th>วันที่</th>
-                                                    <th>รหัสสินค้า</th>
-                                                    <th>รายละเอียด</th>
-                                                    <th>จำนวน</th>
-                                                    <th>คลังปี</th>
-                                                    <th>สัปดาห์</th>
-                                                    <th>จากตำแหน่ง</th>
-                                                    <th>ไปตำแหน่ง</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                                </tfoot>
-                                            </table>
-
-                                            <div id="result"></div>
-
-                                        </div>
-
-                                        <div class="modal fade" id="recordModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                    </div>
-                                                    <form method="post" id="recordForm">
-                                                        <div class="modal-body">
-                                                            <div class="container-fluid">
-                                                                <!-- ใช้ container-fluid เพื่อให้เต็มความกว้างของ modal -->
-                                                                <!-- กลุ่มฟอร์มที่ 1 -->
-                                                                <div class="row">
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label for="doc_date" class="control-label">วันที่</label>
-                                                                            <div class="input-group">
-                                                                                <input type="text" class="form-control"
-                                                                                       id="doc_date" name="doc_date"
-                                                                                       readonly="true"
-                                                                                       value="<?php echo $curr_date; ?>">
-                                                                                <div class="input-group-append">
+                    <form method="post" id="recordForm">
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <!-- ใช้ container-fluid เพื่อให้เต็มความกว้างของ modal -->
+                                <!-- กลุ่มฟอร์มที่ 1 -->
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="doc_date" class="control-label">วันที่</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control"
+                                                       id="doc_date" name="doc_date"
+                                                       readonly="true"
+                                                       value="<?php echo $curr_date; ?>">
+                                                <div class="input-group-append">
                                                                                     <span class="input-group-text"><i
                                                                                                 class="glyphicon glyphicon-th"></i></span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <!-- กลุ่มฟอร์มที่ 2 -->
-                                                                <div class="row">
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label for="product_id"
-                                                                                   class="control-label">รหัสสินค้า</label>
-                                                                            <select class="form-control" id="product_id"
-                                                                                    name="product_id" required>
-                                                                                <option value="">เลือกรหัสสินค้า
-                                                                                </option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label for="product_name"
-                                                                                   class="control-label">รายละเอียด</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   id="product_name" name="product_name"
-                                                                                   readonly placeholder="รายละเอียด"
-                                                                                   required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label for="qty"
-                                                                                   class="control-label">จำนวน</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   id="qty" name="qty" placeholder=""
-                                                                                   required>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <!-- กลุ่มฟอร์มที่ 3 -->
-                                                                <div class="row">
-                                                                    <div class="col-md-3">
-                                                                        <div class="form-group">
-                                                                            <label for="wh_org" class="control-label">คลังปี</label>
-                                                                            <select class="form-control" id="wh_org"
-                                                                                    name="wh_org" required>
-                                                                                <option value="">เลือกคลังปี</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <div class="form-group">
-                                                                            <label for="wh_week_id"
-                                                                                   class="control-label">สัปดาห์</label>
-                                                                            <select class="form-control"
-                                                                                    id="wh_week_id"
-                                                                                    name="wh_week_id" required>
-                                                                                <option value="">สัปดาห์</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <div class="form-group">
-                                                                            <label for="location_org"
-                                                                                   class="control-label">จากตำแหน่ง</label>
-                                                                            <select class="form-control"
-                                                                                    id="location_org"
-                                                                                    name="location_org" required>
-                                                                                <option value="">จากตำแหน่ง</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <div class="form-group">
-                                                                            <label for="location_to"
-                                                                                   class="control-label">ไปตำแหน่ง</label>
-                                                                            <select class="form-control"
-                                                                                    id="location_to" name="location_to"
-                                                                                    required>
-                                                                                <option value="">ไปตำแหน่ง</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <input type="hidden" name="id" id="id"/>
-                                                            <input type="hidden" name="action" id="action" value=""/>
-                                                            <button type="submit" name="save" id="save"
-                                                                    class="btn btn-primary"><i class="fa fa-check"></i>
-                                                                Save
-                                                            </button>
-                                                            <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Close <i
-                                                                        class="fa fa-window-close"></i></button>
-                                                        </div>
-                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
-
-
-                                        <div class="modal fade" id="SearchModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
-                                                    </div>
-
-                                                    <div class="container"></div>
-                                                    <div class="modal-body">
-
-                                                        <div class="modal-body">
-
-                                                            <table cellpadding="0" cellspacing="0" border="0"
-                                                                   class="display"
-                                                                   id="TableUnitList"
-                                                                   width="100%">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tfoot>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    </div>
                                 </div>
+
+                                <!-- กลุ่มฟอร์มที่ 2 -->
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="product_id"
+                                                   class="control-label">รหัสสินค้า</label>
+                                            <select class="form-control" id="product_id"
+                                                    name="product_id" required>
+                                                <option value="">เลือกรหัสสินค้า
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="product_name"
+                                                   class="control-label">รายละเอียด</label>
+                                            <input type="text" class="form-control"
+                                                   id="product_name" name="product_name"
+                                                   readonly placeholder="รายละเอียด"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="qty"
+                                                   class="control-label">จำนวน</label>
+                                            <input type="text" class="form-control"
+                                                   id="qty" name="qty" placeholder=""
+                                                   required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- กลุ่มฟอร์มที่ 3 -->
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="wh_org" class="control-label">คลังปี</label>
+                                            <select class="form-control" id="wh_org"
+                                                    name="wh_org" required>
+                                                <option value="">เลือกคลังปี</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="wh_week_id"
+                                                   class="control-label">สัปดาห์</label>
+                                            <select class="form-control"
+                                                    id="wh_week_id"
+                                                    name="wh_week_id" required>
+                                                <option value="">สัปดาห์</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="location_org"
+                                                   class="control-label">จากตำแหน่ง</label>
+                                            <select class="form-control"
+                                                    id="location_org"
+                                                    name="location_org" required>
+                                                <option value="">จากตำแหน่ง</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="location_to"
+                                                   class="control-label">ไปตำแหน่ง</label>
+                                            <select class="form-control"
+                                                    id="location_to" name="location_to"
+                                                    required>
+                                                <option value="">ไปตำแหน่ง</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                    </div>
-
+                        <div class="modal-footer">
+                            <input type="hidden" name="id" id="id"/>
+                            <input type="hidden" name="action" id="action" value=""/>
+                            <button type="submit" name="save" id="save"
+                                    class="btn btn-primary"><i class="fa fa-check"></i>
+                                Save
+                            </button>
+                            <button type="button" class="btn btn-danger" onclick="closeModal()">Close <i
+                                        class="fa fa-window-close"></i></button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+
+
     </div>
 
     <?php
@@ -277,21 +209,27 @@ if (strlen($_SESSION['alogin']) == "") {
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="js/myadmin.min.js"></script>
 
-    <!-- Page level plugins -->
-
     <script src="vendor/datatables/v11/bootbox.min.js"></script>
     <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
     <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
@@ -374,6 +312,21 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
+        // ฟังก์ชันในการปิด modal ด้วย JavaScript
+        function closeModal() {
+            $('#recordModal').modal('hide');
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#backBtn").click(function () {
+                window.location.href = "Dashboard_stock";
+            });
+        });
+    </script>
+
+    <script>
         $(document).ready(function () {
             let formData = {action: "GET_MOVEMENT", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
@@ -415,16 +368,6 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
-            // ตั้งค่าให้รีเฟรช DataTable ทุกๆ 10 วินาที
-            setInterval(function () {
-                dataRecords.ajax.reload(null, false); // false เพื่อรักษาหน้าปัจจุบัน
-            }, 10000); // 10000 มิลลิวินาที (10 วินาที)
-
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
             <!-- *** FOR SUBMIT FORM *** -->
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();
@@ -568,6 +511,8 @@ if (strlen($_SESSION['alogin']) == "") {
                 dataType: 'json',
                 success: function (data) {
                     let select = $('#product_id');
+                    select.empty(); // ล้างข้อมูลเก่าออกก่อน
+
                     $.each(data, function (index, product) {
                         select.append($('<option>', {
                             value: product.product_id,
@@ -577,7 +522,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     });
 
                     // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
-                    $('#product_id').select2({
+                    select.select2({
                         placeholder: "เลือกรหัสสินค้า",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
@@ -723,5 +668,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
     </body>
     </html>
+
 
 <?php } ?>

@@ -92,7 +92,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
                                                     </div>
                                                     <form method="post" id="recordForm">
                                                         <div class="modal-body">
@@ -414,6 +415,16 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
+            // ตั้งค่าให้รีเฟรช DataTable ทุกๆ 10 วินาที
+            setInterval(function() {
+                dataRecords.ajax.reload(null, false); // false เพื่อรักษาหน้าปัจจุบัน
+            }, 10000); // 10000 มิลลิวินาที (10 วินาที)
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
             <!-- *** FOR SUBMIT FORM *** -->
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();

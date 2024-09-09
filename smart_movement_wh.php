@@ -439,30 +439,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
     </script>
 
-    <!--script>
-        $(document).ready(function () {
-            //FOR SUBMIT FORM ***
-            $("#recordModal").on('submit', '#recordForm', function (event) {
-                event.preventDefault();
-                $('#save').attr('disabled', 'disabled');
-                let formData = $(this).serialize();
-                //alert(formData);
-                $.ajax({
-                    url: 'model/manage_movement_process.php',
-                    method: "POST",
-                    data: formData,
-                    success: function (data) {
-                        alertify.success(data);
-                        $('#recordForm')[0].reset();
-                        $('#recordModal').modal('hide');
-                        $('#save').attr('disabled', false);
-                        dataRecords.ajax.reload();
-                    }
-                })
-            });
-        });
-    </script-->
-
     <script>
         $(document).ready(function () {
             $("#btnAdd").click(function () {

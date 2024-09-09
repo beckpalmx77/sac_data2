@@ -50,6 +50,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     class='btn btn-primary btn-xs'>Add
                                                 <i class="fa fa-plus"></i>
                                             </button>
+                                            <button type='button' name='btnRefresh' id='btnRefresh'
+                                                    class='btn btn-success btn-xs' onclick="ReloadDataTable();">Refresh
+                                                <i class="fa fa-refresh"></i>
+                                            </button>
                                         </div>
 
                                         <div class="col-md-12 col-md-offset-2">
@@ -722,6 +726,12 @@ if (strlen($_SESSION['alogin']) == "") {
                 }
             });
         });
+    </script>
+
+    <script>
+        function ReloadDataTable() {
+            $('#TableRecordList').DataTable().ajax.reload();
+        }
     </script>
 
     </body>

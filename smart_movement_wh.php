@@ -37,7 +37,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                                 <button type='button' name='backBtn' id='backBtn' class='btn btn-danger btn-xs'>กลับหน้าแรก
-                                                    <i class="fa fa-plus"></i>
+                                                    <i class="fa fa-reply"></i>
                                                 </button>
                                             </div>
                                         </div>

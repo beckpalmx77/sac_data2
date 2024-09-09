@@ -25,6 +25,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "product_name" => $result['product_name'],
             "qty" => $result['qty'],
             "wh_org" => $result['wh_org'],
+            "wh_week_id" => $result['wh_week_id'],
             "location_org" => $result['location_org'],
             "location_to" => $result['location_to'],
             "create_by" => $result['create_by']);
@@ -63,6 +64,7 @@ if ($_POST["action"] === 'ADD') {
         $product_id = $_POST["product_id"];
         $qty = $_POST["qty"];
         $wh_org = $_POST["wh_org"];
+        $wh_week_id = $_POST["wh_week_id"];
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
         $sql_find = "SELECT * FROM wh_stock_movement WHERE doc_id = '" . $doc_id . "'";
@@ -70,14 +72,15 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_stock_movement(doc_id,doc_date,product_id,qty,wh_org,wh_to,location_org,location_to,create_by) 
-            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_to,:location_org,:location_to,:create_by)";
+            $sql = "INSERT INTO wh_stock_movement(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by) 
+            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by)";
             $query = $conn->prepare($sql);
             $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
             $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
             $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
             $query->bindParam(':qty', $qty, PDO::PARAM_STR);
             $query->bindParam(':wh_org', $wh_org, PDO::PARAM_STR);
+            $query->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
             $query->bindParam(':wh_to', $wh_org, PDO::PARAM_STR);
             $query->bindParam(':location_org', $location_org, PDO::PARAM_STR);
             $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
@@ -104,20 +107,27 @@ if ($_POST["action"] === 'UPDATE') {
         $product_id = $_POST["product_id"];
         $qty = $_POST["qty"];
         $wh_org = $_POST["wh_org"];
+        $wh_week_id = $_POST["wh_week_id"];
         $wh_to = $_POST["wh_org"];
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
-
+/*
+        $txt = "week = " . $wh_week_id . " | " . $location_org . " | " . $location_to . " | " . $wh_org . " | " . $product_id . " | " . $id . " | " . $doc_date;
+        $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);
+*/
         $sql_find = "SELECT * FROM wh_stock_movement WHERE id = " . $id;
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             $sql_update = "UPDATE wh_stock_movement SET product_id=:product_id,qty=:qty            
-            ,wh_org=:wh_org,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by
+            ,wh_org=:wh_org,wh_week_id=:wh_week_id,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
             $query->bindParam(':qty', $qty, PDO::PARAM_STR);
             $query->bindParam(':wh_org', $wh_org, PDO::PARAM_STR);
+            $query->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
             $query->bindParam(':wh_to', $wh_org, PDO::PARAM_STR);
             $query->bindParam(':location_org', $location_org, PDO::PARAM_STR);
             $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
@@ -212,6 +222,7 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
                 "wh_org" => $row['wh_org'],
                 "location_org" => $row['location_org'],
                 "wh_to" => $row['wh_to'],
+                "wh_week_id" => $row['wh_week_id'],
                 "location_to" => $row['location_to'],
                 "create_by" => $row['create_by'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",

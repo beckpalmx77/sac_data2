@@ -45,6 +45,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         <th>รายละเอียด</th>
                         <th>จำนวน</th>
                         <th>คลังปี</th>
+                        <th>สัปดาห์</th>
                         <th>จากตำแหน่ง</th>
                         <th>ไปตำแหน่ง</th>
                         <th>Action</th>
@@ -57,6 +58,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         <th>รายละเอียด</th>
                         <th>จำนวน</th>
                         <th>คลังปี</th>
+                        <th>สัปดาห์</th>
                         <th>จากตำแหน่ง</th>
                         <th>ไปตำแหน่ง</th>
                         <th>Action</th>
@@ -132,7 +134,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                 <!-- กลุ่มฟอร์มที่ 3 -->
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="wh_org" class="control-label">คลังปี</label>
                                             <select class="form-control" id="wh_org"
@@ -141,7 +143,18 @@ if (strlen($_SESSION['alogin']) == "") {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="wh_week_id"
+                                                   class="control-label">สัปดาห์</label>
+                                            <select class="form-control"
+                                                    id="wh_week_id"
+                                                    name="wh_week_id" required>
+                                                <option value="">สัปดาห์</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="location_org"
                                                    class="control-label">จากตำแหน่ง</label>
@@ -152,7 +165,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="location_to"
                                                    class="control-label">ไปตำแหน่ง</label>
@@ -302,21 +315,6 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
-        // ฟังก์ชันในการปิด modal ด้วย JavaScript
-        function closeModal() {
-            $('#recordModal').modal('hide');
-        }
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $("#backBtn").click(function () {
-                window.location.href = "Dashboard_stock";
-            });
-        });
-    </script>
-
-    <script>
         $(document).ready(function () {
             let formData = {action: "GET_MOVEMENT", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
@@ -333,7 +331,6 @@ if (strlen($_SESSION['alogin']) == "") {
                         next: 'ต่อไป'
                     }
                 },
-                'responsive': true,
                 'processing': true,
                 'serverSide': true,
                 'autoWidth': true,
@@ -352,6 +349,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'product_name'},
                     {data: 'qty'},
                     {data: 'wh_org'},
+                    {data: 'wh_week_id'},
                     {data: 'location_org'},
                     {data: 'location_to'},
                     {data: 'update'},
@@ -363,6 +361,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 event.preventDefault();
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
+                //alert(formData);
                 $.ajax({
                     url: 'model/manage_movement_process.php',
                     method: "POST",
@@ -388,9 +387,10 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#product_id').val(null).trigger('change');
                 $('#qty').val("");
                 $('#wh_org').val(null).trigger('change');
+                $('#wh_week_id').val(null).trigger('change');
                 $('#location_org').val(null).trigger('change');
                 $('#location_to').val(null).trigger('change');
-                $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record ย้ายสินค้า");
+                $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');
             });
@@ -417,6 +417,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let product_name = response[i].product_name;
                         let qty = response[i].qty;
                         let wh_org = response[i].wh_org;
+                        let wh_week_id = response[i].wh_week_id;
                         let location_org = response[i].location_org;
                         let location_to = response[i].location_to;
 
@@ -427,9 +428,10 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#product_name').val(product_name);
                         $('#qty').val(qty);
                         $('#wh_org').val(wh_org).trigger('change');
+                        $('#wh_week_id').val(wh_week_id).trigger('change');
                         $('#location_org').val(location_org).trigger('change');
                         $('#location_to').val(location_to).trigger('change');
-                        $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record ย้ายสินค้า");
+                        $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
                     }
@@ -461,6 +463,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let product_name = response[i].product_name;
                         let qty = response[i].qty;
                         let wh_org = response[i].wh_org;
+                        let wh_week_id = response[i].wh_week_id;
                         let location_org = response[i].location_org;
                         let location_to = response[i].location_to;
 
@@ -471,6 +474,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#product_name').val(product_name);
                         $('#qty').val(qty);
                         $('#wh_org').val(wh_org).trigger('change');
+                        $('#wh_week_id').val(wh_week_id).trigger('change');
                         $('#location_org').val(location_org).trigger('change');
                         $('#location_to').val(location_to).trigger('change');
                         $('.modal-title').html("<i class='fa fa-minus'></i> Delete Record");
@@ -617,6 +621,36 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_wh_week.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#wh_week_id');
+                    $.each(data, function (index, wh_week) {
+                        select.append($('<option>', {
+                            value: wh_week.wh_week_id,
+                            text: wh_week.wh_week_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': wh_week.wh_week_id // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#wh_week_id').select2({
+                        placeholder: "เลือก week",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
 
     </body>
     </html>

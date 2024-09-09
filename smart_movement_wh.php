@@ -33,10 +33,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 mb-3"> <!-- เพิ่ม mb-3 ที่นี่ -->
-                                                <button type='button' name='btnAdd' id='btnAdd' class='btn btn-primary btn-xs'>Add
+                                                <button type='button' name='btnAdd' id='btnAdd'
+                                                        class='btn btn-primary btn-xs'>Add
                                                     <i class="fa fa-plus"></i>
                                                 </button>
-                                                <button type='button' name='backBtn' id='backBtn' class='btn btn-danger btn-xs'>กลับหน้าแรก
+                                                <button type='button' name='backBtn' id='backBtn'
+                                                        class='btn btn-danger btn-xs'>กลับหน้าแรก
                                                     <i class="fa fa-reply"></i>
                                                 </button>
                                             </div>
@@ -413,16 +415,6 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
-            // ตั้งค่าให้รีเฟรช DataTable ทุกๆ 10 วินาที
-            setInterval(function () {
-                dataRecords.ajax.reload(null, false); // false เพื่อรักษาหน้าปัจจุบัน
-            }, 10000); // 10000 มิลลิวินาที (10 วินาที)
-
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
             <!-- *** FOR SUBMIT FORM *** -->
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();
@@ -444,7 +436,32 @@ if (strlen($_SESSION['alogin']) == "") {
             });
             <!-- *** FOR SUBMIT FORM *** -->
         });
+
     </script>
+
+    <!--script>
+        $(document).ready(function () {
+            //FOR SUBMIT FORM ***
+            $("#recordModal").on('submit', '#recordForm', function (event) {
+                event.preventDefault();
+                $('#save').attr('disabled', 'disabled');
+                let formData = $(this).serialize();
+                //alert(formData);
+                $.ajax({
+                    url: 'model/manage_movement_process.php',
+                    method: "POST",
+                    data: formData,
+                    success: function (data) {
+                        alertify.success(data);
+                        $('#recordForm')[0].reset();
+                        $('#recordModal').modal('hide');
+                        $('#save').attr('disabled', false);
+                        dataRecords.ajax.reload();
+                    }
+                })
+            });
+        });
+    </script-->
 
     <script>
         $(document).ready(function () {

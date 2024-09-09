@@ -56,10 +56,12 @@ if ($_POST["action"] === 'ADD') {
         $doc_user_id = $_SESSION['doc_user_id'];
         $doc_date = $_POST["doc_date"];
 
-        $cond = "WHERE doc_date = '" . $doc_date . "' AND doc_user_id = '" . $doc_user_id . "'" ;
+        $cond = "WHERE doc_date = '" . $doc_date . "' AND doc_user_id = '" . $doc_user_id . "'";
 
         //$doc_id = "MV-" . $create_by . "-" . $doc_date . "-" . sprintf('%06s', LAST_ID($conn, "wh_stock_movement", 'id'));
-        $doc_id = "MV-" . $doc_user_id . "-" . $doc_date . "-" . sprintf('%06s', LAST_DOCUMENT_COND($conn, "wh_stock_movement",$cond));
+
+        $run_no = LAST_DOCUMENT_NUMBER($conn, "doc_id", "wh_stock_movement", $cond);
+        $doc_id = "MV-" . $doc_user_id . "-" . $doc_date . "-" . sprintf('%06s', $run_no);
 
         $product_id = $_POST["product_id"];
         $qty = $_POST["qty"];
@@ -68,12 +70,20 @@ if ($_POST["action"] === 'ADD') {
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
         $sql_find = "SELECT * FROM wh_stock_movement WHERE doc_id = '" . $doc_id . "'";
+
+/*
+        $txt = $sql_find . " | " . $run_no . " | " . $cond;
+        $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);
+*/
+
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_stock_movement(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by) 
-            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by)";
+            $sql = "INSERT INTO wh_stock_movement(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id) 
+            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by,:doc_user_id)";
             $query = $conn->prepare($sql);
             $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
             $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
@@ -85,6 +95,7 @@ if ($_POST["action"] === 'ADD') {
             $query->bindParam(':location_org', $location_org, PDO::PARAM_STR);
             $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
             $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
+            $query->bindParam(':doc_user_id', $doc_user_id, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
 
@@ -111,12 +122,12 @@ if ($_POST["action"] === 'UPDATE') {
         $wh_to = $_POST["wh_org"];
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
-/*
-        $txt = "week = " . $wh_week_id . " | " . $location_org . " | " . $location_to . " | " . $wh_org . " | " . $product_id . " | " . $id . " | " . $doc_date;
-        $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $txt);
-        fclose($my_file);
-*/
+        /*
+                $txt = "week = " . $wh_week_id . " | " . $location_org . " | " . $location_to . " | " . $wh_org . " | " . $product_id . " | " . $id . " | " . $doc_date;
+                $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+                fwrite($my_file, $txt);
+                fclose($my_file);
+        */
         $sql_find = "SELECT * FROM wh_stock_movement WHERE id = " . $id;
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {

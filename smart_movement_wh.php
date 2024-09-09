@@ -315,6 +315,13 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
+        // ฟังก์ชันในการปิด modal ด้วย JavaScript
+        function closeModal() {
+            $('#recordModal').modal('hide');
+        }
+    </script>
+
+    <script>
         $(document).ready(function () {
             $("#backBtn").click(function () {
                 window.location.href = "Dashboard_stock";

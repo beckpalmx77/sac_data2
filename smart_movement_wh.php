@@ -28,7 +28,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                         <div class="row">
                                             <div class="col-md-6 mb-3"> <!-- เพิ่ม mb-3 ที่นี่ -->
-                                                <span><b>รายการย้ายสินค้า</b></span>
+                                                <span><b>รายการย้ายสินค้า <?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name'] ?></b></span>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -204,47 +204,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         class="fa fa-window-close"></i></button>
                                                         </div>
                                                     </form>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="modal fade" id="SearchModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
-                                                    </div>
-
-                                                    <div class="container"></div>
-                                                    <div class="modal-body">
-
-                                                        <div class="modal-body">
-
-                                                            <table cellpadding="0" cellspacing="0" border="0"
-                                                                   class="display"
-                                                                   id="TableUnitList"
-                                                                   width="100%">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tfoot>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -41,21 +41,40 @@ if (strlen($_SESSION['alogin']) == "") {
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
+                                        <form id="export_data" method="post"
+                                              action="export_process/export_process_data_wh_movement.php"
+                                              enctype="multipart/form-data">
+                                            <div class="col-md-12 col-md-offset-2"
+                                                 style="display: flex; align-items: center; gap: 10px;">
+                                                <label for="name_t"
+                                                       class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
 
-                                        <div class="col-md-12 col-md-offset-2">
-                                            <label for="name_t"
-                                                   class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
+                                                <button type="button" name="btnAdd" id="btnAdd"
+                                                        class="btn btn-primary btn-xs">
+                                                    Add <i class="fa fa-plus"></i>
+                                                </button>
 
-                                            <button type='button' name='btnAdd' id='btnAdd'
-                                                    class='btn btn-primary btn-xs'>Add
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <button type='button' name='btnRefresh' id='btnRefresh'
-                                                    class='btn btn-success btn-xs' onclick="ReloadDataTable();">Refresh
-                                                <i class="fa fa-refresh"></i>
-                                            </button>
-                                        </div>
+                                                <button type="button" name="btnRefresh" id="btnRefresh"
+                                                        class="btn btn-success btn-xs" onclick="ReloadDataTable();">
+                                                    Refresh <i class="fa fa-refresh"></i>
+                                                </button>
 
+                                                <label for="name_t" class="control-label mb-0"><b>Export Data
+                                                        วันที่&nbsp;</b></label>
+
+                                                <input type="text" class="form-control" id="doc_date" name="doc_date"
+                                                       readonly="true" placeholder=""
+                                                       style="width: calc(0.6em * 10 + 1.25rem);"
+                                                       value="<?php echo $curr_date; ?>">
+
+                                                <button type="button" name="btnRefresh" id="btnRefresh"
+                                                        class="btn btn-success btn-xs" onclick="ExportData();">
+                                                    Export <i class="fa fa-file-excel-o"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                        <br>
                                         <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
@@ -70,7 +89,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>ไปตำแหน่ง</th>
                                                     <th>Create By</th>
                                                     <th>Action</th>
-
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
@@ -359,6 +377,7 @@ if (strlen($_SESSION['alogin']) == "") {
             let today = new Date();
             let doc_date = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
             $('#doc_date').val(doc_date);
+            //document.getElementById('doc_date').value = doc_date;
         });
     </script>
 
@@ -728,9 +747,26 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
+
     <script>
         function ReloadDataTable() {
             $('#TableRecordList').DataTable().ajax.reload();
+        }
+    </script>
+
+    <script>
+        // ฟังก์ชันสำหรับทำการ submit ฟอร์ม
+        function ExportData() {
+            // ดึงฟอร์มจาก ID ที่กำหนด
+            const form = document.getElementById("export_data");
+
+            // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
+            if (form.checkValidity()) {
+                // ทำการ submit ฟอร์ม
+                form.submit();
+            } else {
+                alert("Please fill out the required fields.");
+            }
         }
     </script>
 

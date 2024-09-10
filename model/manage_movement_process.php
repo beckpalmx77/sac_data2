@@ -243,7 +243,7 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
 
 ## Fetch records
     $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id . $searchQuery
-        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+        . " ORDER BY doc_id,create_by,create_date " . " LIMIT :limit,:offset");
 
 // Bind values
     foreach ($searchArray as $key => $search) {

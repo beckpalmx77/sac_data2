@@ -153,7 +153,7 @@ fclose($my_file);
 */
 
 
-$data = "วันที่,ประเภท,รหัสสินค้า,รายละเอียดสินค้า,จำนวน,คลัง/ปี,LOCATION,เลขที่เอกสาร,คันที่,เทค,ชื่อลูกค้า,คงเหลือใน LO\n";
+$data = "วันที่,ประเภท,รหัสสินค้า,รายละเอียดสินค้า,จำนวน,คลัง/ปี,สัปดาห์,LOCATION,เลขที่เอกสาร,คันที่,เทค,ชื่อลูกค้า,คงเหลือใน LO\n";
 
 $query = $conn_sqlsvr->prepare($String_Sql);
 $query->execute();
@@ -175,6 +175,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     $data .= str_replace(",", "^", $row['SKU_NAME']) . ",";
     $data .= str_replace(",", "^", $row['TRD_QTY']) . ",";
     $data .= str_replace(",", "^", $row['WL_CODE']) . ",";
+    $data .= " ,";
     $data .= " ,";
     $data .= $row['DI_REF'] . ",";
     $data .= " ,";

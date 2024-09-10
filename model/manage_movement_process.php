@@ -115,8 +115,8 @@ if ($_POST["action"] === 'ADD') {
                             $record_type = "-";
                             $location = $location_org;
                         }
-                        $sql_ins = "INSERT INTO wh_stock_transaction(doc_id,record_type,line_no,doc_date,product_id,qty,wh,wh_week_id,location,create_by,doc_user_id) 
-                                    VALUES (:doc_id,:record_type,:line_no,:doc_date,:product_id,:qty,:wh,:wh_week_id,:location,:create_by,:doc_user_id)";
+                        $sql_ins = "INSERT INTO wh_stock_transaction(doc_id,record_type,line_no,doc_date,product_id,qty,wh,wh_week_id,location,create_by,doc_user_id,seq_record) 
+                                    VALUES (:doc_id,:record_type,:line_no,:doc_date,:product_id,:qty,:wh,:wh_week_id,:location,:create_by,:doc_user_id,:seq_record)";
                         $query_trans = $conn->prepare($sql_ins);
                         $query_trans->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
                         $query_trans->bindParam(':record_type', $record_type, PDO::PARAM_STR);
@@ -129,6 +129,7 @@ if ($_POST["action"] === 'ADD') {
                         $query_trans->bindParam(':location', $location, PDO::PARAM_STR);
                         $query_trans->bindParam(':create_by', $create_by, PDO::PARAM_STR);
                         $query_trans->bindParam(':doc_user_id', $doc_user_id, PDO::PARAM_STR);
+                        $query_trans->bindParam(':seq_record', $seq_record, PDO::PARAM_STR);
                         $query_trans->execute();
                     }
                 }

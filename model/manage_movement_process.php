@@ -63,6 +63,9 @@ if ($_POST["action"] === 'ADD') {
         $run_no = LAST_DOCUMENT_NUMBER($conn, "doc_id", "wh_stock_movement", $cond);
         $doc_id = "MV-" . $doc_user_id . "-" . $doc_date . "-" . sprintf('%06s', $run_no);
 
+        $str=rand();
+        $seq_record = md5($str);
+
         $product_id = $_POST["product_id"];
         $qty = $_POST["qty"];
         $wh_org = $_POST["wh_org"];
@@ -82,8 +85,8 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_stock_movement(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id) 
-            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by,:doc_user_id)";
+            $sql = "INSERT INTO wh_stock_movement(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id,seq_record) 
+            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by,:doc_user_id,:seq_record)";
             $query = $conn->prepare($sql);
             $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
             $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
@@ -96,6 +99,7 @@ if ($_POST["action"] === 'ADD') {
             $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
             $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
             $query->bindParam(':doc_user_id', $doc_user_id, PDO::PARAM_STR);
+            $query->bindParam(':seq_record', $seq_record, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
 

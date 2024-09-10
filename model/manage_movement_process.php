@@ -71,12 +71,12 @@ if ($_POST["action"] === 'ADD') {
         $location_to = $_POST["location_to"];
         $sql_find = "SELECT * FROM wh_stock_movement WHERE doc_id = '" . $doc_id . "'";
 
-/*
-        $txt = $sql_find . " | " . $run_no . " | " . $cond;
-        $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $txt);
-        fclose($my_file);
-*/
+        /*
+                $txt = $sql_find . " | " . $run_no . " | " . $cond;
+                $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+                fwrite($my_file, $txt);
+                fclose($my_file);
+        */
 
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
@@ -100,6 +100,35 @@ if ($_POST["action"] === 'ADD') {
             $lastInsertId = $conn->lastInsertId();
 
             if ($lastInsertId) {
+                for ($line_no = 1; $line_no <= 2; $line_no++) {
+                    $sql_find_trans = "SELECT * FROM wh_stock_transaction WHERE doc_id = '" . $doc_id . "' AND line_no = " . $line_no;
+                    $nRows = $conn->query($sql_find_trans)->fetchColumn();
+                    if ($nRows <= 0) {
+                        if ($line_no === 1) {
+                            $record_type = "+";
+                            $location = $location_to;
+                        } else {
+                            $record_type = "-";
+                            $location = $location_org;
+                        }
+                        $sql_ins = "INSERT INTO wh_stock_transaction(doc_id,record_type,line_no,doc_date,product_id,qty,wh,wh_week_id,location,create_by,doc_user_id) 
+                                    VALUES (:doc_id,:record_type,:line_no,:doc_date,:product_id,:qty,:wh,:wh_week_id,:location,:create_by,:doc_user_id)";
+                        $query_trans = $conn->prepare($sql_ins);
+                        $query_trans->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+                        $query_trans->bindParam(':record_type', $record_type, PDO::PARAM_STR);
+                        $query_trans->bindParam(':line_no', $line_no, PDO::PARAM_STR);
+                        $query_trans->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
+                        $query_trans->bindParam(':product_id', $product_id, PDO::PARAM_STR);
+                        $query_trans->bindParam(':qty', $qty, PDO::PARAM_STR);
+                        $query_trans->bindParam(':wh', $wh_org, PDO::PARAM_STR);
+                        $query_trans->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
+                        $query_trans->bindParam(':location', $location, PDO::PARAM_STR);
+                        $query_trans->bindParam(':create_by', $create_by, PDO::PARAM_STR);
+                        $query_trans->bindParam(':doc_user_id', $doc_user_id, PDO::PARAM_STR);
+                        $query_trans->execute();
+                    }
+                }
+
                 echo $save_success;
             } else {
                 echo $error;
@@ -180,7 +209,7 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
     $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
     $searchValue = $_POST['search']['value']; // Search value
 
-    if ($_SESSION['account_type']==='stock') {
+    if ($_SESSION['account_type'] === 'stock') {
         $where_doc_user_id = " AND doc_user_id = '" . $_SESSION['doc_user_id'] . "' ";
     }
 
@@ -207,7 +236,7 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " .$where_doc_user_id . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];

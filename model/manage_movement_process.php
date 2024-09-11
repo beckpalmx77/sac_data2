@@ -51,7 +51,7 @@ if ($_POST["action"] === 'SEARCH') {
 }
 
 if ($_POST["action"] === 'ADD') {
-    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !=='') {
+    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !== '') {
         $create_by = $_SESSION['username'];
         $doc_user_id = $_SESSION['doc_user_id'];
         $doc_date = $_POST["doc_date"];
@@ -63,7 +63,7 @@ if ($_POST["action"] === 'ADD') {
         $run_no = LAST_DOCUMENT_NUMBER($conn, "doc_id", "wh_stock_movement", $cond);
         $doc_id = "MV-" . $doc_user_id . "-" . $doc_date . "-" . sprintf('%06s', $run_no);
 
-        $str=rand();
+        $str = rand();
         $seq_record = md5($str);
 
         $product_id = $_POST["product_id"];
@@ -145,7 +145,7 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !=='') {
+    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !== '') {
         $update_by = $_SESSION['username'];
         $id = $_POST["id"];
         $doc_id = $_POST["doc_id"];
@@ -157,12 +157,6 @@ if ($_POST["action"] === 'UPDATE') {
         $wh_to = $_POST["wh_org"];
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
-        /*
-                $txt = "week = " . $wh_week_id . " | " . $location_org . " | " . $location_to . " | " . $wh_org . " | " . $product_id . " | " . $id . " | " . $doc_date;
-                $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-                fwrite($my_file, $txt);
-                fclose($my_file);
-        */
         $sql_find = "SELECT * FROM wh_stock_movement WHERE id = " . $id;
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
@@ -180,7 +174,12 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':update_by', $update_by, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
-
+/*
+            $txt = "week = " . $wh_week_id . " | " . $qty . " | " . $location_org . " | " . $location_to . " | " . $wh_org . " | " . $product_id . " | " . $id . " | " . $doc_date;
+            $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+            fwrite($my_file, $txt);
+            fclose($my_file);
+*/
             for ($line_no = 1; $line_no <= 2; $line_no++) {
                 $sql_find_trans = "SELECT * FROM wh_stock_transaction WHERE doc_id = '" . $doc_id . "' AND line_no = " . $line_no;
                 $nRows = $conn->query($sql_find_trans)->fetchColumn();
@@ -192,9 +191,9 @@ if ($_POST["action"] === 'UPDATE') {
                         $record_type = "-";
                         $location = $location_org;
                     }
-                    $sql_ins = "UPDATE wh_stock_transaction SET record_type=:record_type,product_id=:product_id,qty=:qty,wh=:wh,wh_week_id=:wh_week_id,location=:location "
-                    . " WHERE doc_id = '" . $doc_id . "' AND line_no = " . $line_no;
-                    $query_trans = $conn->prepare($sql_ins);
+                    $sql_updates = "UPDATE wh_stock_transaction SET record_type=:record_type,product_id=:product_id,qty=:qty,wh=:wh,wh_week_id=:wh_week_id,location=:location "
+                        . " WHERE doc_id = '" . $doc_id . "' AND line_no = " . $line_no;
+                    $query_trans = $conn->prepare($sql_updates);
                     $query_trans->bindParam(':record_type', $record_type, PDO::PARAM_STR);
                     $query_trans->bindParam(':product_id', $product_id, PDO::PARAM_STR);
                     $query_trans->bindParam(':qty', $qty, PDO::PARAM_STR);

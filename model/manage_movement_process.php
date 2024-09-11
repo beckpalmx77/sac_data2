@@ -272,8 +272,9 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id . $searchQuery
-        . " ORDER BY doc_id,create_by,create_date " . " LIMIT :limit,:offset");
+    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement 
+        WHERE 1 " . $where_doc_user_id . $searchQuery
+        . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
 
 // Bind values
     foreach ($searchArray as $key => $search) {

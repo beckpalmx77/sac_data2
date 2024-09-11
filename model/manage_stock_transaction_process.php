@@ -225,7 +225,7 @@ if ($_POST["action"] === 'GET_TRANSACTION') {
 
 ## Fetch records
     $stmt = $conn->prepare("SELECT * FROM v_wh_stock_transaction WHERE 1 " . $where_doc_user_id . $searchQuery
-        . " ORDER BY doc_id,create_by,create_date " . " LIMIT :limit,:offset");
+        . " ORDER BY create_date DESC,doc_id DESC" . " LIMIT :limit,:offset");
 
 // Bind values
     foreach ($searchArray as $key => $search) {

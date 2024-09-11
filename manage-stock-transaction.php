@@ -63,12 +63,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <label for="name_t" class="control-label mb-0"><b>Export Data
                                                         วันที่&nbsp;</b></label>
 
-                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start"
+                                                <input type="text" class="form-control" id="doc_date_start"
+                                                       name="doc_date_start"
                                                        readonly="true" placeholder=""
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
                                                 <label for="name_t" class="control-label mb-0"><b>-</b></label>
-                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to"
+                                                <input type="text" class="form-control" id="doc_date_to"
+                                                       name="doc_date_to"
                                                        readonly="true" placeholder=""
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
@@ -85,7 +87,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
-                                                    <th>เลขที่เอกสาร</th>
                                                     <th>วันที่</th>
                                                     <th>รหัสสินค้า</th>
                                                     <th>รายละเอียด</th>
@@ -94,11 +95,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>คลังปี</th>
                                                     <th>สัปดาห์</th>
                                                     <th>ตำแหน่ง</th>
+                                                    <th>Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
                                                 <tr>
-                                                    <th>เลขที่เอกสาร</th>
                                                     <th>วันที่</th>
                                                     <th>รหัสสินค้า</th>
                                                     <th>รายละเอียด</th>
@@ -107,6 +108,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>คลังปี</th>
                                                     <th>สัปดาห์</th>
                                                     <th>ตำแหน่ง</th>
+                                                    <th>Action</th>
                                                 </tr>
                                                 </tfoot>
                                             </table>
@@ -128,10 +130,26 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="container-fluid">
                                                                 <!-- ใช้ container-fluid เพื่อให้เต็มความกว้างของ modal -->
                                                                 <!-- กลุ่มฟอร์มที่ 1 -->
-                                                                <input type="hidden" class="form-control"
-                                                                       id="doc_id" name="doc_id"
-                                                                       readonly="true"
-                                                                       value="">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="doc_id"
+                                                                                   class="control-label">เลขที่เอกสาร</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="doc_id" name="doc_id" placeholder=""
+                                                                                   required readonly="true">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="line_no"
+                                                                                   class="control-label">รายการที่</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="line_no" name="line_no" placeholder=""
+                                                                                   required readonly="true">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                                 <div class="row">
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
@@ -152,7 +170,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <div class="form-group">
                                                                             <label for="record_type_id"
                                                                                    class="control-label">ประเภทรายการ</label>
-                                                                            <select class="form-control" id="record_type_id"
+                                                                            <select class="form-control"
+                                                                                    id="record_type_id"
                                                                                     name="record_type_id" required>
                                                                                 <option value="">ประเภทรายการ</option>
                                                                             </select>
@@ -163,7 +182,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             <label for="record_type_desc"
                                                                                    class="control-label">รายละเอียด</label>
                                                                             <input type="text" class="form-control"
-                                                                                   id="record_type_desc" name="record_type_desc"
+                                                                                   id="record_type_desc"
+                                                                                   name="record_type_desc"
                                                                                    readonly placeholder="รายละเอียด"
                                                                                    required>
                                                                         </div>
@@ -417,7 +437,6 @@ if (strlen($_SESSION['alogin']) == "") {
                     'data': formData
                 },
                 'columns': [
-                    {data: 'doc_id'},
                     {data: 'doc_date'},
                     {data: 'product_id'},
                     {data: 'product_name'},
@@ -426,6 +445,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'wh'},
                     {data: 'wh_week_id'},
                     {data: 'location'},
+                    {data: 'update'},
                 ]
             });
 
@@ -497,6 +517,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
                         let doc_id = response[i].doc_id;
+                        let line_no = response[i].line_no;
                         let doc_date = response[i].doc_date;
                         let record_type_id = response[i].record_type;
                         let product_id = response[i].product_id;
@@ -509,6 +530,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#recordModal').modal('show');
                         $('#id').val(id);
                         $('#doc_id').val(doc_id);
+                        $('#line_no').val(line_no);
                         $('#doc_date').val(doc_date);
                         $('#record_type_id').val(record_type_id).trigger('change');
                         $('#product_id').val(product_id).trigger('change');
@@ -545,6 +567,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
                         let doc_id = response[i].doc_id;
+                        let line_no = response[i].line_no;
                         let doc_date = response[i].doc_date;
                         let record_type_id = response[i].record_type;
                         let product_id = response[i].product_id;
@@ -557,6 +580,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#recordModal').modal('show');
                         $('#id').val(id);
                         $('#doc_id').val(doc_id);
+                        $('#line_no').val(line_no);
                         $('#doc_date').val(doc_date);
                         $('#product_id').val(product_id).trigger('change');
                         $('#record_type_id').val(record_type_id).trigger('change');

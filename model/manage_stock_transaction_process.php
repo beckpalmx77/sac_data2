@@ -21,6 +21,7 @@ if ($_POST["action"] === 'GET_DATA') {
         $return_arr[] = array("id" => $result['id'],
             "doc_id" => $result['doc_id'],
             "doc_date" => $result['doc_date'],
+            "line_no" => $result['line_no'],
             "record_type" => $result['record_type'],
             "product_id" => $result['product_id'],
             "product_name" => $result['product_name'],
@@ -131,11 +132,10 @@ if ($_POST["action"] === 'UPDATE') {
         $doc_date = $_POST["doc_date"];
         $product_id = $_POST["product_id"];
         $qty = $_POST["qty"];
-        $wh_org = $_POST["wh_org"];
+        $wh = $_POST["wh"];
         $wh_week_id = $_POST["wh_week_id"];
-        $wh_to = $_POST["wh_org"];
-        $location_org = $_POST["location_org"];
-        $location_to = $_POST["location_to"];
+        $location = $_POST["location"];
+
         /*
                 $txt = "week = " . $wh_week_id . " | " . $location_org . " | " . $location_to . " | " . $wh_org . " | " . $product_id . " | " . $id . " | " . $doc_date;
                 $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
@@ -146,17 +146,14 @@ if ($_POST["action"] === 'UPDATE') {
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             $sql_update = "UPDATE wh_stock_transaction SET product_id=:product_id,qty=:qty            
-            ,wh_org=:wh_org,wh_week_id=:wh_week_id,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by
+            ,wh=:wh,wh_week_id=:wh_week_id,location=:location
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
             $query->bindParam(':qty', $qty, PDO::PARAM_STR);
-            $query->bindParam(':wh_org', $wh_org, PDO::PARAM_STR);
+            $query->bindParam(':wh', $wh, PDO::PARAM_STR);
             $query->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
-            $query->bindParam(':wh_to', $wh_org, PDO::PARAM_STR);
-            $query->bindParam(':location_org', $location_org, PDO::PARAM_STR);
-            $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
-            $query->bindParam(':update_by', $update_by, PDO::PARAM_STR);
+            $query->bindParam(':location', $location, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
             echo $save_success;

@@ -51,7 +51,7 @@ if ($_POST["action"] === 'SEARCH') {
 }
 
 if ($_POST["action"] === 'ADD') {
-    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !=='') {
+    if ($_POST["product_id"] !== '') {
         $create_by = $_SESSION['username'];
         $doc_user_id = $_SESSION['doc_user_id'];
         $doc_date = $_POST["doc_date"];
@@ -145,10 +145,9 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !=='') {
+    if ($_POST["product_id"] != '') {
         $update_by = $_SESSION['username'];
         $id = $_POST["id"];
-        $doc_id = $_POST["doc_id"];
         $doc_date = $_POST["doc_date"];
         $product_id = $_POST["product_id"];
         $qty = $_POST["qty"];
@@ -180,31 +179,6 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':update_by', $update_by, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
-
-            for ($line_no = 1; $line_no <= 2; $line_no++) {
-                $sql_find_trans = "SELECT * FROM wh_stock_transaction WHERE doc_id = '" . $doc_id . "' AND line_no = " . $line_no;
-                $nRows = $conn->query($sql_find_trans)->fetchColumn();
-                if ($nRows > 0) {
-                    if ($line_no === 1) {
-                        $record_type = "+";
-                        $location = $location_to;
-                    } else {
-                        $record_type = "-";
-                        $location = $location_org;
-                    }
-                    $sql_ins = "UPDATE wh_stock_transaction SET record_type=:record_type,product_id=:product_id,qty=:qty,wh=:wh,wh_week_id=:wh_week_id,location=:location "
-                    . " WHERE doc_id = '" . $doc_id . "' AND line_no = " . $line_no;
-                    $query_trans = $conn->prepare($sql_ins);
-                    $query_trans->bindParam(':record_type', $record_type, PDO::PARAM_STR);
-                    $query_trans->bindParam(':product_id', $product_id, PDO::PARAM_STR);
-                    $query_trans->bindParam(':qty', $qty, PDO::PARAM_STR);
-                    $query_trans->bindParam(':wh', $wh_org, PDO::PARAM_STR);
-                    $query_trans->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
-                    $query_trans->bindParam(':location', $location, PDO::PARAM_STR);
-                    $query_trans->execute();
-                }
-            }
-
             echo $save_success;
         }
 

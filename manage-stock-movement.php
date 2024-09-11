@@ -124,6 +124,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="container-fluid">
                                                                 <!-- ใช้ container-fluid เพื่อให้เต็มความกว้างของ modal -->
                                                                 <!-- กลุ่มฟอร์มที่ 1 -->
+                                                                <input type="text" class="form-control"
+                                                                       id="doc_id" name="doc_id"
+                                                                       readonly="true"
+                                                                       value="">
                                                                 <div class="row">
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
@@ -479,6 +483,7 @@ if (strlen($_SESSION['alogin']) == "") {
             $("#btnAdd").click(function () {
                 $('#recordModal').modal('show');
                 $('#id').val("");
+                $('#doc_id').val("");
                 $('#product_id').val(null).trigger('change');
                 $('#qty').val("");
                 $('#wh_org').val(null).trigger('change');
@@ -507,6 +512,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
+                        let doc_id = response[i].doc_id;
                         let doc_date = response[i].doc_date;
                         let product_id = response[i].product_id;
                         let product_name = response[i].product_name;
@@ -518,6 +524,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
+                        $('#doc_id').val(doc_id);
                         $('#doc_date').val(doc_date);
                         $('#product_id').val(product_id).trigger('change');
                         $('#product_name').val(product_name);
@@ -553,6 +560,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
+                        let doc_id = response[i].doc_id;
                         let doc_date = response[i].doc_date;
                         let product_id = response[i].product_id;
                         let product_name = response[i].product_name;
@@ -564,6 +572,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
+                        $('#doc_id').val(doc_id);
                         $('#doc_date').val(doc_date);
                         $('#product_id').val(product_id).trigger('change');
                         $('#product_name').val(product_name);

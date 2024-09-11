@@ -24,10 +24,9 @@ if ($_POST["action"] === 'GET_DATA') {
             "product_id" => $result['product_id'],
             "product_name" => $result['product_name'],
             "qty" => $result['qty'],
-            "wh_org" => $result['wh_org'],
+            "wh" => $result['wh'],
             "wh_week_id" => $result['wh_week_id'],
-            "location_org" => $result['location_org'],
-            "location_to" => $result['location_to'],
+            "location" => $result['location'],
             "create_by" => $result['create_by']);
     }
 

@@ -122,7 +122,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="container-fluid">
                                                                 <!-- ใช้ container-fluid เพื่อให้เต็มความกว้างของ modal -->
                                                                 <!-- กลุ่มฟอร์มที่ 1 -->
-                                                                <input type="text" class="form-control"
+                                                                <input type="hidden" class="form-control"
                                                                        id="doc_id" name="doc_id"
                                                                        readonly="true"
                                                                        value="">
@@ -140,6 +140,26 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                                 class="glyphicon glyphicon-th"></i></span>
                                                                                 </div>
                                                                             </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label for="record_type_id"
+                                                                                   class="control-label">ประเภทรายการ</label>
+                                                                            <select class="form-control" id="record_type_id"
+                                                                                    name="record_type_id" required>
+                                                                                <option value="">ประเภทรายการ</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="record_type_desc"
+                                                                                   class="control-label">รายละเอียด</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="record_type_desc" name="record_type_desc"
+                                                                                   readonly placeholder="รายละเอียด"
+                                                                                   required>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -182,9 +202,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <div class="row">
                                                                     <div class="col-md-3">
                                                                         <div class="form-group">
-                                                                            <label for="wh_org" class="control-label">คลังปี</label>
-                                                                            <select class="form-control" id="wh_org"
-                                                                                    name="wh_org" required>
+                                                                            <label for="wh"
+                                                                                   class="control-label">คลังปี</label>
+                                                                            <select class="form-control" id="wh"
+                                                                                    name="wh" required>
                                                                                 <option value="">เลือกคลังปี</option>
                                                                             </select>
                                                                         </div>
@@ -202,23 +223,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="form-group">
-                                                                            <label for="location_org"
-                                                                                   class="control-label">จากตำแหน่ง</label>
+                                                                            <label for="location"
+                                                                                   class="control-label">ตำแหน่ง</label>
                                                                             <select class="form-control"
-                                                                                    id="location_org"
-                                                                                    name="location_org" required>
-                                                                                <option value="">จากตำแหน่ง</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <div class="form-group">
-                                                                            <label for="location_to"
-                                                                                   class="control-label">ไปตำแหน่ง</label>
-                                                                            <select class="form-control"
-                                                                                    id="location_to" name="location_to"
-                                                                                    required>
-                                                                                <option value="">ไปตำแหน่ง</option>
+                                                                                    id="location"
+                                                                                    name="location" required>
+                                                                                <option value="">ตำแหน่ง</option>
                                                                             </select>
                                                                         </div>
                                                                     </div>
@@ -443,10 +453,9 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#doc_id').val("");
                 $('#product_id').val(null).trigger('change');
                 $('#qty').val("");
-                $('#wh_org').val(null).trigger('change');
+                $('#wh').val(null).trigger('change');
                 $('#wh_week_id').val(null).trigger('change');
-                $('#location_org').val(null).trigger('change');
-                $('#location_to').val(null).trigger('change');
+                $('#location').val(null).trigger('change');
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');
@@ -474,10 +483,9 @@ if (strlen($_SESSION['alogin']) == "") {
                         let product_id = response[i].product_id;
                         let product_name = response[i].product_name;
                         let qty = response[i].qty;
-                        let wh_org = response[i].wh_org;
+                        let wh = response[i].wh;
                         let wh_week_id = response[i].wh_week_id;
-                        let location_org = response[i].location_org;
-                        let location_to = response[i].location_to;
+                        let location = response[i].location;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
@@ -486,10 +494,9 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#product_id').val(product_id).trigger('change');
                         $('#product_name').val(product_name);
                         $('#qty').val(qty);
-                        $('#wh_org').val(wh_org).trigger('change');
+                        $('#wh').val(wh).trigger('change');
                         $('#wh_week_id').val(wh_week_id).trigger('change');
-                        $('#location_org').val(location_org).trigger('change');
-                        $('#location_to').val(location_to).trigger('change');
+                        $('#location').val(location).trigger('change');
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
@@ -522,10 +529,9 @@ if (strlen($_SESSION['alogin']) == "") {
                         let product_id = response[i].product_id;
                         let product_name = response[i].product_name;
                         let qty = response[i].qty;
-                        let wh_org = response[i].wh_org;
+                        let wh = response[i].wh;
                         let wh_week_id = response[i].wh_week_id;
-                        let location_org = response[i].location_org;
-                        let location_to = response[i].location_to;
+                        let location = response[i].location;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
@@ -534,10 +540,9 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#product_id').val(product_id).trigger('change');
                         $('#product_name').val(product_name);
                         $('#qty').val(qty);
-                        $('#wh_org').val(wh_org).trigger('change');
+                        $('#wh').val(wh).trigger('change');
                         $('#wh_week_id').val(wh_week_id).trigger('change');
-                        $('#location_org').val(location_org).trigger('change');
-                        $('#location_to').val(location_to).trigger('change');
+                        $('#location').val(location).trigger('change');
                         $('.modal-title').html("<i class='fa fa-minus'></i> Delete Record");
                         $('#action').val('DELETE');
                         $('#save').val('Confirm Delete');
@@ -549,6 +554,44 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
 
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_record_type.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#record_type_id');
+                    $.each(data, function (index, record_type) {
+                        select.append($('<option>', {
+                            value: record_type.record_type_id,
+                            text: record_type.record_type_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': record_type.record_type_desc // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#record_type_id').select2({
+                        placeholder: "เลือกรหัสสินค้า",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+
+            // เมื่อมีการเปลี่ยนแปลงค่าใน select
+            $('#record_type_id').on('change', function () {
+                let selectedOption = $(this).find('option:selected');
+                let record_type_desc = selectedOption.data('name'); // ดึงข้อมูล record_type_name จาก attribute
+                $('#record_type_desc').val(record_type_desc); // กำหนดค่าให้กับ input ของ record_type_name
+            });
+        });
     </script>
 
     <script>
@@ -597,7 +640,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 method: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    let select = $('#wh_org');
+                    let select = $('#wh');
                     $.each(data, function (index, warehouse) {
                         select.append($('<option>', {
                             value: warehouse.warehouse_id,
@@ -607,7 +650,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     });
 
                     // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
-                    $('#wh_org').select2({
+                    $('#wh').select2({
                         placeholder: "เลือกคลังปี",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
@@ -628,7 +671,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 method: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    let select = $('#location_org');
+                    let select = $('#location');
                     $.each(data, function (index, wh_location) {
                         select.append($('<option>', {
                             value: wh_location.location_id,
@@ -638,38 +681,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     });
 
                     // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
-                    $('#location_org').select2({
-                        placeholder: "เลือกตำแหน่ง",
-                        allowClear: true,
-                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
-                }
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
-            $.ajax({
-                url: 'model/get_wh_location.php', // หน้า PHP ที่จะดึงข้อมูล
-                method: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    let select = $('#location_to');
-                    $.each(data, function (index, wh_location) {
-                        select.append($('<option>', {
-                            value: wh_location.location_id,
-                            text: wh_location.location_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
-                            'data-name': wh_location.location_id // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
-                        }));
-                    });
-
-                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
-                    $('#location_to').select2({
+                    $('#location').select2({
                         placeholder: "เลือกตำแหน่ง",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
@@ -712,7 +724,6 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
     </script>
-
 
     <script>
         function ReloadDataTable() {

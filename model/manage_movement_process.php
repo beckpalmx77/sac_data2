@@ -249,7 +249,7 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
     $searchQuery = " ";
     if ($searchValue != '') {
         $searchQuery = " AND (doc_date LIKE :doc_date or wh_org LIKE :wh_org
-        product_id LIKE :product_id or product_name LIKE :product_name or create_by LIKE :create_by) ";
+        or product_id LIKE :product_id or product_name LIKE :product_name or create_by LIKE :create_by) ";
         $searchArray = array(
             'doc_date' => "%$searchValue%",
             'wh_org' => "%$searchValue%",
@@ -258,6 +258,13 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
             'create_by' => "%$searchValue%",
         );
     }
+
+/*
+    $txt = "sql = " . $searchValue . " | " . $searchQuery ;
+    $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+    fwrite($my_file, $txt);
+    fclose($my_file);
+*/
 
 ## Total number of records without filtering
     $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id);
@@ -329,3 +336,5 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
     echo json_encode($response);
 
 }
+
+

@@ -22,7 +22,7 @@ if ($_POST["action"] === 'GET_STOCK_BALANCE') {
     ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (wh LIKE :wh product_id LIKE :product_id or product_name LIKE :product_name) ";
+        $searchQuery = " AND (wh LIKE :wh or product_id LIKE :product_id or product_name LIKE :product_name) ";
         $searchArray = array(
             'wh' => "%$searchValue%",
             'product_id' => "%$searchValue%",

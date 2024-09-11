@@ -201,7 +201,7 @@ if ($_POST["action"] === 'GET_TRANSACTION') {
     $searchQuery = " ";
     if ($searchValue != '') {
         $searchQuery = " AND (doc_date LIKE :doc_date or wh LIKE :wh
-        product_id LIKE :product_id or product_name LIKE :product_name or create_by LIKE :create_by) ";
+        or product_id LIKE :product_id or product_name LIKE :product_name or create_by LIKE :create_by) ";
         $searchArray = array(
             'doc_date' => "%$searchValue%",
             'wh' => "%$searchValue%",

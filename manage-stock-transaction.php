@@ -1,6 +1,7 @@
 <?php
 
 include('includes/Header.php');
+
 $curr_date = date("d-m-Y");
 
 if (strlen($_SESSION['alogin']) == "") {
@@ -42,7 +43,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <section class="container-fluid">
                                         <form id="export_data" method="post"
-                                              action="export_process/export_process_data_wh_movement.php"
+                                              action="export_process/export_process_data_wh_stock_transaction.php"
                                               enctype="multipart/form-data">
                                             <div class="col-md-12 col-md-offset-2"
                                                  style="display: flex; align-items: center; gap: 10px;">
@@ -62,7 +63,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <label for="name_t" class="control-label mb-0"><b>Export Data
                                                         วันที่&nbsp;</b></label>
 
-                                                <input type="text" class="form-control" id="doc_date" name="doc_date"
+                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start"
+                                                       readonly="true" placeholder=""
+                                                       style="width: calc(0.6em * 10 + 1.25rem);"
+                                                       value="<?php echo $curr_date; ?>">
+                                                <label for="name_t" class="control-label mb-0"><b>-</b></label>
+                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to"
                                                        readonly="true" placeholder=""
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
@@ -355,7 +361,18 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
-            $('#doc_date').datepicker({
+            $('#doc_date_start').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#doc_date_to').datepicker({
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
                 language: "th",
@@ -451,6 +468,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#recordModal').modal('show');
                 $('#id').val("");
                 $('#doc_id').val("");
+                $('#record_type_id').val(null).trigger('change');
                 $('#product_id').val(null).trigger('change');
                 $('#qty').val("");
                 $('#wh').val(null).trigger('change');
@@ -480,6 +498,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let id = response[i].id;
                         let doc_id = response[i].doc_id;
                         let doc_date = response[i].doc_date;
+                        let record_type_id = response[i].record_type;
                         let product_id = response[i].product_id;
                         let product_name = response[i].product_name;
                         let qty = response[i].qty;
@@ -491,6 +510,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#id').val(id);
                         $('#doc_id').val(doc_id);
                         $('#doc_date').val(doc_date);
+                        $('#record_type_id').val(record_type_id).trigger('change');
                         $('#product_id').val(product_id).trigger('change');
                         $('#product_name').val(product_name);
                         $('#qty').val(qty);
@@ -526,6 +546,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let id = response[i].id;
                         let doc_id = response[i].doc_id;
                         let doc_date = response[i].doc_date;
+                        let record_type_id = response[i].record_type;
                         let product_id = response[i].product_id;
                         let product_name = response[i].product_name;
                         let qty = response[i].qty;
@@ -538,6 +559,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#doc_id').val(doc_id);
                         $('#doc_date').val(doc_date);
                         $('#product_id').val(product_id).trigger('change');
+                        $('#record_type_id').val(record_type_id).trigger('change');
                         $('#product_name').val(product_name);
                         $('#qty').val(qty);
                         $('#wh').val(wh).trigger('change');

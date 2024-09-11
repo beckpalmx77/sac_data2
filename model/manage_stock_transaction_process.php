@@ -21,6 +21,7 @@ if ($_POST["action"] === 'GET_DATA') {
         $return_arr[] = array("id" => $result['id'],
             "doc_id" => $result['doc_id'],
             "doc_date" => $result['doc_date'],
+            "record_type" => $result['record_type'],
             "product_id" => $result['product_id'],
             "product_name" => $result['product_name'],
             "qty" => $result['qty'],
@@ -50,27 +51,38 @@ if ($_POST["action"] === 'SEARCH') {
 }
 
 if ($_POST["action"] === 'ADD') {
-    if ($_POST["product_id"] !== '') {
+
+    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !== '') {
         $create_by = $_SESSION['username'];
         $doc_user_id = $_SESSION['doc_user_id'];
         $doc_date = $_POST["doc_date"];
+        $record_type_id = $_POST["record_type_id"];
+        switch ($record_type_id) {
+            case '+':
+                $leader_no = "WI-";
+                break;
+            case '-':
+                $leader_no = "WO-";
+                break;
+            default:
+                $leader_no = "XX-"; // กำหนดค่าเริ่มต้นหากไม่มีกรณีที่ตรงกัน
+                break;
+        }
 
-        $cond = "WHERE doc_date = '" . $doc_date . "' AND doc_user_id = '" . $doc_user_id . "'";
-
-        //$doc_id = "MV-" . $create_by . "-" . $doc_date . "-" . sprintf('%06s', LAST_ID($conn, "wh_stock_transaction", 'id'));
+        $cond = " WHERE doc_date = '" . $doc_date . "' AND doc_user_id = '" . $doc_user_id . "' AND doc_id LIKE '" . $leader_no . "%'";
 
         $run_no = LAST_DOCUMENT_NUMBER($conn, "doc_id", "wh_stock_transaction", $cond);
-        $doc_id = "MV-" . $doc_user_id . "-" . $doc_date . "-" . sprintf('%06s', $run_no);
+        $doc_id = $leader_no . $doc_user_id . "-" . $doc_date . "-" . sprintf('%06s', $run_no);
 
-        $str=rand();
+        $str = rand();
         $seq_record = md5($str);
 
         $product_id = $_POST["product_id"];
         $qty = $_POST["qty"];
-        $wh_org = $_POST["wh_org"];
+        $wh = $_POST["wh"];
         $wh_week_id = $_POST["wh_week_id"];
-        $location_org = $_POST["location_org"];
-        $location_to = $_POST["location_to"];
+        $location = $_POST["location"];
+
         $sql_find = "SELECT * FROM wh_stock_transaction WHERE doc_id = '" . $doc_id . "'";
 
         /*
@@ -84,55 +96,24 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_stock_transaction(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id,seq_record) 
-            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by,:doc_user_id,:seq_record)";
+            $sql = "INSERT INTO wh_stock_transaction(doc_id,doc_date,product_id,qty,wh,wh_week_id,location,create_by,doc_user_id,seq_record,record_type,line_no) 
+            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh,:wh_week_id,:location,:create_by,:doc_user_id,:seq_record,:record_type_id,:line_no)";
             $query = $conn->prepare($sql);
             $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
             $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
             $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
             $query->bindParam(':qty', $qty, PDO::PARAM_STR);
-            $query->bindParam(':wh_org', $wh_org, PDO::PARAM_STR);
+            $query->bindParam(':wh', $wh, PDO::PARAM_STR);
             $query->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
-            $query->bindParam(':wh_to', $wh_org, PDO::PARAM_STR);
-            $query->bindParam(':location_org', $location_org, PDO::PARAM_STR);
-            $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
+            $query->bindParam(':location', $location, PDO::PARAM_STR);
             $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
             $query->bindParam(':doc_user_id', $doc_user_id, PDO::PARAM_STR);
             $query->bindParam(':seq_record', $seq_record, PDO::PARAM_STR);
+            $query->bindParam(':record_type_id', $record_type_id, PDO::PARAM_STR);
+            $query->bindParam(':line_no', $run_no, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
-
             if ($lastInsertId) {
-                for ($line_no = 1; $line_no <= 2; $line_no++) {
-                    $sql_find_trans = "SELECT * FROM wh_stock_transaction WHERE doc_id = '" . $doc_id . "' AND line_no = " . $line_no;
-                    $nRows = $conn->query($sql_find_trans)->fetchColumn();
-                    if ($nRows <= 0) {
-                        if ($line_no === 1) {
-                            $record_type = "+";
-                            $location = $location_to;
-                        } else {
-                            $record_type = "-";
-                            $location = $location_org;
-                        }
-                        $sql_ins = "INSERT INTO wh_stock_transaction(doc_id,record_type,line_no,doc_date,product_id,qty,wh,wh_week_id,location,create_by,doc_user_id,seq_record) 
-                                    VALUES (:doc_id,:record_type,:line_no,:doc_date,:product_id,:qty,:wh,:wh_week_id,:location,:create_by,:doc_user_id,:seq_record)";
-                        $query_trans = $conn->prepare($sql_ins);
-                        $query_trans->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
-                        $query_trans->bindParam(':record_type', $record_type, PDO::PARAM_STR);
-                        $query_trans->bindParam(':line_no', $line_no, PDO::PARAM_STR);
-                        $query_trans->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
-                        $query_trans->bindParam(':product_id', $product_id, PDO::PARAM_STR);
-                        $query_trans->bindParam(':qty', $qty, PDO::PARAM_STR);
-                        $query_trans->bindParam(':wh', $wh_org, PDO::PARAM_STR);
-                        $query_trans->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
-                        $query_trans->bindParam(':location', $location, PDO::PARAM_STR);
-                        $query_trans->bindParam(':create_by', $create_by, PDO::PARAM_STR);
-                        $query_trans->bindParam(':doc_user_id', $doc_user_id, PDO::PARAM_STR);
-                        $query_trans->bindParam(':seq_record', $seq_record, PDO::PARAM_STR);
-                        $query_trans->execute();
-                    }
-                }
-
                 echo $save_success;
             } else {
                 echo $error;
@@ -144,7 +125,7 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["product_id"] != '') {
+    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !== '') {
         $update_by = $_SESSION['username'];
         $id = $_POST["id"];
         $doc_date = $_POST["doc_date"];

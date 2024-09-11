@@ -124,7 +124,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="container-fluid">
                                                                 <!-- ใช้ container-fluid เพื่อให้เต็มความกว้างของ modal -->
                                                                 <!-- กลุ่มฟอร์มที่ 1 -->
-                                                                <input type="text" class="form-control"
+                                                                <input type="hidden" class="form-control"
                                                                        id="doc_id" name="doc_id"
                                                                        readonly="true"
                                                                        value="">
@@ -244,46 +244,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                             </div>
                                         </div>
 
-
-                                        <div class="modal fade" id="SearchModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
-                                                    </div>
-
-                                                    <div class="container"></div>
-                                                    <div class="modal-body">
-
-                                                        <div class="modal-body">
-
-                                                            <table cellpadding="0" cellspacing="0" border="0"
-                                                                   class="display"
-                                                                   id="TableUnitList"
-                                                                   width="100%">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tfoot>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                 </div>
                             </div>
                         </div>

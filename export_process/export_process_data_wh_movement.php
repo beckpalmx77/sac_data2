@@ -20,14 +20,14 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
 
 if ($query->rowCount() >= 1) {
     foreach ($results as $result) {
-        $data .= " " . $result->doc_date . ",";
-        $data .= " " . $result->product_id . ",";
-        $data .= " " . $result->product_name . ",";
-        $data .= " " . $result->qty . ",";
-        $data .= " " . $result->wh_org . ",";
-        $data .= " " . $result->wh_week_id . ",";
-        $data .= " " . $result->location_org . ",";
-        $data .= " " . $result->location_to . "\n";
+        $data .= $result->doc_date . ",";
+        $data .=  $result->product_id . ",";
+        $data .=  $result->product_name . ",";
+        $data .=  $result->qty . ",";
+        $data .=  $result->wh_org . ",";
+        $data .=  $result->wh_week_id . ",";
+        $data .=  $result->location_org . ",";
+        $data .=  $result->location_to . "\n";
     }
 }
 

@@ -67,7 +67,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
 
-                                                <button type="button" name="btnRefresh" id="btnRefresh"
+                                                <button type="button" name="btnExport" id="btnExport"
                                                         class="btn btn-success btn-xs" onclick="ExportData();">
                                                     Export <i class="fa fa-file-excel-o"></i>
                                                 </button>

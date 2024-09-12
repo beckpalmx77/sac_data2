@@ -105,19 +105,7 @@ if ($_POST["action"] === 'GET_STOCK_BALANCE_DISPLAY') {
     $searchValue = $_POST['search']['value']; // Search value
     $searchArray = array();
 
-    //$doc_date_start = "01-01-2024";
-
-    $doc_date_start = $_POST['doc_date_start'];
-    $doc_date_to = $_POST['doc_date_to'];
-
-    /*
-    $txt = "A wh_param = " . $doc_date_start . " | " . $doc_date_to;
-    $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-    fwrite($my_file, $txt);
-    fclose($my_file);
-    */
-
-## Search
+    ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
         $searchQuery = " AND (product_id LIKE :product_id or product_name LIKE :product_name or wh LIKE :wh) ";
@@ -126,6 +114,29 @@ if ($_POST["action"] === 'GET_STOCK_BALANCE_DISPLAY') {
             'product_name' => "%$searchValue%",
             'wh' => "%$searchValue%",
         );
+    }
+
+    //$doc_date_start = "01-01-2024";
+
+    $doc_date_start = $_POST['doc_date_start'];
+    $doc_date_to = $_POST['doc_date_to'];
+
+    $product_id = $_POST['product_id'];
+    $wh = $_POST['wh'];
+    $wh_week_id = $_POST['wh_week_id'];
+
+    $search_Query = "";
+
+    if (!empty($product_id)) {
+        $search_Query .= " AND t.product_id = '" . $product_id . "' ";
+    }
+
+    if (!empty($wh)) {
+        $search_Query .= " AND t.wh = '" . $wh . "' ";
+    }
+
+    if (!empty($wh_week_id)) {
+        $search_Query .= " AND t.wh_week_id = '" . $wh_week_id . "' ";
     }
 
 ## Total number of records without filtering
@@ -140,7 +151,7 @@ if ($_POST["action"] === 'GET_STOCK_BALANCE_DISPLAY') {
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
-    $sql_get = "SELECT     p.product_id,p.product_name,t.wh,t.wh_week_id,t.location,
+    $sql_get = "SELECT p.product_id,p.product_name,t.wh,t.wh_week_id,t.location,
                 SUM(
                     CASE 
                         WHEN t.record_type = '+' THEN t.qty
@@ -149,8 +160,8 @@ if ($_POST["action"] === 'GET_STOCK_BALANCE_DISPLAY') {
                     END) AS total_qty
                 FROM wh_stock_transaction t
                 JOIN wh_product_master p ON t.product_id = p.product_id
-                WHERE (t.doc_date BETWEEN '". $doc_date_start . "' AND '". $doc_date_to ."') " . $searchQuery .
-                " GROUP BY p.product_id,p.product_name,t.wh,t.wh_week_id,t.location" . " LIMIT :limit,:offset ";
+                WHERE (t.doc_date BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "') " . $search_Query .
+        " GROUP BY p.product_id,p.product_name,t.wh,t.wh_week_id,t.location" . " LIMIT :limit,:offset ";
 
 ## Fetch records
     $stmt = $conn->prepare($sql_get);

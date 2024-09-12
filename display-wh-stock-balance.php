@@ -36,10 +36,21 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <button type="button" name="btnRefresh" id="btnRefresh" class="btn btn-success btn-xs" onclick="ReloadDataTable();">
                                                     Refresh <i class="fa fa-refresh"></i>
                                                 </button>
-                                                <label for="name_t" class="control-label mb-0"><b>Export Data วันที่&nbsp;</b></label>
+                                                <label for="name_t" class="control-label mb-0"><b>วัน</b></label>
                                                 <input type="text" class="form-control" id="doc_date_start" name="doc_date_start" readonly="true" style="width: calc(0.6em * 10 + 1.25rem);" value="<?php echo $start_date; ?>">
                                                 <label for="name_t" class="control-label mb-0"><b>-</b></label>
                                                 <input type="text" class="form-control" id="doc_date_to" name="doc_date_to" readonly="true" style="width: calc(0.6em * 10 + 1.25rem);" value="<?php echo $curr_date; ?>">
+                                                <select id="product_id" name="product_id" class="form-control" style="width: 150px;">
+                                                    <option value="">ค้นหารหัสสินค้า</option>
+                                                </select>
+                                                <input type="text" id="product_name" name="product_name" class="form-control" placeholder="รายละเอียดสินค้า" readonly style="width: 300px;">
+                                                <select id="wh" name="wh" class="form-control" style="width: 100px;">
+                                                    <option value="">คลังปี</option>
+                                                </select>
+                                                <select id="wh_week_id" name="wh_week_id" class="form-control" style="width: 100px;">
+                                                    <option value="">สัปดาห์</option>
+                                                </select>
+
                                                 <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">FilterData <i class="fa fa-filter"></i></button>
                                                 <button type="button" name="btnExport" id="btnExport" class="btn btn-success btn-xs" onclick="ExportData();">Export <i class="fa fa-file-excel-o"></i></button>
                                             </div>
@@ -144,7 +155,8 @@ if (strlen($_SESSION['alogin']) == "") {
                 'processing': true,
                 'serverSide': true,
                 'autoWidth': true,
-                'searching': true,
+                'searching': false,
+                'sortable': true,
                 <?php if ($_SESSION['deviceType'] !== 'computer') { echo "'scrollX': true,"; } ?>
                 'serverMethod': 'post',
                 'ajax': {
@@ -152,6 +164,9 @@ if (strlen($_SESSION['alogin']) == "") {
                     'data': function (d) {
                         d.doc_date_start = $('#doc_date_start').val();
                         d.doc_date_to = $('#doc_date_to').val();
+                        d.product_id = $('#product_id').val();
+                        d.wh = $('#wh').val();
+                        d.wh_week_id = $('#wh_week_id').val();
                         d.action = "GET_STOCK_BALANCE_DISPLAY";
                         d.sub_action = "GET_MASTER";
                     }
@@ -188,6 +203,108 @@ if (strlen($_SESSION['alogin']) == "") {
             }
         }
     </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_products.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#product_id');
+                    $.each(data, function (index, product) {
+                        select.append($('<option>', {
+                            value: product.product_id,
+                            text: product.product_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': product.product_name // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#product_id').select2({
+                        placeholder: "เลือกรหัสสินค้า",
+                        allowClear: true,
+                        width: '80%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+
+            // เมื่อมีการเปลี่ยนแปลงค่าใน select
+            $('#product_id').on('change', function () {
+                let selectedOption = $(this).find('option:selected');
+                let productName = selectedOption.data('name'); // ดึงข้อมูล product_name จาก attribute
+                $('#product_name').val(productName); // กำหนดค่าให้กับ input ของ product_name
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_warehouse.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#wh');
+                    $.each(data, function (index, warehouse) {
+                        select.append($('<option>', {
+                            value: warehouse.warehouse_id,
+                            text: warehouse.warehouse_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': warehouse.warehouse_id // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#wh').select2({
+                        placeholder: "เลือกคลังปี",
+                        allowClear: true,
+                        width: '40%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_wh_week.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#wh_week_id');
+                    $.each(data, function (index, wh_week) {
+                        select.append($('<option>', {
+                            value: wh_week.wh_week_id,
+                            text: wh_week.wh_week_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': wh_week.wh_week_id // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#wh_week_id').select2({
+                        placeholder: "เลือกสัปดาห์",
+                        allowClear: true,
+                        width: '30%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
+
     </body>
     </html>
 

@@ -15,8 +15,7 @@ $end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format(
 */
 
 // สร้างคำสั่ง SQL
-$select_query_wh_balance = "SELECT v_wh_stock_balance.*,wh_product_master.product_name FROM v_wh_stock_balance
-                            LEFT JOIN wh_product_master ON wh_product_master.product_id = v_wh_stock_balance.product_id 
+$select_query_wh_balance = "SELECT * FROM v_wh_stock_balance
                             ORDER BY product_id,wh,wh_week_id,location ";
 /*
 $txt =$select_query_wh_balance;
@@ -44,7 +43,7 @@ if ($query->rowCount() >= 1) {
         $data .= $result->wh . ",";
         $data .= $result->wh_week_id . ",";
         $data .= $result->location . ",";
-        $data .= $result->qty . "\n";
+        $data .= $result->total_qty . "\n";
     }
 }
 

@@ -62,7 +62,13 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <label for="name_t" class="control-label mb-0"><b>Export Data
                                                         วันที่&nbsp;</b></label>
 
-                                                <input type="text" class="form-control" id="doc_date" name="doc_date"
+                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start"
+                                                       readonly="true" placeholder=""
+                                                       style="width: calc(0.6em * 10 + 1.25rem);"
+                                                       value="<?php echo $curr_date; ?>">
+                                                <label for="name_t" class="control-label mb-0"><b>-</b></label>
+
+                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to"
                                                        readonly="true" placeholder=""
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
@@ -340,14 +346,34 @@ if (strlen($_SESSION['alogin']) == "") {
         $(document).ready(function () {
             let today = new Date();
             let doc_date = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
-            $('#doc_date').val(doc_date);
+            $('#doc_date_start').val(doc_date);
             //document.getElementById('doc_date').value = doc_date;
         });
     </script>
 
     <script>
         $(document).ready(function () {
-            $('#doc_date').datepicker({
+            let today = new Date();
+            let doc_date = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
+            $('#doc_date_start').val(doc_date);
+            //document.getElementById('doc_date').value = doc_date;
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#doc_date_to').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#doc_date_to').datepicker({
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
                 language: "th",

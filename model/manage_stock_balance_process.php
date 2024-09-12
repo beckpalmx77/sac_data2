@@ -6,7 +6,7 @@ include('../config/connect_db.php');
 include('../config/lang.php');
 include('../util/record_util.php');
 
-if ($_POST["action"] === 'GET_PERMISSION') {
+if ($_POST["action"] === 'GET_STOCK_BALANCE') {
     ## Read value
     $draw = $_POST['draw'];
     $row = $_POST['start'];
@@ -20,29 +20,29 @@ if ($_POST["action"] === 'GET_PERMISSION') {
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (permission_id LIKE :permission_id or
-        permission_detail LIKE :permission_detail) ";
+        $searchQuery = " AND (product_id LIKE :product_id or product_name LIKE :product_name or wh LIKE :wh) ";
         $searchArray = array(
-            'permission_id' => "%$searchValue%",
-            'permission_detail' => "%$searchValue%",
+            'product_id' => "%$searchValue%",
+            'product_name' => "%$searchValue%",
+            'wh' => "%$searchValue%",
         );
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_permission ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_balance ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_permission WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_balance WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM ims_permission WHERE 1 " . $searchQuery
-        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_balance WHERE 1 " . $searchQuery
+        . " ORDER BY product_id " . " LIMIT :limit,:offset");
 
 // Bind values
     foreach ($searchArray as $key => $search) {
@@ -59,19 +59,21 @@ if ($_POST["action"] === 'GET_PERMISSION') {
 
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
-                "id" => $row['id'],
-                "permission_id" => $row['permission_id'],
-                "permission_detail" => $row['permission_detail'],
+                "product_id" => $row['product_id'],
+                "product_name" => $row['product_name'],
+                "wh" => $row['wh'],
+                "wh_week_id" => $row['wh_week_id'],
+                "location" => $row['location'],
+                "qty" => $row['qty'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
-                "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
-                "status" => $row['status'] === 'Active' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"
+                "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"
             );
         } else {
             $data[] = array(
                 "id" => $row['id'],
-                "permission_id" => $row['permission_id'],
-                "permission_detail" => $row['permission_detail'],
-                "select" => "<button type='button' name='select' id='" . $row['permission_id'] . "@" . $row['permission_detail'] ."' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
+                "product_id" => $row['product_id'],
+                "wh" => $row['wh'],
+                "select" => "<button type='button' name='select' id='" . $row['product_id'] . "@" . $row['wh'] ."' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
 </button>",
             );
         }

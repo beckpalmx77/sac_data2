@@ -64,6 +64,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <thead>
                                                 <tr>
                                                     <th>รหัสสินค้า</th>
+                                                    <th>รายละเอียด</th>
                                                     <th>คลังปี</th>
                                                     <th>สัปดาห์</th>
                                                     <th>ตำแหน่ง</th>
@@ -73,6 +74,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <tfoot>
                                                 <tr>
                                                     <th>รหัสสินค้า</th>
+                                                    <th>รายละเอียด</th>
                                                     <th>คลังปี</th>
                                                     <th>สัปดาห์</th>
                                                     <th>ตำแหน่ง</th>
@@ -245,6 +247,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 },
                 'columns': [
                     {data: 'product_id'},
+                    {data: 'product_name'},
                     {data: 'wh'},
                     {data: 'wh_week_id'},
                     {data: 'location'},

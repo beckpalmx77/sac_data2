@@ -51,9 +51,9 @@ if ($_POST["action"] === 'SEARCH') {
 }
 
 if ($_POST["action"] === 'ADD') {
-    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !== '') {
-        $create_by = $_SESSION['username'];
-        $doc_user_id = $_SESSION['doc_user_id'];
+    if ($_POST["product_id"] !== '' && $_POST["create_by"] !== '' && $_POST["doc_user_id"] !== '') {
+        $create_by = $_POST["create_by"];
+        $doc_user_id = $_POST["doc_user_id"];
         $doc_date = $_POST["doc_date"];
 
         $cond = "WHERE doc_date = '" . $doc_date . "' AND doc_user_id = '" . $doc_user_id . "'";
@@ -75,7 +75,7 @@ if ($_POST["action"] === 'ADD') {
         $sql_find = "SELECT * FROM wh_stock_movement WHERE doc_id = '" . $doc_id . "'";
 
         /*
-                $txt = $sql_find . " | " . $run_no . " | " . $cond;
+                $txt = $sql_find . " | " . $run_no . " | " . $cond . " | " . $create_by . " | " . $doc_user_id;
                 $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
                 fwrite($my_file, $txt);
                 fclose($my_file);
@@ -145,8 +145,9 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !== '') {
-        $update_by = $_SESSION['username'];
+    if ($_POST["product_id"] !== '' && $_POST["create_by"] !== '' && $_POST["doc_user_id"] !== '') {
+
+        $update_by = $_POST["create_by"];
         $id = $_POST["id"];
         $doc_id = $_POST["doc_id"];
         $doc_date = $_POST["doc_date"];

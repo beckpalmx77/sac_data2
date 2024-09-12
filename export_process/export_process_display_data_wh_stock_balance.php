@@ -6,13 +6,26 @@ date_default_timezone_set('Asia/Bangkok');
 @header('Content-Encoding: UTF-8');
 @header("Content-Disposition: attachment; filename=" . $filename);
 
-
 $doc_date_start = $_POST["doc_date_start"] ;
 $doc_date_to = $_POST["doc_date_to"];
 
-$start_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
-$end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+$product_id = $_POST['product_id'];
+$wh = $_POST['wh'];
+$wh_week_id = $_POST['wh_week_id'];
 
+$search_Query = "";
+
+if (!empty($product_id)) {
+    $search_Query .= " AND t.product_id = '" . $product_id . "' ";
+}
+
+if (!empty($wh)) {
+    $search_Query .= " AND t.wh = '" . $wh . "' ";
+}
+
+if (!empty($wh_week_id)) {
+    $search_Query .= " AND t.wh_week_id = '" . $wh_week_id . "' ";
+}
 
 // สร้างคำสั่ง SQL
 $select_query_wh_balance = "SELECT     p.product_id,p.product_name,t.wh,t.wh_week_id,t.location,
@@ -24,10 +37,8 @@ $select_query_wh_balance = "SELECT     p.product_id,p.product_name,t.wh,t.wh_wee
                     END) AS total_qty
                 FROM wh_stock_transaction t
                 JOIN wh_product_master p ON t.product_id = p.product_id
-                WHERE (t.doc_date BETWEEN '". $doc_date_start . "' AND '". $doc_date_to ."') " .
+                WHERE (t.doc_date BETWEEN '". $doc_date_start . "' AND '". $doc_date_to ."') " . $search_Query .
                 " GROUP BY p.product_id,p.product_name,t.wh,t.wh_week_id,t.location";
-
-
 
 $line_no = 0;
 

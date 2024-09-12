@@ -346,10 +346,22 @@ if (strlen($_SESSION['alogin']) == "") {
         $(document).ready(function () {
             let today = new Date();
             let doc_date = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
-            $('#doc_date_start').val(doc_date);
+            $('#doc_date').val(doc_date);
             //document.getElementById('doc_date').value = doc_date;
         });
     </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#doc_date').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+        });
+    </script>
+
 
     <script>
         $(document).ready(function () {
@@ -362,12 +374,21 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
-            $('#doc_date_to').datepicker({
+            $('#doc_date_start').datepicker({
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
                 language: "th",
                 autoclose: true
             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            let today = new Date();
+            let doc_date = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
+            $('#doc_date_to').val(doc_date);
+            //document.getElementById('doc_date').value = doc_date;
         });
     </script>
 

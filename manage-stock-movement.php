@@ -94,6 +94,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>จากตำแหน่ง</th>
                                                     <th>ไปตำแหน่ง</th>
                                                     <th>Create By</th>
+                                                    <th>Create Date</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -108,6 +109,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>จากตำแหน่ง</th>
                                                     <th>ไปตำแหน่ง</th>
                                                     <th>Create By</th>
+                                                    <th>Create Date</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -448,6 +450,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'location_org'},
                     {data: 'location_to'},
                     {data: 'user_name'},
+                    {data: 'create_date'},
                     {data: 'update'},
                 ]
             });

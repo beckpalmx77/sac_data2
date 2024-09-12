@@ -53,7 +53,7 @@
 <script>
     $(document).ready(function() {
         // Initialize DataTable
-        var table = $('#stockTable').DataTable({
+        let table = $('#stockTable').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": {

@@ -310,6 +310,7 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
                 "wh_week_id" => $row['wh_week_id'],
                 "location_to" => $row['location_to'],
                 "create_by" => $row['create_by'],
+                "user_name" => $row['user_name'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"
             );

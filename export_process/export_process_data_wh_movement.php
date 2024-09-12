@@ -6,9 +6,14 @@ date_default_timezone_set('Asia/Bangkok');
 @header('Content-Encoding: UTF-8');
 @header("Content-Disposition: attachment; filename=" . $filename);
 
-$doc_date = $_POST["doc_date"];
+$doc_date_start = $_POST["doc_date_start"] ;
+$doc_date_to = $_POST["doc_date_to"];
 
-$select_query_wh_movement = "  SELECT * FROM v_wh_stock_movement WHERE doc_date = '" . $doc_date . "'" . " ORDER BY doc_id,create_by,create_date ";
+$start_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
+$end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+
+$select_query_wh_movement = "SELECT * FROM v_wh_stock_movement WHERE doc_date BETWEEN '$doc_date_start' AND '$doc_date_to'"
+                          . " ORDER BY doc_id,create_by,create_date ";
 
 $String_Sql = $select_query_wh_movement;
 

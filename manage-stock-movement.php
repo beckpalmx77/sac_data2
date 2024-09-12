@@ -62,7 +62,13 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <label for="name_t" class="control-label mb-0"><b>Export Data
                                                         วันที่&nbsp;</b></label>
 
-                                                <input type="text" class="form-control" id="doc_date" name="doc_date"
+                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start"
+                                                       readonly="true" placeholder=""
+                                                       style="width: calc(0.6em * 10 + 1.25rem);"
+                                                       value="<?php echo $curr_date; ?>">
+                                                <label for="name_t" class="control-label mb-0"><b>-</b></label>
+
+                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to"
                                                        readonly="true" placeholder=""
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
@@ -356,6 +362,47 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
+
+    <script>
+        $(document).ready(function () {
+            let today = new Date();
+            let doc_date = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
+            $('#doc_date_start').val(doc_date);
+            //document.getElementById('doc_date').value = doc_date;
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#doc_date_start').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            let today = new Date();
+            let doc_date = getDay2Digits(today) + "-" + getMonth2Digits(today) + "-" + today.getFullYear();
+            $('#doc_date_to').val(doc_date);
+            //document.getElementById('doc_date').value = doc_date;
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#doc_date_to').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+        });
+    </script>
+
     <script>
         document.getElementById('qty').addEventListener('input', function (e) {
             this.value = this.value.replace(/[^0-9]/g, '');
@@ -400,7 +447,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'wh_week_id'},
                     {data: 'location_org'},
                     {data: 'location_to'},
-                    {data: 'create_by'},
+                    {data: 'user_name'},
                     {data: 'update'},
                 ]
             });

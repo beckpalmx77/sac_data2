@@ -241,8 +241,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
-                                                            <input type="text" name="create_by" id="create_by" value="<?php echo $create_by; ?>"/>
-                                                            <input type="text" name="doc_user_id" id="doc_user_id" value="<?php echo $doc_user_id; ?>"/>
+                                                            <input type="hidden" name="create_by" id="create_by" value="<?php echo $create_by; ?>"/>
+                                                            <input type="hidden" name="doc_user_id" id="doc_user_id" value="<?php echo $doc_user_id; ?>"/>
                                                             <button type="submit" name="save" id="save"
                                                                     class="btn btn-primary"><i class="fa fa-check"></i>
                                                                 Save

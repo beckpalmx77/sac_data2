@@ -426,7 +426,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'wh_week_id'},
                     {data: 'location_org'},
                     {data: 'location_to'},
-                    {data: 'create_by'},
+                    {data: 'user_name'},
                     {data: 'update'},
                 ]
             });

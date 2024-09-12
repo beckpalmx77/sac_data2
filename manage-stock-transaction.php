@@ -1,12 +1,12 @@
 <?php
 
 include('includes/Header.php');
-
-$curr_date = date("d-m-Y");
-
 if (strlen($_SESSION['alogin']) == "") {
     header("Location: index.php");
 } else {
+    $curr_date = date("d-m-Y");
+    $create_by = $_SESSION['user_id'];
+    $doc_user_id = $_SESSION['doc_user_id'];
     ?>
 
     <!DOCTYPE html>
@@ -265,6 +265,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
+                                                            <input type="hidden" name="create_by" id="create_by" value="<?php echo $create_by; ?>"/>
+                                                            <input type="hidden" name="doc_user_id" id="doc_user_id" value="<?php echo $doc_user_id; ?>"/>
                                                             <button type="submit" name="save" id="save"
                                                                     class="btn btn-primary"><i class="fa fa-check"></i>
                                                                 Save

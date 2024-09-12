@@ -53,9 +53,9 @@ if ($_POST["action"] === 'SEARCH') {
 
 if ($_POST["action"] === 'ADD') {
 
-    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !== '') {
-        $create_by = $_SESSION['username'];
-        $doc_user_id = $_SESSION['doc_user_id'];
+    if ($_POST["product_id"] !== '' && $_POST["create_by"] !== '' && $_POST["doc_user_id"] !== '') {
+        $create_by = $_POST["create_by"];
+        $doc_user_id = $_POST["doc_user_id"];
         $doc_date = $_POST["doc_date"];
         $record_type_id = $_POST["record_type_id"];
         switch ($record_type_id) {
@@ -126,8 +126,8 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["product_id"] !== '' && $_SESSION['username'] !== '' && $_SESSION['doc_user_id'] !== '') {
-        $update_by = $_SESSION['username'];
+    if ($_POST["product_id"] !== '' && $_POST["create_by"] !== '' && $_POST["doc_user_id"] !== '') {
+        $update_by = $_POST["create_by"];
         $id = $_POST["id"];
         $doc_date = $_POST["doc_date"];
         $product_id = $_POST["product_id"];

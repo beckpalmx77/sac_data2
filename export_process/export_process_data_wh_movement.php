@@ -13,7 +13,7 @@ $start_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_start)->fo
 $end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
 
 $select_query_wh_movement = "SELECT * FROM v_wh_stock_movement WHERE doc_date BETWEEN '$doc_date_start' AND '$doc_date_to'"
-                          . " ORDER BY create_date,doc_id,create_by ";
+                          . " ORDER BY create_date DESC ,doc_id,create_by ";
 
 $String_Sql = $select_query_wh_movement;
 

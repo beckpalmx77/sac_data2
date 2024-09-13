@@ -247,6 +247,7 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
                 "create_by" => $row['create_by'],
                 "create_date" => $row['create_date'],
                 "remark" => $row['remark'],
+                "status" => $row['status'],
                 "seq_record" => $row['seq_record'],
                 "update" => "<button type='button' name='update' id='" . $row['seq_record'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['seq_record'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"

@@ -68,6 +68,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>ผู้บันทึกรายการ</th>
                                                     <th>วันที่รายการ</th>
                                                     <th>หมายเหตุ</th>
+                                                    <th>สถานะรับ</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -350,6 +351,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'create_by'},
                     {data: 'create_date'},
                     {data: 'remark'},
+                    {data: 'status'},
                     {data: 'update'}
                 ]
             });

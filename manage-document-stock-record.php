@@ -357,30 +357,6 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-
-    <script>
-
-        $("#btnAdd").click(function () {
-            let main_menu = document.getElementById("main_menu").value;
-            let sub_menu = document.getElementById("sub_menu").value;
-            let url = "manage_crm_data.php?title=รายการแบบสอบถาม (FAQ)"
-                + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
-                + '&action=ADD';
-
-            let popup = window.open(url, "PopupWindow", "");
-            // ตรวจสอบการปิดหน้าต่าง POPUP
-            let checkPopupClosed = setInterval(function () {
-                if (popup.closed) {
-                    clearInterval(checkPopupClosed);
-                    // รีโหลด DataTable เมื่อหน้าต่าง POPUP ถูกปิด
-                    ReloadDataTable();
-                }
-            }, 1000);
-
-        });
-
-    </script>
-
     <script>
         $("#TableRecordList").on('click', '.update', function () {
 
@@ -423,40 +399,6 @@ if (strlen($_SESSION['alogin']) == "") {
                     alertify.error("error : " + response);
                 }
             });
-        });
-    </script>
-
-    <script>
-        // เมื่อคลิกที่ปุ่มลบข้อมูล
-        $("#TableRecordList").on('click', '.delete', function () {
-            // ยืนยันการลบข้อมูล
-            if (confirm('ต้องการลบข้อมูลนี้ใช่หรือไม่ ?')) {
-                let id = $(this).attr("id"); // ดึงค่า id ของข้อมูลที่จะลบ
-                let formData = { action: "DELETE", id: id }; // เตรียมข้อมูลสำหรับส่งไปที่เซิร์ฟเวอร์
-
-                // เรียกใช้ AJAX เพื่อลบข้อมูล
-                $.ajax({
-                    type: "POST",
-                    url: 'model/manage_doc_stock_process.php',
-                    dataType: "json",
-                    data: formData,
-                    success: function (response) {
-                        // ตรวจสอบว่าคำตอบจากเซิร์ฟเวอร์เป็น success หรือไม่
-                        if (response.status === 'success') {
-                            ReloadDataTable();
-                            alertify.success("ลบข้อมูลเรียบร้อย");
-                            // คุณสามารถเพิ่มโค้ดที่ต้องการเพื่ออัปเดต UI หลังจากลบข้อมูลสำเร็จ เช่น โหลดข้อมูลใหม่
-                            // location.reload(); // โหลดหน้าใหม่ทั้งหมด
-                        } else {
-                            alertify.error("ไม่สามารถลบข้อมูลได้: " + response.message);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        // แสดงข้อความแจ้งเตือนเมื่อเกิดข้อผิดพลาด
-                        alertify.error("Error: " + xhr.responseText);
-                    }
-                });
-            }
         });
     </script>
 

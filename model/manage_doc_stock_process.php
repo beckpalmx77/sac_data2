@@ -38,11 +38,11 @@ if ($_POST["action"] === 'GET_DATA_KEY') {
     $return_arr = array();
 
     $sql_get = "SELECT * FROM v_ims_customer_crm_header_quest WHERE KeyAddData = '" . $KeyAddData . "'";
-/*
-    $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
-    fwrite($myfile,  $KeyAddData . " | " . $sql_get);
-    fclose($myfile);
-*/
+    /*
+        $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
+        fwrite($myfile,  $KeyAddData . " | " . $sql_get);
+        fclose($myfile);
+    */
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -80,7 +80,7 @@ if ($_POST["action"] === 'ADD') {
         $KeyAddData = $_POST["KeyAddData"];
         $doc_year = substr($_POST["doc_date"], 0, 4);
         $customer_id = $_POST["customer_id"];
-        $cond = "WHERE customer_id LIKE '%" . $customer_id  . "%'";
+        $cond = "WHERE customer_id LIKE '%" . $customer_id . "%'";
         $doc_runno = LAST_DOCUMENT_COND($conn, $table, $cond);
         $doc_id = "Q-" . $customer_id . "-" . sprintf('%04s', $doc_runno);
         $customer_id = $_POST["customer_id"];
@@ -131,9 +131,9 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->bindParam(':update_date', $update_date, PDO::PARAM_STR);
             $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
-            if($query->execute()){
+            if ($query->execute()) {
                 echo $save_success;
-            }else{
+            } else {
                 echo $error;
             }
         }
@@ -147,15 +147,15 @@ if ($_POST["action"] === 'DELETE') {
 
     $sql_get_doc_id = "SELECT ims_customer_crm_quest_header.doc_id AS doc_id FROM ims_customer_crm_quest_header WHERE id = " . $id;
 
-    $doc_id = GetDataValue($conn,$sql_get_doc_id);
+    $doc_id = GetDataValue($conn, $sql_get_doc_id);
 
     $sql_find = "SELECT * FROM ims_customer_crm_quest_header WHERE id = " . $id;
 
-/*
-    $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
-    fwrite($myfile,  $doc_id . " | " . $sql_get_doc_id);
-    fclose($myfile);
-*/
+    /*
+        $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
+        fwrite($myfile,  $doc_id . " | " . $sql_get_doc_id);
+        fclose($myfile);
+    */
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {

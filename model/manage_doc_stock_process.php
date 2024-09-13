@@ -218,7 +218,7 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
 
 ## Fetch records
     $query_str = "SELECT * FROM v_document_wh_stock_record WHERE 1 " . $searchQuery
-        . " ORDER BY v_document_wh_stock_record.doc_id DESC , v_document_wh_stock_record.create_date DESC " . " LIMIT :limit,:offset";
+        . " ORDER BY v_document_wh_stock_record.doc_id DESC , v_document_wh_stock_record.create_date DESC , v_document_wh_stock_record.line_no " . " LIMIT :limit,:offset";
 
     $stmt = $conn->prepare($query_str);
 

@@ -21,7 +21,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 <!-- Container Fluid-->
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
+                        <h1 class="h4 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                         <input type="hidden" id="main_menu" value="<?php echo urldecode($_GET['m']) ?>">
                         <input type="hidden" id="sub_menu" value="<?php echo urldecode($_GET['s']) ?>">
                         <ol class="breadcrumb">

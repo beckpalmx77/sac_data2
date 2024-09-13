@@ -239,6 +239,7 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
             $data[] = array(
                 "doc_id" => $row['doc_id'],
                 "doc_date" => $row['doc_date'],
+                "line_no" => $row['line_no'],
                 "product_id" => $row['product_id'],
                 "product_name" => $row['product_name'],
                 "wh_org" => $row['wh_org'],

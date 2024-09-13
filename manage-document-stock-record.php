@@ -68,7 +68,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>ผู้บันทึกรายการ</th>
                                                     <th>วันที่รายการ</th>
                                                     <th>หมายเหตุ</th>
-                                                    <th>สถานะรับ</th>
+                                                    <th>สถานะ</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>

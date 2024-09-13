@@ -66,7 +66,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>จาก</th>
                                                     <th>ไป</th>
                                                     <th>ผู้บันทึกรายการ</th>
-                                                    <th>วันที่รายการ</th>
                                                     <th>หมายเหตุ</th>
                                                     <th>สถานะ</th>
                                                     <th>Action</th>
@@ -349,7 +348,6 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'wh_org'},
                     {data: 'wh_to'},
                     {data: 'create_by'},
-                    {data: 'create_date'},
                     {data: 'remark'},
                     {data: 'status'},
                     {data: 'update'}

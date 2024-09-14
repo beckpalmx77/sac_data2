@@ -40,21 +40,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
-
-                                        <!--div class="col-md-12 col-md-offset-2">
-                                            <label for="name_t"
-                                                   class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
-
-                                            <button type='button' name='btnAdd' id='btnAdd'
-                                                    class='btn btn-primary btn-xs'>Add
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <button type='button' name='btnRefresh' id='btnRefresh'
-                                                    class='btn btn-success btn-xs' onclick="ReloadDataTable();">Refresh
-                                                <i class="fa fa-refresh"></i>
-                                            </button>
-                                        </div-->
-
                                         <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
@@ -72,138 +57,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </tr>
                                                 </thead>
                                             </table>
-
                                             <div id="result"></div>
-
-                                        </div>
-
-                                        <div class="modal fade" id="recordModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
-                                                    </div>
-                                                    <form method="post" id="recordForm">
-                                                        <input type="hidden" id="KeyAddData" name="KeyAddData" value="">
-                                                        <div class="modal-body">
-                                                            <div class="modal-body">
-
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-6">
-                                                                        <label for="doc_id"
-                                                                               class="control-label">เลขที่เอกสาร</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="doc_id"
-                                                                               name="doc_id"
-                                                                               readonly="true"
-                                                                               placeholder="สร้างอัตโนมัติ">
-                                                                    </div>
-                                                                    <div class="col-sm-6">
-                                                                        <label for="doc_date"
-                                                                               class="control-label">วันที่เอกสาร</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="doc_date"
-                                                                               name="doc_date"
-                                                                               readonly="true"
-                                                                               placeholder="วันที่เอกสาร">
-                                                                    </div>
-
-                                                                </div>
-
-                                                                <div class="form-group row">
-                                                                    <input type="hidden" class="form-control"
-                                                                           id="customer_id"
-                                                                           name="customer_id">
-                                                                    <div class="col-sm-12">
-                                                                        <label for="customer_name"
-                                                                               class="control-label">ชื่อลูกค้า</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="customer_name"
-                                                                               name="customer_name"
-                                                                               readonly="true"
-                                                                               placeholder="ชื่อลูกค้า">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="form-group">
-                                                                    <label for="status"
-                                                                           class="control-label">Status</label>
-                                                                    <select id="status" name="status"
-                                                                            class="form-control"
-                                                                            data-live-search="true"
-                                                                            title="Please select">
-                                                                        <option>Active</option>
-                                                                        <option>Inactive</option>
-                                                                    </select>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <input type="hidden" name="id" id="id"/>
-                                                            <input type="hidden" name="action" id="action"
-                                                                   value=""/>
-                                                            <span class="icon-input-btn">
-                                                                <i class="fa fa-check"></i>
-                                                            <input type="submit" name="save" id="save"
-                                                                   class="btn btn-primary" value="Save"/>
-                                                            </span>
-                                                            <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Close <i
-                                                                        class="fa fa-window-close"></i>
-                                                            </button>
-                                                        </div>
-                                                    </form>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="modal fade" id="SearchCusModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
-                                                    </div>
-                                                    <div class="container"></div>
-                                                    <div class="modal-body">
-                                                        <div class="modal-body">
-                                                            <table cellpadding="0" cellspacing="0" border="0"
-                                                                   class="display"
-                                                                   id="TableCusCRMList"
-                                                                   width="100%">
-                                                                <thead class="thead-light">
-                                                                <tr>
-                                                                    <th>รหัสลูกค้า</th>
-                                                                    <th>ชื่อลูกค้า</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tfoot>
-                                                                <tr>
-                                                                    <th>รหัสลูกค้า</th>
-                                                                    <th>ชื่อลูกค้า</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -359,11 +218,9 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $("#TableRecordList").on('click', '.update', function () {
-
             let id = $(this).attr("id");
             let main_menu = document.getElementById("main_menu").value;
             let sub_menu = document.getElementById("sub_menu").value;
-            //alert(id);
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
@@ -373,15 +230,34 @@ if (strlen($_SESSION['alogin']) == "") {
                 success: function (response) {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
+                        let seq_record = response[i].seq_record;
                         let doc_id = response[i].doc_id;
                         let doc_date = response[i].doc_date;
-                        let customer_id = response[i].customer_id;
-                        let customer_name = response[i].customer_name;
-                        let url = "manage-wh-stock-data?title=รายการแบบสอบถาม (FAQ)"
-                            + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
-                            + '&doc_id=' + doc_id + '&doc_date=' + doc_date
-                            + '&customer_id=' + customer_id
-                            + '&customer_name=' + customer_name
+                        let line_no = response[i].line_no;
+                        let product_id = response[i].product_id;
+                        let product_name = response[i].product_name;
+                        let qty = response[i].qty;
+                        let wh_org = response[i].wh_org;
+                        let wh_to = response[i].wh_to;
+                        let remark = response[i].remark;
+                        let status = response[i].status;
+                        let doc_user_id = response[i].doc_user_id;
+
+                        let url = "manage-wh-stock-data?title=รายการย้ายสินค้า-กำหนดตำแหน่ง (Warehose Location)"
+                            + '&main_menu=' + main_menu
+                            + '&sub_menu=' + sub_menu
+                            + '&seq_record=' + seq_record
+                            + '&doc_id=' + doc_id
+                            + '&doc_date=' + doc_date
+                            + '&line_no=' + line_no
+                            + '&product_id=' + product_id
+                            + '&product_name=' + product_name
+                            + '&qty=' + qty
+                            + '&wh_org=' + wh_org
+                            + '&wh_to=' + wh_to
+                            + '&remark=' + remark
+                            + '&status=' + status
+                            + '&doc_user_id=' + doc_user_id
                             + '&action=UPDATE';
 
                         let popup = window.open(url, "PopupWindow", "");

@@ -13,7 +13,7 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM v_ims_customer_crm_header_quest WHERE id = " . $id;
+    $sql_get = "SELECT * FROM v_document_wh_stock_record WHERE id = " . $id;
 
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -22,9 +22,18 @@ if ($_POST["action"] === 'GET_DATA') {
         $return_arr[] = array("id" => $result['id'],
             "doc_id" => $result['doc_id'],
             "doc_date" => $result['doc_date'],
-            "customer_id" => $result['customer_id'],
-            "customer_name" => $result['customer_name'],
-            "status" => $result['status']);
+            "line_no" => $result['line_no'],
+            "product_id" => $result['product_id'],
+            "product_name" => $result['product_name'],
+            "wh_org" => $result['wh_org'],
+            "wh_to" => $result['wh_to'],
+            "qty" => $result['qty'],
+            "create_by" => $result['create_by'],
+            "create_date" => $result['create_date'],
+            "remark" => $result['remark'],
+            "doc_user_id" => $result['doc_user_id'],
+            "status" => $result['status'],
+            "seq_record" => $result['seq_record']);
     }
 
     echo json_encode($return_arr);
@@ -237,6 +246,7 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
 
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
+                "id" => $row['id'],
                 "doc_id" => $row['doc_id'],
                 "doc_date" => $row['doc_date'],
                 "line_no" => $row['line_no'],
@@ -250,8 +260,8 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
                 "remark" => $row['remark'],
                 "status" => $row['status'],
                 "seq_record" => $row['seq_record'],
-                "update" => "<button type='button' name='update' id='" . $row['seq_record'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
-                "delete" => "<button type='button' name='delete' id='" . $row['seq_record'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"
+                "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
+                "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"
             );
         } else {
             $data[] = array(

@@ -578,7 +578,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let img = response[i].img;
                         //let img_show = img.split(",");
                         //$('#id').val(id);
-                        let url = "manage_image.php?title=จัดการรูปภาพ (Manage Image)"
+                        let url = "manage_image?title=จัดการรูปภาพ (Manage Image)"
                             + '&img=' + img
                             + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
                             + '&id=' + id

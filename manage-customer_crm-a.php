@@ -488,7 +488,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let main_menu = "บันทึกข้อมูลหลัก";
                         let sub_menu = "เอกสารการลางาน (พนักงาน)";
 
-                        let originalURL = "upload_leave_data.php?title=เอกสารการลา (Document)"
+                        let originalURL = "upload_leave_data?title=เอกสารการลา (Document)"
                             + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
                             + '&id=' + id
                             + '&doc_id=' + doc_id + '&doc_date=' + doc_date

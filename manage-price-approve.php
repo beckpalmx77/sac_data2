@@ -437,7 +437,7 @@ if (strlen($_SESSION['alogin']) == "") {
         $("#btnAdd").click(function () {
             let main_menu = document.getElementById("main_menu").value;
             let sub_menu = document.getElementById("sub_menu").value;
-            let url = "manage_order_data.php?title=รายการขายสินค้า (Product Order)"
+            let url = "manage_order_data?title=รายการขายสินค้า (Product Order)"
                 + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
                 + '&action=ADD';
             OpenPopupCenter(url, "", "");
@@ -468,7 +468,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let request_status = response[i].request_status;
                         let approve_status = response[i].approve_status;
                         let edit_price_status = response[i].edit_price_status;
-                        let url = "manage_price_approve_data.php?title=รายการ ขออนุมัติราคาขาย (Request Approve Price)"
+                        let url = "manage_price_approve_data?title=รายการ ขออนุมัติราคาขาย (Request Approve Price)"
                             + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
                             + '&doc_no=' + doc_no
                             + '&doc_date=' + doc_date

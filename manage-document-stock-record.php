@@ -377,7 +377,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let doc_date = response[i].doc_date;
                         let customer_id = response[i].customer_id;
                         let customer_name = response[i].customer_name;
-                        let url = "manage_crm_data.php?title=รายการแบบสอบถาม (FAQ)"
+                        let url = "manage-wh-stock-data?title=รายการแบบสอบถาม (FAQ)"
                             + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
                             + '&doc_id=' + doc_id + '&doc_date=' + doc_date
                             + '&customer_id=' + customer_id

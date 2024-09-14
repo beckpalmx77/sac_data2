@@ -42,7 +42,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <div class="modal-body">
                                                 <div class="modal-body">
                                                     <div class="form-group row">
-                                                        <div class="col-sm-2">
+                                                        <div class="col-sm-1">
                                                             <label for="doc_id"
                                                                    class="control-label">เลขที่เอกสาร</label>
                                                             <input type="text" class="form-control"
@@ -51,20 +51,19 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                    placeholder="เลขที่เอกสาร">
                                                         </div>
 
-                                                        <div class="col-sm-2">
+                                                        <div class="col-sm-1">
                                                             <label for="doc_date"
                                                                    class="control-label">วันที่</label>
                                                             <input type="text" class="form-control"
                                                                    id="doc_date"
                                                                    name="doc_date"
-                                                                   required="required"
                                                                    readonly="true"
                                                                    placeholder="วันที่">
                                                             <div class="input-group-addon">
                                                                 <span class="glyphicon glyphicon-th"></span>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-4">
+                                                        <div class="col-sm-2">
                                                             <label for="product_id"
                                                                    class="control-label">รหัสสินค้า</label>
                                                             <input type="text" class="form-control"
@@ -77,9 +76,57 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <input type="text" class="form-control"
                                                                    id="product_name"
                                                                    name="product_name"
-                                                                   required="required"
                                                                    placeholder="">
                                                         </div>
+
+                                                        <div class="col-sm-1">
+                                                            <label for="qty"
+                                                                   class="control-label">จำนวน</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="qty" name="qty"
+                                                                   readonly="true"
+                                                                   placeholder="">
+                                                        </div>
+
+                                                        <div class="col-sm-1">
+                                                            <label for="wh_org"
+                                                                   class="control-label">จาก</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="wh_org"
+                                                                   name="wh_org"
+                                                                   readonly="true"
+                                                                   placeholder="">
+                                                            <div class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-th"></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-1">
+                                                            <label for="wh_to"
+                                                                   class="control-label">ไป</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="wh_to"
+                                                                   name="wh_to"
+                                                                   readonly="true"
+                                                                   placeholder="">
+                                                            <div class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-th"></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-4">
+                                                            <label for="remark"
+                                                                   class="control-label">หมายเหตุ</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="remark"
+                                                                   name="remark"
+                                                                   readonly="true"
+                                                                   placeholder="">
+                                                            <div class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-th"></span>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
 
                                                     <button type='button' name='btnAdd' id='btnAdd'
@@ -94,29 +141,17 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>สินค้า</th>
+                                                            <th>รหัสสินค้า</th>
+                                                            <th>รายละเอียด</th>
+                                                            <th>ประเภทรายการ</th>
                                                             <th>จำนวน</th>
-                                                            <th>หน่วยนับ</th>
-                                                            <th>ราคา/หน่วย</th>
-                                                            <th>รวมราคา</th>
-                                                            <th>Action</th>
+                                                            <th>คลังปี</th>
+                                                            <th>สัปดาห์</th>
+                                                            <th>ตำแหน่ง</th>
                                                             <th>Action</th>
                                                         </tr>
                                                         </thead>
                                                     </table>
-
-                                                    <div class="form-group">
-                                                        <label for="status"
-                                                               class="control-label">Status</label>
-                                                        <select id="status" name="status"
-                                                                class="form-control"
-                                                                data-live-search="true"
-                                                                title="Please select">
-                                                            <option>Active</option>
-                                                            <option>Inactive</option>
-                                                        </select>
-                                                    </div>
-
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -140,217 +175,182 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
                                                     </div>
                                                     <form method="post" id="recordForm">
-
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-5">
-                                                                <input type="hidden" class="form-control"
-                                                                       id="KeyAddDetail"
-                                                                       name="KeyAddDetail" value="">
-                                                            </div>
-                                                            <div class="col-sm-5">
-                                                                <input type="hidden" class="form-control"
-                                                                       id="doc_id_detail"
-                                                                       name="doc_id_detail" value="">
-                                                            </div>
-                                                            <div class="col-sm-5">
-                                                                <input type="hidden" class="form-control"
-                                                                       id="doc_date_detail"
-                                                                       name="doc_date_detail" value="">
-                                                            </div>
-                                                        </div>
-
                                                         <div class="modal-body">
-                                                            <div class="modal-body">
+                                                            <div class="container-fluid">
 
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-5">
-                                                                        <label for="product_id"
-                                                                               class="control-label">รหัสสินค้า/วัสดุ</label>
-                                                                        <input type="product_id"
-                                                                               class="form-control"
-                                                                               id="product_id" name="product_id"
-                                                                               required="required"
-                                                                               readonly="true"
-                                                                               placeholder="รหัสสินค้า/วัสดุ">
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control"
+                                                                           id="KeyAddDetail"
+                                                                           name="KeyAddDetail" value="">
+                                                                </div>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control"
+                                                                           id="doc_id_detail"
+                                                                           name="doc_id_detail" value="">
+                                                                </div>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control"
+                                                                           id="doc_date_detail"
+                                                                           name="doc_date_detail" value="">
+                                                                </div>
+
+                                                                <!-- ใช้ container-fluid เพื่อให้เต็มความกว้างของ modal -->
+                                                                <!-- กลุ่มฟอร์มที่ 1 -->
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="doc_id"
+                                                                                   class="control-label">เลขที่เอกสาร</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="doc_id" name="doc_id"
+                                                                                   placeholder=""
+                                                                                   required readonly="true">
+                                                                        </div>
                                                                     </div>
-
-                                                                    <div class="col-sm-5">
-                                                                        <label for="name_t"
-                                                                               class="control-label">ชื่อสินค้า/วัสดุ</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="name_t"
-                                                                               name="name_t"
-                                                                               required="required"
-                                                                               readonly="true"
-                                                                               placeholder="ชื่อสินค้า/วัสดุ">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="line_no"
+                                                                                   class="control-label">รายการที่</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="line_no" name="line_no"
+                                                                                   placeholder=""
+                                                                                   required readonly="true">
+                                                                        </div>
                                                                     </div>
-
-                                                                    <div class="col-sm-2">
-                                                                        <label for="quantity"
-                                                                               class="control-label">เลือก</label>
-
-                                                                        <a data-toggle="modal"
-                                                                           href="#SearchProductModal"
-                                                                           class="btn btn-primary">
-                                                                            Click <i class="fa fa-search"
-                                                                                     aria-hidden="true"></i>
-                                                                        </a>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="doc_date" class="control-label">วันที่</label>
+                                                                            <div class="input-group">
+                                                                                <input type="text" class="form-control"
+                                                                                       id="doc_date" name="doc_date"
+                                                                                       readonly="true"
+                                                                                       value="">
+                                                                                <div class="input-group-append">
+                                                                                    <span class="input-group-text"><i
+                                                                                                class="glyphicon glyphicon-th"></i></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label for="record_type_id"
+                                                                                   class="control-label">ประเภทรายการ</label>
+                                                                            <select class="form-control"
+                                                                                    id="record_type_id"
+                                                                                    name="record_type_id" required>
+                                                                                <option value="">ประเภทรายการ</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="record_type_desc"
+                                                                                   class="control-label">รายละเอียด</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="record_type_desc"
+                                                                                   name="record_type_desc"
+                                                                                   readonly placeholder="รายละเอียด"
+                                                                                   required>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-5">
-                                                                        <label for="quantity"
-                                                                               class="control-label">จำนวน</label>
-                                                                        <input type="number" class="form-control"
-                                                                               id="quantity"
-                                                                               name="quantity"
-                                                                               required="required"
-                                                                               placeholder="จำนวน">
+                                                                <!-- กลุ่มฟอร์มที่ 2 -->
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="product_id"
+                                                                                   class="control-label">รหัสสินค้า</label>
+                                                                            <select class="form-control" id="product_id"
+                                                                                    name="product_id" required>
+                                                                                <option value="">เลือกรหัสสินค้า
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
                                                                     </div>
-                                                                    <input type="hidden" class="form-control"
-                                                                           id="unit_id"
-                                                                           name="unit_id">
-                                                                    <div class="col-sm-5">
-                                                                        <label for="unit_name"
-                                                                               class="control-label">หน่วยนับ</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="unit_name"
-                                                                               name="unit_name"
-                                                                               required="required"
-                                                                               readonly="true"
-                                                                               placeholder="หน่วยนับ">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="product_name"
+                                                                                   class="control-label">รายละเอียด</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="product_name" name="product_name"
+                                                                                   readonly placeholder="รายละเอียด"
+                                                                                   required>
+                                                                        </div>
                                                                     </div>
-
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label for="qty"
+                                                                                   class="control-label">จำนวน</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="qty" name="qty" placeholder=""
+                                                                                   required>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-5">
-                                                                        <label for="price"
-                                                                               class="control-label">ราคา/หน่วย</label>
-                                                                        <input type="number" class="form-control"
-                                                                               id="price"
-                                                                               name="price"
-                                                                               required="required"
-                                                                               placeholder="ราคา/หน่วย">
+
+                                                                <!-- กลุ่มฟอร์มที่ 3 -->
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label for="wh"
+                                                                                   class="control-label">คลังปี</label>
+                                                                            <select class="form-control" id="wh"
+                                                                                    name="wh" required>
+                                                                                <option value="">เลือกคลังปี</option>
+                                                                            </select>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="col-sm-5">
-                                                                        <label for="total_price"
-                                                                               class="control-label">ราคารวม</label>
-                                                                        <input type="number" class="form-control"
-                                                                               id="total_price"
-                                                                               name="total_price"
-                                                                               required="required"
-                                                                               placeholder="ราคารวม">
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label for="wh_week_id"
+                                                                                   class="control-label">สัปดาห์</label>
+                                                                            <select class="form-control"
+                                                                                    id="wh_week_id"
+                                                                                    name="wh_week_id" required>
+                                                                                <option value="">สัปดาห์</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label for="location"
+                                                                                   class="control-label">ตำแหน่ง</label>
+                                                                            <select class="form-control"
+                                                                                    id="location"
+                                                                                    name="location" required>
+                                                                                <option value="">ตำแหน่ง</option>
+                                                                            </select>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
                                                             </div>
                                                         </div>
-
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
                                                             <input type="hidden" name="detail_id" id="detail_id"/>
-                                                            <input type="hidden" name="action_detail"
-                                                                   id="action_detail" value=""/>
-                                                            <span class="icon-input-btn">
-                                                                <i class="fa fa-check"></i>
-                                                            <input type="submit" name="save" id="save"
-                                                                   class="btn btn-primary" value="Save"/>
-                                                            </span>
+                                                            <input type="hidden" name="action_detail" id="action_detail"
+                                                                   value=""/>
+                                                            <input type="hidden" name="create_by" id="create_by"
+                                                                   value=""/>
+                                                            <input type="hidden" name="doc_user_id" id="doc_user_id"
+                                                                   value="<?php echo $doc_user_id; ?>"/>
+                                                            <button type="submit" name="save" id="save"
+                                                                    class="btn btn-primary"><i class="fa fa-check"></i>Save
+                                                            </button>
                                                             <button type="button" class="btn btn-danger"
                                                                     data-dismiss="modal">Close <i
-                                                                        class="fa fa-window-close"></i>
-                                                            </button>
+                                                                        class="fa fa-window-close"></i></button>
                                                         </div>
                                                     </form>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="modal fade" id="SearchProductModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
-                                                    </div>
-                                                    <div class="container"></div>
-                                                    <div class="modal-body">
-                                                        <div class="modal-body">
-                                                            <table cellpadding="0" cellspacing="0" border="0"
-                                                                   class="display"
-                                                                   id="TableProductList"
-                                                                   width="100%">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>สินค้า</th>
-                                                                    <th>รหัสหน่วยนับ</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tfoot>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>สินค้า</th>
-                                                                    <th>รหัสหน่วยนับ</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="modal fade" id="SearchCusModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
-                                                    </div>
-
-                                                    <div class="container"></div>
-                                                    <div class="modal-body">
-
-                                                        <div class="modal-body">
-
-                                                            <table cellpadding="0" cellspacing="0" border="0"
-                                                                   class="display"
-                                                                   id="TableCustomerList"
-                                                                   width="100%">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>รหัสลูกค้า</th>
-                                                                    <th>ชื่อลูกค้า</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tfoot>
-                                                                <tr>
-                                                                    <th>รหัสลูกค้า</th>
-                                                                    <th>ชื่อลูกค้า</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -515,6 +515,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#product_id').val(queryString["product_id"]);
                 $('#product_name').val(queryString["product_name"]);
                 $('#qty').val(queryString["qty"]);
+                $('#wh_org').val(queryString["wh_org"]);
                 $('#wh_to').val(queryString["wh_to"]);
                 $('#status').val(queryString["status"]);
                 $('#remark').val(queryString["remark"]);
@@ -576,20 +577,22 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
         $(document).ready(function () {
             $("#btnAdd").click(function () {
-                if ($('#doc_date').val() == '' || $('#f_name').val() == '') {
-                    alertify.error("กรุณาป้อนวันที่ / ชื่อลูกค้า ");
+                if ($('#doc_date').val() == '') {
+                    alertify.error("กรุณาป้อนวันที่");
                 } else {
+                    let doc_id_detail = $('#doc_id').val();
+                    let doc_date_detail = $('#doc_date').val();
+                    let product_id_detail = $('#product_id').val();
+                    let qty_detail = $('#qty').val();
+                    let wh_org_detail = $('#wh_org').val();
+                    let wh_to_detail = $('#wh_org').val();
+
                     $('#recordModal').modal('show');
                     $('#KeyAddDetail').val($('#KeyAddData').val());
-                    $('#doc_id_detail').val($('#doc_id').val());
-                    $('#doc_date_detail').val($('#doc_date').val());
-                    $('#product_id').val("");
-                    $('#name_t').val("");
-                    $('#quantity').val("");
-                    $('#price').val("");
-                    $('#total_price').val("");
-                    $('#unit_id').val("");
-                    $('#unit_name').val("");
+                    $('#doc_id_detail').val(doc_id_detail);
+                    $('#doc_date_detail').val(doc_date_detail);
+                    $('#product_id_detail').val(product_id_detail);
+
                     $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                     $('#action_detail').val('ADD');
                     $('#save').val('Save');

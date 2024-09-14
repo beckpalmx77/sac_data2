@@ -230,6 +230,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 success: function (response) {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
+                        let id = response[i].id;
                         let seq_record = response[i].seq_record;
                         let doc_id = response[i].doc_id;
                         let doc_date = response[i].doc_date;
@@ -242,8 +243,9 @@ if (strlen($_SESSION['alogin']) == "") {
                         let remark = response[i].remark;
                         let status = response[i].status;
                         let doc_user_id = response[i].doc_user_id;
-
+                        let create_by = response[i].create_by;
                         let url = "manage-wh-stock-data?title=รายการย้ายสินค้า-กำหนดตำแหน่ง (Warehose Location)"
+                            + '&id=' + id
                             + '&main_menu=' + main_menu
                             + '&sub_menu=' + sub_menu
                             + '&seq_record=' + seq_record
@@ -258,6 +260,7 @@ if (strlen($_SESSION['alogin']) == "") {
                             + '&remark=' + remark
                             + '&status=' + status
                             + '&doc_user_id=' + doc_user_id
+                            + '&create_by=' + create_by
                             + '&action=UPDATE';
 
                         let popup = window.open(url, "PopupWindow", "");

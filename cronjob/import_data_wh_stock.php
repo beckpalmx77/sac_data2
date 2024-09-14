@@ -58,7 +58,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     if ($nRows > 0) {
         // กรณีที่ข้อมูลมีอยู่แล้ว ทำการ Update
         $doc_date = substr($result_sqlsvr["DI_DATE"], 8, 2) . "-" . substr($result_sqlsvr["DI_DATE"], 5, 2) . "-" . strval(intval(substr($result_sqlsvr["DI_DATE"], 0, 4)));
-
+        $doc_id = $result_sqlsvr["DI_REF"] . "-" . str_pad($result_sqlsvr["TRD_SEQ"], 3, '0', STR_PAD_LEFT);
         $sql_update = "UPDATE wh_stock_record SET 
                     doc_date = :doc_date,
                     qty = :qty,
@@ -74,7 +74,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query_update->bindParam(':doc_user_id', $result_sqlsvr["DT_DOCCODE"], PDO::PARAM_STR);
         $query_update->bindParam(':update_by', $result_sqlsvr["DI_CRE_BY"], PDO::PARAM_STR);
         $query_update->bindParam(':remark', $result_sqlsvr["DI_REMARK"], PDO::PARAM_STR);
-        $query_update->bindParam(':doc_id', $result_sqlsvr["DI_REF"], PDO::PARAM_STR);
+        $query_update->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
         $query_update->bindParam(':line_no', $result_sqlsvr["TRD_SEQ"], PDO::PARAM_INT);
         $query_update->bindParam(':product_id', $result_sqlsvr["TRD_SH_CODE"], PDO::PARAM_STR);
         if ($query_update->execute()) {

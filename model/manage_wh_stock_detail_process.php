@@ -11,26 +11,26 @@ include('../util/reorder_record.php');
 if ($_POST["action"] === 'GET_DATA') {
 
     $id = $_POST["id"];
-    $doc_no = $_POST["doc_no"];
-    $table_name = $_POST["table_name"];
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM " . $table_name . " WHERE id = " . $id;
+    $sql_get = "SELECT * FROM v_wh_stock_transaction WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $result) {
         $return_arr[] = array("id" => $result['id'],
-            "doc_no" => $result['doc_no'],
+            "doc_id" => $result['doc_id'],
             "doc_date" => $result['doc_date'],
+            "line_no" => $result['line_no'],
+            "record_type" => $result['record_type'],
             "product_id" => $result['product_id'],
-            "name_t" => $result['product_name'],
-            "quantity" => $result['quantity'],
-            "price" => $result['price'],
-            "total_price" => $result['total_price'],
-            "unit_id" => $result['unit_id'],
-            "unit_name" => $result['unit_name']);
+            "product_name" => $result['product_name'],
+            "qty" => $result['qty'],
+            "wh" => $result['wh'],
+            "wh_week_id" => $result['wh_week_id'],
+            "location" => $result['location'],
+            "create_by" => $result['create_by']);
     }
 
     echo json_encode($return_arr);
@@ -38,183 +38,109 @@ if ($_POST["action"] === 'GET_DATA') {
 }
 
 if ($_POST["action_detail"] === 'ADD') {
-    if ($_POST["doc_date"] !== '') {
-
-        if ($_POST["KeyAddDetail"] !== '') {
-            $doc_no = $_POST["KeyAddDetail"];
-            $table_name = "ims_order_detail_temp";
-        } else {
-            $doc_no = $_POST["doc_no_detail"];
-            $table_name = "ims_order_detail";
-        }
-
+    if ($_POST["doc_date_detail"] !== '' && $_POST["doc_id_detail"]!=='') {
+        $table_name = "wh_stock_transaction";
+        $doc_id = $_POST["doc_id_detail"];
         $doc_date = $_POST["doc_date_detail"];
-        $product_id = $_POST["product_id"];
-        $unit_id = $_POST["unit_id"];
-        $quantity = $_POST["quantity"];
-        $price = $_POST["price"];
+        $product_id = $_POST["product_id_detail"];
+        $wh = $_POST["wh_to_detail"];
+        $wh_week_id = $_POST["wh_week_id_detail"];
+        $location = $_POST["location_detail"];
+        $qty = $_POST["qty_detail"];
+        $record_type = "+";
+        $seq_record = $_POST["seq_record_detail"];
+        $doc_user_id = $_POST["doc_user_id_detail"];
+        $create_by = $_POST["create_by_detail"];
+        $line_no = LAST_DOCUMENT_COND($conn,$table_name," WHERE doc_id = '" . $doc_id . "'");
 
-        $sql_find = "SELECT count(*) as row FROM " . $table_name . " WHERE doc_no = '" . $doc_no . "'";
-        $row = $conn->query($sql_find)->fetch();
-        if (empty($row["0"])) {
-            $line_no = 1;
-        } else {
-            $line_no = $row["0"] + 1;
-        }
-        $sql = "INSERT INTO " . $table_name . " (doc_no,doc_date,product_id,unit_id,quantity,price,line_no) 
-            VALUES (:doc_no,:doc_date,:product_id,:unit_id,:quantity,:price,:line_no)";
+        $txt = $doc_id . " | " . $doc_date . " | " . $product_id . " | " . $wh_week_id . " | "
+                       . $wh . " | " . $location . " | " . $qty . " | " . $doc_user_id ;
+/*
+        $myfile = fopen("myqeury_1.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $txt . " > " . $line_no );
+        fclose($myfile);
+*/
+        $sql = "INSERT INTO " . $table_name . " (doc_id,doc_date,product_id,record_type,qty,wh,wh_week_id,location,line_no,doc_user_id,seq_record,create_by) 
+            VALUES (:doc_id,:doc_date,:product_id,:record_type,:qty,:wh,:wh_week_id,:location,:line_no,:doc_user_id,:seq_record,:create_by)";
         $query = $conn->prepare($sql);
-        $query->bindParam(':doc_no', $doc_no, PDO::PARAM_STR);
+        $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
         $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
         $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
-        $query->bindParam(':unit_id', $unit_id, PDO::PARAM_STR);
-        $query->bindParam(':quantity', $quantity, PDO::PARAM_STR);
-        $query->bindParam(':price', $price, PDO::PARAM_STR);
+        $query->bindParam(':record_type', $record_type, PDO::PARAM_STR);
+        $query->bindParam(':qty', $qty, PDO::PARAM_STR);
+        $query->bindParam(':wh', $wh, PDO::PARAM_STR);
+        $query->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
+        $query->bindParam(':location', $location, PDO::PARAM_STR);
         $query->bindParam(':line_no', $line_no, PDO::PARAM_STR);
+        $query->bindParam(':doc_user_id', $doc_user_id, PDO::PARAM_STR);
+        $query->bindParam(':seq_record', $seq_record, PDO::PARAM_STR);
+        $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
         $query->execute();
         $lastInsertId = $conn->lastInsertId();
 
         if ($lastInsertId) {
+            $status = "Y";
+            $sql_update = "UPDATE wh_stock_record SET status=:status WHERE id = :id";
+            $query = $conn->prepare($sql_update);
+            $query->bindParam(':status', $status, PDO::PARAM_STR);
+            $query->bindParam(':id', $detail_id, PDO::PARAM_STR);
+            $query->execute();
             echo $save_success;
         } else {
-            echo $error . " | " . $doc_no . " | " . $line_no . " | " . $product_id . " | " . $quantity . " | " . $unit_id;
+            echo $error . " | " . $doc_id . " | " . $line_no . " | " . $product_id . " | " . $location . " | " . $wh_week_id;
         }
 
     }
 }
-
 
 if ($_POST["action_detail"] === 'UPDATE') {
-
-    if ($_POST["$product_id"] !== '') {
-
-        if ($_POST["KeyAddDetail"] !== '') {
-            $doc_no = $_POST["KeyAddDetail"];
-            $table_name = "ims_order_detail_temp";
-        } else {
-            $doc_no = $_POST["doc_no_detail"];
-            $table_name = "ims_order_detail";
-        }
-
+    if ($_POST["doc_date_detail"] !== '' && $_POST["doc_id_detail"] !== '') {
+        $table_name = "wh_stock_transaction";
+        $detail_id = $_POST["detail_id"];
+         $doc_id = $_POST["doc_id_detail"];
         $doc_date = $_POST["doc_date_detail"];
-        $id = $_POST["detail_id"];
-        $product_id = $_POST["product_id"];
-        $quantity = $_POST["quantity"];
-        $price = $_POST["price"];
-        $unit_id = $_POST["unit_id"];
+        $product_id = $_POST["product_id_detail"];
+        $wh = $_POST["wh_to_detail"];
+        $wh_week_id = $_POST["wh_week_id_detail"];
+        $location = $_POST["location_detail"];
+        $qty = $_POST["qty_detail"];
+        $record_type = "+";
+        $seq_record = $_POST["seq_record_detail"];
+        $doc_user_id = $_POST["doc_user_id_detail"];
+        $create_by = $_POST["create_by_detail"];
 
-
-        $sql_find = "SELECT count(*) as row FROM " . $table_name . " WHERE id = '" . $id . "'";
-
-        $row = $conn->query($sql_find)->fetch();
-        if (empty($row["0"])) {
-            echo $error;
-        } else {
-            $sql_update = "UPDATE " . $table_name
-                . " SET doc_date=:doc_date,product_id=:product_id,quantity=:quantity "
-                . ",price=:price,unit_id=:unit_id "
-                . " WHERE id = :id ";
-            $query = $conn->prepare($sql_update);
-            $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
-            $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
-            $query->bindParam(':quantity', $quantity, PDO::PARAM_STR);
-            $query->bindParam(':price', $price, PDO::PARAM_STR);
-            $query->bindParam(':unit_id', $unit_id, PDO::PARAM_STR);
-            $query->bindParam(':id', $id, PDO::PARAM_STR);
-            if($query->execute()){
-                echo $save_success;
-            }else{
-                echo $error;
-            }
-        }
-
-    }
-}
-
-if ($_POST["action_detail"] === 'DELETE') {
-
-    if ($_POST["$product_id"] !== '') {
-
-        if ($_POST["KeyAddDetail"] !== '') {
-            $doc_no = $_POST["KeyAddDetail"];
-            $table_name = "ims_order_detail_temp";
-        } else {
-            $doc_no = $_POST["doc_no_detail"];
-            $table_name = "ims_order_detail";
-        }
-
-        $id = $_POST["detail_id"];
-        $product_id = $_POST["product_id"];
-        $quantity = $_POST["quantity"];
-        $unit_id = $_POST["unit_id"];
-        $sql_find = "SELECT * FROM " . $table_name . " WHERE id = " . $id;
+        $sql_find = "SELECT * FROM wh_stock_transaction WHERE id = " . $detail_id;
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            try {
-                $sql = "DELETE FROM " . $table_name . " WHERE id = " . $id;
-                $query = $conn->prepare($sql);
-                $query->execute();
-
-                Reorder_Record_By_DocNO($conn, $table_name, $doc_no);
-
-                echo $del_success;
-
-            } catch (Exception $e) {
-                echo 'Message: ' . $e->getMessage();
-            }
-        }
-
-
-    }
-}
-
-if ($_POST["action"] === 'SAVE_DETAIL') {
-
-    if ($_POST["KeyAddData"] != '') {
-
-        $KeyAddData = $_POST["KeyAddData"];
-
-        $sql_find = "SELECT * FROM ims_order_master WHERE KeyAddData = '" . $KeyAddData . "'";
-        $statement = $conn->query($sql_find);
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($results as $result) {
-            $doc_no = $result['doc_no'];
-            $doc_date = $result['doc_date'];
-        }
-
-        $sql_find_detail = "SELECT * FROM ims_order_detail_temp WHERE doc_no = '" . $KeyAddData . "'";
-        $statement = $conn->query($sql_find_detail);
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($results as $result) {
-
-            $sql = "INSERT INTO ims_order_detail (doc_no,doc_date,product_id,unit_id,quantity,price,line_no) 
-            VALUES (:doc_no,:doc_date,:product_id,:unit_id,:quantity,:price,:line_no)";
-            $query = $conn->prepare($sql);
-            $query->bindParam(':doc_no', $doc_no, PDO::PARAM_STR);
-            $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
-            $query->bindParam(':product_id', $result['product_id'], PDO::PARAM_STR);
-            $query->bindParam(':unit_id', $result['unit_id'], PDO::PARAM_STR);
-            $query->bindParam(':quantity', $result['quantity'], PDO::PARAM_STR);
-            $query->bindParam(':price', $result['price'], PDO::PARAM_STR);
-            $query->bindParam(':line_no', $result['line_no'], PDO::PARAM_STR);
+            $sql_update = "UPDATE wh_stock_transaction SET qty=:qty,wh_week_id=:wh_week_id,location=:location
+            WHERE id = :id";
+            $query = $conn->prepare($sql_update);
+            $query->bindParam(':qty', $qty, PDO::PARAM_STR);
+            $query->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
+            $query->bindParam(':location', $location, PDO::PARAM_STR);
+            $query->bindParam(':id', $detail_id, PDO::PARAM_STR);
             $query->execute();
-            $lastInsertId = $conn->lastInsertId();
-
-        }
-
-
-        if ($lastInsertId) {
             echo $save_success;
-        } else {
-            echo $error;
         }
-
     }
+}
+
+if ($_POST["action"] === 'CAL_SUM_DETAIL') {
+
+    $doc_id = $_POST['doc_id'];
+
+    // Query เพื่อรวมค่าของ qty_detail ใน table Detail ตาม doc_id
+    $stmt = $conn->prepare("SELECT SUM(qty_detail) as qty FROM v_wh_stock_transaction WHERE doc_id = :doc_id");
+    $stmt->bindParam(':doc_id', $doc_id);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // ส่งค่าผลรวมกลับไปให้ JavaScript
+    echo $result['total_qty'];
 
 }
 
-
-if ($_POST["action"] === 'GET_ORDER_DETAIL') {
+if ($_POST["action"] === 'GET_STOCK_DETAIL') {
 
     ## Read value
     $table_name = $_POST['table_name'];
@@ -231,28 +157,28 @@ if ($_POST["action"] === 'GET_ORDER_DETAIL') {
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (doc_no LIKE :doc_no or
+        $searchQuery = " AND (doc_id LIKE :doc_id or
         doc_date LIKE :doc_date ) ";
         $searchArray = array(
-            'doc_no' => "%$searchValue%",
+            'doc_id' => "%$searchValue%",
             'doc_date' => "%$searchValue%",
         );
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM " . $table_name . " WHERE DOC_NO = '" . $_POST["doc_no"] . "'");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM " . $table_name . " WHERE doc_id = '" . $_POST["doc_id"] . "'");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM " . $table_name . " WHERE DOC_NO = '" . $_POST["doc_no"] . "'");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM " . $table_name . " WHERE doc_id = '" . $_POST["doc_id"] . "'");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 
-    $query_str = "SELECT * FROM " . $table_name . " WHERE doc_no = '" . $_POST["doc_no"] . "'"
+    $query_str = "SELECT * FROM " . $table_name . " WHERE doc_id = '" . $_POST["doc_id"] . "'"
         . " ORDER BY line_no ";
 
     $stmt = $conn->prepare($query_str);
@@ -265,25 +191,26 @@ if ($_POST["action"] === 'GET_ORDER_DETAIL') {
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
                 "id" => $row['id'],
-                "doc_no" => $row['doc_no'],
+                "doc_id" => $row['doc_id'],
                 "doc_date" => $row['doc_date'],
+                "record_type" => $row['record_type'],
                 "line_no" => $row['line_no'],
                 "product_id" => $row['product_id'],
                 "product_name" => $row['product_name'],
-                "quantity" => number_format($row['quantity'],2),
-                "price" => number_format($row['price'],2),
-                "total_price" => number_format($row['total_price'],2),
-                "unit_id" => $row['unit_id'],
-                "unit_name" => $row['unit_name'],
+                "qty" => $row['qty'],
+                "wh" => $row['wh'],
+                "wh_week_id" => $row['wh_week_id'],
+                "location" => $row['location'],
+                "create_by" => $row['create_by'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"
             );
         } else {
             $data[] = array(
                 "id" => $row['id'],
-                "doc_no" => $row['doc_no'],
+                "doc_id" => $row['doc_id'],
                 "doc_date" => $row['doc_date'],
-                "select" => "<button type='button' name='select' id='" . $row['doc_no'] . "@" . $row['doc_date'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
+                "select" => "<button type='button' name='select' id='" . $row['doc_id'] . "@" . $row['doc_date'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
 </button>",
             );
         }

@@ -41,6 +41,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                    value="">
                                             <div class="modal-body">
                                                 <div class="form-group row">
+                                                    <input type="hidden" id="seq_record" value="">
+                                                    <input type="hidden" id="doc_user_id" value="">
+                                                    <input type="hidden" id="create_by" value="">
                                                     <div class="col-sm-4">
                                                         <label for="doc_id"
                                                                class="control-label">เลขที่เอกสาร</label>
@@ -156,14 +159,14 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                             </div>
                                             <div class="modal-footer">
-                                                <input type="hidden" name="id" id="id"/>
+                                                <input type="text" name="id" id="id"/>
                                                 <input type="hidden" name="save_status" id="save_status"/>
                                                 <input type="hidden" name="action" id="action"
                                                        value=""/>
-                                                <button type="button" class="btn btn-primary"
+                                                <!--button type="button" class="btn btn-primary"
                                                         id="btnSave">Save <i
                                                             class="fa fa-check"></i>
-                                                </button>
+                                                </button-->
                                                 <button type="button" class="btn btn-danger"
                                                         id="btnClose">Close <i
                                                             class="fa fa-window-close"></i>
@@ -198,7 +201,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            id="doc_date_detail"
                                                                            name="doc_date_detail" value="">
                                                                 </div>
-
+                                                                <input type="hidden" id="qty_master" value="">
                                                                 <!-- กลุ่มฟอร์มที่ 2 -->
                                                                 <div class="row">
                                                                     <div class="col-sm-4">
@@ -262,6 +265,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             <input type="text" class="form-control"
                                                                                    id="qty_detail" name="qty_detail"
                                                                                    placeholder=""
+                                                                                   onblur="validateQty()"
                                                                                    required>
                                                                         </div>
                                                                     </div>
@@ -270,14 +274,18 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <input type="hidden" name="id" id="id"/>
-                                                            <input type="hidden" name="detail_id" id="detail_id"/>
+                                                            <input type="text" name="detail_id" id="detail_id"/>
                                                             <input type="hidden" name="action_detail" id="action_detail"
                                                                    value=""/>
-                                                            <input type="hidden" name="create_by" id="create_by"
+                                                            <input type="hidden" name="create_by_detail"
+                                                                   id="create_by_detail"
                                                                    value=""/>
-                                                            <input type="hidden" name="doc_user_id" id="doc_user_id"
-                                                                   value="<?php echo $doc_user_id; ?>"/>
+                                                            <input type="hidden" name="seq_record_detail"
+                                                                   id="seq_record_detail"
+                                                                   value=""/>
+                                                            <input type="hidden" name="doc_user_id_detail"
+                                                                   id="doc_user_id_detail"
+                                                                   value=""/>
                                                             <button type="submit" name="save" id="save"
                                                                     class="btn btn-primary"><i class="fa fa-check"></i>Save
                                                             </button>
@@ -479,6 +487,7 @@ if (strlen($_SESSION['alogin']) == "") {
             }
 
             if (queryString["doc_id"] != null && queryString["product_id"] != null && queryString["seq_record"] != null) {
+                $('#id').val(queryString["id"]);
                 $('#doc_id').val(queryString["doc_id"]);
                 $('#doc_date').val(queryString["doc_date"]);
                 $('#line_no').val(queryString["line_no"]);
@@ -491,8 +500,9 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#status').val(queryString["status"]);
                 $('#remark').val(queryString["remark"]);
                 $('#doc_user_id').val(queryString["doc_user_id"]);
+                $('#create_by').val(queryString["create_by"]);
 
-                //Load_Data_Detail(queryString["doc_id"], "v_order_detail");
+                Load_Data_Detail(queryString["doc_id"], "v_wh_stock_transaction");
             }
         });
     </script>
@@ -501,7 +511,7 @@ if (strlen($_SESSION['alogin']) == "") {
         function Load_Data_Detail(doc_id, table_name) {
 
             let formData = {
-                action: "GET_ORDER_DETAIL",
+                action: "GET_STOCK_DETAIL",
                 sub_action: "GET_MASTER",
                 doc_id: doc_id,
                 table_name: table_name
@@ -528,18 +538,19 @@ if (strlen($_SESSION['alogin']) == "") {
                 'serverSide': true,
                 'serverMethod': 'post',
                 'ajax': {
-                    'url': 'model/manage_order_detail_process.php',
+                    'url': 'model/manage_wh_stock_detail_process.php',
                     'data': formData
                 },
                 'columns': [
                     {data: 'line_no'},
+                    {data: 'product_id'},
                     {data: 'product_name'},
-                    {data: 'quantity', className: "text-right"},
-                    {data: 'unit_name'},
-                    {data: 'price', className: "text-right"},
-                    {data: 'total_price', className: "text-right"},
-                    {data: 'update'},
-                    {data: 'delete'}
+                    {data: 'record_type'},
+                    {data: 'qty', className: "text-right"},
+                    {data: 'wh'},
+                    {data: 'wh_week_id'},
+                    {data: 'location'},
+                    {data: 'update'}
                 ]
             });
         }
@@ -556,8 +567,11 @@ if (strlen($_SESSION['alogin']) == "") {
                     let product_id_detail = $('#product_id').val();
                     let product_name_detail = $('#product_name').val();
                     let wh_to_detail = $('#wh_to').val();
+                    let seq_record_detail = $('#seq_record').val();
+                    let doc_user_id_detail = $('#doc_user_id').val();
+                    let create_by_detail = $('#create_by').val();
+                    let qty_master = $('#qty').val();
                     $('#recordModal').modal('show');
-                    $('#KeyAddDetail').val($('#KeyAddData').val());
                     $('#doc_id_detail').val(doc_id_detail);
                     $('#doc_date_detail').val(doc_date_detail);
                     $('#product_id_detail').val(product_id_detail);
@@ -566,6 +580,10 @@ if (strlen($_SESSION['alogin']) == "") {
                     $('#wh_to_detail').val(wh_to_detail);
                     $('#wh_week_id_detail').val('');
                     $('#location_detail').val('');
+                    $('#seq_record_detail').val(seq_record_detail);
+                    $('#doc_user_id_detail').val(doc_user_id_detail);
+                    $('#create_by_detail').val(create_by_detail);
+                    $('#qty_master').val(qty_master);
                     $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                     $('#action_detail').val('ADD');
                     $('#save').val('Save');
@@ -579,46 +597,40 @@ if (strlen($_SESSION['alogin']) == "") {
         $("#TableOrderDetailList").on('click', '.update', function () {
 
             let rec_id = $(this).attr("id");
-
-            if ($('#KeyAddData').val() !== '') {
-                doc_id = $('#KeyAddData').val();
-                table_name = "v_order_detail_temp";
-            } else {
-                doc_id = $('#doc_id').val();
-                table_name = "v_order_detail";
-            }
-
-            let formData = {action: "GET_DATA", id: rec_id, doc_id: doc_id, table_name: table_name};
+            let table_name = "v_wh_stock_transaction";
+            let formData = {action: "GET_DATA", id: rec_id, table_name: table_name};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_order_detail_process.php',
+                url: 'model/manage_wh_stock_detail_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
-                        let product_id = response[i].product_id;
                         let id = response[i].id;
-                        let name_t = response[i].name_t;
-                        let doc_date = response[i].doc_date;
-                        let quantity = response[i].quantity;
-                        let price = response[i].price;
-                        let total_price = response[i].total_price;
-                        let unit_id = response[i].unit_id;
-                        let unit_name = response[i].unit_name;
-
+                        let doc_id_detail = response[i].doc_id;
+                        let doc_date_detail = response[i].doc_date;
+                        let product_id_detail = response[i].product_id;
+                        let product_name_detail = response[i].product_name;
+                        let qty_detail = response[i].qty;
+                        let wh_to_detail = response[i].wh;
+                        let wh_week_id_detail = response[i].wh_week_id;
+                        let location_detail = response[i].location;
+                        let qty_master = $('#qty').val();
+                        let master_id_detail = $('#id').val();
                         $('#recordModal').modal('show');
                         $('#id').val(id);
                         $('#detail_id').val(rec_id);
-                        $('#doc_id_detail').val(doc_id);
-                        $('#doc_date_detail').val(doc_date);
-                        $('#product_id').val(product_id);
-                        $('#name_t').val(name_t);
-                        $('#quantity').val(quantity);
-                        $('#price').val(price);
-                        $('#total_price').val(total_price);
-                        $('#unit_id').val(unit_id);
-                        $('#unit_name').val(unit_name);
+                        $('#doc_id_detail').val(doc_id_detail);
+                        $('#doc_date_detail').val(doc_date_detail);
+                        $('#product_id_detail').val(product_id_detail);
+                        $('#product_name_detail').val(product_name_detail);
+                        $('#qty_detail').val(qty_detail);
+                        $('#wh_to_detail').val(wh_to_detail);
+                        $('#wh_week_id_detail').val(wh_week_id_detail).trigger('change');
+                        $('#location_detail').val(location_detail).trigger('change');
+                        $('#qty_master').val(qty_master);
+                        $('#master_id_detail').val(master_id_detail);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action_detail').val('UPDATE');
                         $('#save').val('Save');
@@ -638,143 +650,9 @@ if (strlen($_SESSION['alogin']) == "") {
 
             let rec_id = $(this).attr("id");
 
-            if ($('#KeyAddData').val() !== '') {
-                doc_id = $('#KeyAddData').val();
-                table_name = "v_order_detail_temp";
-            } else {
-                doc_id = $('#doc_id').val();
-                table_name = "v_order_detail";
-            }
-
-            let formData = {action: "GET_DATA", id: rec_id, doc_id: doc_id, table_name: table_name};
-            $.ajax({
-                type: "POST",
-                url: 'model/manage_order_detail_process.php',
-                dataType: "json",
-                data: formData,
-                success: function (response) {
-                    let len = response.length;
-                    for (let i = 0; i < len; i++) {
-                        let product_id = response[i].product_id;
-                        let id = response[i].id;
-                        let name_t = response[i].name_t;
-                        let quantity = response[i].quantity;
-                        let price = response[i].price;
-                        let total_price = response[i].total_price;
-                        let unit_id = response[i].unit_id;
-                        let unit_name = response[i].unit_name;
-
-                        $('#recordModal').modal('show');
-                        $('#id').val(id);
-                        $('#detail_id').val(rec_id);
-                        $('#doc_id_detail').val(doc_id);
-                        $('#product_id').val(product_id);
-                        $('#name_t').val(name_t);
-                        $('#quantity').val(quantity);
-                        $('#price').val(price);
-                        $('#total_price').val(total_price);
-                        $('#unit_id').val(unit_id);
-                        $('#unit_name').val(unit_name);
-                        $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
-                        $('#action_detail').val('DELETE');
-                        $('#save').val('Confirm Delete');
-                    }
-                },
-                error: function (response) {
-                    alertify.error("error : " + response);
-                }
-            });
         });
 
     </script>
-
-    <script>
-        $(document).ready(function () {
-            $("#btnSave").click(function () {
-                if ($('#doc_date').val() == '' || $('#f_name').val() == '') {
-                    alertify.error("กรุณาป้อนวันที่ / ชื่อลูกค้า ");
-                } else {
-                    let formData = $('#MainrecordForm').serialize();
-                    $.ajax({
-                        url: 'model/manage_order_process.php',
-                        method: "POST",
-                        data: formData,
-                        success: function (data) {
-
-                            if ($('#KeyAddData').val() !== '') {
-                                let KeyAddData = $('#KeyAddData').val();
-                                Save_Detail(KeyAddData);
-                            }
-                            alertify.success(data);
-                            window.opener.location.reload();
-                            $('#save_status').val("save");
-                        }
-                    })
-
-                }
-
-            });
-        });
-    </script>
-
-    <script>
-        function Save_Detail(KeyAddData) {
-
-            let formData = {action: "SAVE_DETAIL", KeyAddData: KeyAddData};
-            $.ajax({
-                url: 'model/manage_order_detail_process.php',
-                method: "POST",
-                data: formData,
-                success: function (data) {
-                    //alertify.success(data);
-                }
-            })
-
-        }
-    </script>
-
-    <script>
-
-        $("#recordModal").on('submit', '#recordForm', function (event) {
-            event.preventDefault();
-            let KeyAddData = $('#KeyAddData').val();
-            if (KeyAddData !== '') {
-                $('#KeyAddDetail').val(KeyAddData);
-            }
-            let doc_id_detail = $('#doc_id_detail').val();
-            let formData = $(this).serialize();
-            $.ajax({
-                url: 'model/manage_order_detail_process.php',
-                method: "POST",
-                data: formData,
-                success: function (data) {
-                    //alertify.success(data);
-                    $('#recordForm')[0].reset();
-                    $('#recordModal').modal('hide');
-
-                    $('#TableOrderDetailList').DataTable().clear().destroy();
-
-                    if (KeyAddData !== '') {
-                        Load_Data_Detail(KeyAddData, "v_order_detail_temp");
-                    } else {
-                        Load_Data_Detail(doc_id_detail, "v_order_detail");
-                    }
-                }
-            })
-
-        });
-
-    </script>
-
-    <script>
-
-        $('#quantity,#price,#total_price').blur(function () {
-            let total_price = new Calculate($('#quantity').val(), $('#price').val());
-            $('#total_price').val(total_price.Multiple().toFixed(2));
-        });
-
-    </script>
-
 
     <script>
         $(document).ready(function () {
@@ -837,6 +715,71 @@ if (strlen($_SESSION['alogin']) == "") {
                 }
             });
         });
+    </script>
+
+    <script>
+        function ReloadDataTable() {
+            $('#TableOrderDetailList').DataTable().ajax.reload();
+        }
+    </script>
+
+    <script>
+        function validateQty() {
+            let doc_id = $('#doc_id_detail').val();  // รับค่า doc_id จาก input
+            let qty_master = parseFloat($('#qty_master').val());  // รับค่า qty_master จาก input และแปลงเป็น float
+            let qty_detail_input = parseFloat($('#qty_detail').val());  // รับค่า qty_detail จาก input form และแปลงเป็น float
+
+            // ตรวจสอบว่าค่าที่ผู้ใช้ป้อนเป็นตัวเลขหรือไม่
+            if (isNaN(qty_detail_input)) {
+                qty_detail_input = 0;  // ถ้าไม่เป็นตัวเลขให้ค่าเป็น 0
+            }
+
+            // ใช้ AJAX เพื่อตรวจสอบข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/manage_wh_stock_detail_process.php',  // ไฟล์ PHP ที่ใช้ดึงข้อมูล
+                type: 'POST',
+                data: { action: "CAL_SUM_DETAIL",doc_id: doc_id },  // ส่ง doc_id ไปให้ PHP
+                success: function(response) {
+                    let total_qty_detail = parseFloat(response);  // รับผลรวม qty_detail จาก table Detail
+
+                    if (isNaN(total_qty_detail)) {
+                        total_qty_detail = 0;  // ถ้าไม่ได้ค่าใดๆ ให้เริ่มต้นเป็น 0
+                    }
+
+                    // คำนวณผลรวมระหว่าง qty_detail ที่มีอยู่ในตารางและ qty ที่ป้อนใหม่
+                    let total_qty = total_qty_detail + qty_detail_input;
+
+                    // ตรวจสอบว่าผลรวมเกินค่า qty_master หรือไม่
+                    if (total_qty > qty_master) {
+                        alertify.alert("จำนวนที่ป้อน รวมทุกรายการแล้วไม่สามารถเกิน " + qty_master + " ได้");
+                        return false;  // หยุดการดำเนินการ
+                    } else {
+                        return true;  // อนุญาตให้ดำเนินการต่อ
+                    }
+                }
+            });
+        }
+    </script>
+
+    <script>
+
+        $("#recordModal").on('submit', '#recordForm', function (event) {
+            event.preventDefault();
+            let formData = $(this).serialize();
+            $.ajax({
+                url: 'model/manage_wh_stock_detail_process.php',
+                method: "POST",
+                data: formData,
+                success: function (data) {
+                    alertify.success(data);
+                    $('#recordForm')[0].reset();
+                    $('#recordModal').modal('hide');
+                    $('#save').attr('disabled', false);
+                    $('#TableOrderDetailList').DataTable().ajax.reload();
+                }
+            })
+        });
+
     </script>
 
     </body>

@@ -40,6 +40,14 @@ if ($_POST["action"] === 'GET_DATA') {
 if ($_POST["action_detail"] === 'ADD') {
     if ($_POST["doc_date"] !== '') {
 
+        if ($_POST["KeyAddDetail"] !== '') {
+            $doc_no = $_POST["KeyAddDetail"];
+            $table_name = "ims_order_detail_temp";
+        } else {
+            $doc_no = $_POST["doc_no_detail"];
+            $table_name = "ims_order_detail";
+        }
+
         $doc_date = $_POST["doc_date_detail"];
         $product_id = $_POST["product_id"];
         $unit_id = $_POST["unit_id"];

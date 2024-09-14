@@ -40,119 +40,120 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <input type="hidden" class="form-control" id="KeyAddData" name="KeyAddData"
                                                    value="">
                                             <div class="modal-body">
-                                                <div class="modal-body">
-                                                    <div class="form-group row">
-                                                        <div class="col-sm-1">
-                                                            <label for="doc_id"
-                                                                   class="control-label">เลขที่เอกสาร</label>
-                                                            <input type="text" class="form-control"
-                                                                   id="doc_id" name="doc_id"
-                                                                   readonly="true"
-                                                                   placeholder="เลขที่เอกสาร">
-                                                        </div>
-
-                                                        <div class="col-sm-1">
-                                                            <label for="doc_date"
-                                                                   class="control-label">วันที่</label>
-                                                            <input type="text" class="form-control"
-                                                                   id="doc_date"
-                                                                   name="doc_date"
-                                                                   readonly="true"
-                                                                   placeholder="วันที่">
-                                                            <div class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-th"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-2">
-                                                            <label for="product_id"
-                                                                   class="control-label">รหัสสินค้า</label>
-                                                            <input type="text" class="form-control"
-                                                                   id="product_id"
-                                                                   name="product_id">
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <label for="product_name"
-                                                                   class="control-label">ชื่อสินค้า</label>
-                                                            <input type="text" class="form-control"
-                                                                   id="product_name"
-                                                                   name="product_name"
-                                                                   placeholder="">
-                                                        </div>
-
-                                                        <div class="col-sm-1">
-                                                            <label for="qty"
-                                                                   class="control-label">จำนวน</label>
-                                                            <input type="text" class="form-control"
-                                                                   id="qty" name="qty"
-                                                                   readonly="true"
-                                                                   placeholder="">
-                                                        </div>
-
-                                                        <div class="col-sm-1">
-                                                            <label for="wh_org"
-                                                                   class="control-label">จาก</label>
-                                                            <input type="text" class="form-control"
-                                                                   id="wh_org"
-                                                                   name="wh_org"
-                                                                   readonly="true"
-                                                                   placeholder="">
-                                                            <div class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-th"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-sm-1">
-                                                            <label for="wh_to"
-                                                                   class="control-label">ไป</label>
-                                                            <input type="text" class="form-control"
-                                                                   id="wh_to"
-                                                                   name="wh_to"
-                                                                   readonly="true"
-                                                                   placeholder="">
-                                                            <div class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-th"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-sm-4">
-                                                            <label for="remark"
-                                                                   class="control-label">หมายเหตุ</label>
-                                                            <input type="text" class="form-control"
-                                                                   id="remark"
-                                                                   name="remark"
-                                                                   readonly="true"
-                                                                   placeholder="">
-                                                            <div class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-th"></span>
-                                                            </div>
-                                                        </div>
-
+                                                <div class="form-group row">
+                                                    <div class="col-sm-4">
+                                                        <label for="doc_id"
+                                                               class="control-label">เลขที่เอกสาร</label>
+                                                        <input type="text" class="form-control"
+                                                               id="doc_id" name="doc_id"
+                                                               readonly="true"
+                                                               placeholder="เลขที่เอกสาร">
                                                     </div>
 
-                                                    <button type='button' name='btnAdd' id='btnAdd'
-                                                            class='btn btn-primary btn-xs'>Add เพิ่มรายการสินค้า
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-
-                                                    <table cellpadding="0" cellspacing="0" border="0"
-                                                           class="display"
-                                                           id="TableOrderDetailList"
-                                                           width="100%">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>รหัสสินค้า</th>
-                                                            <th>รายละเอียด</th>
-                                                            <th>ประเภทรายการ</th>
-                                                            <th>จำนวน</th>
-                                                            <th>คลังปี</th>
-                                                            <th>สัปดาห์</th>
-                                                            <th>ตำแหน่ง</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                        </thead>
-                                                    </table>
+                                                    <div class="col-sm-2">
+                                                        <label for="doc_date"
+                                                               class="control-label">วันที่</label>
+                                                        <input type="text" class="form-control"
+                                                               id="doc_date"
+                                                               name="doc_date"
+                                                               readonly="true"
+                                                               placeholder="วันที่">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                <div class="form-group row">
+                                                    <div class="col-sm-2">
+                                                        <label for="product_id"
+                                                               class="control-label">รหัสสินค้า</label>
+                                                        <input type="text" class="form-control"
+                                                               id="product_id"
+                                                               name="product_id" readonly="true">
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <label for="product_name"
+                                                               class="control-label">ชื่อสินค้า</label>
+                                                        <input type="text" class="form-control"
+                                                               id="product_name"
+                                                               name="product_name"
+                                                               placeholder="" readonly="true">
+                                                    </div>
+
+                                                    <div class="col-sm-1">
+                                                        <label for="qty"
+                                                               class="control-label">จำนวน</label>
+                                                        <input type="text" class="form-control"
+                                                               id="qty" name="qty"
+                                                               readonly="true"
+                                                               placeholder="">
+                                                    </div>
+
+                                                    <div class="col-sm-1">
+                                                        <label for="wh_org"
+                                                               class="control-label">จาก</label>
+                                                        <input type="text" class="form-control"
+                                                               id="wh_org"
+                                                               name="wh_org"
+                                                               readonly="true"
+                                                               placeholder="">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-2">
+                                                        <label for="wh_to"
+                                                               class="control-label">ไป</label>
+                                                        <input type="text" class="form-control"
+                                                               id="wh_to"
+                                                               name="wh_to"
+                                                               readonly="true"
+                                                               placeholder="">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <label for="remark"
+                                                               class="control-label">หมายเหตุ</label>
+                                                        <input type="text" class="form-control"
+                                                               id="remark"
+                                                               name="remark"
+                                                               readonly="true"
+                                                               placeholder="">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <button type='button' name='btnAdd' id='btnAdd'
+                                                        class='btn btn-primary btn-xs'>Add เพิ่มรายการรับเข้าคลังจริง
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+
+                                                <table cellpadding="0" cellspacing="0" border="0"
+                                                       class="display"
+                                                       id="TableOrderDetailList"
+                                                       width="100%">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>รหัสสินค้า</th>
+                                                        <th>รายละเอียด</th>
+                                                        <th>ประเภทรายการ</th>
+                                                        <th>จำนวน</th>
+                                                        <th>คลังปี</th>
+                                                        <th>สัปดาห์</th>
+                                                        <th>ตำแหน่ง</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                    </thead>
+                                                </table>
+
                                             </div>
                                             <div class="modal-footer">
                                                 <input type="hidden" name="id" id="id"/>
@@ -183,115 +184,39 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="container-fluid">
 
                                                                 <div class="col-sm-5">
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="hidden" class="form-control"
                                                                            id="KeyAddDetail"
                                                                            name="KeyAddDetail" value="">
                                                                 </div>
                                                                 <div class="col-sm-5">
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="hidden" class="form-control"
                                                                            id="doc_id_detail"
                                                                            name="doc_id_detail" value="">
                                                                 </div>
                                                                 <div class="col-sm-5">
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="hidden" class="form-control"
                                                                            id="doc_date_detail"
                                                                            name="doc_date_detail" value="">
                                                                 </div>
 
-                                                                <!-- ใช้ container-fluid เพื่อให้เต็มความกว้างของ modal -->
-                                                                <!-- กลุ่มฟอร์มที่ 1 -->
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="doc_id"
-                                                                                   class="control-label">เลขที่เอกสาร</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   id="doc_id" name="doc_id"
-                                                                                   placeholder=""
-                                                                                   required readonly="true">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label for="line_no"
-                                                                                   class="control-label">รายการที่</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   id="line_no" name="line_no"
-                                                                                   placeholder=""
-                                                                                   required readonly="true">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label for="doc_date" class="control-label">วันที่</label>
-                                                                            <div class="input-group">
-                                                                                <input type="text" class="form-control"
-                                                                                       id="doc_date" name="doc_date"
-                                                                                       readonly="true"
-                                                                                       value="">
-                                                                                <div class="input-group-append">
-                                                                                    <span class="input-group-text"><i
-                                                                                                class="glyphicon glyphicon-th"></i></span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <div class="form-group">
-                                                                            <label for="record_type_id"
-                                                                                   class="control-label">ประเภทรายการ</label>
-                                                                            <select class="form-control"
-                                                                                    id="record_type_id"
-                                                                                    name="record_type_id" required>
-                                                                                <option value="">ประเภทรายการ</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label for="record_type_desc"
-                                                                                   class="control-label">รายละเอียด</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   id="record_type_desc"
-                                                                                   name="record_type_desc"
-                                                                                   readonly placeholder="รายละเอียด"
-                                                                                   required>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
                                                                 <!-- กลุ่มฟอร์มที่ 2 -->
                                                                 <div class="row">
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label for="product_id"
-                                                                                   class="control-label">รหัสสินค้า</label>
-                                                                            <select class="form-control" id="product_id"
-                                                                                    name="product_id" required>
-                                                                                <option value="">เลือกรหัสสินค้า
-                                                                                </option>
-                                                                            </select>
-                                                                        </div>
+                                                                    <div class="col-sm-4">
+                                                                        <label for="product_id_detail"
+                                                                               class="control-label">รหัสสินค้า</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="product_id_detail"
+                                                                               name="product_id_detail" readonly="true">
                                                                     </div>
-                                                                    <div class="col-md-4">
+                                                                    <div class="col-md-8">
                                                                         <div class="form-group">
-                                                                            <label for="product_name"
+                                                                            <label for="product_name_detail"
                                                                                    class="control-label">รายละเอียด</label>
                                                                             <input type="text" class="form-control"
-                                                                                   id="product_name" name="product_name"
+                                                                                   id="product_name_detail"
+                                                                                   name="product_name_detail"
                                                                                    readonly placeholder="รายละเอียด"
-                                                                                   required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="form-group">
-                                                                            <label for="qty"
-                                                                                   class="control-label">จำนวน</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   id="qty" name="qty" placeholder=""
-                                                                                   required>
+                                                                                   readonly="true">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -300,34 +225,44 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <div class="row">
                                                                     <div class="col-md-3">
                                                                         <div class="form-group">
-                                                                            <label for="wh"
+                                                                            <label for="wh_to_detail"
                                                                                    class="control-label">คลังปี</label>
-                                                                            <select class="form-control" id="wh"
-                                                                                    name="wh" required>
-                                                                                <option value="">เลือกคลังปี</option>
-                                                                            </select>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="wh_to_detail" name="wh_to_detail"
+                                                                                   placeholder=""
+                                                                                   readonly="true">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="form-group">
-                                                                            <label for="wh_week_id"
+                                                                            <label for="wh_week_id_detail"
                                                                                    class="control-label">สัปดาห์</label>
                                                                             <select class="form-control"
-                                                                                    id="wh_week_id"
-                                                                                    name="wh_week_id" required>
+                                                                                    id="wh_week_id_detail"
+                                                                                    name="wh_week_id_detail" required>
                                                                                 <option value="">สัปดาห์</option>
                                                                             </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="form-group">
-                                                                            <label for="location"
+                                                                            <label for="location_detail"
                                                                                    class="control-label">ตำแหน่ง</label>
                                                                             <select class="form-control"
-                                                                                    id="location"
-                                                                                    name="location" required>
+                                                                                    id="location_detail"
+                                                                                    name="location_detail" required>
                                                                                 <option value="">ตำแหน่ง</option>
                                                                             </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label for="qty_detail"
+                                                                                   class="control-label">จำนวน</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="qty_detail" name="qty_detail"
+                                                                                   placeholder=""
+                                                                                   required>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -411,20 +346,25 @@ if (strlen($_SESSION['alogin']) == "") {
     <script src="js/modal/show_unit_modal.js"></script>
     <!-- Javascript for this page -->
 
-    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.min.css"/>
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"/-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="js/myadmin.min.js"></script>
+
+    <!-- Page level plugins -->
 
     <script src="vendor/datatables/v11/bootbox.min.js"></script>
     <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
     <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
-    <!--link href="vendor/date-picker-1.9/css/date_picker_style.css" rel="stylesheet"/-->
     <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
+
 
     <style>
 
@@ -444,6 +384,37 @@ if (strlen($_SESSION['alogin']) == "") {
             top: 30%;
         }
     </style>
+
+    <style>
+        /* กำหนดความสูงของ select ให้เท่ากับ input text */
+        .form-control {
+            height: calc(1.5em + 0.75rem + 2px); /* ใช้ขนาดเดียวกันกับ input */
+        }
+
+        /* สำหรับ Select2 เพื่อให้ช่อง select มีขนาดสูงเท่ากับ input */
+        .select2-container .select2-selection--single {
+            height: calc(1.5em + 0.75rem + 2px) !important;
+            padding: 0.375rem 0.75rem; /* ใช้ padding เดียวกันกับ input */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: calc(1.5em + 0.75rem + 2px) !important; /* จัดแนวข้อความกลาง */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: calc(1.5em + 0.75rem + 2px) !important; /* ปรับขนาดลูกศรให้สูงเท่ากับ select */
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $(".icon-input-btn").each(function () {
+                let btnFont = $(this).find(".btn").css("font-size");
+                let btnColor = $(this).find(".btn").css("color");
+                $(this).find(".fa").css({'font-size': btnFont, 'color': btnColor});
+            });
+        });
+    </script>
 
     <script>
         $(document).ready(function () {
@@ -583,16 +554,18 @@ if (strlen($_SESSION['alogin']) == "") {
                     let doc_id_detail = $('#doc_id').val();
                     let doc_date_detail = $('#doc_date').val();
                     let product_id_detail = $('#product_id').val();
-                    let qty_detail = $('#qty').val();
-                    let wh_org_detail = $('#wh_org').val();
-                    let wh_to_detail = $('#wh_org').val();
-
+                    let product_name_detail = $('#product_name').val();
+                    let wh_to_detail = $('#wh_to').val();
                     $('#recordModal').modal('show');
                     $('#KeyAddDetail').val($('#KeyAddData').val());
                     $('#doc_id_detail').val(doc_id_detail);
                     $('#doc_date_detail').val(doc_date_detail);
                     $('#product_id_detail').val(product_id_detail);
-
+                    $('#product_name_detail').val(product_name_detail);
+                    $('#qty_detail').val('');
+                    $('#wh_to_detail').val(wh_to_detail);
+                    $('#wh_week_id_detail').val('');
+                    $('#location_detail').val('');
                     $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                     $('#action_detail').val('ADD');
                     $('#save').val('Save');
@@ -800,6 +773,70 @@ if (strlen($_SESSION['alogin']) == "") {
             $('#total_price').val(total_price.Multiple().toFixed(2));
         });
 
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_wh_week.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#wh_week_id_detail');
+                    $.each(data, function (index, wh_week) {
+                        select.append($('<option>', {
+                            value: wh_week.wh_week_id,
+                            text: wh_week.wh_week_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': wh_week.wh_week_id // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#wh_week_id_detail').select2({
+                        placeholder: "เลือก week",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_wh_location.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#location_detail');
+                    $.each(data, function (index, wh_location) {
+                        select.append($('<option>', {
+                            value: wh_location.location_id,
+                            text: wh_location.location_id, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': wh_location.location_id // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#location_detail').select2({
+                        placeholder: "เลือกตำแหน่ง",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
     </script>
 
     </body>

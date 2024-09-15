@@ -15,7 +15,7 @@ $end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format(
 // สร้างคำสั่ง SQL
 $select_query_wh_transaction = "SELECT * FROM v_wh_stock_transaction WHERE doc_user_id = 'DM04' 
                                 AND doc_date BETWEEN '$doc_date_start' AND '$doc_date_to'"
-                             . " ORDER BY doc_id,create_by,create_date ";
+                                . " ORDER BY create_date DESC ,doc_id,create_by ";
 /*
 $txt =$select_query_wh_transaction;
 $my_file = fopen("exp_wh_param.txt", "w") or die("Unable to open file!");

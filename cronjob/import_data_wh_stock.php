@@ -11,7 +11,7 @@ include("../cond_file/doc_stock_warehouse.php");
 echo "Today is " . date("Y/m/d");
 echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
-//AND 	DOCINFO.DI_DATE  = '2024/09/13' AND DT_DOCCODE = 'DM04'
+$select_query_daily_cond = " AND 	DOCINFO.DI_DATE  = '2024/08/20' AND DT_DOCCODE = 'DM04'";
 
 $select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 
@@ -47,9 +47,11 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         echo "Product Save OK = " . $result_sqlsvr["TRD_SH_CODE"] . " | " . $result_sqlsvr["TRD_SH_NAME"] . "\n\r";
     }
 
+    $doc_id = $result_sqlsvr["DI_REF"] . "-" . str_pad($result_sqlsvr["TRD_SEQ"], 3, '0', STR_PAD_LEFT);
+
     $sql_find = "SELECT COUNT(*) FROM wh_stock_record WHERE doc_id = :doc_id AND line_no = :line_no AND product_id = :product_id";
     $query_find = $conn->prepare($sql_find);
-    $query_find->bindParam(':doc_id', $result_sqlsvr["DI_REF"], PDO::PARAM_STR);
+    $query_find->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
     $query_find->bindParam(':line_no', $result_sqlsvr["TRD_SEQ"], PDO::PARAM_INT);
     $query_find->bindParam(':product_id', $result_sqlsvr["TRD_SH_CODE"], PDO::PARAM_STR);
     $query_find->execute();
@@ -92,12 +94,12 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
         // กรณีที่ข้อมูลยังไม่มีอยู่ในฐานข้อมูล ทำการ Insert
         $doc_date = substr($result_sqlsvr["DI_DATE"], 8, 2) . "-" . substr($result_sqlsvr["DI_DATE"], 5, 2) . "-" . strval(intval(substr($result_sqlsvr["DI_DATE"], 0, 4)));
-
+        $doc_id = $result_sqlsvr["DI_REF"] . "-" . str_pad($result_sqlsvr["TRD_SEQ"], 3, '0', STR_PAD_LEFT);
         $sql_insert = "INSERT INTO wh_stock_record (doc_id, doc_date, line_no, product_id, qty, wh_org, wh_to, doc_user_id,seq_record,create_by,create_date,remark) 
             VALUES (:doc_id, :doc_date, :line_no, :product_id, :qty, :wh_org, :wh_to, :doc_user_id,:seq_record,:create_by,:create_date,:remark)";
         $query_insert = $conn->prepare($sql_insert);
 
-        $query_insert->bindParam(':doc_id', $result_sqlsvr["DI_REF"], PDO::PARAM_STR);
+        $query_insert->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
         $query_insert->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
         $query_insert->bindParam(':line_no', $result_sqlsvr["TRD_SEQ"], PDO::PARAM_INT);
         $query_insert->bindParam(':product_id', $result_sqlsvr["TRD_SH_CODE"], PDO::PARAM_STR);

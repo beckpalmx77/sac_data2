@@ -80,11 +80,11 @@ if ($_POST["action_detail"] === 'ADD') {
 
         if ($lastInsertId) {
             $status = "Y";
-            $sql_update = "UPDATE wh_stock_record SET status=:status WHERE id = :id";
-            $query = $conn->prepare($sql_update);
-            $query->bindParam(':status', $status, PDO::PARAM_STR);
-            $query->bindParam(':id', $detail_id, PDO::PARAM_STR);
-            $query->execute();
+            $sql_update_header = "UPDATE wh_stock_record SET status=:status WHERE doc_id = :doc_id";
+            $query_header = $conn->prepare($sql_update_header);
+            $query_header->bindParam(':status', $status, PDO::PARAM_STR);
+            $query_header->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+            $query_header->execute();
             echo $save_success;
         } else {
             echo $error . " | " . $doc_id . " | " . $line_no . " | " . $product_id . " | " . $location . " | " . $wh_week_id;
@@ -97,7 +97,7 @@ if ($_POST["action_detail"] === 'UPDATE') {
     if ($_POST["doc_date_detail"] !== '' && $_POST["doc_id_detail"] !== '') {
         $table_name = "wh_stock_transaction";
         $detail_id = $_POST["detail_id"];
-         $doc_id = $_POST["doc_id_detail"];
+        $doc_id = $_POST["doc_id_detail"];
         $doc_date = $_POST["doc_date_detail"];
         $product_id = $_POST["product_id_detail"];
         $wh = $_POST["wh_to_detail"];
@@ -120,6 +120,14 @@ if ($_POST["action_detail"] === 'UPDATE') {
             $query->bindParam(':location', $location, PDO::PARAM_STR);
             $query->bindParam(':id', $detail_id, PDO::PARAM_STR);
             $query->execute();
+
+            $status = "Y";
+            $sql_update_header = "UPDATE wh_stock_record SET status=:status WHERE doc_id = :doc_id";
+            $query_header = $conn->prepare($sql_update_header);
+            $query_header->bindParam(':status', $status, PDO::PARAM_STR);
+            $query_header->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+            $query_header->execute();
+
             echo $save_success;
         }
     }

@@ -159,7 +159,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                             </div>
                                             <div class="modal-footer">
-                                                <input type="text" name="id" id="id"/>
+                                                <input type="hidden" name="id" id="id"/>
                                                 <input type="hidden" name="save_status" id="save_status"/>
                                                 <input type="hidden" name="action" id="action"
                                                        value=""/>
@@ -274,7 +274,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <input type="text" name="detail_id" id="detail_id"/>
+                                                            <input type="hidden" name="detail_id" id="detail_id"/>
                                                             <input type="hidden" name="action_detail" id="action_detail"
                                                                    value=""/>
                                                             <input type="hidden" name="create_by_detail"
@@ -578,8 +578,10 @@ if (strlen($_SESSION['alogin']) == "") {
                     $('#product_name_detail').val(product_name_detail);
                     $('#qty_detail').val('');
                     $('#wh_to_detail').val(wh_to_detail);
-                    $('#wh_week_id_detail').val('');
-                    $('#location_detail').val('');
+                    //$('#wh_week_id_detail').val('');
+                    //$('#location_detail').val('');
+                    $('#wh_week_id_detail').val(null).trigger('change');
+                    $('#location_detail').val(null).trigger('change');
                     $('#seq_record_detail').val(seq_record_detail);
                     $('#doc_user_id_detail').val(doc_user_id_detail);
                     $('#create_by_detail').val(create_by_detail);

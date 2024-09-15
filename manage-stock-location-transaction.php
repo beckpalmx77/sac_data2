@@ -90,11 +90,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>วันที่</th>
                                                     <th>รหัสสินค้า</th>
                                                     <th>รายละเอียด</th>
-                                                    <th>ประเภทรายการ</th>
+                                                    <th>เลขที่เอกสาร</th>
                                                     <th>จำนวน</th>
                                                     <th>คลังปี</th>
                                                     <th>สัปดาห์</th>
                                                     <th>ตำแหน่ง</th>
+                                                    <th>Create By</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -103,11 +104,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>วันที่</th>
                                                     <th>รหัสสินค้า</th>
                                                     <th>รายละเอียด</th>
-                                                    <th>ประเภทรายการ</th>
+                                                    <th>เลขที่เอกสาร</th>
                                                     <th>จำนวน</th>
                                                     <th>คลังปี</th>
                                                     <th>สัปดาห์</th>
                                                     <th>ตำแหน่ง</th>
+                                                    <th>Create By</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -442,11 +444,12 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'doc_date'},
                     {data: 'product_id'},
                     {data: 'product_name'},
-                    {data: 'record_type'},
+                    {data: 'doc_id'},
                     {data: 'qty'},
                     {data: 'wh'},
                     {data: 'wh_week_id'},
                     {data: 'location'},
+                    {data: 'create_by'},
                     {data: 'update'},
                 ]
             });

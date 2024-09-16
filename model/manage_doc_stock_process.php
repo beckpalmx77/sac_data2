@@ -245,6 +245,18 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
     foreach ($empRecords as $row) {
 
         if ($_POST['sub_action'] === "GET_MASTER") {
+
+            $status = $row['status'];
+
+            // กำหนด HTML พร้อมสไตล์สีสำหรับสถานะ
+            if ($status == 'Y') {
+                $status_html = '<span style="color:green;">' . $status . '</span>';
+            } else if ($status == 'N') {
+                $status_html = '<span style="color:red;">' . $status . '</span>';
+            } else {
+                $status_html = '<span>' . $status . '</span>';
+            }
+
             $data[] = array(
                 "id" => $row['id'],
                 "doc_id" => $row['doc_id'],
@@ -258,7 +270,7 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
                 "create_by" => $row['create_by'],
                 "create_date" => $row['create_date'],
                 "remark" => $row['remark'],
-                "status" => $row['status'],
+                "status" => $status_html,
                 "seq_record" => $row['seq_record'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"

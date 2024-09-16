@@ -281,12 +281,13 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $searchQuery = " ";
     if ($searchValue != '') {
         $searchQuery = " AND (doc_date LIKE :doc_date or wh_org LIKE :wh_org
-        or product_id LIKE :product_id or product_name LIKE :product_name or user_name LIKE :user_name) ";
+        or product_id LIKE :product_id or product_name LIKE :product_name or user_name LIKE :user_name or car_no LIKE :car_no) ";
         $searchArray = array(
             'doc_date' => "%$searchValue%",
             'wh_org' => "%$searchValue%",
             'product_id' => "%$searchValue%",
             'product_name' => "%$searchValue%",
+            'car_no' => "%$searchValue%",
             'user_name' => "%$searchValue%",
         );
     }

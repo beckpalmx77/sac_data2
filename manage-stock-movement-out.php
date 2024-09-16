@@ -44,7 +44,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <section class="container-fluid">
                                         <form id="export_data" method="post"
-                                              action="export_process/export_process_data_wh_movement.php"
+                                              action="export_process/export_process_data_wh_movement_out.php"
                                               enctype="multipart/form-data">
                                             <div class="col-md-12 col-md-offset-2"
                                                  style="display: flex; align-items: center; gap: 10px;">
@@ -712,7 +712,7 @@ if (strlen($_SESSION['alogin']) == "") {
         $(document).ready(function () {
             // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
             $.ajax({
-                url: 'model/get_wh_location.php', // หน้า PHP ที่จะดึงข้อมูล
+                url: 'model/get_wh_location_out.php', // หน้า PHP ที่จะดึงข้อมูล
                 method: 'GET',
                 dataType: 'json',
                 success: function (data) {

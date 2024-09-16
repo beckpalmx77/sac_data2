@@ -13,7 +13,7 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM v_wh_stock_movement WHERE id = " . $id;
+    $sql_get = "SELECT * FROM v_wh_stock_movement_out WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -40,7 +40,7 @@ if ($_POST["action"] === 'SEARCH') {
     if ($_POST["product_id"] !== '') {
 
         $product_id = $_POST["product_id"];
-        $sql_find = "SELECT * FROM v_wh_stock_movement WHERE product_id = '" . $product_id . "'";
+        $sql_find = "SELECT * FROM v_wh_stock_movement_out WHERE product_id = '" . $product_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo 2;
@@ -58,9 +58,9 @@ if ($_POST["action"] === 'ADD') {
 
         $cond = "WHERE doc_date = '" . $doc_date . "' AND doc_user_id = '" . $doc_user_id . "'";
 
-        //$doc_id = "MV-" . $create_by . "-" . $doc_date . "-" . sprintf('%06s', LAST_ID($conn, "wh_stock_movement", 'id'));
+        //$doc_id = "MV-" . $create_by . "-" . $doc_date . "-" . sprintf('%06s', LAST_ID($conn, "wh_stock_movement_out", 'id'));
 
-        $run_no = LAST_DOCUMENT_NUMBER($conn, "doc_id", "wh_stock_movement", $cond);
+        $run_no = LAST_DOCUMENT_NUMBER($conn, "doc_id", "wh_stock_movement_out", $cond);
         $doc_id = "MO-" . $doc_user_id . "-" . $doc_date . "-" . sprintf('%06s', $run_no);
 
         $str = rand();
@@ -72,7 +72,7 @@ if ($_POST["action"] === 'ADD') {
         $wh_week_id = $_POST["wh_week_id"];
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
-        $sql_find = "SELECT * FROM wh_stock_movement WHERE doc_id = '" . $doc_id . "'";
+        $sql_find = "SELECT * FROM wh_stock_movement_out WHERE doc_id = '" . $doc_id . "'";
 
         /*
                 $txt = $sql_find . " | " . $run_no . " | " . $cond . " | " . $create_by . " | " . $doc_user_id;
@@ -85,7 +85,7 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_stock_movement(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id,seq_record) 
+            $sql = "INSERT INTO wh_stock_movement_out(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id,seq_record) 
             VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by,:doc_user_id,:seq_record)";
             $query = $conn->prepare($sql);
             $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
@@ -158,10 +158,10 @@ if ($_POST["action"] === 'UPDATE') {
         $wh_to = $_POST["wh_org"];
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
-        $sql_find = "SELECT * FROM wh_stock_movement WHERE id = " . $id;
+        $sql_find = "SELECT * FROM wh_stock_movement_out WHERE id = " . $id;
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE wh_stock_movement SET product_id=:product_id,qty=:qty            
+            $sql_update = "UPDATE wh_stock_movement_out SET product_id=:product_id,qty=:qty            
             ,wh_org=:wh_org,wh_week_id=:wh_week_id,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
@@ -215,11 +215,11 @@ if ($_POST["action"] === 'DELETE') {
 
     $id = $_POST["id"];
 
-    $sql_find = "SELECT * FROM wh_stock_movement WHERE id = " . $id;
+    $sql_find = "SELECT * FROM wh_stock_movement_out WHERE id = " . $id;
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {
-            $sql = "DELETE FROM wh_stock_movement WHERE id = " . $id;
+            $sql = "DELETE FROM wh_stock_movement_out WHERE id = " . $id;
             $query = $conn->prepare($sql);
             $query->execute();
             echo $del_success;
@@ -268,19 +268,19 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
 */
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 " . $where_doc_user_id);
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 " . $where_doc_user_id . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement 
+    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out 
         WHERE 1 " . $where_doc_user_id . $searchQuery
         . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
 

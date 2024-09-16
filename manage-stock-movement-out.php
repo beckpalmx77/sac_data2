@@ -48,13 +48,13 @@ if (strlen($_SESSION['alogin']) == "") {
                                               enctype="multipart/form-data">
                                             <div class="col-md-12 col-md-offset-2"
                                                  style="display: flex; align-items: center; gap: 10px;">
-                                                <label for="name_t"
+                                                <!--label for="name_t"
                                                        class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
 
                                                 <button type="button" name="btnAdd" id="btnAdd"
                                                         class="btn btn-primary btn-xs">
                                                     Add <i class="fa fa-plus"></i>
-                                                </button>
+                                                </button-->
 
                                                 <button type="button" name="btnRefresh" id="btnRefresh"
                                                         class="btn btn-success btn-xs" onclick="ReloadDataTable();">
@@ -240,6 +240,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         </div>
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
+                                                            <input type="hidden" name="line_no_master" id="line_no_master"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
                                                             <input type="hidden" name="create_by" id="create_by" value="<?php echo $create_by; ?>"/>
                                                             <input type="hidden" name="doc_user_id" id="doc_user_id" value="<?php echo $doc_user_id; ?>"/>
@@ -538,6 +539,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let wh_week_id = response[i].wh_week_id;
                         let location_org = response[i].location_org;
                         let location_to = response[i].location_to;
+                        let line_no_master = response[i].line_no;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
@@ -547,6 +549,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#product_name').val(product_name);
                         $('#qty').val(qty);
                         $('#car_no').val(car_no);
+                        $('#line_no_master').val(line_no_master);
                         $('#wh_org').val(wh_org).trigger('change');
                         $('#wh_week_id').val(wh_week_id).trigger('change');
                         $('#location_org').val(location_org).trigger('change');

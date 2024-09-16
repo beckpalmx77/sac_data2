@@ -25,6 +25,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "product_name" => $result['product_name'],
             "qty" => $result['qty'],
             "car_no" => $result['car_no'],
+            "line_no" => $result['line_no'],
             "wh_org" => $result['wh_org'],
             "wh_week_id" => $result['wh_week_id'],
             "location_org" => $result['location_org'],
@@ -219,11 +220,11 @@ if ($_POST["action"] === 'UPDATE') {
                     $query_trans->bindParam(':line_no', $line_no, PDO::PARAM_INT);
                     $query_trans->execute();
                 } else {
-                    // ถ้าไม่มีข้อมูล ให้ทำการ INSERT
-                    $sql_inserts = "INSERT INTO wh_stock_transaction (doc_id, line_no, record_type, product_id, qty, wh, wh_week_id, location) "
-                        . "VALUES (:doc_id, :line_no, :record_type, :product_id, :qty, :wh, :wh_week_id, :location)";
+                    $sql_inserts = "INSERT INTO wh_stock_transaction (doc_id,doc_date,line_no,record_type,product_id,qty,wh,wh_week_id,location,create_by) "
+                        . "VALUES (:doc_id,:doc_date,:line_no,:record_type,:product_id,:qty,:wh,:wh_week_id,:location,:create_by)";
                     $query_insert = $conn->prepare($sql_inserts);
                     $query_insert->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+                    $query_insert->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
                     $query_insert->bindParam(':line_no', $line_no, PDO::PARAM_INT);
                     $query_insert->bindParam(':record_type', $record_type, PDO::PARAM_STR);
                     $query_insert->bindParam(':product_id', $product_id, PDO::PARAM_STR);
@@ -231,6 +232,7 @@ if ($_POST["action"] === 'UPDATE') {
                     $query_insert->bindParam(':wh', $wh_org, PDO::PARAM_STR);
                     $query_insert->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
                     $query_insert->bindParam(':location', $location, PDO::PARAM_STR);
+                    $query_insert->bindParam(':create_by', $update_by, PDO::PARAM_STR);
                     $query_insert->execute();
                 }
             }
@@ -341,6 +343,7 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
                 "wh_to" => $row['wh_to'],
                 "wh_week_id" => $row['wh_week_id'],
                 "car_no" => $row['car_no'],
+                "line_no" => $row['line_no'],
                 "location_to" => $row['location_to'],
                 "create_by" => $row['create_by'],
                 "create_date" => $row['create_date'],

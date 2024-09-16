@@ -74,7 +74,9 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         }
 
 
-        $doc_id = $result_sqlsvr["DI_REF"];
+        //$doc_id = $result_sqlsvr["DI_REF"];
+        $doc_id = $result_sqlsvr["DI_REF"] . "-" . str_pad($result_sqlsvr["TRD_SEQ"], 3, '0', STR_PAD_LEFT);
+
         $doc_date = substr($result_sqlsvr['DI_DATE'], 8, 2) . "-" . substr($result_sqlsvr['DI_DATE'], 5, 2) . "-" . substr($result_sqlsvr['DI_DATE'], 0, 4);
         $product_id = $result_sqlsvr["TRD_SH_CODE"];
         $wh_org = $result_sqlsvr["WL_CODE"];

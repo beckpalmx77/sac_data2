@@ -24,6 +24,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "product_id" => $result['product_id'],
             "product_name" => $result['product_name'],
             "qty" => $result['qty'],
+            "car_no" => $result['car_no'],
             "wh_org" => $result['wh_org'],
             "wh_week_id" => $result['wh_week_id'],
             "location_org" => $result['location_org'],
@@ -72,6 +73,7 @@ if ($_POST["action"] === 'ADD') {
         $wh_week_id = $_POST["wh_week_id"];
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
+        $car_no = $_POST["car_no"];
         $sql_find = "SELECT * FROM wh_stock_movement_out WHERE doc_id = '" . $doc_id . "'";
 
         /*
@@ -85,8 +87,8 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_stock_movement_out(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id,seq_record) 
-            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by,:doc_user_id,:seq_record)";
+            $sql = "INSERT INTO wh_stock_movement_out(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id,seq_record,car_no) 
+            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by,:doc_user_id,:seq_record,car_no)";
             $query = $conn->prepare($sql);
             $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
             $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
@@ -100,6 +102,7 @@ if ($_POST["action"] === 'ADD') {
             $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
             $query->bindParam(':doc_user_id', $doc_user_id, PDO::PARAM_STR);
             $query->bindParam(':seq_record', $seq_record, PDO::PARAM_STR);
+            $query->bindParam(':car_no', $car_no, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
 
@@ -142,7 +145,6 @@ if ($_POST["action"] === 'ADD') {
     }
 }
 
-
 if ($_POST["action"] === 'UPDATE') {
 
     if ($_POST["product_id"] !== '' && $_POST["create_by"] !== '' && $_POST["doc_user_id"] !== '') {
@@ -158,11 +160,18 @@ if ($_POST["action"] === 'UPDATE') {
         $wh_to = $_POST["wh_org"];
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
-        $sql_find = "SELECT * FROM wh_stock_movement_out WHERE id = " . $id;
-        $nRows = $conn->query($sql_find)->fetchColumn();
+        $car_no = $_POST["car_no"];
+
+        // ตรวจสอบและทำการ UPDATE ข้อมูลใน wh_stock_movement_out
+        $sql_find = "SELECT * FROM wh_stock_movement_out WHERE id = :id";
+        $query_find = $conn->prepare($sql_find);
+        $query_find->bindParam(':id', $id, PDO::PARAM_INT);
+        $query_find->execute();
+        $nRows = $query_find->fetchColumn();
+
         if ($nRows > 0) {
             $sql_update = "UPDATE wh_stock_movement_out SET product_id=:product_id,qty=:qty            
-            ,wh_org=:wh_org,wh_week_id=:wh_week_id,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by
+            ,wh_org=:wh_org,wh_week_id=:wh_week_id,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by,car_no=:car_no
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
@@ -173,27 +182,32 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':location_org', $location_org, PDO::PARAM_STR);
             $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
             $query->bindParam(':update_by', $update_by, PDO::PARAM_STR);
+            $query->bindParam(':car_no', $car_no, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
-/*
-            $txt = "week = " . $wh_week_id . " | " . $qty . " | " . $location_org . " | " . $location_to . " | " . $wh_org . " | " . $product_id . " | " . $id . " | " . $doc_date;
-            $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-            fwrite($my_file, $txt);
-            fclose($my_file);
-*/
+
+            // วนลูปเพื่อทำงานกับ wh_stock_transaction
             for ($line_no = 1; $line_no <= 2; $line_no++) {
-                $sql_find_trans = "SELECT * FROM wh_stock_transaction WHERE doc_id = '" . $doc_id . "' AND line_no = " . $line_no;
-                $nRows = $conn->query($sql_find_trans)->fetchColumn();
-                if ($nRows > 0) {
-                    if ($line_no === 1) {
-                        $record_type = "+";
-                        $location = $location_to;
-                    } else {
-                        $record_type = "-";
-                        $location = $location_org;
-                    }
+                if ($line_no === 1) {
+                    $record_type = "+";
+                    $location = "OUT";
+                } else {
+                    $record_type = "-";
+                    $location = $location_org;
+                }
+
+                // ตรวจสอบข้อมูลใน wh_stock_transaction ก่อนทำการ UPDATE หรือ INSERT
+                $sql_find_trans = "SELECT * FROM wh_stock_transaction WHERE doc_id = :doc_id AND line_no = :line_no";
+                $query_find_trans = $conn->prepare($sql_find_trans);
+                $query_find_trans->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+                $query_find_trans->bindParam(':line_no', $line_no, PDO::PARAM_INT);
+                $query_find_trans->execute();
+                $nRows_trans = $query_find_trans->fetchColumn();
+
+                if ($nRows_trans > 0) {
+                    // ถ้ามีข้อมูล ให้ทำการ UPDATE
                     $sql_updates = "UPDATE wh_stock_transaction SET record_type=:record_type,product_id=:product_id,qty=:qty,wh=:wh,wh_week_id=:wh_week_id,location=:location "
-                        . " WHERE doc_id = '" . $doc_id . "' AND line_no = " . $line_no;
+                        . " WHERE doc_id = :doc_id AND line_no = :line_no";
                     $query_trans = $conn->prepare($sql_updates);
                     $query_trans->bindParam(':record_type', $record_type, PDO::PARAM_STR);
                     $query_trans->bindParam(':product_id', $product_id, PDO::PARAM_STR);
@@ -201,13 +215,28 @@ if ($_POST["action"] === 'UPDATE') {
                     $query_trans->bindParam(':wh', $wh_org, PDO::PARAM_STR);
                     $query_trans->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
                     $query_trans->bindParam(':location', $location, PDO::PARAM_STR);
+                    $query_trans->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+                    $query_trans->bindParam(':line_no', $line_no, PDO::PARAM_INT);
                     $query_trans->execute();
+                } else {
+                    // ถ้าไม่มีข้อมูล ให้ทำการ INSERT
+                    $sql_inserts = "INSERT INTO wh_stock_transaction (doc_id, line_no, record_type, product_id, qty, wh, wh_week_id, location) "
+                        . "VALUES (:doc_id, :line_no, :record_type, :product_id, :qty, :wh, :wh_week_id, :location)";
+                    $query_insert = $conn->prepare($sql_inserts);
+                    $query_insert->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+                    $query_insert->bindParam(':line_no', $line_no, PDO::PARAM_INT);
+                    $query_insert->bindParam(':record_type', $record_type, PDO::PARAM_STR);
+                    $query_insert->bindParam(':product_id', $product_id, PDO::PARAM_STR);
+                    $query_insert->bindParam(':qty', $qty, PDO::PARAM_STR);
+                    $query_insert->bindParam(':wh', $wh_org, PDO::PARAM_STR);
+                    $query_insert->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
+                    $query_insert->bindParam(':location', $location, PDO::PARAM_STR);
+                    $query_insert->execute();
                 }
             }
 
             echo $save_success;
         }
-
     }
 }
 
@@ -304,11 +333,14 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
                 "doc_date" => $row['doc_date'],
                 "product_id" => $row['product_id'],
                 "product_name" => $row['product_name'],
+                "customer_name" => $row['customer_name'],
+                "sale_take" => $row['sale_take'],
                 "qty" => $row['qty'],
                 "wh_org" => $row['wh_org'],
                 "location_org" => $row['location_org'],
                 "wh_to" => $row['wh_to'],
                 "wh_week_id" => $row['wh_week_id'],
+                "car_no" => $row['car_no'],
                 "location_to" => $row['location_to'],
                 "create_by" => $row['create_by'],
                 "create_date" => $row['create_date'],

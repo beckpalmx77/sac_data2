@@ -93,10 +93,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>จำนวน</th>
                                                     <th>คลังปี</th>
                                                     <th>สัปดาห์</th>
-                                                    <th>จากตำแหน่ง</th>
-                                                    <th>ไปตำแหน่ง</th>
-                                                    <th>Create By</th>
-                                                    <th>Create Date</th>
+                                                    <th>ตำแหน่ง</th>
+                                                    <th>เลขที่เอกสาร</th>
+                                                    <th>รถคันที่</th>
+                                                    <th>เทค</th>
+                                                    <th>supplier/ลูกค้า</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -108,10 +109,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>จำนวน</th>
                                                     <th>คลังปี</th>
                                                     <th>สัปดาห์</th>
-                                                    <th>จากตำแหน่ง</th>
-                                                    <th>ไปตำแหน่ง</th>
-                                                    <th>Create By</th>
-                                                    <th>Create Date</th>
+                                                    <th>ตำแหน่ง</th>
+                                                    <th>เลขที่เอกสาร</th>
+                                                    <th>รถคันที่</th>
+                                                    <th>เทค</th>
+                                                    <th>supplier/ลูกค้า</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -225,13 +227,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="form-group">
-                                                                            <label for="location_to"
-                                                                                   class="control-label">ไปตำแหน่ง</label>
-                                                                            <select class="form-control"
-                                                                                    id="location_to" name="location_to"
-                                                                                    required>
-                                                                                <option value="">ไปตำแหน่ง</option>
-                                                                            </select>
+                                                                            <label for="car_no"
+                                                                                   class="control-label">รถคันที่</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id="car_no" name="car_no" placeholder=""
+                                                                                   required>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -452,9 +452,10 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'wh_org'},
                     {data: 'wh_week_id'},
                     {data: 'location_org'},
-                    {data: 'location_to'},
-                    {data: 'user_name'},
-                    {data: 'create_date'},
+                    {data: 'doc_id'},
+                    {data: 'car_no'},
+                    {data: 'sale_take'},
+                    {data: 'customer_name'},
                     {data: 'update'},
                 ]
             });
@@ -500,6 +501,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#doc_id').val("");
                 $('#product_id').val(null).trigger('change');
                 $('#qty').val("");
+                $('#car_no').val("");
                 $('#wh_org').val(null).trigger('change');
                 $('#wh_week_id').val(null).trigger('change');
                 $('#location_org').val(null).trigger('change');
@@ -531,6 +533,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let product_id = response[i].product_id;
                         let product_name = response[i].product_name;
                         let qty = response[i].qty;
+                        let car_no = response[i].car_no;
                         let wh_org = response[i].wh_org;
                         let wh_week_id = response[i].wh_week_id;
                         let location_org = response[i].location_org;
@@ -543,6 +546,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#product_id').val(product_id).trigger('change');
                         $('#product_name').val(product_name);
                         $('#qty').val(qty);
+                        $('#car_no').val(car_no);
                         $('#wh_org').val(wh_org).trigger('change');
                         $('#wh_week_id').val(wh_week_id).trigger('change');
                         $('#location_org').val(location_org).trigger('change');
@@ -769,7 +773,6 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
     </script>
-
 
     <script>
         function ReloadDataTable() {

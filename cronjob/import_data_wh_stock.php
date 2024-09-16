@@ -11,7 +11,7 @@ include("../cond_file/doc_stock_warehouse.php");
 echo "Today is " . date("Y/m/d");
 echo "\n\r" . date("Y/m/d", strtotime("yesterday"));
 
-$select_query_daily_cond = " AND 	DOCINFO.DI_DATE  = '2024/08/20' AND DT_DOCCODE = 'DM04'";
+//$select_query_daily_cond = " AND 	DOCINFO.DI_DATE  = '2024/09/14' AND DT_DOCCODE = 'DM04'";
 
 $select_query_daily_cond = " AND DOCINFO.DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) . "' AND '" . date("Y/m/d") . "'";
 

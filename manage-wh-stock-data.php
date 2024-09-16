@@ -118,7 +118,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-sm-4">
+                                                    <div class="col-sm-6">
                                                         <label for="remark"
                                                                class="control-label">หมายเหตุ</label>
                                                         <input type="text" class="form-control"

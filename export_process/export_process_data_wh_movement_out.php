@@ -6,19 +6,33 @@ date_default_timezone_set('Asia/Bangkok');
 @header('Content-Encoding: UTF-8');
 @header("Content-Disposition: attachment; filename=" . $filename);
 
-$doc_date_start = $_POST["doc_date_start"] ;
+$doc_date_start = $_POST["doc_date_start"];
 $doc_date_to = $_POST["doc_date_to"];
 
 $start_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
 $end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
 
-$select_query_wh_movement = "SELECT * FROM v_wh_stock_movement_out WHERE doc_date BETWEEN '$doc_date_start' AND '$doc_date_to' 
-                            AND wh_week_id <> '' AND wh_week_id <> '' location_org <> '' "
-                        . " ORDER BY create_date DESC ,doc_id,create_by ";
+$sql_get = "SELECT 
+    vo.id,vo.doc_date,vo.doc_id, vo.line_no,vo.product_id,vo.product_name,vo.wh_org,vo.wh_week_id,vo.location_org
+    ,vo.sale_take,vo.customer_name,vo.car_no,vo.doc_user_id,vo.location_to
+    ,vo.qty,vb.total_qty,vo.create_by,vo.create_date 
+FROM 
+    v_wh_stock_movement_out vo
+LEFT JOIN 
+    v_wh_stock_balance vb 
+ON 
+    vb.product_id = vo.product_id 
+    AND vb.wh = vo.wh_org 
+    AND vb.wh_week_id = vo.wh_week_id 
+    AND vb.location = vo.location_org 
+WHERE 1 ";
+
+$select_query_wh_movement = $sql_get . " AND vo.doc_date BETWEEN '$doc_date_start' AND '$doc_date_to' "
+    . " ORDER BY vo.create_date DESC ,vo.doc_id,vo.create_by ";
 
 $String_Sql = $select_query_wh_movement;
 
-$data = "วันที่,รหัสสินค้า,รายละเอียด,จำนวน,คลังปี,สัปดาห์,จากตำแหน่ง,ไปตำแหน่ง,เวลาทำรายการ\n";
+$data = "วันที่,รหัสสินค้า,รายละเอียด,จำนวน,คลังปี,สัปดาห์,ตำแหน่ง,เลขที่เอกสาร,รถคันที่,เทค,Supplier/ลูกค้า,ยอดคงเหลือ\n";
 
 $query = $conn->prepare($String_Sql);
 $query->execute();
@@ -33,8 +47,11 @@ if ($query->rowCount() >= 1) {
         $data .= $result->wh_org . ",";
         $data .= $result->wh_week_id . ",";
         $data .= $result->location_org . ",";
-        $data .= $result->location_to . ",";
-        $data .= $result->create_date . "\n";
+        $data .= $result->doc_id . ",";
+        $data .= $result->car_no . ",";
+        $data .= $result->sale_take . ",";
+        $data .= $result->customer_name . ",";
+        $data .= $result->total_qty . "\n";
     }
 }
 

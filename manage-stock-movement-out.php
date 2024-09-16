@@ -98,6 +98,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>รถคันที่</th>
                                                     <th>เทค</th>
                                                     <th>supplier/ลูกค้า</th>
+                                                    <th>คงเหลือ</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -114,6 +115,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>รถคันที่</th>
                                                     <th>เทค</th>
                                                     <th>supplier/ลูกค้า</th>
+                                                    <th>คงเหลือ</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -457,6 +459,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'car_no'},
                     {data: 'sale_take'},
                     {data: 'customer_name'},
+                    {data: 'total_qty'},
                     {data: 'update'},
                 ]
             });

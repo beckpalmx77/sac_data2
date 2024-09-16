@@ -311,9 +311,29 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
+    $sql_get = "SELECT 
+    vo.id,vo.doc_date,vo.doc_id, vo.line_no,vo.product_id,vo.product_name,vo.wh_org,vo.wh_week_id,vo.location_org
+    ,vo.sale_take,vo.customer_name,vo.car_no,vo.doc_user_id
+    ,vo.qty,vb.total_qty,vo.create_by,vo.create_date 
+FROM 
+    v_wh_stock_movement_out vo
+LEFT JOIN 
+    v_wh_stock_balance vb 
+ON 
+    vb.product_id = vo.product_id 
+    AND vb.wh = vo.wh_org 
+    AND vb.wh_week_id = vo.wh_week_id 
+    AND vb.location = vo.location_org 
+WHERE 1 ";
+
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out 
+/*
+    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out
         WHERE 1 " . $where_doc_user_id . $searchQuery
+        . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
+*/
+
+    $stmt = $conn->prepare($sql_get . $where_doc_user_id . $searchQuery
         . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
 
 // Bind values
@@ -347,6 +367,7 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
                 "location_to" => $row['location_to'],
                 "create_by" => $row['create_by'],
                 "create_date" => $row['create_date'],
+                "total_qty" => $row['total_qty'],
                 "user_name" => $row['user_name'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"

@@ -28,7 +28,7 @@ ON
 WHERE 1 ";
 
 $select_query_wh_movement = $sql_get . " AND vo.doc_date BETWEEN '$doc_date_start' AND '$doc_date_to' "
-    . " ORDER BY vo.create_date DESC ,vo.doc_id,vo.create_by ";
+    . " ORDER BY vo.doc_id ";
 
 $String_Sql = $select_query_wh_movement;
 

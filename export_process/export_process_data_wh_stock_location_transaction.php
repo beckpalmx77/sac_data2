@@ -25,7 +25,7 @@ fclose($my_file);
 
 $String_Sql = $select_query_wh_transaction;
 
-$data = "วันที่,รหัสสินค้า,รายละเอียด,ประเภทเอกสาร,จำนวน,คลังปี,สัปดาห์,ตำแหน่ง\n";
+$data = "วันที่,รหัสสินค้า,รายละเอียด,ประเภทเอกสาร,จำนวน,คลังปี,สัปดาห์,ตำแหน่ง,create_date,create_by\n";
 
 $query = $conn->prepare($String_Sql);
 $query->execute();
@@ -40,7 +40,9 @@ if ($query->rowCount() >= 1) {
         $data .= $result->qty . ",";
         $data .= $result->wh . ",";
         $data .= $result->wh_week_id . ",";
-        $data .= $result->location . "\n";
+        $data .= $result->location . ",";
+        $data .= $result->create_date . ",";
+        $data .= $result->create_by . "\n";
     }
 }
 

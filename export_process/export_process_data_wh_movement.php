@@ -17,7 +17,7 @@ $select_query_wh_movement = "SELECT * FROM v_wh_stock_movement WHERE doc_date BE
 
 $String_Sql = $select_query_wh_movement;
 
-$data = "วันที่,รหัสสินค้า,รายละเอียด,จำนวน,คลังปี,สัปดาห์,จากตำแหน่ง,ไปตำแหน่ง,เวลาทำรายการ\n";
+$data = "วันที่,รหัสสินค้า,รายละเอียด,จำนวน,คลังปี,สัปดาห์,จากตำแหน่ง,ไปตำแหน่ง,create_date,create_by\n";
 
 $query = $conn->prepare($String_Sql);
 $query->execute();
@@ -33,7 +33,8 @@ if ($query->rowCount() >= 1) {
         $data .= $result->wh_week_id . ",";
         $data .= $result->location_org . ",";
         $data .= $result->location_to . ",";
-        $data .= $result->create_date . "\n";
+        $data .= $result->create_date . ",";
+        $data .= $result->create_by . "\n";
     }
 }
 

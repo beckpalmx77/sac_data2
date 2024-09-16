@@ -9,19 +9,25 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
 <html lang="th">
 <body id="page-top">
 <div id="wrapper">
-    <?php include('includes/Side-Bar.php'); ?>
+    <?php
+    include('includes/Side-Bar.php');
+    ?>
 
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
-            <?php include('includes/Top-Bar.php'); ?>
+            <?php
+            include('includes/Top-Bar.php');
+            ?>
             <!-- Container Fluid-->
             <div class="container-fluid" id="container-wrapper">
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h4 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
+                        </li>
                         <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
-                        <li class="breadcrumb-item active" aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
+                        <li class="breadcrumb-item active"
+                            aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
                     </ol>
                 </div>
 
@@ -33,7 +39,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                             <div class="card-body">
                                 <section class="container-fluid">
 
-                                    <!-- Form สำหรับการ Import ข้อมูล -->
                                     <form id="uploadForm" enctype="multipart/form-data">
                                         <div class="mb-3">
                                             <label for="excelFile" class="form-label">Select Excel File</label>
@@ -43,14 +48,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                         <button type="submit" class="btn btn-primary">Import</button>
                                         <button id="showImageBtn" class="btn btn-success">Example Format Data For Import</button>
                                     </form>
-
-                                    <!-- Spinner แสดงโหลดข้อมูล -->
-                                    <div id="loadingSpinner" class="text-center my-3" style="display: none;">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                    </div>
-
                                     <br>
                                     <div class="col-md-12 col-md-offset-2">
                                         <table id='TableRecordList' class='display dataTable'>
@@ -79,7 +76,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                             </tr>
                                             </tfoot>
                                         </table>
+
+
                                     </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -100,6 +101,7 @@ include('includes/Footer.php');
     <i class="fas fa-angle-up"></i>
 </a>
 
+
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -109,11 +111,13 @@ include('includes/Footer.php');
 <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
 <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
+
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
 <style>
+
     .icon-input-btn {
         display: inline-block;
         position: relative;
@@ -130,19 +134,23 @@ include('includes/Footer.php');
         top: 30%;
     }
 </style>
+<script>
+    $(document).ready(function () {
+        $(".icon-input-btn").each(function () {
+            let btnFont = $(this).find(".btn").css("font-size");
+            let btnColor = $(this).find(".btn").css("color");
+            $(this).find(".fa").css({'font-size': btnFont, 'color': btnColor});
+        });
+    });
+</script>
+
 
 <script>
     $(document).ready(function () {
 
-        // แสดง Spinner ขณะส่งฟอร์ม
         $('#uploadForm').on('submit', function (e) {
             e.preventDefault();
-
-            // แสดง Spinner
-            $('#loadingSpinner').show();
-
             let formData = new FormData(this);
-
             $.ajax({
                 url: 'import_process/import_data_stock_in.php',
                 type: 'POST',
@@ -150,29 +158,16 @@ include('includes/Footer.php');
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    // ซ่อน Spinner เมื่อ import สำเร็จ
-                    $('#loadingSpinner').hide();
-
-                    // แสดงผลลัพธ์การ import
                     $('#uploadResult').html(response);
-
-                    // รีโหลดข้อมูลในตาราง
                     $('#TableRecordList').DataTable().ajax.reload();
-
-                    // แสดงข้อความแจ้งเตือน
                     alertify.alert("Notification", "Data imported successfully.");
                 },
                 error: function (xhr, status, error) {
-                    // ซ่อน Spinner เมื่อเกิดข้อผิดพลาด
-                    $('#loadingSpinner').hide();
-
-                    // แสดงข้อความแจ้งเตือนเมื่อเกิดข้อผิดพลาด
                     alertify.alert("Notification", "An error occurred: " + error);
                 }
             });
         });
 
-        // โหลดข้อมูลลงใน DataTable
         $('#TableRecordList').DataTable({
             "lengthMenu": [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
             "ajax": "model/fetch_stock_wh_data.php",
@@ -188,11 +183,13 @@ include('includes/Footer.php');
                 {"data": "location"}
             ]
         });
+    });
+</script>
 
-        // เปิดรูปภาพในหน้าต่างใหม่
-        $('#showImageBtn').on('click', function() {
-            window.open("img/screenshot/stock_wh_in.png", "_blank", "width=800,height=600");
-        });
+<script>
+    // JavaScript สำหรับการเปิดรูปภาพในหน้าต่างใหม่
+    document.getElementById("showImageBtn").addEventListener("click", function() {
+        window.open("img/screenshot/stock_wh_in.png", "_blank", "width=800,height=600");
     });
 </script>
 

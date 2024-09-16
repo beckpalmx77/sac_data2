@@ -86,7 +86,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <div class="col-sm-1">
                                                         <label for="qty"
                                                                class="control-label">จำนวน</label>
-                                                        <input type="text" class="form-control"
+                                                        <input type="number" class="form-control"
                                                                id="qty" name="qty"
                                                                readonly="true"
                                                                placeholder="">
@@ -130,6 +130,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
                                                     </div>
+                                                    <div class="col-sm-2">
+                                                        <label for="totalQty"
+                                                               class="control-label">ผลรวมจำนวน</label>
+                                                        <input type="text" class="form-control"
+                                                               id="totalQty" name="totalQty"
+                                                               readonly="true"
+                                                               placeholder="">
+                                                    </div>
 
                                                 </div>
 
@@ -159,10 +167,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </table>
 
                                             </div>
-                                            <div class="form-group row">
-                                                <label for="totalQty" class="control-label">ผลรวมจำนวน</label>
-                                                <span id="totalQty">0</span>
-                                            </div>
+
                                             <div class="modal-footer">
                                                 <input type="hidden" name="id" id="id"/>
                                                 <input type="hidden" name="save_status" id="save_status"/>
@@ -508,6 +513,8 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#create_by').val(queryString["create_by"]);
 
                 Load_Data_Detail(queryString["doc_id"], "v_wh_stock_transaction");
+                DisplaySumQty();
+
             }
         });
     </script>
@@ -828,11 +835,42 @@ if (strlen($_SESSION['alogin']) == "") {
                             $('#recordModal').modal('hide');
                             $('#save').attr('disabled', false);
                             $('#TableOrderDetailList').DataTable().ajax.reload();
+                            DisplaySumQty();
                         }
                     });
                 } else {
                     // ถ้าการ validate ไม่ผ่าน จะไม่ทำการ submit
                     alertify.error("การตรวจสอบจำนวนไม่ผ่าน");
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function DisplaySumQty() {
+            let doc_id = $('#doc_id').val();  // รับค่า doc_id จาก input
+            // ใช้ AJAX เพื่อตรวจสอบข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/manage_wh_stock_detail_process.php',  // ไฟล์ PHP ที่ใช้ดึงข้อมูล
+                type: 'POST',
+                data: {action: "CAL_SUM_DETAIL", doc_id: doc_id},  // ส่ง doc_id ไปให้ PHP
+                success: function (response) {
+                    let total_qty_detail = parseFloat(response);  // รับผลรวม qty_detail จาก table Detail
+                    $('#totalQty').val(total_qty_detail);
+                }
+            });
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // ตรวจสอบเมื่อมีการพิมพ์ในช่อง input
+            $('#qty_detail').on('input', function () {
+                let inputVal = $(this).val(); // ดึงค่าจากช่อง input
+
+                // ตรวจสอบว่าเป็นตัวเลขหรือไม่
+                if (!/^\d+$/.test(inputVal)) {
+                    $(this).val(''); // ถ้าไม่ใช่ตัวเลข clear ค่าออก
                 }
             });
         });

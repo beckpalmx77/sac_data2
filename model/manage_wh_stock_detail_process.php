@@ -133,12 +133,28 @@ if ($_POST["action_detail"] === 'UPDATE') {
     }
 }
 
+
+if ($_POST["action_detail"] === 'DELETE') {
+    $id = $_POST["detail_id"];
+    $sql_find = "SELECT * FROM wh_stock_transaction WHERE id = " . $id;
+    $nRows = $conn->query($sql_find)->fetchColumn();
+    if ($nRows > 0) {
+        try {
+            $sql = "DELETE FROM wh_stock_transaction WHERE id = " . $id;
+            $query = $conn->prepare($sql);
+            $query->execute();
+            echo $del_success;
+        } catch (Exception $e) {
+            echo 'Message: ' . $e->getMessage();
+        }
+    }
+}
+
 if ($_POST["action"] === 'CAL_SUM_DETAIL') {
 
     $doc_id = $_POST['doc_id'];
-
     // Query เพื่อรวมค่าของ qty_detail ใน table Detail ตาม doc_id
-    $stmt = $conn->prepare("SELECT SUM(qty_detail) as qty FROM v_wh_stock_transaction WHERE doc_id = :doc_id");
+    $stmt = $conn->prepare("SELECT SUM(qty) as total_qty FROM v_wh_stock_transaction WHERE doc_id = :doc_id");
     $stmt->bindParam(':doc_id', $doc_id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);

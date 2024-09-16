@@ -774,10 +774,12 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
-        function validateQty(callback) {
+        function validateQty() {
             let doc_id = $('#doc_id_detail').val();  // รับค่า doc_id จาก input
             let qty_master = parseFloat($('#qty_master').val());  // รับค่า qty_master จาก input และแปลงเป็น float
             let qty_detail_input = parseFloat($('#qty_detail').val());  // รับค่า qty_detail จาก input form และแปลงเป็น float
+
+
 
             // ตรวจสอบว่าค่าที่ผู้ใช้ป้อนเป็นตัวเลขหรือไม่
             if (isNaN(qty_detail_input)) {
@@ -802,41 +804,37 @@ if (strlen($_SESSION['alogin']) == "") {
                     // ตรวจสอบว่าผลรวมเกินค่า qty_master หรือไม่
                     if (total_qty > qty_master) {
                         alertify.alert("จำนวนที่ป้อน รวมทุกรายการแล้วไม่สามารถเกิน " + qty_master + " ได้");
-                        callback(false);  // ส่งค่า false กลับเมื่อไม่ผ่านการตรวจสอบ
+                        return false;  // หยุดการดำเนินการ
                     } else {
-                        callback(true);  // ส่งค่า true กลับเมื่อผ่านการตรวจสอบ
+                        return true;  // อนุญาตให้ดำเนินการต่อ
                     }
                 }
             });
         }
+    </script>
+
+    <script>
 
         $("#recordModal").on('submit', '#recordForm', function (event) {
-            event.preventDefault();  // หยุดการ submit form ชั่วคราว
-
-            validateQty(function (isValid) {
-                if (isValid) {
-                    // ถ้าผ่านการ validate ให้ทำการ submit form
-                    let formData = $('#recordForm').serialize();
-
-                    $.ajax({
-                        url: 'model/manage_wh_stock_detail_process.php',
-                        method: "POST",
-                        data: formData,
-                        success: function (data) {
-                            alertify.success(data);
-                            $('#recordForm')[0].reset();
-                            $('#recordModal').modal('hide');
-                            $('#save').attr('disabled', false);
-                            $('#TableOrderDetailList').DataTable().ajax.reload();
-                        }
-                    });
-                } else {
-                    // ถ้าการ validate ไม่ผ่าน จะไม่ทำการ submit
-                    alertify.error("การตรวจสอบจำนวนไม่ผ่าน");
+            event.preventDefault();
+            let formData = $(this).serialize();
+            $.ajax({
+                url: 'model/manage_wh_stock_detail_process.php',
+                method: "POST",
+                data: formData,
+                success: function (data) {
+                    alertify.success(data);
+                    $('#recordForm')[0].reset();
+                    $('#recordModal').modal('hide');
+                    $('#save').attr('disabled', false);
+                    $('#TableOrderDetailList').DataTable().ajax.reload();
                 }
-            });
+            })
+
         });
+
     </script>
+
 
 
     </body>

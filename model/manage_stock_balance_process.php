@@ -44,7 +44,7 @@ if ($_POST["action"] === 'GET_STOCK_BALANCE') {
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_balance WHERE 1 " . $searchQuery
+    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_balance WHERE v_wh_stock_balance.location <> 'OUT' " . $searchQuery
         . " ORDER BY product_id " . " LIMIT :limit,:offset");
 
 // Bind values
@@ -160,7 +160,7 @@ if ($_POST["action"] === 'GET_STOCK_BALANCE_DISPLAY') {
                     END) AS total_qty
                 FROM wh_stock_transaction t
                 JOIN wh_product_master p ON t.product_id = p.product_id
-                WHERE (t.doc_date BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "') " . $search_Query .
+                WHERE t.location <> 'OUT' AND (t.doc_date BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "') " . $search_Query .
         " GROUP BY p.product_id,p.product_name,t.wh,t.wh_week_id,t.location" . " LIMIT :limit,:offset ";
 
 ## Fetch records

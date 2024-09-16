@@ -12,7 +12,7 @@ $doc_date_to = $_POST["doc_date_to"];
 $start_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
 $end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
 
-$select_query_wh_movement = "SELECT * FROM v_wh_stock_movement_out WHERE doc_date BETWEEN '$doc_date_start' AND '$doc_date_to'"
+$select_query_wh_movement = "SELECT * FROM v_wh_stock_movement_out WHERE doc_date BETWEEN '$doc_date_start' AND '$doc_date_to' AND wh_week_id <> '' AND wh_week_id <> '' location_org <> '' "
                           . " ORDER BY create_date DESC ,doc_id,create_by ";
 
 $String_Sql = $select_query_wh_movement;

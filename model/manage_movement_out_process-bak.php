@@ -373,3 +373,5 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     echo json_encode($response);
 
 }
+
+

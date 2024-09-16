@@ -47,13 +47,13 @@ if (strlen($_SESSION['alogin']) == "") {
                                               enctype="multipart/form-data">
                                             <div class="col-md-12 col-md-offset-2"
                                                  style="display: flex; align-items: center; gap: 10px;">
-                                                <label for="name_t"
+                                                <!--label for="name_t"
                                                        class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
 
                                                 <button type="button" name="btnAdd" id="btnAdd"
                                                         class="btn btn-primary btn-xs">
                                                     Add <i class="fa fa-plus"></i>
-                                                </button>
+                                                </button-->
 
                                                 <button type="button" name="btnRefresh" id="btnRefresh"
                                                         class="btn btn-success btn-xs" onclick="ReloadDataTable();">

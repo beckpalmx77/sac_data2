@@ -13,14 +13,14 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM wh_week WHERE id = " . $id;
+    $sql_get = "SELECT * FROM wh_location_out WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $result) {
         $return_arr[] = array("id" => $result['id'],
-            "wh_week_id" => $result['wh_week_id'],
-            "wh_desc" => $result['wh_desc'],
+            "location_id" => $result['location_id'],
+            "location_group" => $result['location_group'],
             "status" => $result['status']);
     }
 
@@ -30,10 +30,10 @@ if ($_POST["action"] === 'GET_DATA') {
 
 if ($_POST["action"] === 'SEARCH') {
 
-    if ($_POST["wh_desc"] !== '') {
+    if ($_POST["location_group"] !== '') {
 
-        $wh_desc = $_POST["wh_desc"];
-        $sql_find = "SELECT * FROM wh_week WHERE wh_desc = '" . $wh_desc . "'";
+        $location_group = $_POST["location_group"];
+        $sql_find = "SELECT * FROM wh_location_out WHERE location_group = '" . $location_group . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo 2;
@@ -44,19 +44,19 @@ if ($_POST["action"] === 'SEARCH') {
 }
 
 if ($_POST["action"] === 'ADD') {
-    if ($_POST["wh_desc"] !== '') {
-        $wh_week_id = $_POST["wh_week_id"];
-        $wh_desc = $_POST["wh_desc"];
+    if ($_POST["location_group"] !== '') {
+        $location_id = $_POST["location_id"];
+        $location_group = $_POST["location_group"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM wh_week WHERE wh_desc = '" . $wh_desc . "'";
+        $sql_find = "SELECT * FROM wh_location_out WHERE location_group = '" . $location_group . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_week(wh_week_id,wh_desc,status) VALUES (:wh_week_id,:wh_desc,:status)";
+            $sql = "INSERT INTO wh_location_out(location_id,location_group,status) VALUES (:location_id,:location_group,:status)";
             $query = $conn->prepare($sql);
-            $query->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
-            $query->bindParam(':wh_desc', $wh_desc, PDO::PARAM_STR);
+            $query->bindParam(':location_id', $location_id, PDO::PARAM_STR);
+            $query->bindParam(':location_group', $location_group, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
@@ -73,20 +73,20 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["wh_desc"] != '') {
+    if ($_POST["location_group"] != '') {
 
         $id = $_POST["id"];
-        $wh_week_id = $_POST["wh_week_id"];
-        $wh_desc = $_POST["wh_desc"];
+        $location_id = $_POST["location_id"];
+        $location_group = $_POST["location_group"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM wh_week WHERE wh_week_id = '" . $wh_week_id . "'";
+        $sql_find = "SELECT * FROM wh_location_out WHERE location_id = '" . $location_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE wh_week SET wh_week_id=:wh_week_id,wh_desc=:wh_desc,status=:status            
+            $sql_update = "UPDATE wh_location_out SET location_id=:location_id,location_group=:location_group,status=:status            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
-            $query->bindParam(':wh_week_id', $wh_week_id, PDO::PARAM_STR);
-            $query->bindParam(':wh_desc', $wh_desc, PDO::PARAM_STR);
+            $query->bindParam(':location_id', $location_id, PDO::PARAM_STR);
+            $query->bindParam(':location_group', $location_group, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
@@ -100,11 +100,11 @@ if ($_POST["action"] === 'DELETE') {
 
     $id = $_POST["id"];
 
-    $sql_find = "SELECT * FROM wh_week WHERE id = " . $id;
+    $sql_find = "SELECT * FROM wh_location_out WHERE id = " . $id;
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {
-            $sql = "DELETE FROM wh_week WHERE id = " . $id;
+            $sql = "DELETE FROM wh_location_out WHERE id = " . $id;
             $query = $conn->prepare($sql);
             $query->execute();
             echo $del_success;
@@ -114,7 +114,7 @@ if ($_POST["action"] === 'DELETE') {
     }
 }
 
-if ($_POST["action"] === 'GET_WEEK_ID') {
+if ($_POST["action"] === 'GET_LOCATION_OUT') {
 
     ## Read value
     $draw = $_POST['draw'];
@@ -130,28 +130,28 @@ if ($_POST["action"] === 'GET_WEEK_ID') {
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (wh_week_id LIKE :wh_week_id or
-        wh_desc LIKE :wh_desc ) ";
+        $searchQuery = " AND (location_id LIKE :location_id or
+        location_group LIKE :location_group ) ";
         $searchArray = array(
-            'wh_week_id' => "%$searchValue%",
-            'wh_desc' => "%$searchValue%",
+            'location_id' => "%$searchValue%",
+            'location_group' => "%$searchValue%",
         );
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_week ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_location_out ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_week WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_location_out WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM wh_week WHERE 1 " . $searchQuery
+    $stmt = $conn->prepare("SELECT * FROM wh_location_out WHERE 1 " . $searchQuery
         . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
 
 // Bind values
@@ -170,8 +170,8 @@ if ($_POST["action"] === 'GET_WEEK_ID') {
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
                 "id" => $row['id'],
-                "wh_week_id" => $row['wh_week_id'],
-                "wh_desc" => $row['wh_desc'],
+                "location_id" => $row['location_id'],
+                "location_group" => $row['location_group'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
                 "status" => $row['status'] === 'Y' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"
@@ -179,9 +179,9 @@ if ($_POST["action"] === 'GET_WEEK_ID') {
         } else {
             $data[] = array(
                 "id" => $row['id'],
-                "wh_week_id" => $row['wh_week_id'],
-                "wh_desc" => $row['wh_desc'],
-                "select" => "<button type='button' name='select' id='" . $row['wh_week_id'] . "@" . $row['wh_desc'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
+                "location_id" => $row['location_id'],
+                "location_group" => $row['location_group'],
+                "select" => "<button type='button' name='select' id='" . $row['location_id'] . "@" . $row['location_group'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
 </button>",
             );
         }

@@ -13,7 +13,7 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM wh_warehouse_id WHERE id = " . $id;
+    $sql_get = "SELECT * FROM wh_warehouse WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -99,7 +99,7 @@ if ($_POST["action"] === 'DELETE') {
     }
 }
 
-if ($_POST["action"] === 'GET_warehouse_id') {
+if ($_POST["action"] === 'GET_WAREHOUSE') {
 
     ## Read value
     $draw = $_POST['draw'];

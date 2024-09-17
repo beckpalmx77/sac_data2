@@ -7,10 +7,16 @@ namespace Composer\Autoload;
 class ComposerStaticInit81749a0b49ac44f05f3399940816f0e6
 {
     public static $files = array (
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+        'db356362850385d08a5381de2638b5fd' => __DIR__ . '/..' . '/mpdf/mpdf/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'setasign\\Fpdi\\' => 14,
+        ),
         'p' => 
         array (
             'phpseclib3\\' => 11,
@@ -22,6 +28,7 @@ class ComposerStaticInit81749a0b49ac44f05f3399940816f0e6
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
+            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
@@ -30,7 +37,14 @@ class ComposerStaticInit81749a0b49ac44f05f3399940816f0e6
         ),
         'M' => 
         array (
+            'Mpdf\\PsrLogAwareTrait\\' => 22,
+            'Mpdf\\PsrHttpMessageShim\\' => 24,
+            'Mpdf\\' => 5,
             'Matrix\\' => 7,
+        ),
+        'D' => 
+        array (
+            'DeepCopy\\' => 9,
         ),
         'C' => 
         array (
@@ -39,6 +53,10 @@ class ComposerStaticInit81749a0b49ac44f05f3399940816f0e6
     );
 
     public static $prefixDirsPsr4 = array (
+        'setasign\\Fpdi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
         'phpseclib3\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
@@ -50,6 +68,10 @@ class ComposerStaticInit81749a0b49ac44f05f3399940816f0e6
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/src',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -72,9 +94,25 @@ class ComposerStaticInit81749a0b49ac44f05f3399940816f0e6
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
+        'Mpdf\\PsrLogAwareTrait\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src',
+        ),
+        'Mpdf\\PsrHttpMessageShim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src',
+        ),
+        'Mpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
+        ),
         'Matrix\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
+        ),
+        'DeepCopy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
         'Complex\\' => 
         array (

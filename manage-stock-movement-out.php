@@ -44,7 +44,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <section class="container-fluid">
                                         <form id="export_data" method="post"
-                                              action="export_process/export_process_data_wh_movement_out.php"
                                               enctype="multipart/form-data">
                                             <div class="col-md-12 col-md-offset-2"
                                                  style="display: flex; align-items: center; gap: 10px;">
@@ -64,13 +63,15 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <label for="name_t" class="control-label mb-0"><b>Export Data
                                                         วันที่&nbsp;</b></label>
 
-                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start"
+                                                <input type="text" class="form-control" id="doc_date_start"
+                                                       name="doc_date_start"
                                                        readonly="true" placeholder=""
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
                                                 <label for="name_t" class="control-label mb-0"><b>-</b></label>
 
-                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to"
+                                                <input type="text" class="form-control" id="doc_date_to"
+                                                       name="doc_date_to"
                                                        readonly="true" placeholder=""
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
@@ -79,9 +80,13 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         class="btn btn-success btn-xs" onclick="ExportData();">
                                                     Export <i class="fa fa-file-excel-o"></i>
                                                 </button>
+                                                <!--button type="button" name="btnPrint" id="btnPrint"
+                                                        class="btn btn-primary btn-xs" onclick="PrintData();">
+                                                    Print <i class="fa fa-print"></i>
+                                                </button-->
                                             </div>
                                         </form>
-
+                                        <div id="output_area"></div>
                                         <br>
                                         <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
@@ -242,8 +247,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="form-group">
-                                                                            <label for="location_to" class="control-label">ไป</label>
-                                                                            <select class="form-control" id="location_to"
+                                                                            <label for="location_to"
+                                                                                   class="control-label">ไป</label>
+                                                                            <select class="form-control"
+                                                                                    id="location_to"
                                                                                     name="location_to" required>
                                                                                 <option value="">ไป</option>
                                                                             </select>
@@ -254,7 +261,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             <label for="remark"
                                                                                    class="control-label">หมายเหตุ</label>
                                                                             <input type="text" class="form-control"
-                                                                                   id="remark" name="remark" placeholder=""
+                                                                                   id="remark" name="remark"
+                                                                                   placeholder=""
                                                                                    required>
                                                                         </div>
                                                                     </div>
@@ -264,10 +272,13 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         </div>
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
-                                                            <input type="hidden" name="line_no_master" id="line_no_master"/>
+                                                            <input type="hidden" name="line_no_master"
+                                                                   id="line_no_master"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
-                                                            <input type="hidden" name="create_by" id="create_by" value="<?php echo $create_by; ?>"/>
-                                                            <input type="hidden" name="doc_user_id" id="doc_user_id" value="<?php echo $doc_user_id; ?>"/>
+                                                            <input type="hidden" name="create_by" id="create_by"
+                                                                   value="<?php echo $create_by; ?>"/>
+                                                            <input type="hidden" name="doc_user_id" id="doc_user_id"
+                                                                   value="<?php echo $doc_user_id; ?>"/>
                                                             <button type="submit" name="save" id="save"
                                                                     class="btn btn-primary"><i class="fa fa-check"></i>
                                                                 Save
@@ -857,6 +868,8 @@ if (strlen($_SESSION['alogin']) == "") {
 
             // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
             if (form.checkValidity()) {
+                form.action = "export_process/export_process_data_wh_movement_out.php";
+                form.target = "_blank"; // เปิดไฟล์ PDF ในแท็บใหม่
                 // ทำการ submit ฟอร์ม
                 form.submit();
             } else {
@@ -864,6 +877,95 @@ if (strlen($_SESSION['alogin']) == "") {
             }
         }
     </script>
+
+    <script>
+        // ฟังก์ชันสำหรับทำการ submit ฟอร์ม
+        function PrintData() {
+            // ดึงฟอร์มจาก ID ที่กำหนด
+            const form = document.getElementById("export_data");
+
+            // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
+            if (form.checkValidity()) {
+                form.action = "print_process/print_process_data_wh_movement_out.php";
+                form.target = "_blank"; // เปิดไฟล์ PDF ในแท็บใหม่
+                // ทำการ submit ฟอร์ม
+                form.submit();
+            } else {
+                alert("Please fill out the required fields.");
+            }
+        }
+    </script>
+
+    <script>
+        // ฟังก์ชันสำหรับ Print ข้อมูลไปที่หน้าจอ
+        function PrintData_BAK2() {
+
+            const form = document.getElementById("export_data");
+
+            // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
+            if (form.checkValidity()) {
+                // ดึงค่าจากฟอร์ม
+                const doc_date_start = document.getElementById("doc_date_start").value;
+                const doc_date_to = document.getElementById("doc_date_to").value;
+                //alert(doc_date_start + " - " + doc_date_to);
+                // ส่งข้อมูลด้วย AJAX ไปที่ Backend เพื่อดึงข้อมูล
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "print_process/print_process_data_wh_movement_out.php", true); // ชี้ไปที่ไฟล์ PHP ที่จะดึงข้อมูล
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        // แสดงผลใน div ที่เรากำหนดไว้
+                        document.getElementById("output_area").innerHTML = xhr.responseText;
+                    } else {
+                        alert("Error: Unable to load data");
+                    }
+                };
+
+                // ส่งข้อมูลไป Backend
+                xhr.send("doc_date_start=" + encodeURIComponent(doc_date_start) + "&doc_date_to=" + encodeURIComponent(doc_date_to));
+            } else {
+                alert("Please fill out the required fields.");
+            }
+        }
+    </script>
+
+    <script>
+        // ฟังก์ชันสำหรับ Print ข้อมูลไปที่หน้าจอ
+        function PrintData_BAK() {
+            const form = document.getElementById("export_data");
+
+            // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
+            if (form.checkValidity()) {
+                // ดึงค่าจากฟอร์ม
+                const doc_date_start = document.getElementById("doc_date_start").value;
+                const doc_date_to = document.getElementById("doc_date_to").value;
+
+                // ส่งข้อมูลด้วย AJAX ไปที่ Backend เพื่อดึงข้อมูล
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "print_process/print_process_data_wh_movement_out.php", true); // ชี้ไปที่ไฟล์ PHP ที่จะดึงข้อมูล
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        // แสดงผลใน div ที่เรากำหนดไว้
+                        document.getElementById("output_area").innerHTML = xhr.responseText;
+
+                        // เรียกการพิมพ์เมื่อโหลดข้อมูลเสร็จแล้ว
+                        window.onload = function () {
+                            window.print();  // เปิดหน้าต่างพิมพ์อัตโนมัติ
+                        };
+                    } else {
+                        alert("Error: Unable to load data");
+                    }
+                };
+
+                // ส่งข้อมูลไป Backend
+                xhr.send("doc_date_start=" + encodeURIComponent(doc_date_start) + "&doc_date_to=" + encodeURIComponent(doc_date_to));
+            } else {
+                alert("Please fill out the required fields.");
+            }
+        }
+    </script>
+
 
     </body>
     </html>

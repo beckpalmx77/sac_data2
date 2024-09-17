@@ -178,7 +178,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-4">
+                                                                    <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="product_name"
                                                                                    class="control-label">รายละเอียด</label>
@@ -188,7 +188,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                    required>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-4">
+                                                                    <div class="col-md-2">
                                                                         <div class="form-group">
                                                                             <label for="qty"
                                                                                    class="control-label">จำนวน</label>

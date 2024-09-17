@@ -28,6 +28,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "line_no" => $result['line_no'],
             "wh_org" => $result['wh_org'],
             "wh_week_id" => $result['wh_week_id'],
+            "remark" => $result['remark'],
             "location_org" => $result['location_org'],
             "location_to" => $result['location_to'],
             "create_by" => $result['create_by']);
@@ -75,6 +76,7 @@ if ($_POST["action"] === 'ADD') {
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
         $car_no = $_POST["car_no"];
+        $remark = $_POST["remark"];
         $sql_find = "SELECT * FROM wh_stock_movement_out WHERE doc_id = '" . $doc_id . "'";
 
         /*
@@ -88,8 +90,8 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_stock_movement_out(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id,seq_record,car_no) 
-            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by,:doc_user_id,:seq_record,car_no)";
+            $sql = "INSERT INTO wh_stock_movement_out(doc_id,doc_date,product_id,qty,wh_org,wh_week_id,wh_to,location_org,location_to,create_by,doc_user_id,seq_record,car_no,remark) 
+            VALUES (:doc_id,:doc_date,:product_id,:qty,:wh_org,:wh_week_id,:wh_to,:location_org,:location_to,:create_by,:doc_user_id,:seq_record,:car_no,:remark)";
             $query = $conn->prepare($sql);
             $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
             $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
@@ -104,6 +106,7 @@ if ($_POST["action"] === 'ADD') {
             $query->bindParam(':doc_user_id', $doc_user_id, PDO::PARAM_STR);
             $query->bindParam(':seq_record', $seq_record, PDO::PARAM_STR);
             $query->bindParam(':car_no', $car_no, PDO::PARAM_STR);
+            $query->bindParam(':remark', $remark, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
 
@@ -162,7 +165,7 @@ if ($_POST["action"] === 'UPDATE') {
         $location_org = $_POST["location_org"];
         $location_to = $_POST["location_to"];
         $car_no = $_POST["car_no"];
-
+        $remark = $_POST["remark"];
         // ตรวจสอบและทำการ UPDATE ข้อมูลใน wh_stock_movement_out
         $sql_find = "SELECT * FROM wh_stock_movement_out WHERE id = :id";
         $query_find = $conn->prepare($sql_find);
@@ -172,7 +175,7 @@ if ($_POST["action"] === 'UPDATE') {
 
         if ($nRows > 0) {
             $sql_update = "UPDATE wh_stock_movement_out SET product_id=:product_id,qty=:qty            
-            ,wh_org=:wh_org,wh_week_id=:wh_week_id,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by,car_no=:car_no
+            ,wh_org=:wh_org,wh_week_id=:wh_week_id,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by,car_no=:car_no,remark=:remark
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
@@ -184,6 +187,7 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':location_to', $location_to, PDO::PARAM_STR);
             $query->bindParam(':update_by', $update_by, PDO::PARAM_STR);
             $query->bindParam(':car_no', $car_no, PDO::PARAM_STR);
+            $query->bindParam(':remark', $remark, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
 
@@ -369,6 +373,7 @@ WHERE 1 ";
                 "create_date" => $row['create_date'],
                 "total_qty" => $row['total_qty'],
                 "user_name" => $row['user_name'],
+                "remark" => $row['remark'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"
             );

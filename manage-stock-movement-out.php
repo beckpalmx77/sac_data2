@@ -528,6 +528,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#product_id').val(null).trigger('change');
                 $('#qty').val("");
                 $('#car_no').val("");
+                $('#remark').val("");
                 $('#wh_org').val(null).trigger('change');
                 $('#wh_week_id').val(null).trigger('change');
                 $('#location_org').val(null).trigger('change');
@@ -565,6 +566,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         let location_org = response[i].location_org;
                         let location_to = response[i].location_to;
                         let line_no_master = response[i].line_no;
+                        let remark = response[i].remark;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
@@ -579,6 +581,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#wh_week_id').val(wh_week_id).trigger('change');
                         $('#location_org').val(location_org).trigger('change');
                         $('#location_to').val(location_to).trigger('change');
+                        $('#remark').val(remark);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
@@ -611,10 +614,13 @@ if (strlen($_SESSION['alogin']) == "") {
                         let product_id = response[i].product_id;
                         let product_name = response[i].product_name;
                         let qty = response[i].qty;
+                        let car_no = response[i].car_no;
                         let wh_org = response[i].wh_org;
                         let wh_week_id = response[i].wh_week_id;
                         let location_org = response[i].location_org;
                         let location_to = response[i].location_to;
+                        let line_no_master = response[i].line_no;
+                        let remark = response[i].remark;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
@@ -623,11 +629,14 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#product_id').val(product_id).trigger('change');
                         $('#product_name').val(product_name);
                         $('#qty').val(qty);
+                        $('#car_no').val(car_no);
+                        $('#line_no_master').val(line_no_master);
                         $('#wh_org').val(wh_org).trigger('change');
                         $('#wh_week_id').val(wh_week_id).trigger('change');
                         $('#location_org').val(location_org).trigger('change');
                         $('#location_to').val(location_to).trigger('change');
-                        $('.modal-title').html("<i class='fa fa-minus'></i> Delete Record");
+                        $('#remark').val(remark);
+                        $('.modal-title').html("<i class='fa fa-plus'></i> Delete Record");
                         $('#action').val('DELETE');
                         $('#save').val('Confirm Delete');
                     }

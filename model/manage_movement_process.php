@@ -279,10 +279,32 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
+    $sql_get = "SELECT 
+    vo.id,vo.doc_date,vo.doc_id,vo.product_id,vo.product_name,vo.wh_org,vo.wh_to,vo.wh_week_id,vo.location_org,vo.location_to
+    ,vo.doc_user_id,vo.qty,vb.total_qty,vo.create_by,vo.create_date,vo.user_name 
+FROM 
+    v_wh_stock_movement vo
+LEFT JOIN 
+    v_wh_stock_balance vb 
+ON 
+    vb.product_id = vo.product_id 
+    AND vb.wh = vo.wh_org 
+    AND vb.wh_week_id = vo.wh_week_id 
+    AND vb.location = vo.location_org 
+WHERE 1 ";
+
+
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement 
+
+    ## Fetch records
+    $stmt = $conn->prepare($sql_get . $where_doc_user_id . $searchQuery
+        . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
+
+/*
+    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement vo
         WHERE 1 " . $where_doc_user_id . $searchQuery
         . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
+*/
 
 // Bind values
     foreach ($searchArray as $key => $search) {
@@ -306,10 +328,11 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
                 "product_name" => $row['product_name'],
                 "qty" => $row['qty'],
                 "wh_org" => $row['wh_org'],
-                "location_org" => $row['location_org'],
                 "wh_to" => $row['wh_to'],
                 "wh_week_id" => $row['wh_week_id'],
+                "location_org" => $row['location_org'],
                 "location_to" => $row['location_to'],
+                "total_qty" => $row['total_qty'],
                 "create_by" => $row['create_by'],
                 "create_date" => $row['create_date'],
                 "user_name" => $row['user_name'],

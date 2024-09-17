@@ -95,6 +95,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>สัปดาห์</th>
                                                     <th>จากตำแหน่ง</th>
                                                     <th>ไปตำแหน่ง</th>
+                                                    <th>คงเหลือ</th>
                                                     <th>Create By</th>
                                                     <th>Create Date</th>
                                                     <th>Action</th>
@@ -110,6 +111,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>สัปดาห์</th>
                                                     <th>จากตำแหน่ง</th>
                                                     <th>ไปตำแหน่ง</th>
+                                                    <th>คงเหลือ</th>
                                                     <th>Create By</th>
                                                     <th>Create Date</th>
                                                     <th>Action</th>
@@ -453,6 +455,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'wh_week_id'},
                     {data: 'location_org'},
                     {data: 'location_to'},
+                    {data: 'total_qty'},
                     {data: 'user_name'},
                     {data: 'create_date'},
                     {data: 'update'},

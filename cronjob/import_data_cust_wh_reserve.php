@@ -46,7 +46,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         echo "Product Save OK = " . $result_sqlsvr["TRD_SH_CODE"] . " | " . $result_sqlsvr["TRD_SH_NAME"] . "\n\r";
     }
 
-    //$doc_id = $result_sqlsvr["DI_REF"];
     $doc_id = $result_sqlsvr["DI_REF"] . "-" . str_pad($result_sqlsvr["TRD_SEQ"], 3, '0', STR_PAD_LEFT);
 
     $sql_find_master = "SELECT COUNT(*) FROM wh_stock_movement_out WHERE doc_id = :doc_id AND product_id = :product_id AND line_no = :line_no ";

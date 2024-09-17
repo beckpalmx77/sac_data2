@@ -91,12 +91,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <label for="warehouse_id" class="control-label">รหัสคลัง/ปี</label>
                                                                     <input type="warehouse_id" class="form-control"
                                                                            id="warehouse_id" name="warehouse_id"
-                                                                           readonly="true"
-                                                                           placeholder="สร้างอัตโนมัติ">
+                                                                           required="true"
+                                                                           placeholder="">
                                                                 </div>
 
                                                                 <div class="form-group">
-                                                                    <label for="name_t"
+                                                                    <label for="warehouse_year"
                                                                            class="control-label">รายละเอียด</label>
                                                                     <input type="text" class="form-control"
                                                                            id="warehouse_year"

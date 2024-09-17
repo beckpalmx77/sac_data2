@@ -52,8 +52,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
-                                                    <th>รหัสสัปดาห์ยาง</th>
-                                                    <th>สัปดาห์ยาง</th>
+                                                    <th>รหัสรถคันที่</th>
+                                                    <th>รายละเอียด</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -61,8 +61,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </thead>
                                                 <tfoot>
                                                 <tr>
-                                                    <th>รหัสสัปดาห์ยาง</th>
-                                                    <th>สัปดาห์ยาง</th>
+                                                    <th>รหัสรถคันที่</th>
+                                                    <th>รายละเอียด</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -88,21 +88,21 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="modal-body">
 
                                                                 <div class="form-group">
-                                                                    <label for="wh_week_id" class="control-label">รหัสสัปดาห์ยาง</label>
-                                                                    <input type="wh_week_id" class="form-control"
-                                                                           id="wh_week_id" name="wh_week_id"
-                                                                           required="true"
-                                                                           placeholder="">
+                                                                    <label for="car_no" class="control-label">รหัสรถคันที่</label>
+                                                                    <input type="car_no" class="form-control"
+                                                                           id="car_no" name="car_no"
+                                                                           readonly="true"
+                                                                           placeholder="สร้างอัตโนมัติ">
                                                                 </div>
 
                                                                 <div class="form-group">
                                                                     <label for="name_t"
-                                                                           class="control-label">สัปดาห์ยาง</label>
+                                                                           class="control-label">รายละเอียด</label>
                                                                     <input type="text" class="form-control"
-                                                                           id="wh_desc"
-                                                                           name="wh_desc"
+                                                                           id="car_register_no"
+                                                                           name="car_register_no"
                                                                            required="required"
-                                                                           placeholder="สัปดาห์ยาง">
+                                                                           placeholder="รายละเอียด">
                                                                 </div>
 
                                                                 <div class="form-group">
@@ -135,46 +135,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                             </div>
                                         </div>
 
-
-                                        <div class="modal fade" id="SearchModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
-                                                    </div>
-
-                                                    <div class="container"></div>
-                                                    <div class="modal-body">
-
-                                                        <div class="modal-body">
-
-                                                            <table cellpadding="0" cellspacing="0" border="0"
-                                                                   class="display"
-                                                                   id="TableUnitList"
-                                                                   width="100%">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tfoot>
-                                                                <tr>
-                                                                    <th>รหัส</th>
-                                                                    <th>หน่วยนับ</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -244,14 +204,14 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
 
-        $("#wh_desc").blur(function () {
+        $("#car_register_no").blur(function () {
             let method = $('#action').val();
             if (method === "ADD") {
-                let wh_week_id = $('#wh_week_id').val();
-                let wh_desc = $('#wh_desc').val();
-                let formData = {action: "SEARCH", wh_week_id: wh_week_id, wh_desc: wh_desc};
+                let car_no = $('#car_no').val();
+                let car_register_no = $('#car_register_no').val();
+                let formData = {action: "SEARCH", car_no: car_no, car_register_no: car_register_no};
                 $.ajax({
-                    url: 'model/manage_wh_week_process.php',
+                    url: 'model/manage_wh_car_no_process.php',
                     method: "POST",
                     data: formData,
                     success: function (data) {
@@ -267,7 +227,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_WEEK_ID", sub_action: "GET_MASTER"};
+            let formData = {action: "GET_CAR_NO", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
@@ -286,12 +246,12 @@ if (strlen($_SESSION['alogin']) == "") {
                 'serverSide': true,
                 'serverMethod': 'post',
                 'ajax': {
-                    'url': 'model/manage_wh_week_process.php',
+                    'url': 'model/manage_wh_car_no_process.php',
                     'data': formData
                 },
                 'columns': [
-                    {data: 'wh_week_id'},
-                    {data: 'wh_desc'},
+                    {data: 'car_no'},
+                    {data: 'car_register_no'},
                     {data: 'status'},
                     {data: 'update'},
                     {data: 'delete'}
@@ -304,7 +264,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
                 $.ajax({
-                    url: 'model/manage_wh_week_process.php',
+                    url: 'model/manage_wh_car_no_process.php',
                     method: "POST",
                     data: formData,
                     success: function (data) {
@@ -325,8 +285,8 @@ if (strlen($_SESSION['alogin']) == "") {
             $("#btnAdd").click(function () {
                 $('#recordModal').modal('show');
                 $('#id').val("");
-                $('#wh_week_id').val("");
-                $('#wh_desc').val("");
+                $('#car_no').val("");
+                $('#car_register_no').val("");
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');
@@ -342,21 +302,21 @@ if (strlen($_SESSION['alogin']) == "") {
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_wh_week_process.php',
+                url: 'model/manage_wh_car_no_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
-                        let wh_week_id = response[i].wh_week_id;
-                        let wh_desc = response[i].wh_desc;
+                        let car_no = response[i].car_no;
+                        let car_register_no = response[i].car_register_no;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
-                        $('#wh_week_id').val(wh_week_id);
-                        $('#wh_desc').val(wh_desc);
+                        $('#car_no').val(car_no);
+                        $('#car_register_no').val(car_register_no);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
@@ -378,21 +338,21 @@ if (strlen($_SESSION['alogin']) == "") {
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_wh_week_process.php',
+                url: 'model/manage_wh_car_no_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {
                     let len = response.length;
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
-                        let wh_week_id = response[i].wh_week_id;
-                        let wh_desc = response[i].wh_desc;
+                        let car_no = response[i].car_no;
+                        let car_register_no = response[i].car_register_no;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
-                        $('#wh_week_id').val(wh_week_id);
-                        $('#wh_desc').val(wh_desc);
+                        $('#car_no').val(car_no);
+                        $('#car_register_no').val(car_register_no);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-minus'></i> Delete Record");
                         $('#action').val('DELETE');

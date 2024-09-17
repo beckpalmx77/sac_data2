@@ -13,14 +13,14 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM wh_location WHERE id = " . $id;
+    $sql_get = "SELECT * FROM wh_car_no WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $result) {
         $return_arr[] = array("id" => $result['id'],
-            "location_id" => $result['location_id'],
-            "location_group" => $result['location_group'],
+            "car_no" => $result['car_no'],
+            "car_register_no" => $result['car_register_no'],
             "status" => $result['status']);
     }
 
@@ -28,35 +28,20 @@ if ($_POST["action"] === 'GET_DATA') {
 
 }
 
-if ($_POST["action"] === 'SEARCH') {
-
-    if ($_POST["location_group"] !== '') {
-
-        $location_group = $_POST["location_group"];
-        $sql_find = "SELECT * FROM wh_location WHERE location_group = '" . $location_group . "'";
-        $nRows = $conn->query($sql_find)->fetchColumn();
-        if ($nRows > 0) {
-            echo 2;
-        } else {
-            echo 1;
-        }
-    }
-}
-
 if ($_POST["action"] === 'ADD') {
-    if ($_POST["location_group"] !== '') {
-        $location_id = $_POST["location_id"];
-        $location_group = $_POST["location_group"];
+    if ($_POST["car_register_no"] !== '') {
+        $car_no = $_POST["car_no"];
+        $car_register_no = $_POST["car_register_no"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM wh_location WHERE location_group = '" . $location_group . "'";
+        $sql_find = "SELECT * FROM wh_car_no WHERE car_no = '" . $car_no . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO wh_location(location_id,location_group,status) VALUES (:location_id,:location_group,:status)";
+            $sql = "INSERT INTO wh_car_no(car_no,car_register_no,status) VALUES (:car_no,:car_register_no,:status)";
             $query = $conn->prepare($sql);
-            $query->bindParam(':location_id', $location_id, PDO::PARAM_STR);
-            $query->bindParam(':location_group', $location_group, PDO::PARAM_STR);
+            $query->bindParam(':car_no', $car_no, PDO::PARAM_STR);
+            $query->bindParam(':car_register_no', $car_register_no, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
@@ -73,20 +58,20 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["location_group"] != '') {
+    if ($_POST["car_register_no"] != '') {
 
         $id = $_POST["id"];
-        $location_id = $_POST["location_id"];
-        $location_group = $_POST["location_group"];
+        $car_no = $_POST["car_no"];
+        $car_register_no = $_POST["car_register_no"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM wh_location WHERE location_id = '" . $location_id . "'";
+        $sql_find = "SELECT * FROM wh_car_no WHERE car_no = '" . $car_no . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE wh_location SET location_id=:location_id,location_group=:location_group,status=:status            
+            $sql_update = "UPDATE wh_car_no SET car_no=:car_no,car_register_no=:car_register_no,status=:status            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
-            $query->bindParam(':location_id', $location_id, PDO::PARAM_STR);
-            $query->bindParam(':location_group', $location_group, PDO::PARAM_STR);
+            $query->bindParam(':car_no', $car_no, PDO::PARAM_STR);
+            $query->bindParam(':car_register_no', $car_register_no, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
@@ -100,11 +85,11 @@ if ($_POST["action"] === 'DELETE') {
 
     $id = $_POST["id"];
 
-    $sql_find = "SELECT * FROM wh_location WHERE id = " . $id;
+    $sql_find = "SELECT * FROM wh_car_no WHERE id = " . $id;
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {
-            $sql = "DELETE FROM wh_location WHERE id = " . $id;
+            $sql = "DELETE FROM wh_car_no WHERE id = " . $id;
             $query = $conn->prepare($sql);
             $query->execute();
             echo $del_success;
@@ -114,7 +99,7 @@ if ($_POST["action"] === 'DELETE') {
     }
 }
 
-if ($_POST["action"] === 'GET_WEEK_ID') {
+if ($_POST["action"] === 'GET_CAR_NO') {
 
     ## Read value
     $draw = $_POST['draw'];
@@ -130,28 +115,28 @@ if ($_POST["action"] === 'GET_WEEK_ID') {
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (location_id LIKE :location_id or
-        location_group LIKE :location_group ) ";
+        $searchQuery = " AND (car_no LIKE :car_no or
+        car_register_no LIKE :car_register_no ) ";
         $searchArray = array(
-            'location_id' => "%$searchValue%",
-            'location_group' => "%$searchValue%",
+            'car_no' => "%$searchValue%",
+            'car_register_no' => "%$searchValue%",
         );
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_location ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_car_no ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_location WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM wh_car_no WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM wh_location WHERE 1 " . $searchQuery
+    $stmt = $conn->prepare("SELECT * FROM wh_car_no WHERE 1 " . $searchQuery
         . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
 
 // Bind values
@@ -170,8 +155,8 @@ if ($_POST["action"] === 'GET_WEEK_ID') {
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
                 "id" => $row['id'],
-                "location_id" => $row['location_id'],
-                "location_group" => $row['location_group'],
+                "car_no" => $row['car_no'],
+                "car_register_no" => $row['car_register_no'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
                 "status" => $row['status'] === 'Active' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"
@@ -179,9 +164,9 @@ if ($_POST["action"] === 'GET_WEEK_ID') {
         } else {
             $data[] = array(
                 "id" => $row['id'],
-                "location_id" => $row['location_id'],
-                "location_group" => $row['location_group'],
-                "select" => "<button type='button' name='select' id='" . $row['location_id'] . "@" . $row['location_group'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
+                "car_no" => $row['car_no'],
+                "car_register_no" => $row['car_register_no'],
+                "select" => "<button type='button' name='select' id='" . $row['car_no'] . "@" . $row['car_register_no'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
 </button>",
             );
         }

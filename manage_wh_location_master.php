@@ -91,8 +91,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <label for="location_id" class="control-label">รหัสตำแหน่งคลังสินค้า</label>
                                                                     <input type="location_id" class="form-control"
                                                                            id="location_id" name="location_id"
-                                                                           readonly="true"
-                                                                           placeholder="สร้างอัตโนมัติ">
+                                                                           required="true"
+                                                                           placeholder="">
                                                                 </div>
 
                                                                 <div class="form-group">
@@ -110,8 +110,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <select id="status" name="status"
                                                                             class="form-control" data-live-search="true"
                                                                             title="Please select">
-                                                                        <option>Active</option>
-                                                                        <option>Inactive</option>
+                                                                        <option value="Y">Y</option>
+                                                                        <option value="N">N</option>
                                                                     </select>
                                                                 </div>
                                                             </div>

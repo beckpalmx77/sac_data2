@@ -45,7 +45,7 @@ if ($_POST["action"] === 'SEARCH') {
 
 if ($_POST["action"] === 'ADD') {
     if ($_POST["wh_desc"] !== '') {
-        $wh_week_id = "Q-" . sprintf('%04s', LAST_ID($conn, "wh_week", 'id'));
+        $wh_week_id = $_POST["wh_week_id"];
         $wh_desc = $_POST["wh_desc"];
         $status = $_POST["status"];
         $sql_find = "SELECT * FROM wh_week WHERE wh_desc = '" . $wh_desc . "'";

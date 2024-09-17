@@ -486,10 +486,10 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
-            // ตั้งค่าให้รีเฟรช DataTable ทุกๆ 10 วินาที
+            // ตั้งค่าให้รีเฟรช DataTable
             setInterval(function () {
                 dataRecords.ajax.reload(null, false); // false เพื่อรักษาหน้าปัจจุบัน
-            }, 10000); // 10000 มิลลิวินาที (10 วินาที)
+            }, 300000); // 10000 มิลลิวินาที (10 วินาที)
 
         });
     </script>

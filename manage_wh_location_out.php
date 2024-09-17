@@ -211,7 +211,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 let location_group = $('#location_group').val();
                 let formData = {action: "SEARCH", location_id: location_id, location_group: location_group};
                 $.ajax({
-                    url: 'model/manage_wh_location_our_process.php',
+                    url: 'model/manage_wh_location_out_process.php',
                     method: "POST",
                     data: formData,
                     success: function (data) {
@@ -264,7 +264,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
                 $.ajax({
-                    url: 'model/manage_wh_location_our_process.php',
+                    url: 'model/manage_wh_location_out_process.php',
                     method: "POST",
                     data: formData,
                     success: function (data) {
@@ -302,7 +302,7 @@ if (strlen($_SESSION['alogin']) == "") {
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_wh_location_our_process.php',
+                url: 'model/manage_wh_location_out_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {
@@ -338,7 +338,7 @@ if (strlen($_SESSION['alogin']) == "") {
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_wh_location_our_process.php',
+                url: 'model/manage_wh_location_out_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {

@@ -85,6 +85,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     Print <i class="fa fa-print"></i>
                                                 </button-->
                                             </div>
+                                            <input type="hidden" name="search_value" id="search_value">
                                         </form>
                                         <div id="output_area"></div>
                                         <br>
@@ -865,6 +866,12 @@ if (strlen($_SESSION['alogin']) == "") {
         function ExportData() {
             // ดึงฟอร์มจาก ID ที่กำหนด
             const form = document.getElementById("export_data");
+
+            let searchValue = $('#TableRecordList_filter input').val();
+
+            document.getElementById("search_value").value = searchValue;
+
+            //alert(searchValue);
 
             // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
             if (form.checkValidity()) {

@@ -17,16 +17,6 @@ $query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) .
 
 $sql_sqlsvr = $sql_reserve . $query_year;
 
-/*
-    $myfile = fopen("qry_file_mssql_server.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_sqlsvr);
-    fclose($myfile);
-
-    $myfile = fopen("imp_reserve.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $doc_id . " | " . $doc_date);
-    fclose($myfile);
-*/
-
 $insert_data = "";
 $update_data = "";
 $doc_id_compare = "";
@@ -56,9 +46,12 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         echo "Product Save OK = " . $result_sqlsvr["TRD_SH_CODE"] . " | " . $result_sqlsvr["TRD_SH_NAME"] . "\n\r";
     }
 
+    //$doc_id = $result_sqlsvr["DI_REF"];
+    $doc_id = $result_sqlsvr["DI_REF"] . "-" . str_pad($result_sqlsvr["TRD_SEQ"], 3, '0', STR_PAD_LEFT);
+
     $sql_find_master = "SELECT COUNT(*) FROM wh_stock_movement_out WHERE doc_id = :doc_id AND product_id = :product_id AND line_no = :line_no ";
     $query_find = $conn->prepare($sql_find_master);
-    $query_find->bindParam(':doc_id', $result_sqlsvr["DI_REF"], PDO::PARAM_STR);
+    $query_find->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
     $query_find->bindParam(':product_id', $result_sqlsvr["TRD_SH_CODE"], PDO::PARAM_STR);
     $query_find->bindParam(':line_no', $result_sqlsvr["TRD_SEQ"], PDO::PARAM_STR);
     $query_find->execute();
@@ -72,10 +65,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         } else {
             $customer_name = $result_sqlsvr['AR_NAME'];
         }
-
-
-        //$doc_id = $result_sqlsvr["DI_REF"];
-        $doc_id = $result_sqlsvr["DI_REF"] . "-" . str_pad($result_sqlsvr["TRD_SEQ"], 3, '0', STR_PAD_LEFT);
 
         $doc_date = substr($result_sqlsvr['DI_DATE'], 8, 2) . "-" . substr($result_sqlsvr['DI_DATE'], 5, 2) . "-" . substr($result_sqlsvr['DI_DATE'], 0, 4);
         $product_id = $result_sqlsvr["TRD_SH_CODE"];

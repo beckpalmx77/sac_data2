@@ -227,12 +227,34 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             </select>
                                                                         </div>
                                                                     </div>
+                                                                </div>
+
+                                                                <!-- กลุ่มฟอร์มที่ 4 -->
+                                                                <div class="row">
                                                                     <div class="col-md-3">
                                                                         <div class="form-group">
-                                                                            <label for="car_no"
-                                                                                   class="control-label">รถคันที่</label>
+                                                                            <label for="car_no" class="control-label">รถคันที่</label>
+                                                                            <select class="form-control" id="car_no"
+                                                                                    name="car_no" required>
+                                                                                <option value="">รถคันที่</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label for="location_to" class="control-label">ไป</label>
+                                                                            <select class="form-control" id="location_to"
+                                                                                    name="location_to" required>
+                                                                                <option value="">ไป</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="remark"
+                                                                                   class="control-label">หมายเหตุ</label>
                                                                             <input type="text" class="form-control"
-                                                                                   id="car_no" name="car_no" placeholder=""
+                                                                                   id="remark" name="remark" placeholder=""
                                                                                    required>
                                                                         </div>
                                                                     </div>
@@ -737,7 +759,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                     // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
                     $('#location_to').select2({
-                        placeholder: "เลือกตำแหน่ง",
+                        placeholder: "เลือกปลายทาง",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
                     });
@@ -779,6 +801,38 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
     </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_wh_car_no.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#car_no');
+                    $.each(data, function (index, wh_car_no) {
+                        select.append($('<option>', {
+                            value: wh_car_no.car_no,
+                            text: wh_car_no.car_no, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': wh_car_no.car_no // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#car_no').select2({
+                        placeholder: "เลือกรถคันที่",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
 
     <script>
         function ReloadDataTable() {

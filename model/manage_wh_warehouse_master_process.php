@@ -28,22 +28,45 @@ if ($_POST["action"] === 'GET_DATA') {
 
 }
 
+if ($_POST["action"] === 'SEARCH') {
+
+    if ($_POST["warehouse_id"] !== '') {
+
+        $warehouse_id = $_POST["warehouse_year"];
+        $sql_find = "SELECT * FROM wh_warehouse WHERE warehouse_id = '" . $warehouse_id . "'";
+        $nRows = $conn->query($sql_find)->fetchColumn();
+        if ($nRows > 0) {
+            echo 2;
+        } else {
+            echo 1;
+        }
+    }
+}
+
 if ($_POST["action"] === 'ADD') {
     if ($_POST["warehouse_year"] !== '') {
         $warehouse_id = $_POST["warehouse_id"];
         $warehouse_year = $_POST["warehouse_year"];
         $status = $_POST["status"];
         $sql_find = "SELECT * FROM wh_warehouse WHERE warehouse_id = '" . $warehouse_id . "'";
+
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             echo $dup;
         } else {
+
             $sql = "INSERT INTO wh_warehouse(warehouse_id,warehouse_year,status) VALUES (:warehouse_id,:warehouse_year,:status)";
+
+            $myfile = fopen("wh1_param.txt", "w") or die("Unable to open file!");
+            fwrite($myfile, $sql);
+            fclose($myfile);
+
             $query = $conn->prepare($sql);
             $query->bindParam(':warehouse_id', $warehouse_id, PDO::PARAM_STR);
             $query->bindParam(':warehouse_year', $warehouse_year, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->execute();
+
             $lastInsertId = $conn->lastInsertId();
 
             if ($lastInsertId) {
@@ -64,7 +87,7 @@ if ($_POST["action"] === 'UPDATE') {
         $warehouse_id = $_POST["warehouse_id"];
         $warehouse_year = $_POST["warehouse_year"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM wh_warehouse WHERE warehouse_id = '" . $warehouse_id . "'";
+        $sql_find = "SELECT * FROM wh_warehouse WHERE id = " . $id ;
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             $sql_update = "UPDATE wh_warehouse SET warehouse_id=:warehouse_id,warehouse_year=:warehouse_year,status=:status            
@@ -137,7 +160,7 @@ if ($_POST["action"] === 'GET_WAREHOUSE') {
 
 ## Fetch records
     $stmt = $conn->prepare("SELECT * FROM wh_warehouse WHERE 1 " . $searchQuery
-        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+        . " ORDER BY warehouse_id DESC LIMIT :limit,:offset");
 
 // Bind values
     foreach ($searchArray as $key => $search) {
@@ -159,7 +182,7 @@ if ($_POST["action"] === 'GET_WAREHOUSE') {
                 "warehouse_year" => $row['warehouse_year'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
-                "status" => $row['status'] === 'Active' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"
+                "status" => $row['status'] === 'Y' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"
             );
         } else {
             $data[] = array(

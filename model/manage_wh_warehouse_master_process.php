@@ -56,11 +56,11 @@ if ($_POST["action"] === 'ADD') {
         } else {
 
             $sql = "INSERT INTO wh_warehouse(warehouse_id,warehouse_year,status) VALUES (:warehouse_id,:warehouse_year,:status)";
-
-            $myfile = fopen("wh1_param.txt", "w") or die("Unable to open file!");
-            fwrite($myfile, $sql);
-            fclose($myfile);
-
+            /*
+                        $myfile = fopen("wh1_param.txt", "w") or die("Unable to open file!");
+                        fwrite($myfile, $sql);
+                        fclose($myfile);
+            */
             $query = $conn->prepare($sql);
             $query->bindParam(':warehouse_id', $warehouse_id, PDO::PARAM_STR);
             $query->bindParam(':warehouse_year', $warehouse_year, PDO::PARAM_STR);
@@ -87,7 +87,7 @@ if ($_POST["action"] === 'UPDATE') {
         $warehouse_id = $_POST["warehouse_id"];
         $warehouse_year = $_POST["warehouse_year"];
         $status = $_POST["status"];
-        $sql_find = "SELECT * FROM wh_warehouse WHERE id = " . $id ;
+        $sql_find = "SELECT * FROM wh_warehouse WHERE id = " . $id;
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             $sql_update = "UPDATE wh_warehouse SET warehouse_id=:warehouse_id,warehouse_year=:warehouse_year,status=:status            

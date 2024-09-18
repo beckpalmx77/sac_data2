@@ -471,7 +471,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 },
                 'processing': true,
                 'serverSide': true,
-                'autoWidth': true,
+                'autoWidth': false,
                 'searching': true,
                 <?php  if ($_SESSION['deviceType'] !== 'computer') {
                     echo "'scrollX': true,";

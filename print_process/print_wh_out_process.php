@@ -16,48 +16,86 @@ $data = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Print Preview</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         @media print {
             @page {
-                size: landscape; /* ตั้งค่าเป็นแนวนอน */
-                margin: 1cm; /* กำหนดระยะขอบ */
+                size: A4 landscape; /* ตั้งค่าเป็นแนวนอน A4 */
+                margin: 0.5cm; /* กำหนดขนาดขอบของเอกสาร */
             }
+
             body {
-                -webkit-print-color-adjust: exact; /* เพื่อให้พิมพ์สีได้ */
+                -webkit-print-color-adjust: exact;
             }
+
+            .table {
+                font-size: 14px; /* ลดขนาดฟอนต์เพื่อให้พอดีกับหน้า */
+            }
+
+            .table-responsive {
+                overflow: visible !important; /* ทำให้ตารางพอดีกับหน้ากระดาษ */
+            }
+        }
+
+        /* เพิ่มการเลื่อนแนวนอนถ้าข้อมูลไม่พอแสดง */
+        .table-responsive {
+            overflow-x: auto;
         }
     </style>
 </head>
-<body onload="window.print();">
+<body>
+
 <div class="container">
     <h2>รายงานการตัดจ่ายสินค้าคงคลัง</h2>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>วันที่เอกสาร</th>
-            <th>รหัสสินค้า</th>
-            <th>ชื่อสินค้า</th>
-            <th>จำนวน</th>
-            <th>คลังต้นทาง</th>
-            <th>ทะเบียนรถ</th>
-            <th>ชื่อลูกค้า</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($data as $row) : ?>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
             <tr>
-                <td><?= htmlspecialchars($row['doc_date'] ?? '') ?></td>
-                <td><?= htmlspecialchars($row['product_id'] ?? '') ?></td>
-                <td><?= htmlspecialchars($row['product_name'] ?? '') ?></td>
-                <td><?= htmlspecialchars($row['qty'] ?? '') ?></td>
-                <td><?= htmlspecialchars($row['wh_org'] ?? '') ?></td>
-                <td><?= htmlspecialchars($row['car_no'] ?? '') ?></td>
-                <td><?= htmlspecialchars($row['customer_name'] ?? '') ?></td>
+                <th>วันที่เอกสาร</th>
+                <th>รหัสสินค้า</th>
+                <th>ชื่อสินค้า</th>
+                <th>จำนวน</th>
+                <th>คลังต้นทาง</th>
+                <th>สัปดาห์</th>
+                <th>ตำแหน่ง</th>
+                <th>เลขที่เอกสาร</th>
+                <th>ทะเบียนรถ</th>
+                <th>ชื่อ Sale/Take</th>
+                <th>ชื่อลูกค้า</th>
+                <th>คงเหลือ</th>
             </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            <?php foreach ($data as $row) : ?>
+                <tr>
+                    <td><?= htmlspecialchars($row['doc_date'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['product_id'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['product_name'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['qty'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['wh_org'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['wh_week_id'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['location_org'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['doc_id'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['car_no'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['sale_take'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['customer_name'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['total_qty'] ?? '') ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
-</body>
-</html>
+
+<script>
+    // JavaScript event to adjust table style before printing
+    window.onbeforeprint = function() {
+        document.querySelector('.table').style.fontSize = '10px'; // ลดขนาดฟอนต์ก่อนพิมพ์
+    };
+
+    window.onafterprint = function() {
+        document.querySelector('.table').style.fontSize = ''; // คืนค่าฟอนต์กลับหลังจากพิมพ์เสร็จ
+    };
+</script>
+
+<script src="https://cdn

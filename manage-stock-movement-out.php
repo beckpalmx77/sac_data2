@@ -12,7 +12,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <!DOCTYPE html>
     <html lang="th">
-    <body id="page-top">
+<body id="page-top">
     <div id="wrapper">
         <?php
         include('includes/Side-Bar.php');
@@ -80,10 +80,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         class="btn btn-success btn-xs" onclick="ExportData();">
                                                     Export <i class="fa fa-file-excel-o"></i>
                                                 </button>
-                                                <!--button type="button" name="btnPrint" id="btnPrint"
+                                                <button type="button" name="
+" id="btnPrint"
                                                         class="btn btn-primary btn-xs" onclick="PrintData();">
                                                     Print <i class="fa fa-print"></i>
-                                                </button-->
+                                                </button>
                                             </div>
                                             <input type="hidden" name="search_value" id="search_value">
                                         </form>
@@ -452,9 +453,70 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             let formData = {action: "GET_MOVEMENT_OUT", sub_action: "GET_MASTER"};
+            let dataRecords = $('#TableRecordList').DataTable({
+                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
+                'language': {
+                    search: 'ค้นหาตามเลขที่เอกสาร', lengthMenu: 'แสดง _MENU_ รายการ',
+                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
+                    infoEmpty: 'ไม่มีข้อมูล',
+                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
+                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
+                    paginate: {
+                        previous: 'ก่อนหน้า',
+                        last: 'สุดท้าย',
+                        next: 'ต่อไป'
+                    }
+                },
+                'processing': true,
+                'serverSide': true,
+                'autoWidth': true,
+                'searching': true,
+                <?php if ($_SESSION['deviceType'] !== 'computer') {
+        echo "'scrollX': true,";
+    } ?>
+                'serverMethod': 'post',
+                'ajax': {
+                    'url': 'model/manage_movement_out_process.php',
+                    'data': formData
+                },
+                'columns': [
+                    {data: 'doc_date'},
+                    {data: 'product_id'},
+                    {data: 'product_name'},
+                    {data: 'qty'},
+                    {data: 'wh_org'},
+                    {data: 'wh_week_id'},
+                    {data: 'location_org'},
+                    {data: 'doc_id'},
+                    {data: 'car_no'},
+                    {data: 'sale_take'},
+                    {data: 'customer_name'},
+                    {data: 'total_qty'},
+                    {data: 'update'},
+                ]
+            });
+
+            // ตั้งค่าให้รีเฟรช DataTable
+            setInterval(function () {
+                dataRecords.ajax.reload(null, false); // false เพื่อรักษาหน้าปัจจุบัน
+            }, 300000); // 10000 มิลลิวินาที (10 วินาที)
+
+        });
+    </script-->
+
+    <script>
+        $(document).ready(function () {
+            let doc_date_start = $('#doc_date_start').val();
+            let doc_date_to = $('#doc_date_to').val();
+            let formData = {
+                action: "GET_MOVEMENT_OUT",
+                sub_action: "GET_MASTER",
+                doc_date_start: doc_date_start,
+                doc_date_to: doc_date_to
+            };
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
@@ -498,12 +560,23 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
-            // ตั้งค่าให้รีเฟรช DataTable
             setInterval(function () {
-                dataRecords.ajax.reload(null, false); // false เพื่อรักษาหน้าปัจจุบัน
-            }, 300000); // 10000 มิลลิวินาที (10 วินาที)
-
+                dataRecords.ajax.reload(null, false); // รีเฟรชตารางทุกๆ 5 นาที
+            }, 300000);
         });
+
+        // ฟังก์ชันรีเฟรช DataTable
+        function ReloadDataTable() {
+            $('#TableRecordList').DataTable().ajax.reload(null, false);
+        }
+
+        // ฟังก์ชันพิมพ์ข้อมูล
+        function PrintData() {
+            let doc_date_start = $('#doc_date_start').val();
+            let doc_date_to = $('#doc_date_to').val();
+
+            window.open('print_preview.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to, '_blank');
+        }
     </script>
 
     <script>
@@ -887,7 +960,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         // ฟังก์ชันสำหรับทำการ submit ฟอร์ม
-        function PrintData() {
+        function PrintData_BAK_1() {
             // ดึงฟอร์มจาก ID ที่กำหนด
             const form = document.getElementById("export_data");
 
@@ -905,7 +978,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         // ฟังก์ชันสำหรับ Print ข้อมูลไปที่หน้าจอ
-        function PrintData_BAK2() {
+        function PrintData_BAK_2() {
 
             const form = document.getElementById("export_data");
 
@@ -938,7 +1011,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         // ฟังก์ชันสำหรับ Print ข้อมูลไปที่หน้าจอ
-        function PrintData_BAK() {
+        function PrintData_BAK_3() {
             const form = document.getElementById("export_data");
 
             // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
@@ -973,8 +1046,17 @@ if (strlen($_SESSION['alogin']) == "") {
         }
     </script>
 
+    <script>
+        function PrintData() {
+            let doc_date_start = $('#doc_date_start').val();
+            let doc_date_to = $('#doc_date_to').val();
+            window.open('print_process/print_wh_out_process.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to, '_blank');
+        }
+    </script>
 
-    </body>
-    </html>
+
+<
+/body>
+< /html>
 
 <?php } ?>

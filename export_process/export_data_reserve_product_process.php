@@ -160,12 +160,9 @@ $query->execute();
 
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
-    //SAC.0001405=Ready Quick
-    if ($row['AR_CODE']==="SAC.0001405") {
-        $customer_name = preg_replace("/\s+/", " ", $row['DI_REMARK']);
-    } else {
-        $customer_name = $row['AR_NAME'];
-    }
+
+    $customer_name = $row['AR_NAME'];
+
 
     $doc_date = substr($row['DI_DATE'],8,2) . "/" . substr($row['DI_DATE'],5,2) . "/" . substr($row['DI_DATE'],0,4);
 

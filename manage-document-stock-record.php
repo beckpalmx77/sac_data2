@@ -40,6 +40,30 @@ if (strlen($_SESSION['alogin']) == "") {
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
+                                        <form id="export_data" method="post" action="export_process/export_process_display_data_wh_stock_balance.php" enctype="multipart/form-data">
+                                            <div class="col-md-12 col-md-offset-2" style="display: flex; align-items: center; gap: 10px;">
+                                                <button type="button" name="btnRefresh" id="btnRefresh" class="btn btn-success btn-xs" onclick="ReloadDataTable();">
+                                                    Refresh <i class="fa fa-refresh"></i>
+                                                </button>
+                                                <label for="name_t" class="control-label mb-0"><b>วัน</b></label>
+                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start" readonly="true" style="width: calc(0.6em * 10 + 1.25rem);" value="<?php echo $start_date; ?>">
+                                                <label for="name_t" class="control-label mb-0"><b>-</b></label>
+                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to" readonly="true" style="width: calc(0.6em * 10 + 1.25rem);" value="<?php echo $curr_date; ?>">
+                                                <select id="product_id" name="product_id" class="form-control" style="width: 150px;">
+                                                    <option value="">ค้นหารหัสสินค้า</option>
+                                                </select>
+                                                <input type="text" id="product_name" name="product_name" class="form-control" placeholder="รายละเอียดสินค้า" readonly style="width: 300px;">
+                                                <select id="wh" name="wh" class="form-control" style="width: 100px;">
+                                                    <option value="">คลังปี</option>
+                                                </select>
+                                                <select id="wh_week_id" name="wh_week_id" class="form-control" style="width: 100px;">
+                                                    <option value="">สัปดาห์</option>
+                                                </select>
+
+                                                <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">FilterData <i class="fa fa-filter"></i></button>
+                                                <button type="button" name="btnExport" id="btnExport" class="btn btn-success btn-xs" onclick="ExportData();">Export <i class="fa fa-file-excel-o"></i></button>
+                                            </div>
+                                        </form>
                                         <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>

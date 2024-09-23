@@ -1,5 +1,6 @@
 <?php
 include('includes/Header.php');
+$curr_date = date("d-m-Y");
 if (strlen($_SESSION['alogin']) == "") {
     header("Location: index.php");
 } else {
@@ -40,28 +41,35 @@ if (strlen($_SESSION['alogin']) == "") {
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
-                                        <form id="export_data" method="post" action="export_process/export_process_display_data_wh_stock_balance.php" enctype="multipart/form-data">
-                                            <div class="col-md-12 col-md-offset-2" style="display: flex; align-items: center; gap: 10px;">
-                                                <button type="button" name="btnRefresh" id="btnRefresh" class="btn btn-success btn-xs" onclick="ReloadDataTable();">
+                                        <form id="export_data" method="post"
+                                              action="export_process/export_process_display_data_wh_stock_balance.php"
+                                              enctype="multipart/form-data">
+                                            <div class="col-md-12 col-md-offset-2"
+                                                 style="display: flex; align-items: center; gap: 10px;">
+                                                <button type="button" name="btnRefresh" id="btnRefresh"
+                                                        class="btn btn-success btn-xs" onclick="ReloadDataTable();">
                                                     Refresh <i class="fa fa-refresh"></i>
                                                 </button>
                                                 <label for="name_t" class="control-label mb-0"><b>วัน</b></label>
-                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start" readonly="true" style="width: calc(0.6em * 10 + 1.25rem);" value="<?php echo $start_date; ?>">
+                                                <input type="text" class="form-control" id="doc_date_start"
+                                                       name="doc_date_start" readonly="true"
+                                                       style="width: calc(0.6em * 10 + 1.25rem);"
+                                                       value="<?php echo $curr_date; ?>">
                                                 <label for="name_t" class="control-label mb-0"><b>-</b></label>
-                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to" readonly="true" style="width: calc(0.6em * 10 + 1.25rem);" value="<?php echo $curr_date; ?>">
-                                                <select id="product_id" name="product_id" class="form-control" style="width: 150px;">
-                                                    <option value="">ค้นหารหัสสินค้า</option>
-                                                </select>
-                                                <input type="text" id="product_name" name="product_name" class="form-control" placeholder="รายละเอียดสินค้า" readonly style="width: 300px;">
-                                                <select id="wh" name="wh" class="form-control" style="width: 100px;">
-                                                    <option value="">คลังปี</option>
-                                                </select>
-                                                <select id="wh_week_id" name="wh_week_id" class="form-control" style="width: 100px;">
-                                                    <option value="">สัปดาห์</option>
+                                                <input type="text" class="form-control" id="doc_date_to"
+                                                       name="doc_date_to" readonly="true"
+                                                       style="width: calc(0.6em * 10 + 1.25rem);"
+                                                       value="<?php echo $curr_date; ?>">
+                                                <label for="name_t" class="control-label mb-0"><b>เลือกผู้บันทึกข้อมูล</b></label>
+                                                <select id="create_by" name="create_by" class="form-control"
+                                                        style="width: 100px;">
+                                                    <option value="">-</option>
                                                 </select>
 
                                                 <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">FilterData <i class="fa fa-filter"></i></button>
-                                                <button type="button" name="btnExport" id="btnExport" class="btn btn-success btn-xs" onclick="ExportData();">Export <i class="fa fa-file-excel-o"></i></button>
+                                                <button type="button" name="btnExport" id="btnExport"
+                                                        class="btn btn-success btn-xs" onclick="ExportData();">Export <i
+                                                            class="fa fa-file-excel-o"></i></button>
                                             </div>
                                         </form>
                                         <div class="col-md-12 col-md-offset-2">
@@ -193,7 +201,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             let formData = {action: "GET_WH_STOCK", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
@@ -237,7 +245,94 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
+            $('#btnFilter').click(function () {
+                dataRecords.ajax.reload();
+            });
+
         });
+    </script-->
+
+    <script>
+        $(document).ready(function () {
+            // Datepicker configuration
+            $('#doc_date_start, #doc_date_to').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+
+            // DataTable configuration
+            let dataRecords = $('#TableRecordList').DataTable({
+                'lengthMenu': [[10, 20, 50, 100], [5, 10, 20, 50, 100]],
+                'language': {
+                    search: 'ค้นหา',
+                    lengthMenu: 'แสดง _MENU_ รายการ',
+                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
+                    infoEmpty: 'ไม่มีข้อมูล',
+                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
+                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
+                    paginate: { previous: 'ก่อนหน้า', last: 'สุดท้าย', next: 'ต่อไป' }
+                },
+                'processing': true,
+                'serverSide': true,
+                'autoWidth': true,
+                'searching': false,
+                'sortable': true,
+                <?php if ($_SESSION['deviceType'] !== 'computer') { echo "'scrollX': true,"; } ?>
+                'serverMethod': 'post',
+                'ajax': {
+                    'url': 'model/manage_doc_stock_process.php',
+                    'data': function (d) {
+                        // ดึงค่า create_by จาก select box
+                        d.create_by = $('#create_by').val();
+                        d.action = "GET_WH_STOCK";
+                        d.sub_action = "GET_MASTER";
+                    }
+                },
+                'columns': [
+                    {data: 'doc_id'},
+                    {data: 'doc_date'},
+                    {data: 'product_id'},
+                    {data: 'qty'},
+                    {data: 'wh_org'},
+                    {data: 'wh_to'},
+                    {data: 'create_by'},  // ตรวจสอบว่า column นี้มีในฐานข้อมูลและส่งค่ากลับมาถูกต้อง
+                    {data: 'remark'},
+                    {data: 'status'},
+                    {data: 'update'}
+                ]
+            });
+
+            // เมื่อกดปุ่มกรอง จะทำการ reload ข้อมูลใน DataTable
+            $('#btnFilter').click(function() {
+                // ตรวจสอบค่า create_by ก่อนการ reload ข้อมูล
+                let create_by = $('#create_by').val();
+                console.log("Selected create_by: ", create_by);  // ใช้ตรวจสอบว่าได้ค่า create_by หรือไม่
+
+                dataRecords.ajax.reload();  // Reload ข้อมูลใหม่
+            });
+
+            // Reload ข้อมูลทุก ๆ 10 วินาที
+            setInterval(function () {
+                dataRecords.ajax.reload(null, false);  // false เพื่อไม่ให้หน้ารีเซ็ต
+            }, 10000);
+        });
+
+        // Reload DataTable manually
+        function ReloadDataTable() {
+            $('#TableRecordList').DataTable().ajax.reload();
+        }
+
+        // Export Data function
+        function ExportData() {
+            const form = document.getElementById("export_data");
+            if (form.checkValidity()) {
+                form.submit();
+            } else {
+                alert("Please fill out the required fields.");
+            }
+        }
     </script>
 
     <script>
@@ -300,6 +395,44 @@ if (strlen($_SESSION['alogin']) == "") {
                 },
                 error: function (response) {
                     alertify.error("error : " + response);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_record_stock_create_by_data.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);  // ตรวจสอบข้อมูลที่ได้รับจาก PHP
+
+                    let select = $('#create_by');
+
+                    if (Array.isArray(data) && data.length > 0) {
+                        $.each(data, function (index, create_user) {
+                            select.append($('<option>', {
+                                value: create_user.create_by,
+                                text: create_user.create_by, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                                'data-name': create_user.create_by // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                            }));
+                        });
+
+                        // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                        $('#create_by').select2({
+                            placeholder: "-",
+                            allowClear: true,
+                            width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                        });
+                    } else {
+                        console.error('ไม่มีข้อมูลหรือข้อมูลไม่ถูกต้อง');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
                 }
             });
         });

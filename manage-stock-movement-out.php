@@ -12,7 +12,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <!DOCTYPE html>
     <html lang="th">
-<body id="page-top">
+    <body id="page-top">
     <div id="wrapper">
         <?php
         include('includes/Side-Bar.php');
@@ -80,9 +80,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         class="btn btn-success btn-xs" onclick="ExportData();">
                                                     Export <i class="fa fa-file-excel-o"></i>
                                                 </button>
-                                                <button type="button" name="
-" id="btnPrint"
-                                                        class="btn btn-primary btn-xs" onclick="PrintData();">
+                                                <button type="button" name="" id="btnPrint" class="btn btn-primary btn-xs" onclick="PrintData();">
                                                     Print <i class="fa fa-print"></i>
                                                 </button>
                                             </div>
@@ -1054,9 +1052,7 @@ if (strlen($_SESSION['alogin']) == "") {
         }
     </script>
 
-
-<
-/body>
-< /html>
+    </body>
+    </html>
 
 <?php } ?>

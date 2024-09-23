@@ -43,8 +43,7 @@ $data = $stmt->fetchAll();
         }
     </style>
 </head>
-
-<body onload="window.print()"> <!-- เรียกคำสั่ง window.print() เมื่อหน้าเพจโหลด -->
+<body>
 
 <!--div class="container"-->
 <h2>รายงานการตัดจ่ายสินค้าคงคลัง</h2>

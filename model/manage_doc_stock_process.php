@@ -200,16 +200,32 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
         $columnSortOrder = "desc";
     }
 
+    $doc_date_start = $_POST['doc_date_start'];
+    $doc_date_to = $_POST['doc_date_to'];
+    $create_by = $_POST['create_by'];
+
     $searchArray = array();
+
+    // ตรวจสอบว่า create_by เป็น '-' หรือไม่
+    if ($create_by == '-' || empty($create_by)) {
+        // ถ้า create_by เป็น '-' หรือว่าง ให้ดึงข้อมูลทั้งหมด
+        $where_filter = "";
+    } else {
+        // ถ้ามีค่า create_by และไม่ใช่ '-' ให้กรองตาม create_by
+        $where_filter = " AND create_by = '" . $create_by . "'";
+    }
+
+    $txt = "AA " . $create_by . " = " . $where_filter;
+    $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
+    fwrite($myfile,  $txt);
+    fclose($myfile);
 
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (doc_id LIKE :doc_id or
-        doc_date LIKE :doc_date ) ";
+        $searchQuery = " AND (create_by LIKE :create_by) ";
         $searchArray = array(
-            'doc_id' => "%$searchValue%",
-            'doc_date' => "%$searchValue%",
+            'create_by' => "%$searchValue%",
         );
     }
 
@@ -220,14 +236,21 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_document_wh_stock_record WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $query_str = "SELECT * FROM v_document_wh_stock_record WHERE 1 " . $searchQuery
+    $query_str = "SELECT * FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter
         . " ORDER BY v_document_wh_stock_record.doc_id DESC , v_document_wh_stock_record.create_date DESC , v_document_wh_stock_record.line_no " . " LIMIT :limit,:offset";
+
+
+    $txt = $query_str;
+    $myfile = fopen("crm-param1.txt", "w") or die("Unable to open file!");
+    fwrite($myfile,  $txt);
+    fclose($myfile);
+
 
     $stmt = $conn->prepare($query_str);
 

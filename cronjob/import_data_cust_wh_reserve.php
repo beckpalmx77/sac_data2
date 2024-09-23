@@ -17,9 +17,11 @@ $query_year = " AND DI_DATE BETWEEN '" . date("Y/m/d", strtotime("yesterday")) .
 
 $sql_sqlsvr = $sql_reserve . $query_year;
 
+/*
 $my_file = fopen("sql_getsql.txt", "w") or die("Unable to open file!");
 fwrite($my_file,$sql_sqlsvr);
 fclose($my_file);
+*/
 
 $insert_data = "";
 $update_data = "";

@@ -215,6 +215,11 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
         $where_filter = " AND create_by = '" . $create_by . "'";
     }
 
+    if ($doc_date_start!=='' AND $doc_date_to!=='') {
+
+        $where_filter_date = " AND doc_date BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "'";
+    }
+
 /*
     $txt = "AA " . $create_by . " = " . $where_filter;
     $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
@@ -238,13 +243,13 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter . $where_filter_date);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $query_str = "SELECT * FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter
+    $query_str = "SELECT * FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter . $where_filter_date
         . " ORDER BY v_document_wh_stock_record.doc_id DESC , v_document_wh_stock_record.create_date DESC , v_document_wh_stock_record.line_no " . " LIMIT :limit,:offset";
 
 /*

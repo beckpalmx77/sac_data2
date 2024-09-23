@@ -1,5 +1,11 @@
 <?php
 include('includes/Header.php');
+
+$year = date("Y");
+$month = date("m");
+$start_date = "01-" . $month. "-" . $year;
+$curr_date = date("d-m-Y");
+
 $curr_date = date("d-m-Y");
 if (strlen($_SESSION['alogin']) == "") {
     header("Location: index.php");
@@ -54,7 +60,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <input type="text" class="form-control" id="doc_date_start"
                                                        name="doc_date_start" readonly="true"
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
-                                                       value="<?php echo $curr_date; ?>">
+                                                       value="<?php echo $start_date; ?>">
                                                 <label for="name_t" class="control-label mb-0"><b>-</b></label>
                                                 <input type="text" class="form-control" id="doc_date_to"
                                                        name="doc_date_to" readonly="true"
@@ -285,6 +291,8 @@ if (strlen($_SESSION['alogin']) == "") {
                     'url': 'model/manage_doc_stock_process.php',
                     'data': function (d) {
                         // ดึงค่า create_by จาก select box
+                        d.doc_date_start = $('#doc_date_start').val();
+                        d.doc_date_to = $('#doc_date_to').val();
                         d.create_by = $('#create_by').val();
                         d.action = "GET_WH_STOCK";
                         d.sub_action = "GET_MASTER";
@@ -307,6 +315,8 @@ if (strlen($_SESSION['alogin']) == "") {
             // เมื่อกดปุ่มกรอง จะทำการ reload ข้อมูลใน DataTable
             $('#btnFilter').click(function() {
                 // ตรวจสอบค่า create_by ก่อนการ reload ข้อมูล
+                let doc_date_start = $('#doc_date_start').val();
+                let doc_date_to = $('#doc_date_to').val();
                 let create_by = $('#create_by').val();
                 console.log("Selected create_by: ", create_by);  // ใช้ตรวจสอบว่าได้ค่า create_by หรือไม่
 

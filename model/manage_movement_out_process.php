@@ -315,13 +315,13 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     */
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 " . $where_doc_user_id);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 " . $where_doc_user_id . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
@@ -348,8 +348,8 @@ WHERE 1 ";
         . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
 */
 
-    $stmt = $conn->prepare($sql_get . $where_doc_user_id . $searchQuery
-        . " ORDER BY doc_id DESC " . " LIMIT :limit,:offset");
+    $stmt = $conn->prepare($sql_get . $searchQuery
+        . " ORDER BY create_date DESC " . " LIMIT :limit,:offset");
 
 // Bind values
     foreach ($searchArray as $key => $search) {

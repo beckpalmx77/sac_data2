@@ -43,49 +43,43 @@ if (strlen($_SESSION['alogin']) == "") {
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
-                                        <form id="export_data" method="post"
-                                              enctype="multipart/form-data">
-                                            <div class="col-md-12 col-md-offset-2"
-                                                 style="display: flex; align-items: center; gap: 10px;">
-                                                <!--label for="name_t"
-                                                       class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
-
-                                                <button type="button" name="btnAdd" id="btnAdd"
-                                                        class="btn btn-primary btn-xs">
-                                                    Add <i class="fa fa-plus"></i>
-                                                </button-->
-
-                                                <button type="button" name="btnRefresh" id="btnRefresh"
-                                                        class="btn btn-success btn-xs" onclick="ReloadDataTable();">
+                                        <form id="export_data" method="post" enctype="multipart/form-data">
+                                            <div class="col-md-12 col-md-offset-2" style="display: flex; align-items: center; gap: 10px;">
+                                                <button type="button" name="btnRefresh" id="btnRefresh" class="btn btn-success btn-xs" onclick="ReloadDataTable();">
                                                     Refresh <i class="fa fa-refresh"></i>
                                                 </button>
 
-                                                <label for="name_t" class="control-label mb-0"><b>Export Data
-                                                        วันที่&nbsp;</b></label>
+                                                <label for="doc_date_start" class="control-label mb-0"><b>วันที่&nbsp;</b></label>
 
-                                                <input type="text" class="form-control" id="doc_date_start"
-                                                       name="doc_date_start"
-                                                       readonly="true" placeholder=""
-                                                       style="width: calc(0.6em * 10 + 1.25rem);"
-                                                       value="<?php echo $curr_date; ?>">
-                                                <label for="name_t" class="control-label mb-0"><b>-</b></label>
+                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start" readonly
+                                                       style="width: 130px;" value="<?php echo $curr_date; ?>">
 
-                                                <input type="text" class="form-control" id="doc_date_to"
-                                                       name="doc_date_to"
-                                                       readonly="true" placeholder=""
-                                                       style="width: calc(0.6em * 10 + 1.25rem);"
-                                                       value="<?php echo $curr_date; ?>">
+                                                <label for="doc_date_to" class="control-label mb-0"><b>-</b></label>
 
-                                                <button type="button" name="btnExport" id="btnExport"
-                                                        class="btn btn-success btn-xs" onclick="ExportData();">
+                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to" readonly
+                                                       style="width: 130px;" value="<?php echo $curr_date; ?>">
+
+                                                <!--label for="car_no_main" class="control-label mb-0"><b>รถคันที่&nbsp;</b></label>
+                                                <input type="text" class="form-control" id="car_no_main" name="car_no_main"
+                                                       style="width: 130px;" value=""-->
+
+                                                <!--label for="car_no_main" class="control-label mb-0"><b>รถคันที่</b></label>
+                                                <select id="car_no_main" name="car_no_main" class="form-control"
+                                                        style="width: 100px;">
+                                                    <option value="">-</option>
+                                                </select-->
+                                                <!--button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">FilterData <i class="fa fa-filter"></i></button-->
+                                                <button type="button" name="btnExport" id="btnExport" class="btn btn-success btn-xs" onclick="ExportData();">
                                                     Export <i class="fa fa-file-excel-o"></i>
                                                 </button>
-                                                <button type="button" name="" id="btnPrint" class="btn btn-primary btn-xs" onclick="PrintData();">
+
+                                                <button type="button" id="btnPrint" class="btn btn-primary btn-xs" onclick="PrintData();">
                                                     Print <i class="fa fa-print"></i>
                                                 </button>
                                             </div>
                                             <input type="hidden" name="search_value" id="search_value">
                                         </form>
+
                                         <div id="output_area"></div>
                                         <br>
                                         <div class="col-md-12 col-md-offset-2">
@@ -450,60 +444,6 @@ if (strlen($_SESSION['alogin']) == "") {
             this.value = this.value.replace(/[^0-9]/g, '');
         });
     </script>
-
-    <!--script>
-        $(document).ready(function () {
-            let formData = {action: "GET_MOVEMENT_OUT", sub_action: "GET_MASTER"};
-            let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
-                'language': {
-                    search: 'ค้นหาตามเลขที่เอกสาร', lengthMenu: 'แสดง _MENU_ รายการ',
-                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
-                    infoEmpty: 'ไม่มีข้อมูล',
-                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
-                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
-                    paginate: {
-                        previous: 'ก่อนหน้า',
-                        last: 'สุดท้าย',
-                        next: 'ต่อไป'
-                    }
-                },
-                'processing': true,
-                'serverSide': true,
-                'autoWidth': true,
-                'searching': true,
-                <?php if ($_SESSION['deviceType'] !== 'computer') {
-        echo "'scrollX': true,";
-    } ?>
-                'serverMethod': 'post',
-                'ajax': {
-                    'url': 'model/manage_movement_out_process.php',
-                    'data': formData
-                },
-                'columns': [
-                    {data: 'doc_date'},
-                    {data: 'product_id'},
-                    {data: 'product_name'},
-                    {data: 'qty'},
-                    {data: 'wh_org'},
-                    {data: 'wh_week_id'},
-                    {data: 'location_org'},
-                    {data: 'doc_id'},
-                    {data: 'car_no'},
-                    {data: 'sale_take'},
-                    {data: 'customer_name'},
-                    {data: 'total_qty'},
-                    {data: 'update'},
-                ]
-            });
-
-            // ตั้งค่าให้รีเฟรช DataTable
-            setInterval(function () {
-                dataRecords.ajax.reload(null, false); // false เพื่อรักษาหน้าปัจจุบัน
-            }, 300000); // 10000 มิลลิวินาที (10 วินาที)
-
-        });
-    </script-->
 
     <script>
         $(document).ready(function () {
@@ -957,100 +897,13 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
-        // ฟังก์ชันสำหรับทำการ submit ฟอร์ม
-        function PrintData_BAK_1() {
-            // ดึงฟอร์มจาก ID ที่กำหนด
-            const form = document.getElementById("export_data");
-
-            // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
-            if (form.checkValidity()) {
-                form.action = "print_process/print_process_data_wh_movement_out.php";
-                form.target = "_blank"; // เปิดไฟล์ PDF ในแท็บใหม่
-                // ทำการ submit ฟอร์ม
-                form.submit();
-            } else {
-                alert("Please fill out the required fields.");
-            }
-        }
-    </script>
-
-    <script>
-        // ฟังก์ชันสำหรับ Print ข้อมูลไปที่หน้าจอ
-        function PrintData_BAK_2() {
-
-            const form = document.getElementById("export_data");
-
-            // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
-            if (form.checkValidity()) {
-                // ดึงค่าจากฟอร์ม
-                const doc_date_start = document.getElementById("doc_date_start").value;
-                const doc_date_to = document.getElementById("doc_date_to").value;
-                //alert(doc_date_start + " - " + doc_date_to);
-                // ส่งข้อมูลด้วย AJAX ไปที่ Backend เพื่อดึงข้อมูล
-                const xhr = new XMLHttpRequest();
-                xhr.open("POST", "print_process/print_process_data_wh_movement_out.php", true); // ชี้ไปที่ไฟล์ PHP ที่จะดึงข้อมูล
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        // แสดงผลใน div ที่เรากำหนดไว้
-                        document.getElementById("output_area").innerHTML = xhr.responseText;
-                    } else {
-                        alert("Error: Unable to load data");
-                    }
-                };
-
-                // ส่งข้อมูลไป Backend
-                xhr.send("doc_date_start=" + encodeURIComponent(doc_date_start) + "&doc_date_to=" + encodeURIComponent(doc_date_to));
-            } else {
-                alert("Please fill out the required fields.");
-            }
-        }
-    </script>
-
-    <script>
-        // ฟังก์ชันสำหรับ Print ข้อมูลไปที่หน้าจอ
-        function PrintData_BAK_3() {
-            const form = document.getElementById("export_data");
-
-            // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
-            if (form.checkValidity()) {
-                // ดึงค่าจากฟอร์ม
-                const doc_date_start = document.getElementById("doc_date_start").value;
-                const doc_date_to = document.getElementById("doc_date_to").value;
-
-                // ส่งข้อมูลด้วย AJAX ไปที่ Backend เพื่อดึงข้อมูล
-                const xhr = new XMLHttpRequest();
-                xhr.open("POST", "print_process/print_process_data_wh_movement_out.php", true); // ชี้ไปที่ไฟล์ PHP ที่จะดึงข้อมูล
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        // แสดงผลใน div ที่เรากำหนดไว้
-                        document.getElementById("output_area").innerHTML = xhr.responseText;
-
-                        // เรียกการพิมพ์เมื่อโหลดข้อมูลเสร็จแล้ว
-                        window.onload = function () {
-                            window.print();  // เปิดหน้าต่างพิมพ์อัตโนมัติ
-                        };
-                    } else {
-                        alert("Error: Unable to load data");
-                    }
-                };
-
-                // ส่งข้อมูลไป Backend
-                xhr.send("doc_date_start=" + encodeURIComponent(doc_date_start) + "&doc_date_to=" + encodeURIComponent(doc_date_to));
-            } else {
-                alert("Please fill out the required fields.");
-            }
-        }
-    </script>
-
-    <script>
         function PrintData() {
             let doc_date_start = $('#doc_date_start').val();
             let doc_date_to = $('#doc_date_to').val();
             window.open('print_process/print_wh_out_process.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to, '_blank');
         }
     </script>
+
 
     </body>
     </html>

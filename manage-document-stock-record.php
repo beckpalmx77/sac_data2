@@ -66,7 +66,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                        name="doc_date_to" readonly="true"
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
-                                                <label for="name_t" class="control-label mb-0"><b>เลือกผู้บันทึกข้อมูล</b></label>
+                                                <label for="create_by" class="control-label mb-0"><b>เลือกผู้บันทึกข้อมูล</b></label>
                                                 <select id="create_by" name="create_by" class="form-control"
                                                         style="width: 100px;">
                                                     <option value="">-</option>
@@ -319,7 +319,6 @@ if (strlen($_SESSION['alogin']) == "") {
                 let doc_date_to = $('#doc_date_to').val();
                 let create_by = $('#create_by').val();
                 console.log("Selected create_by: ", create_by);  // ใช้ตรวจสอบว่าได้ค่า create_by หรือไม่
-
                 dataRecords.ajax.reload();  // Reload ข้อมูลใหม่
             });
 

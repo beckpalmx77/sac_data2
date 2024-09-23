@@ -215,10 +215,12 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
         $where_filter = " AND create_by = '" . $create_by . "'";
     }
 
+/*
     $txt = "AA " . $create_by . " = " . $where_filter;
     $myfile = fopen("crm-param.txt", "w") or die("Unable to open file!");
     fwrite($myfile,  $txt);
     fclose($myfile);
+*/
 
 ## Search
     $searchQuery = " ";
@@ -245,12 +247,12 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
     $query_str = "SELECT * FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter
         . " ORDER BY v_document_wh_stock_record.doc_id DESC , v_document_wh_stock_record.create_date DESC , v_document_wh_stock_record.line_no " . " LIMIT :limit,:offset";
 
-
+/*
     $txt = $query_str;
     $myfile = fopen("crm-param1.txt", "w") or die("Unable to open file!");
     fwrite($myfile,  $txt);
     fclose($myfile);
-
+*/
 
     $stmt = $conn->prepare($query_str);
 

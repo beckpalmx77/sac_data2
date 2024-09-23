@@ -44,32 +44,40 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <section class="container-fluid">
                                         <form id="export_data" method="post" enctype="multipart/form-data">
-                                            <div class="col-md-12 col-md-offset-2" style="display: flex; align-items: center; gap: 10px;">
-                                                <button type="button" name="btnRefresh" id="btnRefresh" class="btn btn-success btn-xs" onclick="ReloadDataTable();">
+                                            <div class="col-md-12 col-md-offset-2"
+                                                 style="display: flex; align-items: center; gap: 10px;">
+                                                <button type="button" name="btnRefresh" id="btnRefresh"
+                                                        class="btn btn-success btn-xs" onclick="ReloadDataTable();">
                                                     Refresh <i class="fa fa-refresh"></i>
                                                 </button>
 
-                                                <label for="doc_date_start" class="control-label mb-0"><b>วันที่&nbsp;</b></label>
-                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start" readonly
+                                                <label for="doc_date_start"
+                                                       class="control-label mb-0"><b>วันที่&nbsp;</b></label>
+                                                <input type="text" class="form-control" id="doc_date_start"
+                                                       name="doc_date_start" readonly
                                                        style="width: 130px;" value="<?php echo $curr_date; ?>">
 
                                                 <label for="doc_date_to" class="control-label mb-0"><b>-</b></label>
-                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to" readonly
+                                                <input type="text" class="form-control" id="doc_date_to"
+                                                       name="doc_date_to" readonly
                                                        style="width: 130px;" value="<?php echo $curr_date; ?>">
 
                                                 <!--label for="car_no_main" class="control-label mb-0"><b>รถคันที่ (1-12)</b></label>
                                                 <input type="number" class="form-control" id="car_no_main" name="car_no_main"
                                                        style="width: 130px;" min="1" max="12" value=""-->
 
-                                                <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">
+                                                <button type="button" name="btnFilter" id="btnFilter"
+                                                        class="btn btn-primary btn-xs">
                                                     FilterData <i class="fa fa-filter"></i>
                                                 </button>
 
-                                                <button type="button" name="btnExport" id="btnExport" class="btn btn-success btn-xs" onclick="ExportData();">
+                                                <button type="button" name="btnExport" id="btnExport"
+                                                        class="btn btn-success btn-xs" onclick="ExportData();">
                                                     Export <i class="fa fa-file-excel-o"></i>
                                                 </button>
 
-                                                <button type="button" id="btnPrint" class="btn btn-primary btn-xs" onclick="PrintData();">
+                                                <button type="button" id="btnPrint" class="btn btn-primary btn-xs"
+                                                        onclick="PrintData();">
                                                     Print <i class="fa fa-print"></i>
                                                 </button>
                                             </div>

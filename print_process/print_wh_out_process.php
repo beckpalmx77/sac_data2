@@ -92,11 +92,11 @@ $data = $stmt->fetchAll();
 
 <script>
     // JavaScript event to adjust table style before printing
-    window.onbeforeprint = function() {
+    window.onbeforeprint = function () {
         document.querySelector('.table').style.fontSize = '10px'; // ลดขนาดฟอนต์ก่อนพิมพ์
     };
 
-    window.onafterprint = function() {
+    window.onafterprint = function () {
         document.querySelector('.table').style.fontSize = ''; // คืนค่าฟอนต์กลับหลังจากพิมพ์เสร็จ
     };
 </script>

@@ -285,12 +285,8 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $searchQuery = " ";
 
     if ($searchValue != '') {
-        $searchQuery = " AND (create_by LIKE :create_by or customer_name LIKE :customer_name or sale_take LIKE :sale_take or doc_date LIKE :doc_date or doc_id LIKE :doc_id) ";
+        $searchQuery = " AND (doc_id LIKE :doc_id) ";
         $searchArray = array(
-            'create_by' => "%$searchValue%",
-            'customer_name' => "%$searchValue%",
-            'sale_take' => "%$searchValue%",
-            'doc_date' => "%$searchValue%",
             'doc_id' => "%$searchValue%",
         );
     }

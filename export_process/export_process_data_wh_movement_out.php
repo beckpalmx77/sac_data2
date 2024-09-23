@@ -6,9 +6,24 @@ date_default_timezone_set('Asia/Bangkok');
 @header('Content-Encoding: UTF-8');
 @header("Content-Disposition: attachment; filename=" . $filename);
 
-$doc_date_start = $_POST["doc_date_start"];
-$doc_date_to = $_POST["doc_date_to"];
-$doc_id = $_POST["search_value"];
+// ดึงข้อมูลตามวันที่เริ่มต้นและสิ้นสุดที่ส่งมาจาก form
+$doc_date_start = $_POST['doc_date_start'];
+$doc_date_to = $_POST['doc_date_to'];
+$car_no = $_POST['car_no_main'];
+
+if ($car_no !== '-') {
+    $where_cond = " AND vo.car_no = " . $car_no;
+}
+
+//AND vo.doc_id LIKE '%" . $doc_id . "%'"
+
+//$doc_id = $_POST["search_value"];
+/*
+$txt = "sql = " . $doc_date_start . " | " . $doc_date_to . " | " . $car_no ;
+$my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $txt);
+fclose($my_file);
+*/
 
 $start_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
 $end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
@@ -28,9 +43,7 @@ ON
     AND vb.location = vo.location_org 
 WHERE 1 ";
 
-$select_query_wh_movement = $sql_get . " AND vo.doc_date BETWEEN '$doc_date_start' AND '$doc_date_to' AND vo.doc_id LIKE '%" . $doc_id . "%'"
-    . " ORDER BY vo.doc_id ";
-
+$select_query_wh_movement = $sql_get . " AND vo.doc_date BETWEEN '$doc_date_start' AND '$doc_date_to' " . $where_cond . " ORDER BY vo.doc_id ";
 
 
 $String_Sql = $select_query_wh_movement;

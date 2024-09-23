@@ -44,7 +44,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <section class="container-fluid">
                                         <form id="export_data" method="post"
-                                              action="export_process/export_process_display_data_wh_stock_balance.php"
+                                              action="export_process/export_process_data_wh_movement_out.php"
                                               enctype="multipart/form-data">
                                             <div class="col-md-12 col-md-offset-2"
                                                  style="display: flex; align-items: center; gap: 10px;">
@@ -72,10 +72,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </select>
 
                                                 <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">FilterData <i class="fa fa-filter"></i></button>
-                                                <button type="button" name="btnExport" id="btnExport"
+                                                <button type="submit" name="btnExport" id="btnExport"
                                                         class="btn btn-success btn-xs" onclick="ExportData();">Export <i class="fa fa-file-excel-o"></i></button>
                                                 <button type="button" name="btnPrint" id="btnPrint" class="btn btn-primary btn-xs" onclick="PrintData();">Print <i class="fa fa-print"></i></button>
                                             </div>
+
                                         </form>
 
                                         <div id="output_area"></div>
@@ -867,7 +868,7 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
             $.ajax({
@@ -896,7 +897,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 }
             });
         });
-    </script>
+    </script-->
 
 
     <script>
@@ -907,30 +908,43 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         // ฟังก์ชันสำหรับทำการ submit ฟอร์ม
-        function ExportData() {
+        function ExportData(event) {
+            // ป้องกันการรีเฟรชหน้าเมื่อกดปุ่มส่งฟอร์ม
+            event.preventDefault();
+
             // ดึงฟอร์มจาก ID ที่กำหนด
             const form = document.getElementById("export_data");
 
+            // ดึงค่าจากฟิลด์ต่างๆ
             let searchValue = $('#TableRecordList_filter input').val();
 
-            document.getElementById("search_value").value = searchValue;
 
-            //alert(searchValue);
+            // ตรวจสอบค่าที่ได้มา (เพื่อความมั่นใจว่ามีค่าถูกต้อง)
+            //alert("กำลังส่งออกข้อมูลรถ: " + car_no_main);
 
-            // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
-            if (form.checkValidity()) {
-                form.action = "export_process/export_process_data_wh_movement_out.php";
-                form.target = "_blank"; // เปิดไฟล์ PDF ในแท็บใหม่
-                // ทำการ submit ฟอร์ม
-                form.submit();
-            } else {
-                alert("Please fill out the required fields.");
-            }
+            // ตั้งค่า input ที่เป็น hidden field
+            //document.getElementById("search_value").value = searchValue;
+
+            // ตั้งค่า action ให้ไปที่ PHP ที่จะทำการส่งออกเป็น CSV
+            form.action = "export_process/export_process_data_wh_movement_out.php"; // PHP ที่จะสร้างไฟล์ CSV
+            form.method = "POST"; // ใช้ POST เพื่อส่งข้อมูล
+            form.target = "_blank"; // เปิดการดาวน์โหลดไฟล์ในแท็บใหม่
+
+            // ทำการส่งฟอร์ม
+            form.submit();
         }
+
+        // ฟังก์ชันที่ทำงานเมื่อผู้ใช้กดปุ่ม
+        document.getElementById("btnExport").addEventListener("click", ExportData);
     </script>
+
+
 
     <script>
         function PrintData() {
+            let searchValue = $('#TableRecordList_filter input').val();
+
+            alert(searchValue);
             let doc_date_start = $('#doc_date_start').val();
             let doc_date_to = $('#doc_date_to').val();
             let car_no_main = $('#car_no_main').val();

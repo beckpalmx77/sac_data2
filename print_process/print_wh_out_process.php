@@ -6,6 +6,8 @@ $doc_date_start = $_GET['doc_date_start'];
 $doc_date_to = $_GET['doc_date_to'];
 $car_no = $_GET['car_no_main'];
 
+$where_cond = "";
+
 if ($car_no!=='-') {
     $where_cond = " AND car_no = " . $car_no;
 }

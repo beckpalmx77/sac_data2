@@ -349,7 +349,7 @@ WHERE 1 ";
 */
 
     $stmt = $conn->prepare($sql_get . $searchQuery
-        . " ORDER BY create_date DESC " . " LIMIT :limit,:offset");
+        . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
 
 // Bind values
     foreach ($searchArray as $key => $search) {

@@ -283,25 +283,13 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
 
 ## Search
     $searchQuery = " ";
-    /*
-    if ($searchValue != '') {
-        $searchQuery = " AND (doc_date LIKE :doc_date or wh_org LIKE :wh_org
-        or product_id LIKE :product_id or product_name LIKE :product_name or user_name LIKE :user_name or car_no LIKE :car_no) ";
-        $searchArray = array(
-            'doc_date' => "%$searchValue%",
-            'wh_org' => "%$searchValue%",
-            'product_id' => "%$searchValue%",
-            'product_name' => "%$searchValue%",
-            'car_no' => "%$searchValue%",
-            'user_name' => "%$searchValue%",
-        );
-    }
-    */
 
     if ($searchValue != '') {
-        $searchQuery = " AND (doc_date LIKE :doc_date or doc_id LIKE :doc_id
-        ) ";
+        $searchQuery = " AND (create_by LIKE :create_by or customer_name LIKE :customer_name or sale_take LIKE :sale_take or doc_date LIKE :doc_date or doc_id LIKE :doc_id) ";
         $searchArray = array(
+            'create_by' => "%$searchValue%",
+            'customer_name' => "%$searchValue%",
+            'sale_take' => "%$searchValue%",
             'doc_date' => "%$searchValue%",
             'doc_id' => "%$searchValue%",
         );

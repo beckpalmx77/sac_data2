@@ -4,8 +4,13 @@ include('../config/connect_db.php');
 // ดึงข้อมูลตามวันที่เริ่มต้นและสิ้นสุดที่ส่งมาจาก form
 $doc_date_start = $_GET['doc_date_start'];
 $doc_date_to = $_GET['doc_date_to'];
+$car_no = $_GET['car_no_main'];
 
-$stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out WHERE doc_date BETWEEN :start_date AND :end_date");
+if ($car_no!=='-') {
+    $where_cond = " AND car_no = " . $car_no;
+}
+
+$stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out WHERE doc_date BETWEEN :start_date AND :end_date " . $where_cond);
 $stmt->execute(['start_date' => $doc_date_start, 'end_date' => $doc_date_to]);
 $data = $stmt->fetchAll();
 ?>
@@ -22,8 +27,8 @@ $data = $stmt->fetchAll();
     <style>
         @media print {
             @page {
-                size: A4 landscape; /* ตั้งค่าเป็นแนวนอน A4 */
-                margin: 0.5cm; /* กำหนดขนาดขอบของเอกสาร */
+                size: A4 landscape;
+                margin: 0.5cm;
             }
 
             body {
@@ -31,15 +36,19 @@ $data = $stmt->fetchAll();
             }
 
             .table {
-                font-size: 14px; /* ลดขนาดฟอนต์เพื่อให้พอดีกับหน้า */
+                font-size: 14px;
             }
 
             .table-responsive {
-                overflow: visible !important; /* ทำให้ตารางพอดีกับหน้ากระดาษ */
+                overflow: visible !important;
+            }
+
+            /* ซ่อนปุ่มปิดหน้าจอเฉพาะการพิมพ์ */
+            .no-print {
+                display: none;
             }
         }
 
-        /* เพิ่มการเลื่อนแนวนอนถ้าข้อมูลไม่พอแสดง */
         .table-responsive {
             overflow-x: auto;
         }
@@ -50,6 +59,7 @@ $data = $stmt->fetchAll();
 
 <!--div class="container"-->
 <h2>รายงานการตัดจ่ายสินค้าคงคลัง</h2>
+
 <div class="table-responsive">
     <table class="table table-bordered">
         <thead>
@@ -62,7 +72,7 @@ $data = $stmt->fetchAll();
             <th>สัปดาห์</th>
             <th>ตำแหน่ง</th>
             <th>เลขที่เอกสาร</th>
-            <th>ทะเบียนรถ</th>
+            <th>รถคันที่</th>
             <th>ชื่อ Sale/Take</th>
             <th>ชื่อลูกค้า</th>
             <th>คงเหลือ</th>

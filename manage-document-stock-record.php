@@ -207,57 +207,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
     </script>
 
-    <!--script>
-        $(document).ready(function () {
-            let formData = {action: "GET_WH_STOCK", sub_action: "GET_MASTER"};
-            let dataRecords = $('#TableRecordList').DataTable({
-                'columnDefs': [{"orderSequence": ["desc", "asc"]}],
-                'lengthMenu': [[10, 20, 50, 100], [10, 20, 50, 100]],
-                'language': {
-                    search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
-                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
-                    infoEmpty: 'ไม่มีข้อมูล',
-                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
-                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
-                    paginate: {
-                        previous: 'ก่อนหน้า',
-                        last: 'สุดท้าย',
-                        next: 'ต่อไป'
-                    }
-                },
-                'processing': true,
-                'serverSide': true,
-                'serverMethod': 'post',
-                'autoWidth': true,
-                'searching': true,
-                <?php  if ($_SESSION['deviceType'] !== 'computer') {
-                    echo "'scrollX': true,";
-                }?>
-                'ajax': {
-                    'url': 'model/manage_doc_stock_process.php',
-                    'data': formData
-                },
-                'columns': [
-                    {data: 'doc_id'},
-                    {data: 'doc_date'},
-                    {data: 'product_id'},
-                    {data: 'qty'},
-                    {data: 'wh_org'},
-                    {data: 'wh_to'},
-                    {data: 'create_by'},
-                    {data: 'remark'},
-                    {data: 'status'},
-                    {data: 'update'}
-                ]
-            });
-
-            $('#btnFilter').click(function () {
-                dataRecords.ajax.reload();
-            });
-
-        });
-    </script-->
-
     <script>
         $(document).ready(function () {
             // Datepicker configuration

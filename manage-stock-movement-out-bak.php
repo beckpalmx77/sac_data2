@@ -57,9 +57,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <input type="text" class="form-control" id="doc_date_to" name="doc_date_to" readonly
                                                        style="width: 130px;" value="<?php echo $curr_date; ?>">
 
-                                                <!--label for="car_no_main" class="control-label mb-0"><b>รถคันที่ (1-12)</b></label>
-                                                <input type="number" class="form-control" id="car_no_main" name="car_no_main"
-                                                       style="width: 130px;" min="1" max="12" value=""-->
+                                                <label for="car_no_main" class=""><b>รถคันที่</b></label>
+                                                <select id="car_no_main" name="car_no_main" class="control-label mb-0" style="width: 60px;">
+                                                    <option value="">-</option>
+                                                </select>
 
                                                 <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">
                                                     FilterData <i class="fa fa-filter"></i>
@@ -869,28 +870,21 @@ if (strlen($_SESSION['alogin']) == "") {
                 method: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);  // ตรวจสอบข้อมูลที่ได้รับจาก PHP
+                    let select = $('#car_no_main');
+                    $.each(data, function (index, wh_car_no) {
+                        select.append($('<option>', {
+                            value: wh_car_no.car_no,
+                            text: wh_car_no.car_no, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': wh_car_no.car_no // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
 
-                    let select = $('#cars');
-
-                    if (Array.isArray(data) && data.length > 0) {
-                        $.each(data, function (index, create_user) {
-                            select.append($('<option>', {
-                                value: create_user.car_no,
-                                text: create_user.car_no, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
-                                'data-name': create_user.car_no // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
-                            }));
-                        });
-
-                        // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
-                        $('#cars').select2({
-                            placeholder: "-",
-                            allowClear: true,
-                            width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
-                        });
-                    } else {
-                        console.error('ไม่มีข้อมูลหรือข้อมูลไม่ถูกต้อง');
-                    }
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#car_no_main').select2({
+                        placeholder: "เลือกรถคันที่",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
                 },
                 error: function (xhr, status, error) {
                     console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);

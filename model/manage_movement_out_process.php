@@ -166,6 +166,14 @@ if ($_POST["action"] === 'UPDATE') {
         $location_to = $_POST["location_to"];
         $car_no = $_POST["car_no"];
         $remark = $_POST["remark"];
+
+        if ($wh_week_id!=='' && $location_org!=='' && $wh_org!=='') {
+            $status = 'Y';
+        } else {
+            $status = 'N';
+        }
+
+
         // ตรวจสอบและทำการ UPDATE ข้อมูลใน wh_stock_movement_out
         $sql_find = "SELECT * FROM wh_stock_movement_out WHERE id = :id";
         $query_find = $conn->prepare($sql_find);
@@ -175,7 +183,7 @@ if ($_POST["action"] === 'UPDATE') {
 
         if ($nRows > 0) {
             $sql_update = "UPDATE wh_stock_movement_out SET product_id=:product_id,qty=:qty            
-            ,wh_org=:wh_org,wh_week_id=:wh_week_id,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by,car_no=:car_no,remark=:remark
+            ,wh_org=:wh_org,wh_week_id=:wh_week_id,wh_to=:wh_to,location_org=:location_org,location_to=:location_to,update_by=:update_by,car_no=:car_no,remark=:remark,status=:status
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':product_id', $product_id, PDO::PARAM_STR);
@@ -188,6 +196,7 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':update_by', $update_by, PDO::PARAM_STR);
             $query->bindParam(':car_no', $car_no, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
+            $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
 
@@ -313,7 +322,7 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $sql_get = "SELECT 
     vo.id,vo.doc_date,vo.doc_id, vo.line_no,vo.product_id,vo.product_name,vo.wh_org,vo.wh_week_id,vo.location_org
     ,vo.sale_take,vo.customer_name,vo.car_no,vo.doc_user_id
-    ,vo.qty,vb.total_qty,vo.create_by,vo.create_date 
+    ,vo.qty,vb.total_qty,vo.create_by,vo.create_date,vo.status 
 FROM 
     v_wh_stock_movement_out vo
 LEFT JOIN 
@@ -348,10 +357,21 @@ WHERE 1 ";
 
     foreach ($empRecords as $row) {
         if ($_POST['sub_action'] === "GET_MASTER") {
+
+            $doc_id = $row['doc_id'];
+            $status = $row['status'];
+
+            // กำหนด HTML พร้อมสไตล์สีสำหรับสถานะ
+            if ($status == 'Y') {
+                $doc_id_html = '<span style="color:green;">' . $doc_id . '</span>';
+            } else {
+                $doc_id_html = '<span style="color:red;">' . $doc_id . '</span>';
+            }
+
             $data[] = array(
                 "id" => $row['id'],
                 "doc_id" => $row['doc_id'],
-                "doc_date" => $row['doc_date'],
+                "doc_date" => $doc_id_html,
                 "product_id" => $row['product_id'],
                 "product_name" => $row['product_name'],
                 "customer_name" => $row['customer_name'],
@@ -368,6 +388,7 @@ WHERE 1 ";
                 "create_date" => $row['create_date'],
                 "total_qty" => $row['total_qty'],
                 "user_name" => $row['user_name'],
+                "status" => $row['status'],
                 "remark" => $row['remark'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"

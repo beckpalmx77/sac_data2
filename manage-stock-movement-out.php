@@ -261,8 +261,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                    class="control-label">หมายเหตุ</label>
                                                                             <input type="text" class="form-control"
                                                                                    id="remark" name="remark"
-                                                                                   placeholder=""
-                                                                                   required>
+                                                                                   placeholder="">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -508,8 +507,8 @@ if (strlen($_SESSION['alogin']) == "") {
             });
 
             setInterval(function () {
-                dataRecords.ajax.reload(null, false); // รีเฟรชตารางทุกๆ 5 นาที
-            }, 300000);
+                dataRecords.ajax.reload(null, false); // รีเฟรชตาราง
+            }, 30000);
         });
 
         // ฟังก์ชันรีเฟรช DataTable
@@ -543,7 +542,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#recordForm')[0].reset();
                         $('#recordModal').modal('hide');
                         $('#save').attr('disabled', false);
-                        dataRecords.ajax.reload();
+                        ReloadDataTable();
                     }
                 })
             });

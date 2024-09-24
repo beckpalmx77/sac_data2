@@ -73,9 +73,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </select>
 
                                                 <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">FilterData <i class="fa fa-filter"></i></button>
-                                                <button type="button" name="btnExport" id="btnExport"
+                                                <!--button type="button" name="btnExport" id="btnExport"
                                                         class="btn btn-success btn-xs" onclick="ExportData();">Export <i
-                                                            class="fa fa-file-excel-o"></i></button>
+                                                            class="fa fa-file-excel-o"></i></button-->
                                             </div>
                                         </form>
                                         <div class="col-md-12 col-md-offset-2">

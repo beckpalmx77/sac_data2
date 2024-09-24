@@ -138,6 +138,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                readonly="true"
                                                                placeholder="">
                                                     </div>
+                                                    <div class="col-sm-2">
+                                                        <label for="total_not_Qty"
+                                                               class="control-label">จำนวนที่ยังไม่จัดตำแหน่ง</label>
+                                                        <input type="text" class="form-control"
+                                                               id="total_not_Qty" name="total_not_Qty"
+                                                               readonly="true"
+                                                               placeholder="">
+                                                    </div>
 
                                                 </div>
 
@@ -857,6 +865,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 success: function (response) {
                     let total_qty_detail = parseFloat(response);  // รับผลรวม qty_detail จาก table Detail
                     $('#totalQty').val(total_qty_detail);
+                    $('#total_not_Qty').val($('#qty').val() - total_qty_detail);
                 }
             });
         }

@@ -47,14 +47,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                               enctype="multipart/form-data">
                                             <div class="col-md-12 col-md-offset-2"
                                                  style="display: flex; align-items: center; gap: 10px;">
-                                                <!--label for="name_t"
-                                                       class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
-
-                                                <button type="button" name="btnAdd" id="btnAdd"
-                                                        class="btn btn-primary btn-xs">
-                                                    Add <i class="fa fa-plus"></i>
-                                                </button-->
-
                                                 <button type="button" name="btnRefresh" id="btnRefresh"
                                                         class="btn btn-success btn-xs" onclick="ReloadDataTable();">
                                                     Refresh <i class="fa fa-refresh"></i>
@@ -74,7 +66,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                        readonly="true" placeholder=""
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
-
                                                 <button type="button" name="btnExport" id="btnExport"
                                                         class="btn btn-success btn-xs" onclick="ExportData();">
                                                     Export <i class="fa fa-file-excel-o"></i>
@@ -415,7 +406,7 @@ if (strlen($_SESSION['alogin']) == "") {
         $(document).ready(function () {
             let formData = {action: "GET_LOCATION_TRANSACTION", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
+                'lengthMenu': [[7,10, 20, 50, 100], [7 ,10, 20, 50, 100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
                     info: 'หน้าที่ _PAGE_ จาก _PAGES_',

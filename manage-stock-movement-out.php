@@ -43,7 +43,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
-                                        <form id="export_data" method="POST" action="export_process/export_process_data_wh_movement_out.php" enctype="multipart/form-data">
+                                        <form id="export_data" method="POST"
+                                              action="export_process/export_process_data_wh_movement_out.php"
+                                              enctype="multipart/form-data">
                                             <div class="col-md-12 col-md-offset-2"
                                                  style="display: flex; align-items: center; gap: 10px;">
                                                 <button type="button" name="btnRefresh" id="btnRefresh"

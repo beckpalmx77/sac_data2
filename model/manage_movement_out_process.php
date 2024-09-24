@@ -370,8 +370,8 @@ WHERE 1 ";
 
             $data[] = array(
                 "id" => $row['id'],
-                "doc_id" => $row['doc_id'],
-                "doc_date" => $doc_id_html,
+                "doc_id" => $doc_id_html,
+                "doc_date" => $row['doc_date'],
                 "product_id" => $row['product_id'],
                 "product_name" => $row['product_name'],
                 "customer_name" => $row['customer_name'],

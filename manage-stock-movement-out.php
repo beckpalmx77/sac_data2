@@ -943,8 +943,7 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
         function PrintData() {
             let searchValue = $('#TableRecordList_filter input').val();
-
-            alert(searchValue);
+            //alert(searchValue);
             let doc_date_start = $('#doc_date_start').val();
             let doc_date_to = $('#doc_date_to').val();
             let car_no_main = $('#car_no_main').val();

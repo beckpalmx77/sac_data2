@@ -152,7 +152,7 @@ if ($_POST["action"] === 'GET_WEEK_ID') {
 
 ## Fetch records
     $stmt = $conn->prepare("SELECT * FROM wh_week WHERE 1 " . $searchQuery
-        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+        . " ORDER BY id LIMIT :limit,:offset");
 
 // Bind values
     foreach ($searchArray as $key => $search) {

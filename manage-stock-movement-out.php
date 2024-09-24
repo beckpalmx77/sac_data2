@@ -43,9 +43,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
-                                        <form id="export_data" method="post"
-                                              action="export_process/export_process_data_wh_movement_out.php"
-                                              enctype="multipart/form-data">
+                                        <form id="export_data" method="POST" action="export_process/export_process_data_wh_movement_out.php" enctype="multipart/form-data">
                                             <div class="col-md-12 col-md-offset-2"
                                                  style="display: flex; align-items: center; gap: 10px;">
                                                 <button type="button" name="btnRefresh" id="btnRefresh"
@@ -62,20 +60,28 @@ if (strlen($_SESSION['alogin']) == "") {
                                                        name="doc_date_to" readonly="true"
                                                        style="width: calc(0.6em * 10 + 1.25rem);"
                                                        value="<?php echo $curr_date; ?>">
-                                                <label for="car_no_main" class="control-label mb-0"><b>รถคันที่</b></label>
+                                                <label for="car_no_main"
+                                                       class="control-label mb-0"><b>รถคันที่</b></label>
                                                 <select id="car_no_main" name="car_no_main" class="form-control"
                                                         style="width: 100px;">
                                                     <option value="-">-</option>
-                                                    <?php for ($car_no=1;$car_no<=12;$car_no++) { ?>
-                                                    <option value="<?php echo $car_no?>"><?php echo $car_no?></option>
+                                                    <?php for ($car_no = 1; $car_no <= 12; $car_no++) { ?>
+                                                        <option value="<?php echo $car_no ?>"><?php echo $car_no ?></option>
                                                     <?php } ?>
                                                 </select>
 
-                                                <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">FilterData <i class="fa fa-filter"></i></button>
+                                                <!--button type="button" name="btnFilter" id="btnFilter"
+                                                        class="btn btn-primary btn-xs">FilterData <i
+                                                            class="fa fa-filter"></i></button-->
                                                 <button type="submit" name="btnExport" id="btnExport"
-                                                        class="btn btn-success btn-xs" onclick="ExportData();">Export <i class="fa fa-file-excel-o"></i></button>
-                                                <button type="button" name="btnPrint" id="btnPrint" class="btn btn-primary btn-xs" onclick="PrintData();">Print <i class="fa fa-print"></i></button>
+                                                        class="btn btn-success btn-xs" onclick="">Export <i
+                                                            class="fa fa-file-excel-o"></i></button>
+                                                <button type="button" name="btnPrint" id="btnPrint"
+                                                        class="btn btn-primary btn-xs" onclick="PrintData();">Print <i
+                                                            class="fa fa-print"></i></button>
                                             </div>
+
+                                            <input type="hidden" id="search_value" name="search_value" value="">
 
                                         </form>
 
@@ -497,7 +503,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
-            $('#btnFilter').click(function() {
+            $('#btnFilter').click(function () {
                 dataRecords.ajax.reload();
             });
 
@@ -908,7 +914,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         // ฟังก์ชันสำหรับทำการ submit ฟอร์ม
-        function ExportData(event) {
+        function ExportData_BAK(event) {
             // ป้องกันการรีเฟรชหน้าเมื่อกดปุ่มส่งฟอร์ม
             event.preventDefault();
 
@@ -917,13 +923,18 @@ if (strlen($_SESSION['alogin']) == "") {
 
             // ดึงค่าจากฟิลด์ต่างๆ
             let searchValue = $('#TableRecordList_filter input').val();
+            let doc_date_start = $('#doc_date_start').val();
+            let doc_date_to = $('#doc_date_to').val();
+            let car_no_main = $('#car_no_main').val();
 
+            // ตรวจสอบค่าที่ได้มา
+            alert("กำลังส่งออกข้อมูล: " + searchValue);
 
-            // ตรวจสอบค่าที่ได้มา (เพื่อความมั่นใจว่ามีค่าถูกต้อง)
-            //alert("กำลังส่งออกข้อมูลรถ: " + car_no_main);
-
-            // ตั้งค่า input ที่เป็น hidden field
-            //document.getElementById("search_value").value = searchValue;
+            // ตั้งค่า hidden input เพื่อเก็บค่าที่ดึงมา
+            document.getElementById("search_value").value = searchValue;
+            document.getElementById("doc_date_start_value").value = doc_date_start;
+            document.getElementById("doc_date_to_value").value = doc_date_to;
+            document.getElementById("car_no_main_value").value = car_no_main;
 
             // ตั้งค่า action ให้ไปที่ PHP ที่จะทำการส่งออกเป็น CSV
             form.action = "export_process/export_process_data_wh_movement_out.php"; // PHP ที่จะสร้างไฟล์ CSV
@@ -934,11 +945,7 @@ if (strlen($_SESSION['alogin']) == "") {
             form.submit();
         }
 
-        // ฟังก์ชันที่ทำงานเมื่อผู้ใช้กดปุ่ม
-        document.getElementById("btnExport").addEventListener("click", ExportData);
     </script>
-
-
 
     <script>
         function PrintData() {
@@ -947,8 +954,17 @@ if (strlen($_SESSION['alogin']) == "") {
             let doc_date_start = $('#doc_date_start').val();
             let doc_date_to = $('#doc_date_to').val();
             let car_no_main = $('#car_no_main').val();
-            window.open('print_process/print_wh_out_process.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to + '&car_no_main=' + car_no_main , '_blank');
+            window.open('print_process/print_wh_out_process.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to + '&car_no_main=' + car_no_main + '&searchValue=' + searchValue, '_blank');
         }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                let search_value = $('#TableRecordList_filter input').val();
+                //alert(search_value);
+            }, 1000);
+        });
     </script>
 
 

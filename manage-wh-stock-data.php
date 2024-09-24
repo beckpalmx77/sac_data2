@@ -865,7 +865,37 @@ if (strlen($_SESSION['alogin']) == "") {
                 success: function (response) {
                     let total_qty_detail = parseFloat(response);  // รับผลรวม qty_detail จาก table Detail
                     $('#totalQty').val(total_qty_detail);
-                    $('#total_not_Qty').val($('#qty').val() - total_qty_detail);
+                    let total_not_Qty = $('#qty').val() - total_qty_detail;
+                    $('#total_not_Qty').val(total_not_Qty);
+                    let status = "";
+
+                    if (total_not_Qty == 0) {
+                        status = "Y";
+                        $('#status').val("Y");
+                    } else {
+                        status = "N";
+                        $('#status').val("N");
+                    }
+
+                    // AJAX เพื่อ save ข้อมูล status ลง database
+                    $.ajax({
+                        url: 'model/manage_wh_stock_detail_process.php',  // ไฟล์ PHP ที่ใช้บันทึกข้อมูล
+                        type: 'POST',
+                        data: {
+                            doc_id: doc_id,
+                            status: status,
+                            action: "SAVE_STATUS"  // action เพื่อระบุว่าต้องการบันทึก status
+                        },
+                        success: function (saveResponse) {
+                            // ตรวจสอบว่าบันทึกสำเร็จหรือไม่
+                            if (saveResponse == 'success') {
+                                alert('Status saved successfully.');
+                            }
+                        },
+                        error: function () {
+                            alert('Error in AJAX request.');
+                        }
+                    });
                 }
             });
         }

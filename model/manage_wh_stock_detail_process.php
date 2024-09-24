@@ -38,7 +38,7 @@ if ($_POST["action"] === 'GET_DATA') {
 }
 
 if ($_POST["action_detail"] === 'ADD') {
-    if ($_POST["doc_date_detail"] !== '' && $_POST["doc_id_detail"]!=='') {
+    if ($_POST["doc_date_detail"] !== '' && $_POST["doc_id_detail"] !== '') {
         $table_name = "wh_stock_transaction";
         $doc_id = $_POST["doc_id_detail"];
         $doc_date = $_POST["doc_date_detail"];
@@ -51,15 +51,17 @@ if ($_POST["action_detail"] === 'ADD') {
         $seq_record = $_POST["seq_record_detail"];
         $doc_user_id = $_POST["doc_user_id_detail"];
         $create_by = $_POST["create_by_detail"];
-        $line_no = LAST_DOCUMENT_COND($conn,$table_name," WHERE doc_id = '" . $doc_id . "'");
+        $status = $_POST["status"];
+
+        $line_no = LAST_DOCUMENT_COND($conn, $table_name, " WHERE doc_id = '" . $doc_id . "'");
 
         $txt = $doc_id . " | " . $doc_date . " | " . $product_id . " | " . $wh_week_id . " | "
-                       . $wh . " | " . $location . " | " . $qty . " | " . $doc_user_id ;
-/*
-        $myfile = fopen("myqeury_1.txt", "w") or die("Unable to open file!");
-        fwrite($myfile, $txt . " > " . $line_no );
-        fclose($myfile);
-*/
+            . $wh . " | " . $location . " | " . $qty . " | " . $doc_user_id;
+        /*
+                $myfile = fopen("myqeury_1.txt", "w") or die("Unable to open file!");
+                fwrite($myfile, $txt . " > " . $line_no );
+                fclose($myfile);
+        */
         $sql = "INSERT INTO " . $table_name . " (doc_id,doc_date,product_id,record_type,qty,wh,wh_week_id,location,line_no,doc_user_id,seq_record,create_by) 
             VALUES (:doc_id,:doc_date,:product_id,:record_type,:qty,:wh,:wh_week_id,:location,:line_no,:doc_user_id,:seq_record,:create_by)";
         $query = $conn->prepare($sql);
@@ -79,12 +81,11 @@ if ($_POST["action_detail"] === 'ADD') {
         $lastInsertId = $conn->lastInsertId();
 
         if ($lastInsertId) {
-            $status = "Y";
-            $sql_update_header = "UPDATE wh_stock_record SET status=:status WHERE doc_id = :doc_id";
-            $query_header = $conn->prepare($sql_update_header);
-            $query_header->bindParam(':status', $status, PDO::PARAM_STR);
-            $query_header->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
-            $query_header->execute();
+            //$sql_update_header = "UPDATE wh_stock_record SET status=:status WHERE doc_id = :doc_id";
+            //$query_header = $conn->prepare($sql_update_header);
+            //$query_header->bindParam(':status', $status, PDO::PARAM_STR);
+            //$query_header->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+            //$query_header->execute();
             echo $save_success;
         } else {
             echo $error . " | " . $doc_id . " | " . $line_no . " | " . $product_id . " | " . $location . " | " . $wh_week_id;
@@ -108,7 +109,7 @@ if ($_POST["action_detail"] === 'UPDATE') {
         $seq_record = $_POST["seq_record_detail"];
         $doc_user_id = $_POST["doc_user_id_detail"];
         $create_by = $_POST["create_by_detail"];
-
+        $status = $_POST["status"];
         $sql_find = "SELECT * FROM wh_stock_transaction WHERE id = " . $detail_id;
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
@@ -121,12 +122,11 @@ if ($_POST["action_detail"] === 'UPDATE') {
             $query->bindParam(':id', $detail_id, PDO::PARAM_STR);
             $query->execute();
 
-            $status = "Y";
-            $sql_update_header = "UPDATE wh_stock_record SET status=:status WHERE doc_id = :doc_id";
-            $query_header = $conn->prepare($sql_update_header);
-            $query_header->bindParam(':status', $status, PDO::PARAM_STR);
-            $query_header->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
-            $query_header->execute();
+            //$sql_update_header = "UPDATE wh_stock_record SET status=:status WHERE doc_id = :doc_id";
+            //$query_header = $conn->prepare($sql_update_header);
+            //$query_header->bindParam(':status', $status, PDO::PARAM_STR);
+            //$query_header->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+            //$query_header->execute();
 
             echo $save_success;
         }
@@ -162,6 +162,17 @@ if ($_POST["action"] === 'CAL_SUM_DETAIL') {
     // ส่งค่าผลรวมกลับไปให้ JavaScript
     echo $result['total_qty'];
 
+}
+
+if ($_POST["action"] === 'SAVE_STATUS') {
+    $doc_id = $_POST['doc_id'];
+    $status = $_POST["status"];
+    $sql_update_header = "UPDATE wh_stock_record SET status=:status WHERE doc_id = :doc_id";
+    $query_header = $conn->prepare($sql_update_header);
+    $query_header->bindParam(':status', $status, PDO::PARAM_STR);
+    $query_header->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+    $query_header->execute();
+    echo $save_success;
 }
 
 if ($_POST["action"] === 'GET_STOCK_DETAIL') {

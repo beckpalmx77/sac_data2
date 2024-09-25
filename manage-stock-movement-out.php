@@ -72,13 +72,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <?php } ?>
                                                 </select>
 
-                                                <label for="status" class="control-label mb-0"><b>สถานะ</b></label>
+                                                <!--label for="create_by" class="control-label mb-0"><b>สถานะ</b></label>
                                                 <select id="status" name="status" class="form-control"
                                                         style="width: 100px;">
                                                     <option value="-">-</option>
-                                                    <!--option value="N">N</option>
-                                                    <option value="Y">Y</option-->
-                                                </select>
+                                                    <option value="N">N</option>
+                                                    <option value="Y">Y</option>
+                                                </select-->
+                                                <input type="hidden" id="status" name="status" value="-">
 
                                                 <button type="button" name="btnFilter" id="btnFilter"
                                                         class="btn btn-primary btn-xs">FilterData <i

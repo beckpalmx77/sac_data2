@@ -74,8 +74,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <label for="create_by" class="control-label mb-0"><b>สถานะ</b></label>
                                                 <select id="status" name="status" class="form-control"
                                                         style="width: 100px;">
-                                                    <option value="N">N</option>
-                                                    <option value="Y">Y</option>
+                                                    <option value="-">-</option>
+                                                    <!--option value="N">N</option>
+                                                    <option value="Y">Y</option-->
                                                 </select>
 
                                                 <button type="button" name="btnFilter" id="btnFilter"
@@ -346,6 +347,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 clearInterval(checkPopupClosed);
                                 // รีโหลด DataTable เมื่อหน้าต่าง POPUP ถูกปิด
                                 //ReloadDataTable();
+                                $('#TableRecordList').DataTable().ajax.reload(null, false); // false เพื่อไม่ให้กลับไปหน้าแรก
                             }
                         }, 1000);
                     }

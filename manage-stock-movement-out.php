@@ -72,16 +72,18 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <?php } ?>
                                                 </select>
 
-                                                <label for="create_by" class="control-label mb-0"><b>สถานะ</b></label>
+                                                <label for="status" class="control-label mb-0"><b>สถานะ</b></label>
                                                 <select id="status" name="status" class="form-control"
                                                         style="width: 100px;">
-                                                    <option value="N">N</option>
-                                                    <option value="Y">Y</option>
+                                                    <option value="-">-</option>
+                                                    <!--option value="N">N</option>
+                                                    <option value="Y">Y</option-->
                                                 </select>
 
                                                 <button type="button" name="btnFilter" id="btnFilter"
                                                         class="btn btn-primary btn-xs">FilterData <i
                                                             class="fa fa-filter"></i></button>
+
                                                 <button type="submit" name="btnExport" id="btnExport"
                                                         class="btn btn-success btn-xs" onclick="">Export <i
                                                             class="fa fa-file-excel-o"></i></button>
@@ -462,14 +464,15 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
-            let doc_date_start = $('#doc_date_start').val();
-            let doc_date_to = $('#doc_date_to').val();
-            let formData = {
-                action: "GET_MOVEMENT_OUT",
-                sub_action: "GET_MASTER",
-                doc_date_start: doc_date_start,
-                doc_date_to: doc_date_to
-            };
+
+            // Datepicker configuration
+            $('#doc_date_start, #doc_date_to').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true
+            });
+
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
@@ -494,7 +497,15 @@ if (strlen($_SESSION['alogin']) == "") {
                 'serverMethod': 'post',
                 'ajax': {
                     'url': 'model/manage_movement_out_process.php',
-                    'data': formData
+                    'data': function (d) {
+                        // ดึงค่า create_by จาก select box
+                        d.doc_date_start = $('#doc_date_start').val();
+                        d.doc_date_to = $('#doc_date_to').val();
+                        d.car_no = $('#car_no_main').val();
+                        d.status = $('#status').val();
+                        d.action = "GET_MOVEMENT_OUT";
+                        d.sub_action = "GET_MASTER";
+                    }
                 },
                 'columns': [
                     {data: 'doc_date'},
@@ -515,26 +526,19 @@ if (strlen($_SESSION['alogin']) == "") {
             });
 
             $('#btnFilter').click(function () {
-                dataRecords.ajax.reload();
+                let doc_date_start = $('#doc_date_start').val();
+                let doc_date_to = $('#doc_date_to').val();
+                let car_no = $('#car_no_main').val();
+                let status = $('#status').val();
+                console.log("Selected status: ", status);  // ใช้ตรวจสอบว่าได้ค่า status หรือไม่
+                dataRecords.ajax.reload();  // Reload ข้อมูลใหม่
             });
 
-            setInterval(function () {
-                dataRecords.ajax.reload(null, false); // รีเฟรชตาราง
-            }, 30000);
+            //setInterval(function () {
+                //dataRecords.ajax.reload(null, false); // รีเฟรชตาราง
+            //}, 30000);
         });
 
-        // ฟังก์ชันรีเฟรช DataTable
-        function ReloadDataTable() {
-            $('#TableRecordList').DataTable().ajax.reload(null, false);
-        }
-
-        // ฟังก์ชันพิมพ์ข้อมูล
-        function PrintData() {
-            let doc_date_start = $('#doc_date_start').val();
-            let doc_date_to = $('#doc_date_to').val();
-
-            window.open('print_preview.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to, '_blank');
-        }
     </script>
 
     <script>
@@ -554,7 +558,8 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#recordForm')[0].reset();
                         $('#recordModal').modal('hide');
                         $('#save').attr('disabled', false);
-                        ReloadDataTable();
+                        //ReloadDataTable();
+                        $('#TableRecordList').DataTable().ajax.reload(null, false); // false เพื่อไม่ให้กลับไปหน้าแรก
                     }
                 })
             });
@@ -885,38 +890,6 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-    <!--script>
-        $(document).ready(function () {
-            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
-            $.ajax({
-                url: 'model/get_wh_cars.php', // หน้า PHP ที่จะดึงข้อมูล
-                method: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    let select = $('#cars');
-                    $.each(data, function (index, wh_car_no) {
-                        select.append($('<option>', {
-                            value: wh_car_no.car_no,
-                            text: wh_car_no.car_no, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
-                            'data-name': wh_car_no.car_no // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
-                        }));
-                    });
-
-                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
-                    $('#cars').select2({
-                        placeholder: "เลือกรถคันที่",
-                        allowClear: true,
-                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
-                }
-            });
-        });
-    </script-->
-
-
     <script>
         function ReloadDataTable() {
             $('#TableRecordList').DataTable().ajax.reload();
@@ -969,14 +942,14 @@ if (strlen($_SESSION['alogin']) == "") {
         }
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             setInterval(function () {
                 let search_value = $('#TableRecordList_filter input').val();
                 //alert(search_value);
             }, 1000);
         });
-    </script>
+    </script-->
 
 
     </body>

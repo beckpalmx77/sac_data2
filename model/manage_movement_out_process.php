@@ -167,7 +167,7 @@ if ($_POST["action"] === 'UPDATE') {
         $car_no = $_POST["car_no"];
         $remark = $_POST["remark"];
 
-        if ($wh_week_id!=='' && $location_org!=='' && $wh_org!=='') {
+        if ($wh_week_id !== '' && $location_org !== '' && $wh_org !== '') {
             $status = 'Y';
         } else {
             $status = 'N';
@@ -284,8 +284,37 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
     $searchValue = $_POST['search']['value']; // Search value
 
-    if ($_SESSION['account_type'] === 'stock') {
-        $where_doc_user_id = " AND doc_user_id = '" . $_SESSION['doc_user_id'] . "' ";
+    //if ($_SESSION['account_type'] === 'stock') {
+    //$where_doc_user_id = " AND doc_user_id = '" . $_SESSION['doc_user_id'] . "' ";
+    //}
+
+    $status = $_POST['status'];
+    $doc_date_start = $_POST['doc_date_start'];
+    $doc_date_to = $_POST['doc_date_to'];
+    $car_no = $_POST['car_no'];
+
+    // ตรวจสอบว่า create_by เป็น '-' หรือไม่
+    if ($status == '-' || empty($status)) {
+        // ถ้า create_by เป็น '-' หรือว่าง ให้ดึงข้อมูลทั้งหมด
+        $where_filter_status = "";
+    } else {
+        // ถ้ามีค่า create_by และไม่ใช่ '-' ให้กรองตาม create_by
+        //$where_filter_status = " AND status = '" . $status . "'";
+        $where_filter_status = "";
+    }
+
+    if ($doc_date_start!=='' AND $doc_date_to!=='') {
+
+        $where_filter_date = " AND doc_date BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "'";
+    }
+
+    // ตรวจสอบว่า create_by เป็น '-' หรือไม่
+    if ($car_no == '-' || empty($car_no)) {
+        // ถ้า create_by เป็น '-' หรือว่าง ให้ดึงข้อมูลทั้งหมด
+        $where_filter_car_no = "";
+    } else {
+        // ถ้ามีค่า create_by และไม่ใช่ '-' ให้กรองตาม create_by
+        $where_filter_car_no = " AND car_no = '" . $car_no . "'";
     }
 
     $searchArray = array();
@@ -300,13 +329,6 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
         );
     }
 
-    /*
-        $txt = "sql = " . $searchValue . " | " . $searchQuery ;
-        $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $txt);
-        fclose($my_file);
-    */
-
 ## Total number of records without filtering
     $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 ");
     $stmt->execute();
@@ -314,7 +336,7 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 " . $searchQuery . $where_filter_status . $where_filter_date . $where_filter_car_no);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
@@ -335,14 +357,22 @@ ON
 WHERE 1 ";
 
 ## Fetch records
-/*
-    $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out
-        WHERE 1 " . $where_doc_user_id . $searchQuery
-        . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
-*/
+    /*
+        $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out
+            WHERE 1 " . $where_doc_user_id . $searchQuery
+            . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
+    */
+    $sql_get = $sql_get . $searchQuery . $where_filter_status . $where_filter_date . $where_filter_car_no
+        . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset";
 
-    $stmt = $conn->prepare($sql_get . $searchQuery
-        . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
+    $stmt = $conn->prepare($sql_get);
+
+/*
+    $txt = "sql = " . $sql_get;
+    $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+    fwrite($my_file, $txt);
+    fclose($my_file);
+*/
 
 // Bind values
     foreach ($searchArray as $key => $search) {

@@ -299,10 +299,12 @@ WHERE 1 ";
     $sql_get = $sql_get . $where_doc_user_id . $searchQuery
         . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset";
 
+/*
     $txt = "sql = " . $sql_get  . " | " . $searchValue;
     $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
     fwrite($my_file, $txt);
     fclose($my_file);
+*/
 
 
     $stmt = $conn->prepare($sql_get);

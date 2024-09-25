@@ -249,10 +249,9 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
 ## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery = " AND (doc_date LIKE :doc_date or wh_org LIKE :wh_org
-        or product_id LIKE :product_id or product_name LIKE :product_name or user_name LIKE :user_name) ";
+        $searchQuery = " AND (vo.wh_org LIKE :wh_org
+        or vo.product_id LIKE :product_id or vo.product_name LIKE :product_name or vo.user_name LIKE :user_name) ";
         $searchArray = array(
-            'doc_date' => "%$searchValue%",
             'wh_org' => "%$searchValue%",
             'product_id' => "%$searchValue%",
             'product_name' => "%$searchValue%",
@@ -268,13 +267,13 @@ if ($_POST["action"] === 'GET_MOVEMENT') {
 */
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement vo WHERE 1 " . $where_doc_user_id);
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement WHERE 1 " . $where_doc_user_id . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement vo WHERE 1 " . $where_doc_user_id . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
@@ -297,8 +296,16 @@ WHERE 1 ";
 ## Fetch records
 
     ## Fetch records
-    $stmt = $conn->prepare($sql_get . $where_doc_user_id . $searchQuery
-        . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
+    $sql_get = $sql_get . $where_doc_user_id . $searchQuery
+        . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset";
+
+    $txt = "sql = " . $sql_get  . " | " . $searchValue;
+    $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+    fwrite($my_file, $txt);
+    fclose($my_file);
+
+
+    $stmt = $conn->prepare($sql_get);
 
 /*
     $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement vo

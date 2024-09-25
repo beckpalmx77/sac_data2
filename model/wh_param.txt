@@ -1,0 +1,14 @@
+sql = SELECT 
+    vo.id,vo.doc_date,vo.doc_id,vo.product_id,vo.product_name,vo.wh_org,vo.wh_to,vo.wh_week_id,vo.location_org,vo.location_to
+    ,vo.doc_user_id,vo.qty,vb.total_qty,vo.create_by,vo.create_date,vo.user_name 
+FROM 
+    v_wh_stock_movement vo
+LEFT JOIN 
+    v_wh_stock_balance vb 
+ON 
+    vb.product_id = vo.product_id 
+    AND vb.wh = vo.wh_org 
+    AND vb.wh_week_id = vo.wh_week_id 
+    AND vb.location = vo.location_org 
+WHERE 1  AND (vo.wh_org LIKE :wh_org
+        or vo.product_id LIKE :product_id or vo.product_name LIKE :product_name or vo.user_name LIKE :user_name)  ORDER BY create_date DESC,doc_id DESC  LIMIT :limit,:offset | Stoc

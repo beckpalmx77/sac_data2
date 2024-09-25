@@ -34,10 +34,6 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $data = [];
             for ($i = 0; $i <= 33; $i++) {
                 $data[$i] = empty($row[$i]) ? "-" : str_replace(",", "", $row[$i]);
-                $txt .= $data[$i] . " | " ;
-                $my_file = fopen("import_wh_param-0.txt", "w") or die("Unable to open file!");
-                fwrite($my_file, $txt);
-                fclose($my_file);
             }
 
             $DI_DAY = $data[0];
@@ -46,13 +42,14 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $DI_YEAR = $data[2];
             $AR_CODE = $data[3];
             $SKU_CODE = $data[4];
-            $DI_REF = $data[8];
-            $WL_CODE = $data[20];
-            $TRD_QTY = $data[12];
+            $DI_REF = $data[4];
 
             // Validate required fields
             if ($DI_DAY !== "-" && $DI_MONTH !== "-" && $DI_YEAR !== "-" && $AR_CODE !== "-" && $SKU_CODE !== "-") {
                 // Check for duplicates
+                $statement = $conn->prepare("SELECT COUNT(*) FROM $table_name WHERE DI_DAY = ? AND DI_MONTH = ? AND DI_YEAR = ? AND AR_CODE = ? AND SKU_CODE = ?");
+                $statement->execute([$DI_DAY, $DI_MONTH, $DI_YEAR, $AR_CODE, $SKU_CODE]);
+
                 $statement = $conn->prepare("SELECT COUNT(*) FROM " . $table_name . " WHERE DI_DAY = ? AND DI_MONTH = ? AND DI_YEAR = ? AND DI_REF = ? 
                                     AND AR_CODE = ? AND SKU_CODE = ? AND WL_CODE = ? AND TRD_QTY = ?");
                 $statement->execute([$DI_DAY, $DI_MONTH, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY]);
@@ -66,13 +63,6 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     $stmt_insert = $conn->prepare($sql_insert);
                     $stmt_insert->execute(array_values($data));
-
-                    $txt = $DI_DAY . " | " . $DI_MONTH_NAME . " | " . $DI_MONTH . " | " . $DI_YEAR . " | " . $AR_CODE . " | " . $SKU_CODE . " | " . $DI_REF . " | " . $WL_CODE
-                        . " | " . $TRD_QTY;
-                    $my_file = fopen("import_wh_param_ins.txt", "w") or die("Unable to open file!");
-                    fwrite($my_file, $txt);
-                    fclose($my_file);
-
                     $importedRows++;
                 } else {
                     // Update existing record

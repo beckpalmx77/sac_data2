@@ -58,28 +58,80 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                             <tr>
                                                 <th>วัน</th>
                                                 <th>เดือน</th>
+                                                <th>ชื่อเดือน</th>
                                                 <th>ปี</th>
                                                 <th>รหัสลูกค้า</th>
                                                 <th>รหัสสินค้า</th>
                                                 <th>ชื่อสินค้า</th>
                                                 <th>รายละเอียด</th>
                                                 <th>แบรนด์</th>
-                                                <th>จำนวน</th>
-                                                <th>ประเภท</th>
+                                                <th>เลขที่เอกสาร</th>
+                                                <th>ชื่อลูกค้า</th>
+                                                <th>ชื่อพนักงานขาย</th>
+                                                <th>ชื่อเทค</th>
+                                                <th>จำนวนสินค้า</th>
+                                                <th>ราคาต่อหน่วย</th>
+                                                <th>ส่วนลด</th>
+                                                <th>ราคาทั้งหมด</th>
+                                                <th>ภาษีมูลค่าเพิ่ม</th>
+                                                <th>ราคาสุทธิ</th>
+                                                <th>คะแนนต่อเส้น1</th>
+                                                <th>คะแนนที่ได้1</th>
+                                                <th>รหัสคลังสินค้า</th>
+                                                <th>จำนวนฟรี</th>
+                                                <th>เขตอำเภอ</th>
+                                                <th>จังหวัด</th>
+                                                <th>หมายเหตุ</th>
+                                                <th>คะแนนใช้</th>
+                                                <th>คะแนนคืน</th>
+                                                <th>คะแนนสะสม</th>
+                                                <th>คะแนนทั้งหมด</th>
+                                                <th>เปรียบเทียบ</th>
+                                                <th>ร้านค้า</th>
+                                                <th>โดยแอพมือถือ</th>
+                                                <th>อายุสินค้า</th>
+                                                <th>หมวดหมู่สินค้า</th>
+                                                <th>สถานะ</th>
                                             </tr>
                                             </thead>
                                             <tfoot>
                                             <tr>
                                                 <th>วัน</th>
                                                 <th>เดือน</th>
+                                                <th>ชื่อเดือน</th>
                                                 <th>ปี</th>
                                                 <th>รหัสลูกค้า</th>
                                                 <th>รหัสสินค้า</th>
                                                 <th>ชื่อสินค้า</th>
                                                 <th>รายละเอียด</th>
                                                 <th>แบรนด์</th>
-                                                <th>จำนวน</th>
-                                                <th>ประเภท</th>
+                                                <th>เลขที่เอกสาร</th>
+                                                <th>ชื่อลูกค้า</th>
+                                                <th>ชื่อพนักงานขาย</th>
+                                                <th>ชื่อเทค</th>
+                                                <th>จำนวนสินค้า</th>
+                                                <th>ราคาต่อหน่วย</th>
+                                                <th>ส่วนลด</th>
+                                                <th>ราคาทั้งหมด</th>
+                                                <th>ภาษีมูลค่าเพิ่ม</th>
+                                                <th>ราคาสุทธิ</th>
+                                                <th>คะแนนต่อเส้น1</th>
+                                                <th>คะแนนที่ได้1</th>
+                                                <th>รหัสคลังสินค้า</th>
+                                                <th>จำนวนฟรี</th>
+                                                <th>เขตอำเภอ</th>
+                                                <th>จังหวัด</th>
+                                                <th>หมายเหตุ</th>
+                                                <th>คะแนนใช้</th>
+                                                <th>คะแนนคืน</th>
+                                                <th>คะแนนสะสม</th>
+                                                <th>คะแนนทั้งหมด</th>
+                                                <th>เปรียบเทียบ</th>
+                                                <th>ร้านค้า</th>
+                                                <th>โดยแอพมือถือ</th>
+                                                <th>อายุสินค้า</th>
+                                                <th>หมวดหมู่สินค้า</th>
+                                                <th>สถานะ</th>
                                             </tr>
                                             </tfoot>
                                         </table>
@@ -183,14 +235,39 @@ include('includes/Footer.php');
             "order": [[0, 'desc']],
             "columns": [
                 {"data": "DI_DAY"},           // วัน
+                {"data": "DI_MONTH"},         // เดือน
                 {"data": "DI_MONTH_NAME"},    // ชื่อเดือน
                 {"data": "DI_YEAR"},          // ปี
                 {"data": "AR_CODE"},          // รหัสลูกค้า
                 {"data": "SKU_CODE"},         // รหัสสินค้า
                 {"data": "SKU_NAME"},         // ชื่อสินค้า
-                {"data": "AR_NAME"},           // รายละเอียดสินค้า
+                {"data": "DETAIL"},           // รายละเอียดสินค้า
                 {"data": "BRAND"},            // ยี่ห้อ
-                {"data": "TRD_QTY"},            // จำนวน
+                {"data": "DI_REF"},           // เลขที่เอกสาร
+                {"data": "AR_NAME"},          // ชื่อลูกค้า
+                {"data": "SALE_NAME"},        // ชื่อพนักงานขาย
+                {"data": "TAKE_NAME"},        // ชื่อพนักงานจัดสินค้า
+                {"data": "TRD_QTY"},          // จำนวนสินค้า
+                {"data": "TRD_PRC"},          // ราคา
+                {"data": "TRD_DISCOUNT"},     // ส่วนลด
+                {"data": "TRD_TOTAL_PRICE"},  // ราคารวม
+                {"data": "TRD_VAT"},          // VAT
+                {"data": "TRD_AMOUNT_PRICE"}, // ราคาสุทธิ
+                {"data": "TRD_PER_POINT"},    // ต่อแต้ม
+                {"data": "TRD_TOTALPOINT"},   // แต้มรวม
+                {"data": "WL_CODE"},          // รหัสคลังสินค้า
+                {"data": "TRD_Q_FREE"},       // จำนวนฟรี
+                {"data": "TRD_AMPHUR"},       // อำเภอ
+                {"data": "TRD_PROVINCE"},     // จังหวัด
+                {"data": "TRD_MARK"},         // หมายเหตุ
+                {"data": "TRD_U_POINT"},      // แต้ม U
+                {"data": "TRD_R_POINT"},      // แต้ม R
+                {"data": "TRD_S_POINT"},      // แต้ม S
+                {"data": "TRD_T_POINT"},      // แต้ม T
+                {"data": "TRD_COMPARE"},      // เปรียบเทียบ
+                {"data": "TRD_SHOP"},         // ร้านค้า
+                {"data": "TRD_BY_MOBAPP"},    // ผ่าน Mobile App
+                {"data": "TRD_YEAR_OLD"},     // อายุสินค้า
                 {"data": "SKU_CAT"}          // หมวดหมู่สินค้า
             ]
         });

@@ -15,5 +15,5 @@ function convertMonthToNumber($thaiMonth) {
         "ธันวาคม" => "12"
     ];
 
-    return isset($months[$thaiMonth]) ? $months[$thaiMonth] : null; // คืนค่า null ถ้าไม่พบชื่อเดือน
+    return isset($months[$thaiMonth]) ? $months[$thaiMonth] : "-"; // คืนค่า - ถ้าไม่พบชื่อเดือน
 }

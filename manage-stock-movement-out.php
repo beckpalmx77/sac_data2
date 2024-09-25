@@ -72,9 +72,16 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <?php } ?>
                                                 </select>
 
-                                                <!--button type="button" name="btnFilter" id="btnFilter"
+                                                <label for="create_by" class="control-label mb-0"><b>สถานะ</b></label>
+                                                <select id="status" name="status" class="form-control"
+                                                        style="width: 100px;">
+                                                    <option value="N">N</option>
+                                                    <option value="Y">Y</option>
+                                                </select>
+
+                                                <button type="button" name="btnFilter" id="btnFilter"
                                                         class="btn btn-primary btn-xs">FilterData <i
-                                                            class="fa fa-filter"></i></button-->
+                                                            class="fa fa-filter"></i></button>
                                                 <button type="submit" name="btnExport" id="btnExport"
                                                         class="btn btn-success btn-xs" onclick="">Export <i
                                                             class="fa fa-file-excel-o"></i></button>
@@ -105,6 +112,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>เทค</th>
                                                     <th>supplier/ลูกค้า</th>
                                                     <th>คงเหลือ</th>
+                                                    <th>สถานะ</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -122,6 +130,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>เทค</th>
                                                     <th>supplier/ลูกค้า</th>
                                                     <th>คงเหลือ</th>
+                                                    <th>สถานะ</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -500,6 +509,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     {data: 'sale_take'},
                     {data: 'customer_name'},
                     {data: 'total_qty'},
+                    {data: 'status'},
                     {data: 'update'},
                 ]
             });

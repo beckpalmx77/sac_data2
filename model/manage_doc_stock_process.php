@@ -203,6 +203,7 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
     $doc_date_start = $_POST['doc_date_start'];
     $doc_date_to = $_POST['doc_date_to'];
     $create_by = $_POST['create_by'];
+    $status = $_POST['status'];
 
     $searchArray = array();
 
@@ -218,6 +219,15 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
     if ($doc_date_start!=='' AND $doc_date_to!=='') {
 
         $where_filter_date = " AND doc_date BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "'";
+    }
+
+    // ตรวจสอบว่า create_by เป็น '-' หรือไม่
+    if ($status == '-' || empty($status)) {
+        // ถ้า create_by เป็น '-' หรือว่าง ให้ดึงข้อมูลทั้งหมด
+        $where_filter_status = "";
+    } else {
+        // ถ้ามีค่า create_by และไม่ใช่ '-' ให้กรองตาม create_by
+        $where_filter_status = " AND status = '" . $status . "'";
     }
 
 /*
@@ -243,13 +253,13 @@ if ($_POST["action"] === 'GET_WH_STOCK') {
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter . $where_filter_date);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter . $where_filter_date . $where_filter_status);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $query_str = "SELECT * FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter . $where_filter_date
+    $query_str = "SELECT * FROM v_document_wh_stock_record WHERE 1 " . $searchQuery . $where_filter . $where_filter_date . $where_filter_status
         . " ORDER BY v_document_wh_stock_record.doc_id DESC , v_document_wh_stock_record.create_date DESC , v_document_wh_stock_record.line_no " . " LIMIT :limit,:offset";
 
 /*

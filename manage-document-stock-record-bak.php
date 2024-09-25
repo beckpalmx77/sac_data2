@@ -3,7 +3,7 @@ include('includes/Header.php');
 
 $year = date("Y");
 $month = date("m");
-$start_date = "01-" . $month . "-" . $year;
+$start_date = "01-" . $month. "-" . $year;
 $curr_date = date("d-m-Y");
 
 $curr_date = date("d-m-Y");
@@ -71,16 +71,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         style="width: 100px;">
                                                     <option value="">-</option>
                                                 </select>
-                                                <label for="create_by" class="control-label mb-0"><b>สถานะ</b></label>
-                                                <select id="status" name="status" class="form-control"
-                                                        style="width: 100px;">
-                                                    <option value="N">N</option>
-                                                    <option value="Y">Y</option>
-                                                </select>
 
-                                                <button type="button" name="btnFilter" id="btnFilter"
-                                                        class="btn btn-primary btn-xs">FilterData <i
-                                                            class="fa fa-filter"></i></button>
+                                                <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">FilterData <i class="fa fa-filter"></i></button>
                                                 <!--button type="button" name="btnExport" id="btnExport"
                                                         class="btn btn-success btn-xs" onclick="ExportData();">Export <i
                                                             class="fa fa-file-excel-o"></i></button-->
@@ -235,16 +227,14 @@ if (strlen($_SESSION['alogin']) == "") {
                     infoEmpty: 'ไม่มีข้อมูล',
                     zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
                     infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
-                    paginate: {previous: 'ก่อนหน้า', last: 'สุดท้าย', next: 'ต่อไป'}
+                    paginate: { previous: 'ก่อนหน้า', last: 'สุดท้าย', next: 'ต่อไป' }
                 },
                 'processing': true,
                 'serverSide': true,
                 'autoWidth': true,
                 'searching': false,
                 'sortable': true,
-                <?php if ($_SESSION['deviceType'] !== 'computer') {
-                    echo "'scrollX': true,";
-                } ?>
+                <?php if ($_SESSION['deviceType'] !== 'computer') { echo "'scrollX': true,"; } ?>
                 'serverMethod': 'post',
                 'ajax': {
                     'url': 'model/manage_doc_stock_process.php',
@@ -253,7 +243,6 @@ if (strlen($_SESSION['alogin']) == "") {
                         d.doc_date_start = $('#doc_date_start').val();
                         d.doc_date_to = $('#doc_date_to').val();
                         d.create_by = $('#create_by').val();
-                        d.status = $('#status').val();
                         d.action = "GET_WH_STOCK";
                         d.sub_action = "GET_MASTER";
                     }
@@ -273,23 +262,35 @@ if (strlen($_SESSION['alogin']) == "") {
             });
 
             // เมื่อกดปุ่มกรอง จะทำการ reload ข้อมูลใน DataTable
-            $('#btnFilter').click(function () {
+            $('#btnFilter').click(function() {
                 // ตรวจสอบค่า create_by ก่อนการ reload ข้อมูล
                 let doc_date_start = $('#doc_date_start').val();
                 let doc_date_to = $('#doc_date_to').val();
                 let create_by = $('#create_by').val();
-                let status = $('#status').val();
                 console.log("Selected create_by: ", create_by);  // ใช้ตรวจสอบว่าได้ค่า create_by หรือไม่
-                console.log("Selected status: ", status);  // ใช้ตรวจสอบว่าได้ค่า status หรือไม่
                 dataRecords.ajax.reload();  // Reload ข้อมูลใหม่
             });
 
             // Reload ข้อมูลทุก ๆ 10 วินาที
-            //setInterval(function () {
-            //dataRecords.ajax.reload(null, false);  // false เพื่อไม่ให้หน้ารีเซ็ต
-            //}, 10000);
+            setInterval(function () {
+                dataRecords.ajax.reload(null, false);  // false เพื่อไม่ให้หน้ารีเซ็ต
+            }, 10000);
         });
 
+        // Reload DataTable manually
+        function ReloadDataTable() {
+            $('#TableRecordList').DataTable().ajax.reload();
+        }
+
+        // Export Data function
+        function ExportData() {
+            const form = document.getElementById("export_data");
+            if (form.checkValidity()) {
+                form.submit();
+            } else {
+                alert("Please fill out the required fields.");
+            }
+        }
     </script>
 
     <script>
@@ -345,7 +346,7 @@ if (strlen($_SESSION['alogin']) == "") {
                             if (popup.closed) {
                                 clearInterval(checkPopupClosed);
                                 // รีโหลด DataTable เมื่อหน้าต่าง POPUP ถูกปิด
-                                //ReloadDataTable();
+                                ReloadDataTable();
                             }
                         }, 1000);
                     }
@@ -398,18 +399,6 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
         function ReloadDataTable() {
             $('#TableRecordList').DataTable().ajax.reload();
-        }
-    </script>
-
-    <script>
-        // Export Data function
-        function ExportData() {
-            const form = document.getElementById("export_data");
-            if (form.checkValidity()) {
-                form.submit();
-            } else {
-                alert("Please fill out the required fields.");
-            }
         }
     </script>
 

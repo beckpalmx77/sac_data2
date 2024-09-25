@@ -43,38 +43,48 @@ if (strlen($_SESSION['alogin']) == "") {
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
-                                        <form id="export_data" method="post" enctype="multipart/form-data">
-                                            <div class="col-md-12 col-md-offset-2" style="display: flex; align-items: center; gap: 10px;">
-                                                <button type="button" name="btnRefresh" id="btnRefresh" class="btn btn-success btn-xs" onclick="ReloadDataTable();">
+                                        <form id="export_data" method="POST"
+                                              action="export_process/export_process_data_wh_movement_out.php"
+                                              enctype="multipart/form-data">
+                                            <div class="col-md-12 col-md-offset-2"
+                                                 style="display: flex; align-items: center; gap: 10px;">
+                                                <button type="button" name="btnRefresh" id="btnRefresh"
+                                                        class="btn btn-success btn-xs" onclick="ReloadDataTable();">
                                                     Refresh <i class="fa fa-refresh"></i>
                                                 </button>
-
-                                                <label for="doc_date_start" class="control-label mb-0"><b>วันที่&nbsp;</b></label>
-                                                <input type="text" class="form-control" id="doc_date_start" name="doc_date_start" readonly
-                                                       style="width: 130px;" value="<?php echo $curr_date; ?>">
-
-                                                <label for="doc_date_to" class="control-label mb-0"><b>-</b></label>
-                                                <input type="text" class="form-control" id="doc_date_to" name="doc_date_to" readonly
-                                                       style="width: 130px;" value="<?php echo $curr_date; ?>">
-
-                                                <label for="car_no_main" class=""><b>รถคันที่</b></label>
-                                                <select id="car_no_main" name="car_no_main" class="control-label mb-0" style="width: 60px;">
-                                                    <option value="">-</option>
+                                                <label for="name_t" class="control-label mb-0"><b>วัน</b></label>
+                                                <input type="text" class="form-control" id="doc_date_start"
+                                                       name="doc_date_start" readonly="true"
+                                                       style="width: calc(0.6em * 10 + 1.25rem);"
+                                                       value="<?php echo $curr_date; ?>">
+                                                <label for="name_t" class="control-label mb-0"><b>-</b></label>
+                                                <input type="text" class="form-control" id="doc_date_to"
+                                                       name="doc_date_to" readonly="true"
+                                                       style="width: calc(0.6em * 10 + 1.25rem);"
+                                                       value="<?php echo $curr_date; ?>">
+                                                <label for="car_no_main"
+                                                       class="control-label mb-0"><b>รถคันที่</b></label>
+                                                <select id="car_no_main" name="car_no_main" class="form-control"
+                                                        style="width: 100px;">
+                                                    <option value="-">-</option>
+                                                    <?php for ($car_no = 1; $car_no <= 12; $car_no++) { ?>
+                                                        <option value="<?php echo $car_no ?>"><?php echo $car_no ?></option>
+                                                    <?php } ?>
                                                 </select>
 
-                                                <button type="button" name="btnFilter" id="btnFilter" class="btn btn-primary btn-xs">
-                                                    FilterData <i class="fa fa-filter"></i>
-                                                </button>
-
-                                                <button type="button" name="btnExport" id="btnExport" class="btn btn-success btn-xs" onclick="ExportData();">
-                                                    Export <i class="fa fa-file-excel-o"></i>
-                                                </button>
-
-                                                <button type="button" id="btnPrint" class="btn btn-primary btn-xs" onclick="PrintData();">
-                                                    Print <i class="fa fa-print"></i>
-                                                </button>
+                                                <!--button type="button" name="btnFilter" id="btnFilter"
+                                                        class="btn btn-primary btn-xs">FilterData <i
+                                                            class="fa fa-filter"></i></button-->
+                                                <button type="submit" name="btnExport" id="btnExport"
+                                                        class="btn btn-success btn-xs" onclick="">Export <i
+                                                            class="fa fa-file-excel-o"></i></button>
+                                                <button type="button" name="btnPrint" id="btnPrint"
+                                                        class="btn btn-primary btn-xs" onclick="PrintData();">Print <i
+                                                            class="fa fa-print"></i></button>
                                             </div>
-                                            <input type="hidden" name="search_value" id="search_value">
+
+                                            <input type="hidden" id="search_value" name="search_value" value="">
+
                                         </form>
 
                                         <div id="output_area"></div>
@@ -253,8 +263,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                    class="control-label">หมายเหตุ</label>
                                                                             <input type="text" class="form-control"
                                                                                    id="remark" name="remark"
-                                                                                   placeholder=""
-                                                                                   required>
+                                                                                   placeholder="">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -495,9 +504,13 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
+            $('#btnFilter').click(function () {
+                dataRecords.ajax.reload();
+            });
+
             setInterval(function () {
-                dataRecords.ajax.reload(null, false); // รีเฟรชตารางทุกๆ 5 นาที
-            }, 300000);
+                dataRecords.ajax.reload(null, false); // รีเฟรชตาราง
+            }, 30000);
         });
 
         // ฟังก์ชันรีเฟรช DataTable
@@ -531,7 +544,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#recordForm')[0].reset();
                         $('#recordModal').modal('hide');
                         $('#save').attr('disabled', false);
-                        dataRecords.ajax.reload();
+                        ReloadDataTable();
                     }
                 })
             });
@@ -862,15 +875,15 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
             $.ajax({
-                url: 'model/get_wh_car_no.php', // หน้า PHP ที่จะดึงข้อมูล
+                url: 'model/get_wh_cars.php', // หน้า PHP ที่จะดึงข้อมูล
                 method: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    let select = $('#car_no_main');
+                    let select = $('#cars');
                     $.each(data, function (index, wh_car_no) {
                         select.append($('<option>', {
                             value: wh_car_no.car_no,
@@ -880,7 +893,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     });
 
                     // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
-                    $('#car_no_main').select2({
+                    $('#cars').select2({
                         placeholder: "เลือกรถคันที่",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
@@ -891,7 +904,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 }
             });
         });
-    </script>
+    </script-->
 
 
     <script>
@@ -902,34 +915,57 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         // ฟังก์ชันสำหรับทำการ submit ฟอร์ม
-        function ExportData() {
+        function ExportData_BAK(event) {
+            // ป้องกันการรีเฟรชหน้าเมื่อกดปุ่มส่งฟอร์ม
+            event.preventDefault();
+
             // ดึงฟอร์มจาก ID ที่กำหนด
             const form = document.getElementById("export_data");
 
+            // ดึงค่าจากฟิลด์ต่างๆ
             let searchValue = $('#TableRecordList_filter input').val();
+            let doc_date_start = $('#doc_date_start').val();
+            let doc_date_to = $('#doc_date_to').val();
+            let car_no_main = $('#car_no_main').val();
 
+            // ตรวจสอบค่าที่ได้มา
+            alert("กำลังส่งออกข้อมูล: " + searchValue);
+
+            // ตั้งค่า hidden input เพื่อเก็บค่าที่ดึงมา
             document.getElementById("search_value").value = searchValue;
+            document.getElementById("doc_date_start_value").value = doc_date_start;
+            document.getElementById("doc_date_to_value").value = doc_date_to;
+            document.getElementById("car_no_main_value").value = car_no_main;
 
-            //alert(searchValue);
+            // ตั้งค่า action ให้ไปที่ PHP ที่จะทำการส่งออกเป็น CSV
+            form.action = "export_process/export_process_data_wh_movement_out.php"; // PHP ที่จะสร้างไฟล์ CSV
+            form.method = "POST"; // ใช้ POST เพื่อส่งข้อมูล
+            form.target = "_blank"; // เปิดการดาวน์โหลดไฟล์ในแท็บใหม่
 
-            // ตรวจสอบว่า input ที่จำเป็นถูกกรอกครบหรือไม่
-            if (form.checkValidity()) {
-                form.action = "export_process/export_process_data_wh_movement_out.php";
-                form.target = "_blank"; // เปิดไฟล์ PDF ในแท็บใหม่
-                // ทำการ submit ฟอร์ม
-                form.submit();
-            } else {
-                alert("Please fill out the required fields.");
-            }
+            // ทำการส่งฟอร์ม
+            form.submit();
         }
+
     </script>
 
     <script>
         function PrintData() {
+            let searchValue = $('#TableRecordList_filter input').val();
+            //alert(searchValue);
             let doc_date_start = $('#doc_date_start').val();
             let doc_date_to = $('#doc_date_to').val();
-            window.open('print_process/print_wh_out_process.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to, '_blank');
+            let car_no_main = $('#car_no_main').val();
+            window.open('print_process/print_wh_out_process.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to + '&car_no_main=' + car_no_main + '&searchValue=' + searchValue, '_blank');
         }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                let search_value = $('#TableRecordList_filter input').val();
+                //alert(search_value);
+            }, 1000);
+        });
     </script>
 
 

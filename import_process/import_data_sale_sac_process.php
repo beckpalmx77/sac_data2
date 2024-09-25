@@ -34,68 +34,73 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $data = [];
             for ($i = 0; $i <= 33; $i++) {
                 $data[$i] = empty($row[$i]) ? "-" : str_replace(",", "", $row[$i]);
-                $txt .= $data[$i] . " | " ;
-                $my_file = fopen("import_wh_param-0.txt", "w") or die("Unable to open file!");
-                fwrite($my_file, $txt);
-                fclose($my_file);
             }
 
+            // กำหนดตัวแปรต่าง ๆ ตามลำดับคอลัมน์ในฐานข้อมูล
             $DI_DAY = $data[0];
             $DI_MONTH_NAME = $data[1];
-            $DI_MONTH = convertMonthToNumber($DI_MONTH_NAME);
             $DI_YEAR = $data[2];
             $AR_CODE = $data[3];
             $SKU_CODE = $data[4];
+            $SKU_NAME = $data[5];
+            $DETAIL = $data[6];
+            $BRAND = $data[7];
             $DI_REF = $data[8];
-            $WL_CODE = $data[20];
+            $AR_NAME = $data[9];
+            $SALE_NAME = $data[10];
+            $TAKE_NAME = $data[11];
             $TRD_QTY = $data[12];
+            $TRD_PRC = $data[13];
+            $TRD_DISCOUNT = $data[14];
+            $TRD_TOTAL_PRICE = $data[15];
+            $TRD_VAT = $data[16];
+            $TRD_AMOUNT_PRICE = $data[17];
+            $TRD_PER_POINT = $data[18];
+            $TRD_TOTAL_POINT = $data[19];
+            $WL_CODE = $data[20];
+            $TRD_Q_FREE = $data[21];
+            $TRD_AMPHUR = $data[22];
+            $TRD_PROVINCE = $data[23];
+            $TRD_MARK = $data[24];
+            $TRD_U_POINT = $data[25];
+            $TRD_R_POINT = $data[26];
+            $TRD_S_POINT = $data[27];
+            $TRD_T_POINT = $data[28];
+            $TRD_COMPARE = $data[29];
+            $TRD_SHOP = $data[30];
+            $TRD_BY_MOBAPP = $data[31];
+            $TRD_YEAR_OLD = $data[32];
+            $SKU_CAT = $data[33];
 
-            // Validate required fields
-            if ($DI_DAY !== "-" && $DI_MONTH !== "-" && $DI_YEAR !== "-" && $AR_CODE !== "-" && $SKU_CODE !== "-") {
-                // Check for duplicates
-                $statement = $conn->prepare("SELECT COUNT(*) FROM " . $table_name . " WHERE DI_DAY = ? AND DI_MONTH = ? AND DI_YEAR = ? AND DI_REF = ? 
-                                    AND AR_CODE = ? AND SKU_CODE = ? AND WL_CODE = ? AND TRD_QTY = ?");
-                $statement->execute([$DI_DAY, $DI_MONTH, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY]);
+            // Insert new record
+            $sql_insert = "INSERT INTO $table_name (DI_DAY, DI_MONTH_NAME, DI_YEAR, AR_CODE, SKU_CODE, SKU_NAME, DETAIL
+        , BRAND, DI_REF, AR_NAME, SALE_NAME, TAKE_NAME, TRD_QTY, TRD_PRC, TRD_DISCOUNT, TRD_TOTAL_PRICE, TRD_VAT, TRD_AMOUNT_PRICE
+        , TRD_PER_POINT, TRD_TOTAL_POINT, WL_CODE, TRD_Q_FREE, TRD_AMPHUR, TRD_PROVINCE, TRD_MARK, TRD_U_POINT, TRD_R_POINT
+        , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)";
 
-                if ((int)$statement->fetchColumn() === 0) {
-                    // Insert new record
-                    $sql_insert = "INSERT INTO $table_name (DI_DAY, DI_MONTH, DI_MONTH_NAME, DI_YEAR, AR_CODE, SKU_CODE, SKU_NAME, DETAIL
-                    , BRAND, AR_NAME, SALE_NAME, TAKE_NAME, TRD_QTY, TRD_PRC, TRD_DISCOUNT, TRD_TOTAL_PRICE, TRD_VAT, TRD_AMOUNT_PRICE
-                    , TRD_PER_POINT, TRD_TOTALPOINT, WL_CODE, TRD_Q_FREE, TRD_AMPHUR, TRD_PROVINCE, TRD_MARK, TRD_U_POINT, TRD_R_POINT
-                    , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT, DI_REF) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                    $stmt_insert = $conn->prepare($sql_insert);
-                    $stmt_insert->execute(array_values($data));
-
-                    $txt = $DI_DAY . " | " . $DI_MONTH_NAME . " | " . $DI_MONTH . " | " . $DI_YEAR . " | " . $AR_CODE . " | " . $SKU_CODE . " | " . $DI_REF . " | " . $WL_CODE
-                        . " | " . $TRD_QTY;
-                    $my_file = fopen("import_wh_param_ins.txt", "w") or die("Unable to open file!");
-                    fwrite($my_file, $txt);
-                    fclose($my_file);
-
-                    $importedRows++;
-                } else {
-                    // Update existing record
-                    $sql_update = "UPDATE $table_name SET DI_MONTH = ?, DI_MONTH_NAME = ?, SKU_NAME = ?, DETAIL = ?, BRAND = ?
-                    , AR_NAME = ?, SALE_NAME = ?, TAKE_NAME = ?, TRD_PRC = ?, TRD_DISCOUNT = ?, TRD_TOTAL_PRICE = ?, TRD_VAT = ?
-                    , TRD_AMOUNT_PRICE = ?, TRD_PER_POINT = ?, TRD_TOTALPOINT = ?, TRD_Q_FREE = ?, TRD_AMPHUR = ?
-                    , TRD_PROVINCE = ?, TRD_MARK = ?, TRD_U_POINT = ?, TRD_R_POINT = ?, TRD_S_POINT = ?, TRD_T_POINT = ?
-                    , TRD_COMPARE = ?, TRD_SHOP = ?, TRD_BY_MOBAPP = ?, TRD_YEAR_OLD = ?, SKU_CAT = ?
-                    , DI_REF = ? WHERE DI_DAY = ? AND DI_MONTH = ? AND DI_YEAR = ? AND AR_CODE = ? AND SKU_CODE = ?";
-                    $stmt_update = $conn->prepare($sql_update);
-                    $stmt_update->execute(array_merge(array_slice($data, 1), [$DI_DAY, $DI_MONTH, $DI_YEAR, $AR_CODE, $SKU_CODE]));
-                    $duplicateRows++;
-                }
-            }
+            $stmt_insert = $conn->prepare($sql_insert);
+            $stmt_insert->execute([
+                $DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $AR_CODE, $SKU_CODE, $SKU_NAME, $DETAIL,
+                $BRAND, $DI_REF, $AR_NAME, $SALE_NAME, $TAKE_NAME, $TRD_QTY, $TRD_PRC,
+                $TRD_DISCOUNT, $TRD_TOTAL_PRICE, $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT,
+                $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE, $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK,
+                $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT, $TRD_COMPARE, $TRD_SHOP,
+                $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT
+            ]);
         }
 
         echo "Import completed. Imported rows: $importedRows, Duplicated rows: $duplicateRows.";
 
     } catch (Exception $e) {
         error_log("Error processing file: " . $e->getMessage());
-        echo "Error processing file.";
+        /*
+        $txt = $e->getMessage();
+        $my_file = fopen("import_wh_param_err.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);        echo "Error processing file."; */
     }
 } else {
     echo "Error uploading file.";
 }
-?>
+

@@ -34,7 +34,10 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $data = [];
             for ($i = 0; $i <= 33; $i++) {
                 // ตรวจสอบว่า cell ใน Excel มีค่าเป็น null หรือว่างเปล่าหรือไม่
-                $data[$i] = (isset($row[$i]) && trim($row[$i]) !== '') ? str_replace(",", "", $row[$i]) : "-";
+                $value = isset($row[$i]) && trim($row[$i]) !== '' ? $row[$i] : "0";
+
+                // Replace commas and check for #N/A
+                $data[$i] = str_replace(["#", ","], "", ($value === "#N/A" ? "0" : $value));
             }
 
             // กำหนดตัวแปรต่าง ๆ ตามลำดับคอลัมน์ในฐานข้อมูล
@@ -44,8 +47,8 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $AR_CODE = $data[3];
             $SKU_CODE = $data[4];
             $SKU_NAME = $data[5];
-            $DETAIL = $data[6];
-            $BRAND = $data[7];
+            $DETAIL = ($data[6] === "0" ? "-" : $data[6]);
+            $BRAND = ($data[7] === "0" ? "-" : $data[7]);
             $DI_REF = $data[8];
             $AR_NAME = $data[9];
             $SALE_NAME = $data[10];
@@ -58,20 +61,22 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $TRD_AMOUNT_PRICE = $data[17];
             $TRD_PER_POINT = $data[18];
             $TRD_TOTAL_POINT = $data[19];
-            $WL_CODE = $data[20];
+            $WL_CODE = ($data[20] === "0" ? "-" : $data[20]);
             $TRD_Q_FREE = $data[21];
-            $TRD_AMPHUR = $data[22];
-            $TRD_PROVINCE = $data[23];
-            $TRD_MARK = $data[24];
+            $TRD_AMPHUR = ($data[22] === "0" ? "-" : $data[22]);
+            $TRD_PROVINCE = ($data[23] === "0" ? "-" : $data[23]);
+            $TRD_MARK = ($data[24] === "0" ? "-" : $data[24]);
             $TRD_U_POINT = $data[25];
             $TRD_R_POINT = $data[26];
             $TRD_S_POINT = $data[27];
             $TRD_T_POINT = $data[28];
-            $TRD_COMPARE = $data[29];
-            $TRD_SHOP = $data[30];
-            $TRD_BY_MOBAPP = $data[31];
-            $TRD_YEAR_OLD = $data[32];
-            $SKU_CAT = $data[33];
+            $TRD_COMPARE = ($data[29] === "0" ? "-" : $data[29]);
+            $TRD_SHOP = ($data[30] === "0" ? "-" : $data[30]);
+            $TRD_BY_MOBAPP = ($data[31] === "0" ? "-" : $data[31]);
+            $TRD_YEAR_OLD = ($data[32] === "0" ? "-" : $data[32]);
+            $SKU_CAT = ($data[33] === "0" ? "-" : $data[33]);
+
+            $DI_MONTH = convertMonthToNumberSingle($DI_MONTH_NAME);
 
             $statement = $conn->prepare("SELECT COUNT(*) FROM " . $table_name . " WHERE DI_DAY = ? AND DI_MONTH_NAME = ? 
             AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? 
@@ -83,17 +88,15 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                 $sql_insert = "INSERT INTO $table_name (DI_DAY, DI_MONTH_NAME, DI_YEAR, AR_CODE, SKU_CODE, SKU_NAME, DETAIL
         , BRAND, DI_REF, AR_NAME, SALE_NAME, TAKE_NAME, TRD_QTY, TRD_PRC, TRD_DISCOUNT, TRD_TOTAL_PRICE, TRD_VAT, TRD_AMOUNT_PRICE
         , TRD_PER_POINT, TRD_TOTAL_POINT, WL_CODE, TRD_Q_FREE, TRD_AMPHUR, TRD_PROVINCE, TRD_MARK, TRD_U_POINT, TRD_R_POINT
-        , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)";
+        , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT,DI_MONTH) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?,?)";
                 $stmt_insert = $conn->prepare($sql_insert);
-                $stmt_insert->execute([
-                    $DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $AR_CODE, $SKU_CODE, $SKU_NAME, $DETAIL,
+                $stmt_insert->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $AR_CODE, $SKU_CODE, $SKU_NAME, $DETAIL,
                     $BRAND, $DI_REF, $AR_NAME, $SALE_NAME, $TAKE_NAME, $TRD_QTY, $TRD_PRC,
                     $TRD_DISCOUNT, $TRD_TOTAL_PRICE, $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT,
                     $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE, $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK,
                     $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT, $TRD_COMPARE, $TRD_SHOP,
-                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT
-                ]);
+                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH]);
             }
         }
 

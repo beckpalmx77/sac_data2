@@ -394,8 +394,10 @@ WHERE 1 ";
             // กำหนด HTML พร้อมสไตล์สีสำหรับสถานะ
             if ($status == 'Y') {
                 $doc_id_html = '<span style="color:green;">' . $doc_id . '</span>';
+                $status_html = '<span style="color:green;">' . $status . '</span>';
             } else {
                 $doc_id_html = '<span style="color:red;">' . $doc_id . '</span>';
+                $status_html = '<span style="color:red;">' . $status . '</span>';
             }
 
             $data[] = array(
@@ -418,7 +420,7 @@ WHERE 1 ";
                 "create_date" => $row['create_date'],
                 "total_qty" => $row['total_qty'],
                 "user_name" => $row['user_name'],
-                "status" => $row['status'],
+                "status" => $status_html,
                 "remark" => $row['remark'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"

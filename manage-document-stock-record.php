@@ -71,7 +71,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         style="width: 100px;">
                                                     <option value="">-</option>
                                                 </select>
-                                                
+
                                                 <!--label for="create_by" class="control-label mb-0"><b>สถานะ</b></label>
                                                 <select id="status" name="status" class="form-control"
                                                         style="width: 100px;">

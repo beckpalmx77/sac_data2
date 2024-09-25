@@ -134,15 +134,25 @@ if ($_POST["action_detail"] === 'UPDATE') {
 }
 
 
-if ($_POST["action_detail"] === 'DELETE') {
-    $id = $_POST["detail_id"];
+if ($_POST["delete_action_detail"] === 'DELETE') {
+
+    $id = $_POST["delete_detail_id"];
+    $doc_id = $_POST["delete_detail_doc_id"];
+    $table_name = "wh_stock_transaction";
+
     $sql_find = "SELECT * FROM wh_stock_transaction WHERE id = " . $id;
+/*
+    $myfile = fopen("myqeury_1.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $id . " > " . $sql_find );
+    fclose($myfile);
+*/
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
         try {
             $sql = "DELETE FROM wh_stock_transaction WHERE id = " . $id;
             $query = $conn->prepare($sql);
             $query->execute();
+            Reorder_Record_By_DocID($conn, $table_name, $doc_id);
             echo $del_success;
         } catch (Exception $e) {
             echo 'Message: ' . $e->getMessage();

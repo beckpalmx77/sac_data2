@@ -316,6 +316,45 @@ if (strlen($_SESSION['alogin']) == "") {
                                             </div>
                                         </div>
 
+                                        <div class="modal fade" id="DeleteModal">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Modal title</h4>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <form method="post" id="DeleteForm">
+                                                        <div class="modal-body">
+                                                            <div class="container-fluid">
+                                                                <div class="row">
+                                                                    <div class="col-sm-4">
+                                                                        <label for="delete_product_id_detail"
+                                                                               class="control-label">ต้องการลบข้อมูลนี้
+                                                                            ?</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <input type="hidden" name="delete_detail_id"
+                                                                   id="delete_detail_id"/>
+                                                            <input type="hidden" name="delete_action_detail"
+                                                                   id="delete_action_detail" value=""/>
+                                                            <input type="hidden" name="delete_detail_doc_id"
+                                                                   id="delete_detail_doc_id" value=""/>
+                                                            <button type="submit" name="delete" id="delete"
+                                                                    class="btn btn-primary"><i class="fa fa-check"></i>Delete
+                                                            </button>
+                                                            <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Close <i
+                                                                        class="fa fa-window-close"></i></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div id="result"></div>
 
                                     </section>
@@ -670,7 +709,6 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
 
         $("#TableOrderDetailList").on('click', '.delete', function () {
-
             let rec_id = $(this).attr("id");
             let table_name = "v_wh_stock_transaction";
             let formData = {action: "GET_DATA", id: rec_id, table_name: table_name};
@@ -684,31 +722,13 @@ if (strlen($_SESSION['alogin']) == "") {
                     for (let i = 0; i < len; i++) {
                         let id = response[i].id;
                         let doc_id_detail = response[i].doc_id;
-                        let doc_date_detail = response[i].doc_date;
-                        let product_id_detail = response[i].product_id;
-                        let product_name_detail = response[i].product_name;
-                        let qty_detail = response[i].qty;
-                        let wh_to_detail = response[i].wh;
-                        let wh_week_id_detail = response[i].wh_week_id;
-                        let location_detail = response[i].location;
-                        let qty_master = $('#qty').val();
-                        let master_id_detail = $('#id').val();
-                        $('#recordModal').modal('show');
+                        $('#DeleteModal').modal('show');
                         $('#id').val(id);
-                        $('#detail_id').val(rec_id);
-                        $('#doc_id_detail').val(doc_id_detail);
-                        $('#doc_date_detail').val(doc_date_detail);
-                        $('#product_id_detail').val(product_id_detail);
-                        $('#product_name_detail').val(product_name_detail);
-                        $('#qty_detail').val(qty_detail);
-                        $('#wh_to_detail').val(wh_to_detail);
-                        $('#wh_week_id_detail').val(wh_week_id_detail).trigger('change');
-                        $('#location_detail').val(location_detail).trigger('change');
-                        $('#qty_master').val(qty_master);
-                        $('#master_id_detail').val(master_id_detail);
+                        $('#delete_detail_id').val(rec_id);
+                        $('#delete_detail_doc_id').val(doc_id_detail);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Delete Record");
-                        $('#action_detail').val('DELETE');
-                        $('#save').val('Save');
+                        $('#delete_action_detail').val('DELETE');
+                        $('#save').val('Confirm Delete');
                     }
                 },
                 error: function (response) {
@@ -841,7 +861,6 @@ if (strlen($_SESSION['alogin']) == "") {
                             alertify.success(data);
                             $('#recordForm')[0].reset();
                             $('#recordModal').modal('hide');
-                            $('#save').attr('disabled', false);
                             $('#TableOrderDetailList').DataTable().ajax.reload();
                             DisplaySumQty();
                         }
@@ -851,6 +870,31 @@ if (strlen($_SESSION['alogin']) == "") {
                     alertify.error("การตรวจสอบจำนวนไม่ผ่าน");
                 }
             });
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            <!-- *** FOR SUBMIT FORM *** -->
+            $("#DeleteModal").on('submit', '#DeleteForm', function (event) {
+                event.preventDefault();
+                $('#save').attr('disabled', 'disabled');
+                let formData = $(this).serialize();
+                $.ajax({
+                    url: 'model/manage_wh_stock_detail_process.php',
+                    method: "POST",
+                    data: formData,
+                    success: function (data) {
+                        alertify.success(data);
+                        $('#DeleteForm')[0].reset();
+                        $('#DeleteModal').modal('hide');
+                        $('#TableOrderDetailList').DataTable().ajax.reload();
+                        DisplaySumQty();
+                    }
+                })
+            });
+            <!-- *** FOR SUBMIT FORM *** -->
         });
     </script>
 

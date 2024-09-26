@@ -1,7 +1,4 @@
 <?php
-session_start();
-error_reporting(0);
-
 // Include necessary files for database connection and PhpSpreadsheet
 include '../config/connect_db.php'; // Include your database connection
 require '../vendor/autoload.php'; // Load PhpSpreadsheet library
@@ -26,30 +23,12 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
 
-        $user_id = $_SESSION['user_id'];
         $table_name = "ims_data_sale_sac_all";
         $importedRows = 0;
         $duplicateRows = 0;
-        $totalRows = 0;
-
-        $str = rand();
-        $seq_record = md5($str);
 
         foreach ($rows as $index => $row) {
             if ($index == 0) continue; // Skip header row
-
-            // ตรวจสอบแถวว่าง ถ้าแถวทั้งหมดเป็นค่าว่าง จะข้ามไป
-            $isEmptyRow = true;
-            foreach ($row as $cell) {
-                if (trim($cell) !== '') {
-                    $isEmptyRow = false;
-                    break;
-                }
-            }
-            if ($isEmptyRow) continue; // ข้ามแถวว่าง
-
-            // นับจำนวนแถวทั้งหมด (ไม่รวมแถวว่าง)
-            $totalRows++;
 
             // Map data from Excel row to your table structure
             $data = [];
@@ -109,37 +88,28 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                 $sql_insert = "INSERT INTO $table_name (DI_DAY, DI_MONTH_NAME, DI_YEAR, AR_CODE, SKU_CODE, SKU_NAME, DETAIL
         , BRAND, DI_REF, AR_NAME, SALE_NAME, TAKE_NAME, TRD_QTY, TRD_PRC, TRD_DISCOUNT, TRD_TOTAL_PRICE, TRD_VAT, TRD_AMOUNT_PRICE
         , TRD_PER_POINT, TRD_TOTAL_POINT, WL_CODE, TRD_Q_FREE, TRD_AMPHUR, TRD_PROVINCE, TRD_MARK, TRD_U_POINT, TRD_R_POINT
-        , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT,DI_MONTH,seq_record) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?,?,?)";
+        , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT,DI_MONTH) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?,?)";
                 $stmt_insert = $conn->prepare($sql_insert);
                 $stmt_insert->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $AR_CODE, $SKU_CODE, $SKU_NAME, $DETAIL,
                     $BRAND, $DI_REF, $AR_NAME, $SALE_NAME, $TAKE_NAME, $TRD_QTY, $TRD_PRC,
                     $TRD_DISCOUNT, $TRD_TOTAL_PRICE, $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT,
                     $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE, $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK,
                     $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT, $TRD_COMPARE, $TRD_SHOP,
-                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $seq_record]);
-
-                $importedRows++; // นับแถวที่นำเข้าสำเร็จ
-            } else {
-                $duplicateRows++; // นับแถวที่ซ้ำ
+                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH]);
             }
         }
 
-        //echo "Import completed. Total rows: $totalRows, Imported rows: $importedRows, Duplicated rows: $duplicateRows.";
-        $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าสำเร็จ: $importedRows รายการ";
-
-        $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,seq_record,create_by) VALUES (?,?,?,?,?,?)";
-        $stmt_insert_log = $conn->prepare($sql_insert_log);
-        $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $seq_record,$user_id]);
-
-        echo $import_success;
+        echo "Import completed. Imported rows: $importedRows, Duplicated rows: $duplicateRows.";
 
     } catch (Exception $e) {
         error_log("Error processing file: " . $e->getMessage());
-        echo "Error processing file.";
+        /*
+        $txt = $e->getMessage();
+        $my_file = fopen("import_wh_param_err.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);        echo "Error processing file."; */
     }
 } else {
     echo "Error uploading file.";
 }
-
-

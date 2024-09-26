@@ -2,9 +2,9 @@
 include('includes/Header.php');
 if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == "") {
     header("Location: index.php");
-} else {
-    ?>
-<?php } ?>
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="th">
 <body id="page-top">
@@ -14,7 +14,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
             <?php include('includes/Top-Bar.php'); ?>
-            <!-- Container Fluid-->
             <div class="container-fluid" id="container-wrapper">
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h4 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
@@ -28,31 +27,28 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card mb-12">
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            </div>
                             <div class="card-body">
                                 <section class="container-fluid">
-
-                                    <!-- Form สำหรับการ Import ข้อมูล -->
                                     <form id="uploadForm" enctype="multipart/form-data">
                                         <div class="mb-3">
                                             <label for="excelFile" class="form-label">Select Excel File</label>
-                                            <input class="form-control" type="file" id="excelFile" name="excelFile"
-                                                   accept=".xlsx, .xls">
+                                            <input class="form-control" type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls">
                                         </div>
                                         <button type="submit" class="btn btn-primary">Import</button>
                                         <button id="showImageBtn" class="btn btn-success">Example Format Data For Import</button>
                                     </form>
 
-                                    <!-- Spinner แสดงโหลดข้อมูล -->
-                                    <div id="loadingSpinner" class="text-center my-3" style="display: none;">
+                                    <div id="importedCount" class="mt-3">
+                                        จำนวนรายการที่นำเข้า: <span id="itemCount">0</span> รายการ
+                                    </div>
+
+                                    <div id="spinner" class="text-center my-3" style="display: none;">
                                         <div class="spinner-border text-primary" role="status">
                                             <span class="sr-only">Loading...</span>
                                         </div>
                                     </div>
 
-                                    <br>
-                                    <div class="col-md-12 col-md-offset-2">
+                                    <div class="col-md-12">
                                         <table id='TableRecordList' class='display dataTable'>
                                             <thead>
                                             <tr>
@@ -104,46 +100,30 @@ include('includes/Footer.php');
     <i class="fas fa-angle-up"></i>
 </a>
 
+<!-- Vendor Scripts -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="js/myadmin.min.js"></script>
 
+<!-- Datatables Scripts -->
 <script src="vendor/datatables/v11/bootbox.min.js"></script>
 <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
 <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
-<style>
-    .icon-input-btn {
-        display: inline-block;
-        position: relative;
-    }
+<!-- Custom Style -->
+<link href="css/spinner_over.css" rel="stylesheet"/>
 
-    .icon-input-btn input[type="submit"] {
-        padding-left: 2em;
-    }
-
-    .icon-input-btn .fa {
-        display: inline-block;
-        position: absolute;
-        left: 0.65em;
-        top: 30%;
-    }
-</style>
-
+<!-- Custom Script -->
 <script>
     $(document).ready(function () {
 
-        // แสดง Spinner ขณะส่งฟอร์ม
         $('#uploadForm').on('submit', function (e) {
             e.preventDefault();
-
-            // แสดง Spinner
-            $('#loadingSpinner').show();
+            $("#spinner").show();
 
             let formData = new FormData(this);
 
@@ -154,49 +134,42 @@ include('includes/Footer.php');
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    // ซ่อน Spinner เมื่อ import สำเร็จ
-                    $('#loadingSpinner').hide();
 
-                    // แสดงผลลัพธ์การ import
-                    $('#uploadResult').html(response);
+                    $('#spinner').hide();
+                    alertify.alert(response);
+                    // Assuming server response contains 'importedCount' field
+                    let importedCount = response.importedCount || 0;
+                    $('#itemCount').text(importedCount);
 
-                    // รีโหลดข้อมูลในตาราง
                     $('#TableRecordList').DataTable().ajax.reload();
-
-                    // แสดงข้อความแจ้งเตือน
                     alertify.alert("Notification", "Data imported successfully.");
                 },
                 error: function (xhr, status, error) {
-                    // ซ่อน Spinner เมื่อเกิดข้อผิดพลาด
-                    $('#loadingSpinner').hide();
-
-                    // แสดงข้อความแจ้งเตือนเมื่อเกิดข้อผิดพลาด
+                    $('#spinner').hide();
                     alertify.alert("Notification", "An error occurred: " + error);
                 }
             });
         });
 
-        // โหลดข้อมูลลงใน DataTable
         $('#TableRecordList').DataTable({
             "lengthMenu": [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
-            "ajax": "model/fetch_data_sale_sac.php", // ดึงข้อมูลจาก PHP
+            "ajax": "model/fetch_data_sale_sac.php",
             "order": [[0, 'desc']],
             "columns": [
-                {"data": "DI_DAY"},           // วัน
-                {"data": "DI_MONTH_NAME"},    // ชื่อเดือน
-                {"data": "DI_YEAR"},          // ปี
-                {"data": "AR_CODE"},          // รหัสลูกค้า
-                {"data": "SKU_CODE"},         // รหัสสินค้า
-                {"data": "SKU_NAME"},         // ชื่อสินค้า
-                {"data": "AR_NAME"},           // รายละเอียดสินค้า
-                {"data": "BRAND"},            // ยี่ห้อ
-                {"data": "TRD_QTY"},            // จำนวน
-                {"data": "SKU_CAT"}          // หมวดหมู่สินค้า
+                {"data": "DI_DAY"},
+                {"data": "DI_MONTH_NAME"},
+                {"data": "DI_YEAR"},
+                {"data": "AR_CODE"},
+                {"data": "SKU_CODE"},
+                {"data": "SKU_NAME"},
+                {"data": "AR_NAME"},
+                {"data": "BRAND"},
+                {"data": "TRD_QTY"},
+                {"data": "SKU_CAT"}
             ]
         });
 
-        // เปิดรูปภาพในหน้าต่างใหม่
-        $('#showImageBtn').on('click', function() {
+        $('#showImageBtn').on('click', function () {
             window.open("img/screenshot/stock_wh_in.png", "_blank", "width=800,height=600");
         });
     });

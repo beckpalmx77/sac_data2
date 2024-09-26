@@ -99,7 +99,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $SKU_CAT = ($data[33] === "0" ? "-" : $data[33]);
 
             $DI_MONTH = convertMonthToNumberSingle($DI_MONTH_NAME);
-            $DI_DATE = formatNumber($DI_DAY,2) . "-" . formatNumber($DI_MONTH,2) . "-" . $DI_YEAR ;
+            $DI_DATE = formatNumber($DI_DAY, 2) . "-" . formatNumber($DI_MONTH, 2) . "-" . $DI_YEAR;
 
             $statement = $conn->prepare("SELECT COUNT(*) FROM " . $table_name . " WHERE DI_DAY = ? AND DI_MONTH_NAME = ? 
             AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? 
@@ -119,7 +119,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     $TRD_DISCOUNT, $TRD_TOTAL_PRICE, $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT,
                     $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE, $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK,
                     $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT, $TRD_COMPARE, $TRD_SHOP,
-                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $seq_record,$DI_DATE]);
+                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $seq_record, $DI_DATE]);
 
                 $importedRows++; // นับแถวที่นำเข้าสำเร็จ
             } else {
@@ -132,7 +132,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
         $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,seq_record,create_by) VALUES (?,?,?,?,?,?)";
         $stmt_insert_log = $conn->prepare($sql_insert_log);
-        $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $seq_record,$user_id]);
+        $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $seq_record, $user_id]);
 
         echo $import_success;
 

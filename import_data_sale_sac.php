@@ -32,16 +32,15 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                     <form id="uploadForm" enctype="multipart/form-data">
                                         <div class="mb-3">
                                             <label for="excelFile" class="form-label">Select Excel File</label>
-                                            <input class="form-control" type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls">
+                                            <input class="form-control" type="file" id="excelFile" name="excelFile"
+                                                   accept=".xlsx, .xls">
                                         </div>
                                         <button type="submit" class="btn btn-primary">Import</button>
-                                        <button id="showImageBtn" class="btn btn-success">Example Format Data For Import</button>
+                                        <button type="button" id="showImageBtn" class="btn btn-success">ตัวอย่างไฟล์
+                                            Excel Format Data สำหรับนำเข้า
+                                        </button>
                                     </form>
-
-                                    <div id="importedCount" class="mt-3">
-                                        จำนวนรายการที่นำเข้า: <span id="itemCount">0</span> รายการ
-                                    </div>
-
+                                    <br>
                                     <div id="spinner" class="text-center my-3" style="display: none;">
                                         <div class="spinner-border text-primary" role="status">
                                             <span class="sr-only">Loading...</span>
@@ -134,13 +133,8 @@ include('includes/Footer.php');
                 contentType: false,
                 processData: false,
                 success: function (response) {
-
                     $('#spinner').hide();
                     alertify.alert(response);
-                    // Assuming server response contains 'importedCount' field
-                    let importedCount = response.importedCount || 0;
-                    $('#itemCount').text(importedCount);
-
                     $('#TableRecordList').DataTable().ajax.reload();
                     alertify.alert("Notification", "Data imported successfully.");
                 },
@@ -152,7 +146,7 @@ include('includes/Footer.php');
         });
 
         $('#TableRecordList').DataTable({
-            "lengthMenu": [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
+            "lengthMenu": [[7, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
             "ajax": "model/fetch_data_sale_sac.php",
             "order": [[0, 'desc']],
             "columns": [
@@ -168,9 +162,13 @@ include('includes/Footer.php');
                 {"data": "SKU_CAT"}
             ]
         });
+    });
+</script>
 
+<script>
+    $(document).ready(function () {
         $('#showImageBtn').on('click', function () {
-            window.open("img/screenshot/stock_wh_in.png", "_blank", "width=800,height=600");
+            window.open("import_process/template/ims_data_sale_sac_all.xlsx", "_blank");
         });
     });
 </script>

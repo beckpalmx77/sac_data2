@@ -121,6 +121,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             <option value="">ประเภท</option>
                                                                         </select>
                                                                     </div>
+                                                                    <div class="col-sm-3">
+                                                                        <label for="BRAND" class="control-label">ยี่ห้อ
+                                                                        </label>
+                                                                        <select id="BRAND" name="BRAND"
+                                                                                class="form-control">
+                                                                            <option value="">ยี่ห้อ</option>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
 
                                                             </div>
@@ -358,6 +366,37 @@ if (strlen($_SESSION['alogin']) == "") {
                     // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
                     $('#TRD_PROVINCE').select2({
                         placeholder: "เลือกจังหวัด",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_sku_brand.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#BRAND');
+                    $.each(data, function (index, sku_brand) {
+                        select.append($('<option>', {
+                            value: sku_brand.BRAND,
+                            text: sku_brand.BRAND, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': sku_brand.BRAND // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#BRAND').select2({
+                        placeholder: "เลือกยี่ห้อ",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
                     });

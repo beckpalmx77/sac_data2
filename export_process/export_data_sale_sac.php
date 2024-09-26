@@ -1,95 +1,120 @@
 <?php
+include('../config/connect_db.php');
+require '../vendor/autoload.php'; // Make sure this path is correct
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 date_default_timezone_set('Asia/Bangkok');
+$filename = "sac_sale_" . date('Y-m-d_H-i-s') . ".xlsx";
 
-$filename = "Data_Sale_Return-Daily-" . date('m/d/Y H:i:s', time()) . ".csv";
+// Set headers to prompt file download
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header("Content-Disposition: attachment; filename=\"$filename\"");
+header('Cache-Control: max-age=0');
 
-@header('Content-type: text/csv; charset=UTF-8');
-@header('Content-Encoding: UTF-8');
-@header("Content-Disposition: attachment; filename=" . $filename);
+$doc_date_start = $_POST["doc_date_start"];
+$doc_date_to = $_POST["doc_date_to"];
+$ar_name = $_POST['AR_NAME'];
+$province = $_POST['TRD_PROVINCE'];
+$name_name = $_POST['SALE_NAME'];
+$sku_cat = $_POST['SKU_CAT'];
 
-include('../config/connect_sqlserver.php');
-include('../cond_file/doc_info_sale_return_daily.php');
+$search_Query = "";
 
-$DT_DOCCODE_MINUS = "IS";
+if (!empty($doc_date_start) && !empty($doc_date_to)) {
+    $search_Query .= " AND (sale_sac.DI_DATE BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "') ";
+}
 
-$doc_date_start = substr($_POST['doc_date_start'], 6, 4) . "/" . substr($_POST['doc_date_start'], 3, 2) . "/" . substr($_POST['doc_date_start'], 0, 2);
-$doc_date_to = substr($_POST['doc_date_to'], 6, 4) . "/" . substr($_POST['doc_date_to'], 3, 2) . "/" . substr($_POST['doc_date_to'], 0, 2);
+if (!empty($ar_name)) {
+    $search_Query .= " AND sale_sac.AR_NAME = '" . $ar_name . "' ";
+}
 
+if (!empty($province)) {
+    $search_Query .= " AND sale_sac.TRD_PROVINCE = '" . $province . "' ";
+}
 
-$String_Sql = $select_query_daily . $select_query_daily_cond . " AND DI_DATE BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "' "
-    . $select_query_daily_order;
+if (!empty($sku_cat)) {
+    $search_Query .= " AND sale_sac.SKU_CAT = '" . $sku_cat . "' ";
+}
 
-//$my_file = fopen("D-sac_str1.txt", "w") or die("Unable to open file!");
-//fwrite($my_file, $String_Sql);
-//fclose($my_file);
+// Create SQL query
+$select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE 1 " . $search_Query;
 
-$data = "DI_DATE,,,AR_CODE,SKU_CODE,SKU_NAME,BRN_NAME,BRN_CODE,DI_REF,AR_NAME,SLMN_NAME,,TRD_QTY,TRD_U_PRC,TRD_DSC_KEYINV,TRD_B_SELL,TRD_B_VAT,TRD_G_KEYIN,,,WL_CODE\n";
-
-$query = $conn_sqlsvr->prepare($String_Sql);
+$query = $conn->prepare($select_query_sale_sac);
 $query->execute();
+$results = $query->fetchAll(PDO::FETCH_OBJ);
 
-while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+// Create new Spreadsheet object
+$spreadsheet = new Spreadsheet();
+$sheet = $spreadsheet->getActiveSheet();
 
-    $data .= " " . $row['DI_DATE'] . ",";
-    $data .= " " . ",";
-    $data .= " " . ",";
+// Set the header for the Excel file
+$headers = [
+    'ลำดับ', 'วัน', 'เดือน', 'ปี', 'รหัสลูกค้า', 'รหัสสินค้า', 'รายละเอียดสินค้า', 'รายละเอียด',
+    'ยี่ห้อสินค้า', 'INV ลูกค้า', 'ชื่อลูกค้า', 'ผู้แทนขาย', 'Take', 'จำนวน',
+    'ราคาขาย', 'ส่วนลด', 'มูลค่ารวม', 'ภาษี 7%', 'มูลค่ารวมภาษี', 'คะแนนต่อเส้น',
+    'คะแนนที่ได้', 'ปี-เดือน', 'ของแถม /ยางแถม', 'อำเภอ', 'จังหวัด',
+    'Mark', 'คะแนนต่อเส้น1', 'คะแนนที่ได้1', 'คะแนน Shop', 'คะแนนที่ได้ SHOP',
+    'เทียบ/เว็ป', 'ร้านที่เป็น SHOP', 'สั่งซื้อจากแอฟมือถือ', 'ยางปีเก่า', 'ประเภทยาง'
+];
 
-    //$DI_DATE = str_replace("\\r\ ", "", $row['DI_DATE']);
-    //$data .= $DI_DATE . ",";
+$sheet->fromArray($headers, NULL, 'A1');
 
-    $data .= str_replace(",", "^", $row['AR_CODE']) . ",";
-    $data .= str_replace(",", "^", $row['SKU_CODE']) . ",";
-    $data .= str_replace(",", "^", $row['SKU_NAME']) . ",";
-    $data .= str_replace(",", "^", $row['BRN_NAME']) . ",";
-    $data .= str_replace(",", "^", $row['BRN_CODE']) . ",";
-    $data .= str_replace(",", "^", $row['DI_REF']) . ",";
-    $data .= str_replace(",", "^", $row['AR_NAME']) . ",";
-    $data .= str_replace(",", "^", $row['SLMN_CODE']) . ",";
-    $data .= str_replace(",", "^", $row['SLMN_NAME']) . ",";
+// Fill the spreadsheet with data
+$line_no = 0;
+foreach ($results as $result) {
+    $line_no++;
+    // ตรวจสอบว่าช่อง TRD_AMOUNT_PRICE ไม่ใช่ช่องว่างหรือเครื่องหมาย "-"
+    if ($result->TRD_AMOUNT_PRICE !== '' && $result->TRD_AMOUNT_PRICE !== '-') {
+        // แปลงเป็นตัวเลข ถ้าเป็นไปได้
+        $amount_price = is_numeric($result->TRD_AMOUNT_PRICE) ? (float)$result->TRD_AMOUNT_PRICE : 0;
+    } else {
+        // ถ้าเป็นช่องว่างหรือ "-"
+        $amount_price = 0;
+    }
 
-
-    $TRD_QTY = $row['TRD_Q_FREE'] > 0 ? $row['TRD_QTY'] = $row['TRD_QTY'] + $row['TRD_Q_FREE'] : $row['TRD_QTY'];
-
-
-    $TRD_U_PRC = $row['TRD_U_PRC'];
-    $TRD_DSC_KEYINV = $row['TRD_DSC_KEYINV'];
-    $TRD_B_SELL = $row['TRD_G_SELL'];
-    $TRD_B_VAT = $row['TRD_G_VAT'];
-    $TRD_G_KEYIN = $row['TRD_G_KEYIN'];
-
-    //$my_file = fopen("D-sac_str_return.txt", "w") or die("Unable to open file!");
-    //fwrite($my_file, "Data " . " = " . $TRD_QTY . " | " . $TRD_U_PRC . " | "
-        //. $TRD_DSC_KEYINV . " | " . $TRD_B_SELL . " | " . $TRD_B_VAT . " | " . $TRD_G_KEYIN);
-    //fclose($my_file);
-
-
-
-if(strpos($row['DT_DOCCODE'], $DT_DOCCODE_MINUS) !== false){
-    $data .= "-" . $TRD_QTY . ",";
-    $data .= "-" . $TRD_U_PRC . ",";
-    $data .= "-" . $TRD_DSC_KEYINV . ",";
-    $data .= "-" . $TRD_B_SELL . ",";
-    $data .= "-" . $TRD_B_VAT . ",";
-    $data .= "-" . $TRD_G_KEYIN . ",";
-} else {
-    $data .= $TRD_QTY . ",";
-    $data .= $TRD_U_PRC . ",";
-    $data .= $TRD_DSC_KEYINV . ",";
-    $data .= $TRD_B_SELL . ",";
-    $data .= $TRD_B_VAT . ",";
-    $data .= $TRD_G_KEYIN . ",";
+    $row = [
+        $line_no,
+        $result->DI_DAY,
+        $result->DI_MONTH_NAME,
+        $result->DI_YEAR,
+        $result->AR_CODE,
+        $result->SKU_CODE,
+        $result->SKU_NAME,
+        $result->DETAIL,
+        $result->BRAND,
+        $result->DI_REF,
+        $result->AR_NAME,
+        $result->SALE_NAME,
+        $result->TAKE_NAME,
+        $result->TRD_QTY,
+        $result->TRD_PRC,
+        $result->TRD_DISCOUNT,
+        $result->TRD_TOTAL_PRICE,
+        $result->TRD_VAT,
+        $amount_price,
+        $result->TRD_PER_POINT,
+        $result->TRD_TOTAL_POINT,
+        $result->WL_CODE,
+        $result->TRD_Q_FREE,
+        $result->TRD_AMPHUR,
+        $result->TRD_PROVINCE,
+        $result->TRD_MARK,
+        $result->TRD_U_POINT,
+        $result->TRD_R_POINT,
+        $result->TRD_S_POINT,
+        $result->TRD_T_POINT,
+        $result->TRD_COMPARE,
+        $result->TRD_SHOP,
+        $result->TRD_BY_MOBAPP,
+        $result->TRD_YEAR_OLD,
+        $result->SKU_CAT
+    ];
+    $sheet->fromArray($row, NULL, 'A' . ($line_no + 1));
 }
 
-    $data .= " " . ",";
-    $data .= " " . ",";
-
-    $data .= str_replace(",", "^", $row['WL_CODE']) . "\n";
-
-
-}
-
-// $data = iconv("utf-8", "tis-620", $data);
-$data = iconv("utf-8", "windows-874//IGNORE", $data);
-echo $data;
-
+// Save Excel file to output
+$writer = new Xlsx($spreadsheet);
+$writer->save('php://output');
 exit();

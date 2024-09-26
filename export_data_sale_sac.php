@@ -94,6 +94,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
+                                                                        <label for="TRD_AMPHUR" class="control-label">อำเภอ
+                                                                        </label>
+                                                                        <select id="TRD_AMPHUR" name="TRD_AMPHUR"
+                                                                                class="form-control">
+                                                                            <option value="">อำเภอ</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
                                                                         <label for="TRD_PROVINCE" class="control-label">จังหวัด
                                                                         </label>
                                                                         <select id="TRD_PROVINCE" name="TRD_PROVINCE"
@@ -397,6 +405,37 @@ if (strlen($_SESSION['alogin']) == "") {
                     // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
                     $('#BRAND').select2({
                         placeholder: "เลือกยี่ห้อ",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_amphur_name.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#TRD_AMPHUR');
+                    $.each(data, function (index, amphur_name) {
+                        select.append($('<option>', {
+                            value: amphur_name.TRD_AMPHUR,
+                            text: amphur_name.TRD_AMPHUR, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': amphur_name.TRD_AMPHUR // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#TRD_AMPHUR').select2({
+                        placeholder: "เลือกอำเภอ",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
                     });

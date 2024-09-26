@@ -16,8 +16,9 @@ header('Cache-Control: max-age=0');
 $doc_date_start = $_POST["doc_date_start"];
 $doc_date_to = $_POST["doc_date_to"];
 $ar_name = $_POST['AR_NAME'];
+$amphur = $_POST['TRD_AMPHUR'];
 $province = $_POST['TRD_PROVINCE'];
-$name_name = $_POST['SALE_NAME'];
+$sale_name = $_POST['SALE_NAME'];
 $sku_cat = $_POST['SKU_CAT'];
 
 $search_Query = "";
@@ -30,6 +31,10 @@ if (!empty($ar_name)) {
     $search_Query .= " AND sale_sac.AR_NAME = '" . $ar_name . "' ";
 }
 
+if (!empty($amphur)) {
+    $search_Query .= " AND sale_sac.TRD_AMPHUR = '" . $amphur . "' ";
+}
+
 if (!empty($province)) {
     $search_Query .= " AND sale_sac.TRD_PROVINCE = '" . $province . "' ";
 }
@@ -38,8 +43,19 @@ if (!empty($sku_cat)) {
     $search_Query .= " AND sale_sac.SKU_CAT = '" . $sku_cat . "' ";
 }
 
+if (!empty($sale_name)) {
+    $search_Query .= " AND sale_sac.SALE_NAME = '" . $sale_name . "' ";
+}
+
 // Create SQL query
 $select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE 1 " . $search_Query;
+
+/*
+$txt = "sql = " . $select_query_sale_sac;
+$my_file = fopen("exp_sale_param.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $txt);
+fclose($my_file);
+*/
 
 $query = $conn->prepare($select_query_sale_sac);
 $query->execute();

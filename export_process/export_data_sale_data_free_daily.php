@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('Asia/Bangkok');
 
-$filename = "Data_Sale_Return-Daily-" . date('m/d/Y H:i:s', time()) . ".csv";
+$filename = "Data_Sale_Free-Daily-" . date('m/d/Y H:i:s', time()) . ".csv";
 
 @header('Content-type: text/csv; charset=UTF-8');
 @header('Content-Encoding: UTF-8');
@@ -23,7 +23,7 @@ $String_Sql = $select_query_daily . $select_query_daily_cond . " AND DI_DATE BET
 //fwrite($my_file, $String_Sql);
 //fclose($my_file);
 
-$data = "DI_DATE,,,AR_CODE,SKU_CODE,SKU_NAME,BRN_NAME,BRN_CODE,DI_REF,AR_NAME,SLMN_NAME,,TRD_QTY,TRD_U_PRC,TRD_DSC_KEYINV,TRD_B_SELL,TRD_B_VAT,TRD_G_KEYIN,,,WL_CODE\n";
+$data = "DI_DATE,,,AR_CODE,SKU_CODE,SKU_NAME,BRN_NAME,BRN_CODE,DI_REF,AR_NAME,SLMN_NAME,,TRD_QTY,TRD_U_PRC,TRD_DSC_KEYINV,TRD_B_SELL,TRD_B_VAT,TRD_G_KEYIN,,,WL_CODE,TRD_Q_FREE\n";
 
 $query = $conn_sqlsvr->prepare($String_Sql);
 $query->execute();
@@ -48,8 +48,8 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     $data .= str_replace(",", "^", $row['SLMN_NAME']) . ",";
 
 
-    $TRD_QTY = $row['TRD_Q_FREE'] > 0 ? $row['TRD_QTY'] = $row['TRD_QTY'] + $row['TRD_Q_FREE'] : $row['TRD_QTY'];
-
+    $TRD_QTY = $row['TRD_QTY'];
+    $TRD_Q_FREE = $row['TRD_Q_FREE'];
 
     $TRD_U_PRC = $row['TRD_U_PRC'];
     $TRD_DSC_KEYINV = $row['TRD_DSC_KEYINV'];
@@ -59,40 +59,40 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
     //$my_file = fopen("D-sac_str_return.txt", "w") or die("Unable to open file!");
     //fwrite($my_file, "Data " . " = " . $TRD_QTY . " | " . $TRD_U_PRC . " | "
-        //. $TRD_DSC_KEYINV . " | " . $TRD_B_SELL . " | " . $TRD_B_VAT . " | " . $TRD_G_KEYIN);
+    //. $TRD_DSC_KEYINV . " | " . $TRD_B_SELL . " | " . $TRD_B_VAT . " | " . $TRD_G_KEYIN);
     //fclose($my_file);
 
 
 
-if(strpos($row['DT_DOCCODE'], $DT_DOCCODE_MINUS) !== false){
-    $data .= "-" . $TRD_QTY . ",";
-    $data .= "-" . $TRD_U_PRC . ",";
-    $data .= "-" . $TRD_DSC_KEYINV . ",";
-    $data .= "-" . $TRD_B_SELL . ",";
-    $data .= "-" . $TRD_B_VAT . ",";
-    $data .= "-" . $TRD_G_KEYIN . ",";
-} else {
-    $data .= $TRD_QTY . ",";
-    $data .= $TRD_U_PRC . ",";
-    $data .= $TRD_DSC_KEYINV . ",";
-    $data .= $TRD_B_SELL . ",";
-    $data .= $TRD_B_VAT . ",";
-    $data .= $TRD_G_KEYIN . ",";
-}
-/*
-    $data .= $TRD_QTY . ",";
-    $data .= $TRD_U_PRC . ",";
-    $data .= $TRD_DSC_KEYINV . ",";
-    $data .= $TRD_B_SELL . ",";
-    $data .= $TRD_B_VAT . ",";
-    $data .= $TRD_G_KEYIN . ",";
+    if(strpos($row['DT_DOCCODE'], $DT_DOCCODE_MINUS) !== false){
+        $data .= "-" . $TRD_QTY . ",";
+        $data .= "-" . $TRD_U_PRC . ",";
+        $data .= "-" . $TRD_DSC_KEYINV . ",";
+        $data .= "-" . $TRD_B_SELL . ",";
+        $data .= "-" . $TRD_B_VAT . ",";
+        $data .= "-" . $TRD_G_KEYIN . ",";
+    } else {
+        $data .= $TRD_QTY . ",";
+        $data .= $TRD_U_PRC . ",";
+        $data .= $TRD_DSC_KEYINV . ",";
+        $data .= $TRD_B_SELL . ",";
+        $data .= $TRD_B_VAT . ",";
+        $data .= $TRD_G_KEYIN . ",";
+    }
+    /*
+        $data .= $TRD_QTY . ",";
+        $data .= $TRD_U_PRC . ",";
+        $data .= $TRD_DSC_KEYINV . ",";
+        $data .= $TRD_B_SELL . ",";
+        $data .= $TRD_B_VAT . ",";
+        $data .= $TRD_G_KEYIN . ",";
 
-*/
-
+    */
 
     $data .= " " . ",";
     $data .= " " . ",";
-    $data .= str_replace(",", "^", $row['WL_CODE']) . "\n";
+    $data .= str_replace(",", "^", $row['WL_CODE']) . ",";
+    $data .= $TRD_Q_FREE . "\n";
 
 
 }

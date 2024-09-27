@@ -51,28 +51,24 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                         <table id='TableRecordList' class='display dataTable'>
                                             <thead>
                                             <tr>
-                                                <th>วัน</th>
-                                                <th>เดือน</th>
-                                                <th>ปี</th>
-                                                <th>รหัสลูกค้า</th>
+                                                <th>วันที่</th>
+                                                <th>เลขที่เอกสาร</th>
+                                                <th>ชื่อ Sale</th>
                                                 <th>รหัสสินค้า</th>
                                                 <th>ชื่อสินค้า</th>
                                                 <th>รายละเอียด</th>
-                                                <th>แบรนด์</th>
                                                 <th>จำนวน</th>
                                                 <th>ประเภท</th>
                                             </tr>
                                             </thead>
                                             <tfoot>
                                             <tr>
-                                                <th>วัน</th>
-                                                <th>เดือน</th>
-                                                <th>ปี</th>
-                                                <th>รหัสลูกค้า</th>
+                                                <th>วันที่</th>
+                                                <th>เลขที่เอกสาร</th>
+                                                <th>ชื่อ Sale</th>
                                                 <th>รหัสสินค้า</th>
                                                 <th>ชื่อสินค้า</th>
                                                 <th>รายละเอียด</th>
-                                                <th>แบรนด์</th>
                                                 <th>จำนวน</th>
                                                 <th>ประเภท</th>
                                             </tr>
@@ -150,14 +146,12 @@ include('includes/Footer.php');
             "ajax": "model/fetch_data_sale_sac.php",
             "order": [[0, 'desc']],
             "columns": [
-                {"data": "DI_DAY"},
-                {"data": "DI_MONTH_NAME"},
-                {"data": "DI_YEAR"},
-                {"data": "AR_CODE"},
+                {"data": "DI_DATE"},
+                {"data": "DI_REF"},
+                {"data": "AR_NAME"},
+                {"data": "SALE_NAME"},
                 {"data": "SKU_CODE"},
                 {"data": "SKU_NAME"},
-                {"data": "AR_NAME"},
-                {"data": "BRAND"},
                 {"data": "TRD_QTY"},
                 {"data": "SKU_CAT"}
             ]

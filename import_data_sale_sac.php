@@ -53,9 +53,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                             <tr>
                                                 <th>วันที่</th>
                                                 <th>เลขที่เอกสาร</th>
-                                                <th>ชื่อ Sale</th>
+                                                <th>ชื่อลูกค้า</th>
+                                                <th>ชื่อSale</th>
                                                 <th>รหัสสินค้า</th>
-                                                <th>ชื่อสินค้า</th>
                                                 <th>รายละเอียด</th>
                                                 <th>จำนวน</th>
                                                 <th>ประเภท</th>
@@ -65,9 +65,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                             <tr>
                                                 <th>วันที่</th>
                                                 <th>เลขที่เอกสาร</th>
-                                                <th>ชื่อ Sale</th>
+                                                <th>ชื่อลูกค้า</th>
+                                                <th>ชื่อSale</th>
                                                 <th>รหัสสินค้า</th>
-                                                <th>ชื่อสินค้า</th>
                                                 <th>รายละเอียด</th>
                                                 <th>จำนวน</th>
                                                 <th>ประเภท</th>

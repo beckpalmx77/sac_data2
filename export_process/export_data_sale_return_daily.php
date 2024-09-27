@@ -23,7 +23,7 @@ $String_Sql = $select_query_daily . $select_query_daily_cond . " AND DI_DATE BET
 //fwrite($my_file, $String_Sql);
 //fclose($my_file);
 
-$data = "DI_DATE,,,AR_CODE,SKU_CODE,SKU_NAME,BRN_NAME,BRN_CODE,DI_REF,AR_NAME,SLMN_NAME,,TRD_QTY,TRD_U_PRC,TRD_DSC_KEYINV,TRD_B_SELL,TRD_B_VAT,TRD_G_KEYIN,,,WL_CODE,LINE_NO\n";
+$data = "DI_DATE,,,AR_CODE,SKU_CODE,SKU_NAME,BRN_NAME,BRN_CODE,DI_REF,AR_NAME,SLMN_NAME,,TRD_QTY,TRD_U_PRC,TRD_DSC_KEYINV,TRD_B_SELL,TRD_B_VAT,TRD_G_KEYIN,,,WL_CODE,TRD_SEQ\n";
 
 $query = $conn_sqlsvr->prepare($String_Sql);
 $query->execute();

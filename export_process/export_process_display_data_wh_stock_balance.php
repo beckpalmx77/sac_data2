@@ -15,6 +15,14 @@ $wh_week_id = $_POST['wh_week_id'];
 
 $search_Query = "";
 
+// แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
+$doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
+$doc_date_to = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+
+if (!empty($doc_date_start) && !empty($doc_date_to)) {
+    $search_Query .= " AND STR_TO_DATE(t.doc_date, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' " ;
+}
+
 if (!empty($product_id)) {
     $search_Query .= " AND t.product_id = '" . $product_id . "' ";
 }
@@ -37,7 +45,7 @@ $select_query_wh_balance = "SELECT     p.product_id,p.product_name,t.wh,t.wh_wee
                     END) AS total_qty
                 FROM wh_stock_transaction t
                 JOIN wh_product_master p ON t.product_id = p.product_id
-                WHERE (t.doc_date BETWEEN '". $doc_date_start . "' AND '". $doc_date_to ."') " . $search_Query .
+                WHERE 1 " . $search_Query .
                 " GROUP BY p.product_id,p.product_name,t.wh,t.wh_week_id,t.location";
 
 $line_no = 0;

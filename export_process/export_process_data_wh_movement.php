@@ -9,10 +9,15 @@ date_default_timezone_set('Asia/Bangkok');
 $doc_date_start = $_POST["doc_date_start"] ;
 $doc_date_to = $_POST["doc_date_to"];
 
-$start_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
-$end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+// แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
+$doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
+$doc_date_to = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
 
-$select_query_wh_movement = "SELECT * FROM v_wh_stock_movement WHERE doc_date BETWEEN '$doc_date_start' AND '$doc_date_to'"
+if (!empty($doc_date_start) && !empty($doc_date_to)) {
+    $search_Query .= " AND STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' " ;
+}
+
+$select_query_wh_movement = "SELECT * FROM v_wh_stock_movement WHERE 1 " . $search_Query
                           . " ORDER BY create_date DESC ,doc_id,create_by ";
 
 $String_Sql = $select_query_wh_movement;

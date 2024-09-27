@@ -16,12 +16,13 @@ if ($car_no !== '-') {
     $where_cond = " AND vo.car_no = " . $car_no;
 }
 
-//AND vo.doc_id LIKE '%" . $doc_id . "%'"
+// แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
+$doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
+$doc_date_to = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
 
-//$doc_id = $_POST["search_value"];
-
-$start_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
-$end_date_formatted = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+if (!empty($doc_date_start) && !empty($doc_date_to)) {
+    $search_Query .= " AND STR_TO_DATE(vo.doc_date, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' " ;
+}
 
 $sql_get = "SELECT 
     vo.id,vo.doc_date,vo.doc_id, vo.line_no,vo.product_id,vo.product_name,vo.wh_org,vo.wh_week_id,vo.location_org
@@ -38,7 +39,7 @@ ON
     AND vb.location = vo.location_org 
 WHERE 1 ";
 
-$select_query_wh_movement = $sql_get . " AND vo.doc_date BETWEEN '$doc_date_start' AND '$doc_date_to' " . $where_cond . " ORDER BY vo.doc_id ";
+$select_query_wh_movement = $sql_get . $search_Query . $where_cond . " ORDER BY vo.doc_id ";
 
 /*
 $txt = "sql = " . $select_query_wh_movement ;

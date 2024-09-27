@@ -12,6 +12,7 @@ include '../util/check_format_number.php'; // Include any utility files
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLOAD_ERR_OK) {
+    $file_Upload = $_FILES['excelFile']['name'];
     $fileTmp = $_FILES['excelFile']['tmp_name'];
     $fileType = mime_content_type($fileTmp); // ตรวจสอบ MIME type
 
@@ -129,8 +130,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
         AR_NAME = ?, SALE_NAME = ?, TAKE_NAME = ?, TRD_QTY = ?, TRD_PRC = ?, TRD_DISCOUNT = ?, TRD_TOTAL_PRICE = ?, 
         TRD_VAT = ?, TRD_AMOUNT_PRICE = ?, TRD_PER_POINT = ?, TRD_TOTAL_POINT = ?, WL_CODE = ?, TRD_Q_FREE = ?, 
         TRD_AMPHUR = ?, TRD_PROVINCE = ?, TRD_MARK = ?, TRD_U_POINT = ?, TRD_R_POINT = ?, TRD_S_POINT = ?, TRD_T_POINT = ?, 
-        TRD_COMPARE = ?, TRD_SHOP = ?, TRD_BY_MOBAPP = ?, TRD_YEAR_OLD = ?, SKU_CAT = ?, DI_MONTH = ?, seq_record = ?, 
-        DI_DATE = ?
+        TRD_COMPARE = ?, TRD_SHOP = ?, TRD_BY_MOBAPP = ?, TRD_YEAR_OLD = ?, SKU_CAT = ?, DI_MONTH = ?, DI_DATE = ?
         WHERE DI_DAY = ? AND DI_MONTH_NAME = ? AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? AND WL_CODE = ? AND TRD_QTY = ?";
 
                 $stmt_update = $conn->prepare($sql_update);
@@ -139,8 +139,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     $AR_NAME, $SALE_NAME, $TAKE_NAME, $TRD_QTY, $TRD_PRC, $TRD_DISCOUNT, $TRD_TOTAL_PRICE,
                     $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT, $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE,
                     $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK, $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT,
-                    $TRD_COMPARE, $TRD_SHOP, $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $seq_record,
-                    $DI_DATE,
+                    $TRD_COMPARE, $TRD_SHOP, $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE,
                     // เงื่อนไขใน WHERE
                     $DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY
                 ]);
@@ -152,9 +151,9 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
         //echo "Import completed. Total rows: $totalRows, Imported rows: $importedRows, Duplicated rows: $duplicateRows.";
         $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r ปรับปรุงข้อมูลสำเร็จ: $duplicateRows รายการ";
 
-        $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,seq_record,create_by) VALUES (?,?,?,?,?,?)";
+        $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
         $stmt_insert_log = $conn->prepare($sql_insert_log);
-        $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $seq_record, $user_id]);
+        $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);
 
         echo $import_success;
 

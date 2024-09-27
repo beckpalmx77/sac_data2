@@ -303,9 +303,12 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
         $where_filter_status = "";
     }
 
-    if ($doc_date_start!=='' AND $doc_date_to!=='') {
+// แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
+    $doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
+    $doc_date_to = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
 
-        $where_filter_date = " AND doc_date BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "'";
+    if (!empty($doc_date_start) && !empty($doc_date_to)) {
+        $where_filter_date .= " AND STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' " ;
     }
 
     // ตรวจสอบว่า create_by เป็น '-' หรือไม่

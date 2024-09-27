@@ -99,7 +99,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $TRD_YEAR_OLD = ($data[32] === "0" ? "-" : $data[32]);
             $SKU_CAT = ($data[33] === "0" ? "-" : $data[33]);
 
-            $DI_MONTH = convertMonthToNumberSingle($DI_MONTH_NAME);
+            $DI_MONTH = convertMonthToNumberSingle(trim($DI_MONTH_NAME));
             $DI_DATE = formatNumber($DI_DAY, 2) . "-" . formatNumber($DI_MONTH, 2) . "-" . $DI_YEAR;
 
             $statement = $conn->prepare("SELECT COUNT(*) FROM " . $table_name . " WHERE DI_DAY = ? AND DI_MONTH_NAME = ? 

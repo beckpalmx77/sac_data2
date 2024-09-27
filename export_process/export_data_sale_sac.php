@@ -23,8 +23,15 @@ $sku_cat = $_POST['SKU_CAT'];
 
 $search_Query = "";
 
+$doc_date_start = $_POST["doc_date_start"];
+$doc_date_to = $_POST["doc_date_to"];
+
+// แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
+$doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
+$doc_date_to = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+
 if (!empty($doc_date_start) && !empty($doc_date_to)) {
-    $search_Query .= " AND (sale_sac.DI_DATE BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "') ";
+    $search_Query .= " AND STR_TO_DATE(DI_DATE, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' " ;
 }
 
 if (!empty($ar_name)) {

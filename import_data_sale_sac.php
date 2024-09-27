@@ -142,7 +142,7 @@ include('includes/Footer.php');
         });
 
         $('#TableRecordList').DataTable({
-            "lengthMenu": [[7, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
+            "lengthMenu": [[7, 10, 20, 50, 100], [7, 10, 20, 50, 100]],
             "ajax": "model/fetch_data_sale_sac.php",
             "order": [[0, 'desc']],
             "columns": [

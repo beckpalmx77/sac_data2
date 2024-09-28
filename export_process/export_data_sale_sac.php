@@ -51,8 +51,10 @@ if (!empty($sale_name)) {
     $search_Query .= " AND sale_sac.SALE_NAME = '" . $sale_name . "' ";
 }
 
+$order_by = "order by DI_YEAR , DI_MONTH , DI_DAY ";
+
 // Create SQL query
-$select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE 1 " . $search_Query;
+$select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE 1 " . $search_Query . $order_by;
 
 /*
 $txt = "sql = " . $select_query_sale_sac;

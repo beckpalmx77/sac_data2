@@ -46,7 +46,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <div class="panel-body">
 
                                                         <form id="from_data" method="post"
-                                                              action="export_process/export_data_sale_sac.php"
+                                                              action="export_process/export_data_sale_sac_csv.php"
                                                               enctype="multipart/form-data">
                                                             <div class="modal-body">
                                                                 <h5 class="modal-title">ข้อมูลรายการขาย SAC <?php $_SESSION['permission_price'] . " | " . $_SESSION['first_name']?></h5>

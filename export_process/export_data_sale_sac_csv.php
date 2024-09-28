@@ -4,6 +4,7 @@ include('../config/connect_db.php');
 date_default_timezone_set('Asia/Bangkok');
 $filename = "sac_sale_" . date('Y-m-d_H-i-s') . ".csv";
 
+
 // Set headers to prompt file download as CSV
 header('Content-Type: text/csv; charset=UTF-8');
 header("Content-Disposition: attachment; filename=\"$filename\"");
@@ -123,6 +124,5 @@ foreach ($results as $result) {
 
 // Close the output stream
 fclose($output);
+
 exit();
-
-

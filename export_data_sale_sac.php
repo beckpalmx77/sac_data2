@@ -44,15 +44,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <div class="col-md-12 col-md-offset-2">
                                                 <div class="panel">
                                                     <div class="panel-body">
-                                                        <!--form id="from_data" method="post"
-                                                              action="export_process/export_data_sale_sac.php"
-                                                              enctype="multipart/form-data"-->
-                                                        <form id="from_data" method="post"
-                                                              action="export_process/export_data_sale_sac_csv.php"
-                                                              enctype="multipart/form-data">
+                                                        <form id="from_data" method="post" action="" enctype="multipart/form-data">
                                                             <div class="modal-body">
                                                                 <h5 class="modal-title">ข้อมูลรายการขาย SAC</h5>
-
                                                                 <div class="form-group row mb-3">
                                                                     <div class="col-sm-3">
                                                                         <label for="doc_date_start"
@@ -149,16 +143,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                        id="save_status"/>
                                                                 <input type="hidden" name="action" id="action"
                                                                        value=""/>
-                                                                <!--button type="submit" class="btn btn-success"
-                                                                        id="btnExport">Export <i
-                                                                            class="fa fa-check"></i></button-->
-                                                                <!-- <button type="button" class="btn btn-danger" id="btnClose">Close <i class="fa fa-window-close"></i></button> -->
-                                                                <!-- ปุ่ม Export พร้อม Spin Loader -->
-                                                                <button type="submit" class="btn btn-success"
-                                                                        id="btnExport">
+                                                                <button type="button" class="btn btn-success"
+                                                                        id="btnExport" onclick="Export_Data();">
                                                                     Export <i class="fa fa-check"></i>
-                                                                    <!--i class="fa fa-spinner fa-spin" id="loadingSpinner"
-                                                                       style="display:none;"></i-->
                                                                 </button>
                                                                 <!-- Spin Loader -->
                                                                 <div id="spinner" class="spinner-overlay"
@@ -259,26 +246,28 @@ if (strlen($_SESSION['alogin']) == "") {
             height: 38px !important; /* ปรับลูกศรให้มีความสูงเท่ากับ Select2 */
         }
     </style>
+
     <style>
-        .spinner-overlay {
+        /* Spin Loader CSS */
+        #spinner {
+            display: none; /* ซ่อน spinner ตอนแรก */
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+            z-index: 999;
+            left: 50%;
+            top: 50%;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .spinner-border {
-            width: 10rem;
-            height: 10rem;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
-
 
     <script>
         $(document).ready(function () {
@@ -484,18 +473,24 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
+    <script>
+        function Export_Data() {
+            // แสดง loader
+            document.getElementById('spinner').style.display = 'block';
 
-    <!--script>
-        $(document).ready(function () {
-            $('#from_data').on('submit', function () {
-                // แสดง Spin Loader ตรงกลางหน้าเพจ
-                $('#spinner').show();
+            // ตั้งค่าการส่งแบบฟอร์ม
+            document.forms['from_data'].action = 'export_process/export_data_sale_sac_csv.php';
+            document.forms['from_data'].submit();
 
-                // ปิดการใช้งานปุ่มเพื่อป้องกันการกดซ้ำ
-                $('#btnExport').prop('disabled', true);
-            });
-        });
-    </script-->
+            // ซ่อน loader หลังจากการส่ง
+            // ใช้ setTimeout เพื่อจำลองการทำงาน
+            setTimeout(function() {
+                document.getElementById('spinner').style.display = 'none';
+            }, 4000); // ปรับเวลาตามต้องการ
+
+            return true;
+        }
+    </script>
 
     </body>
 

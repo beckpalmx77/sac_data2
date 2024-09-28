@@ -230,7 +230,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                 let label_name = skuCat + " เดือน " + month_start + " ถึง " + month_to + " ปี " + year + str_sale_name;
 
-                if (!month_start || !month_to || !year || !skuCat ||) {
+                if (!month_start || !month_to || !year || !skuCat) {
                     alert("กรุณาเลือกเดือน, ปี, และ SKU Category");
                     return;
                 }

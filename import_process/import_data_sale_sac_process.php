@@ -51,7 +51,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
             if ($isEmptyRow) continue; // ข้ามแถวว่าง
 
-            // นับจำนวนแถวทั้งหมด (ไม่รวมแถวว่าง)
+            // นับจำนวนแถวทั้งหมด (ไม่รวม Header)
             if ($index <> 0) {
                 $totalRows++;
             }

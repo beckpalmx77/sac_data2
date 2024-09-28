@@ -48,13 +48,10 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     break;
                 }
             }
-
             if ($isEmptyRow) continue; // ข้ามแถวว่าง
 
             // นับจำนวนแถวทั้งหมด (ไม่รวมแถวว่าง)
-            if ($index <> 0) {
-                $totalRows++;
-            }
+            $totalRows++;
 
             // Map data from Excel row to your table structure
             $data = [];
@@ -108,7 +105,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $statement = $conn->prepare("SELECT COUNT(*) FROM " . $table_name . " WHERE DI_DAY = ? AND DI_MONTH_NAME = ? 
             AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? 
             AND WL_CODE = ? AND TRD_QTY = ? AND TRD_PRC = ? AND TRD_AMOUNT_PRICE = ? ");
-            $statement->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY, $TRD_PRC, $TRD_AMOUNT_PRICE]);
+            $statement->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY ,$TRD_PRC ,$TRD_AMOUNT_PRICE]);
             $row = $statement->fetchColumn();
             if ($row === 0) {
                 // Insert new record
@@ -123,7 +120,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     $TRD_DISCOUNT, $TRD_TOTAL_PRICE, $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT,
                     $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE, $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK,
                     $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT, $TRD_COMPARE, $TRD_SHOP,
-                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE, $seq_record]);
+                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE ,$seq_record]);
 
                 $importedRows++; // นับแถวที่นำเข้าสำเร็จ
             } else {
@@ -142,7 +139,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     $AR_NAME, $SALE_NAME, $TAKE_NAME, $TRD_QTY, $TRD_PRC, $TRD_DISCOUNT, $TRD_TOTAL_PRICE,
                     $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT, $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE,
                     $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK, $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT,
-                    $TRD_COMPARE, $TRD_SHOP, $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE, $seq_record,
+                    $TRD_COMPARE, $TRD_SHOP, $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE,$seq_record,
                     // เงื่อนไขใน WHERE
                     $DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY
                 ]);

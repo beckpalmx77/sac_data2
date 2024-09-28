@@ -214,19 +214,15 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         $(document).ready(function () {
-            $('#fetchData').click(function () {
-                const month_start = $('#monthSelectStart').val();
-                const month_to = $('#monthSelectTo').val();
-                const year = $('#yearSelect').val();
-                const skuCat = $('#skuCatSelect').val();
-                let sale_name = $('#saleSelect').val();
-                let str_sale_name = "";
-                if (sale_name !== '') {
-                    str_sale_name = "ชื่อ sale " + sale_name;
-                } else {
-                    str_sale_name = "";
-                }
+            let chart; // ตัวแปรสำหรับเก็บ Chart instance
 
+            $('#fetchData').click(function () {
+                let month_start = $('#monthSelectStart').val();
+                let month_to = $('#monthSelectTo').val();
+                let year = $('#yearSelect').val();
+                let skuCat = $('#skuCatSelect').val();
+                let sale_name = $('#saleSelect').val();
+                let str_sale_name = sale_name ? "ชื่อ sale " + sale_name : "";
 
                 let label_name = skuCat + " เดือน " + month_start + " ถึง " + month_to + " ปี " + year + str_sale_name;
 
@@ -268,8 +264,13 @@ if (strlen($_SESSION['alogin']) == "") {
                             }]
                         };
 
+                        // หากมี chart อยู่แล้ว ให้ทำการทำลายก่อนสร้างใหม่
+                        if (chart) {
+                            chart.destroy();
+                        }
+
                         let ctx = $("#mycanvas");
-                        new Chart(ctx, {
+                        chart = new Chart(ctx, {
                             type: 'bar',
                             data: chartdata
                         });

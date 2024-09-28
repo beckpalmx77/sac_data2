@@ -219,11 +219,18 @@ if (strlen($_SESSION['alogin']) == "") {
                 const month_to = $('#monthSelectTo').val();
                 const year = $('#yearSelect').val();
                 const skuCat = $('#skuCatSelect').val();
-                const sale_name = $('#saleSelect').val();
+                let sale_name = $('#saleSelect').val();
+                let str_sale_name = "";
+                if (sale_name !== '') {
+                    str_sale_name = "ชื่อ sale " + sale_name;
+                } else {
+                    str_sale_name = "";
+                }
 
-                let label_name = skuCat + " เดือน " + month_start + " ถึง " + month_to + " ปี " + year ;
 
-                if (!month_start || !month_to || !year || !skuCat) {
+                let label_name = skuCat + " เดือน " + month_start + " ถึง " + month_to + " ปี " + year + str_sale_name;
+
+                if (!month_start || !month_to || !year || !skuCat ||) {
                     alert("กรุณาเลือกเดือน, ปี, และ SKU Category");
                     return;
                 }

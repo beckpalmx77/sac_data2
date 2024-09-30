@@ -130,7 +130,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <div class="col-md-4 col-md-offset-2">
                                                 <div class="panel">
                                                     <div class="panel-body">
-                                                        <button id="fetchData" class="btn btn-primary">แสดงกราฟ</button>
+                                                        <button id="fetchData" class="btn btn-primary">แสดงข้อมูล</button>
                                                     </div>
                                                 </div>
                                             </div>

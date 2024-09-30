@@ -121,6 +121,17 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </div>
+                                                        <div class="form-group mr-3">
+                                                            <label for="brandSelect">เลือก BRAND</label>
+                                                            <select id="brandSelect" class="form-control">
+                                                                <option value="">-- เลือก BRAND --</option>
+                                                                <?php foreach ($brands as $brand): ?>
+                                                                    <option value="<?php echo $brand['BRAND']; ?>">
+                                                                        <?php echo $brand['BRAND']; ?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -130,7 +141,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <div class="col-md-4 col-md-offset-2">
                                                 <div class="panel">
                                                     <div class="panel-body">
-                                                        <button id="fetchData" class="btn btn-primary">แสดงกราฟ</button>
+                                                        <button id="fetchData" class="btn btn-primary">แสดงข้อมูล</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -151,6 +162,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <table id="dataTable" class="table table-striped table-bordered" style="width:100%">
                                                     <thead>
                                                     <tr>
+                                                        <th>ลำดับที่</th>
                                                         <th>เดือน</th>
                                                         <th>จำนวน</th>
                                                         <th>ยอดเงิน</th>
@@ -201,29 +213,32 @@ if (strlen($_SESSION['alogin']) == "") {
                 let month_to = $('#monthSelectTo').val();
                 let year = $('#yearSelect').val();
                 let skuCat = $('#skuCatSelect').val();
+                let brand = $('#brandSelect').val();
                 let sale_name = $('#saleSelect').val();
                 let str_sale_name = sale_name ? "ชื่อ sale " + sale_name : "";
 
                 let label_name = skuCat + " เดือน " + month_start + " ถึง " + month_to + " ปี " + year + str_sale_name;
 
-                if (!month_start || !month_to || !year || !skuCat) {
-                    alert("กรุณาเลือกเดือน, ปี, และ SKU Category");
+                if (!month_start || !month_to || !year || !skuCat || !brand) {
+                    alert("กรุณาเลือกเดือน, ปี, SKU Category , brand");
                     return;
                 }
 
                 $.ajax({
-                    url: "engine/chart_sale_sac_001.php",
+                    url: "engine/chart_sale_sac_002.php",
                     method: "GET",
                     data: {
                         month_start: month_start,
                         month_to: month_to,
                         year: year,
                         skuCat: skuCat,
+                        brand: brand,
                         sale_name: sale_name
                     },
                     dataType: "json",
                     success: function (data) {
                         console.log(data);
+                        let RowNumber = [];
                         let DI_MONTH_NAME = [];
                         let SUM_TRD_QTY = [];
                         let SUM_TRD_TOTAL_PRICE = [];
@@ -232,12 +247,14 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#dataTable').DataTable().clear().draw();
 
                         for (let i in data) {
+                            RowNumber.push(data[i].RowNumber);
                             DI_MONTH_NAME.push(data[i].DI_MONTH_NAME);
                             SUM_TRD_QTY.push(data[i].SUM_TRD_QTY);
                             SUM_TRD_TOTAL_PRICE.push(data[i].SUM_TRD_TOTAL_PRICE);
 
                             // เพิ่มข้อมูลในตาราง
                             $('#dataTable').DataTable().row.add([
+                                data[i].RowNumber,
                                 data[i].DI_MONTH_NAME,
                                 data[i].SUM_TRD_QTY,
                                 data[i].SUM_TRD_TOTAL_PRICE

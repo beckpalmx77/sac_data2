@@ -11,13 +11,13 @@ if (strlen($_SESSION['alogin']) == "") {
     $stmt_months->execute();
     $months = $stmt_months->fetchAll(PDO::FETCH_ASSOC);
 
-// Query to get unique years
+    // Query to get unique years
     $sql_years = "SELECT DISTINCT DI_YEAR FROM ims_data_sale_sac_all ORDER BY CAST(DI_YEAR as unsigned) DESC";
     $stmt_years = $conn->prepare($sql_years);
     $stmt_years->execute();
     $years = $stmt_years->fetchAll(PDO::FETCH_ASSOC);
 
-// Query to get unique SKU categories
+    // Query to get unique SKU categories
     $sql_sku = "SELECT DISTINCT SKU_CAT FROM ims_data_sale_sac_all ORDER BY SKU_CAT";
     $stmt_sku = $conn->prepare($sql_sku);
     $stmt_sku->execute();
@@ -42,23 +42,17 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <body id="page-top">
     <div id="wrapper">
-        <?php
-        include('includes/Side-Bar.php');
-        ?>
-
+        <?php include('includes/Side-Bar.php'); ?>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <?php
-                include('includes/Top-Bar.php');
-                ?>
+                <?php include('includes/Top-Bar.php'); ?>
 
                 <!-- Container Fluid-->
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h4 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
-                            </li>
+                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a></li>
                             <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
                             <li class="breadcrumb-item active"
                                 aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
@@ -68,12 +62,10 @@ if (strlen($_SESSION['alogin']) == "") {
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card mb-12">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
-
                                         <div class="row">
+                                            <!-- Filters -->
                                             <div class="col-md-12">
                                                 <div class="panel">
                                                     <div class="panel-body d-flex align-items-center">
@@ -88,7 +80,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </div>
-
                                                         <div class="form-group mr-3">
                                                             <label for="monthSelectTo">ถึง</label>
                                                             <select id="monthSelectTo" class="form-control">
@@ -100,7 +91,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </div>
-
                                                         <div class="form-group mr-3">
                                                             <label for="yearSelect">เลือกปี</label>
                                                             <select id="yearSelect" class="form-control">
@@ -112,19 +102,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </div>
-
                                                         <div class="form-group mr-3">
                                                             <label for="saleSelect">เลือกชื่อ Sale</label>
                                                             <select id="saleSelect" class="form-control">
-                                                                <option value="">-- เลือก Sale --</option>
-                                                                <?php foreach ($sale_name as $sale): ?>
-                                                                    <option value="<?php echo $sale['SALE_NAME']; ?>">
-                                                                        <?php echo $sale['SALE_NAME']; ?>
-                                                                    </option>
-                                                                <?php endforeach; ?>
+                                                                <option value="<?php echo $_SESSION['first_name']; ?>">
+                                                                    <?php echo $_SESSION['first_name']; ?>
+                                                                </option>
                                                             </select>
                                                         </div>
-
                                                         <div class="form-group mr-3">
                                                             <label for="skuCatSelect">เลือก SKU CAT</label>
                                                             <select id="skuCatSelect" class="form-control">
@@ -136,10 +121,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </div>
-
                                                         <div class="form-group mr-3">
-                                                            <label for="BrandSelect">เลือก BRAND</label>
-                                                            <select id="BrandSelect" class="form-control">
+                                                            <label for="brandSelect">เลือก BRAND</label>
+                                                            <select id="brandSelect" class="form-control">
                                                                 <option value="">-- เลือก BRAND --</option>
                                                                 <?php foreach ($brands as $brand): ?>
                                                                     <option value="<?php echo $brand['BRAND']; ?>">
@@ -148,8 +132,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </div>
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -159,15 +141,15 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <div class="col-md-4 col-md-offset-2">
                                                 <div class="panel">
                                                     <div class="panel-body">
-                                                        <button id="fetchData" class="btn btn-primary">แสดงกราฟ</button>
+                                                        <button id="fetchData" class="btn btn-primary">แสดงข้อมูล</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-
+                                        <!-- Chart Section -->
                                         <div class="row">
-                                            <div class="col-md-4 col-md-offset-2">
+                                            <div class="col-md-4">
                                                 <div class="panel">
                                                     <div class="panel-body">
                                                         <div id="chart-container">
@@ -176,26 +158,33 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-4">
+                                                <table id="dataTable" class="table table-striped table-bordered" style="width:100%">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ลำดับที่</th>
+                                                        <th>เดือน</th>
+                                                        <th>จำนวน</th>
+                                                        <th>ยอดเงิน</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
 
-                                        <!-- /.row -->
                                     </section>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!--Row-->
-
-                    <!-- Row -->
                 </div>
                 <!---Container Fluid-->
             </div>
 
-            <?php
-            include('includes/Modal-Logout.php');
-            include('includes/Footer.php');
-            ?>
-
+            <?php include('includes/Modal-Logout.php'); include('includes/Footer.php'); ?>
         </div>
     </div>
 
@@ -204,82 +193,82 @@ if (strlen($_SESSION['alogin']) == "") {
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <!-- Scripts -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-    <!-- Select2 -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <!-- Bootstrap Datepicker -->
-    <script src="vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-    <!-- Bootstrap Touchspin -->
-    <script src="vendor/bootstrap-touchspin/js/jquery.bootstrap-touchspin.js"></script>
-    <!-- ClockPicker -->
-    <script src="vendor/clock-picker/clockpicker.js"></script>
-    <!-- RuangAdmin Javascript -->
-    <script src="js/myadmin.min.js"></script>
-    <!-- Javascript for this page -->
-
-    <script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
-    <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
-    <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
-
-    <script src="js/MyFrameWork/framework_util.js"></script>
-
-    <script src="js/util.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
 
     <script>
         $(document).ready(function () {
             let chart; // ตัวแปรสำหรับเก็บ Chart instance
+
+            // สร้าง DataTable
+            $('#dataTable').DataTable();
 
             $('#fetchData').click(function () {
                 let month_start = $('#monthSelectStart').val();
                 let month_to = $('#monthSelectTo').val();
                 let year = $('#yearSelect').val();
                 let skuCat = $('#skuCatSelect').val();
+                let brand = $('#brandSelect').val();
                 let sale_name = $('#saleSelect').val();
-                let BrandSelect = $('#BrandSelect').val();
                 let str_sale_name = sale_name ? "ชื่อ sale " + sale_name : "";
 
                 let label_name = skuCat + " เดือน " + month_start + " ถึง " + month_to + " ปี " + year + str_sale_name;
 
-                if (!month_start || !month_to || !year || !skuCat) {
-                    alert("กรุณาเลือกเดือน, ปี, และ SKU Category");
+                if (!month_start || !month_to || !year || !skuCat || !brand) {
+                    alert("กรุณาเลือกเดือน, ปี, SKU Category , brand");
                     return;
                 }
 
                 $.ajax({
-                    url: "engine/chart_sale_sac_001.php",
+                    url: "engine/chart_sale_sac_002.php",
                     method: "GET",
                     data: {
                         month_start: month_start,
                         month_to: month_to,
                         year: year,
                         skuCat: skuCat,
-                        brand:BrandSelect,
+                        brand: brand,
                         sale_name: sale_name
                     },
                     dataType: "json",
                     success: function (data) {
                         console.log(data);
+                        let RowNumber = [];
                         let DI_MONTH_NAME = [];
                         let SUM_TRD_QTY = [];
+                        let SUM_TRD_TOTAL_PRICE = [];
+
+                        // ล้างข้อมูลใน DataTable ก่อน
+                        $('#dataTable').DataTable().clear().draw();
 
                         for (let i in data) {
+                            RowNumber.push(data[i].RowNumber);
                             DI_MONTH_NAME.push(data[i].DI_MONTH_NAME);
                             SUM_TRD_QTY.push(data[i].SUM_TRD_QTY);
+                            SUM_TRD_TOTAL_PRICE.push(data[i].SUM_TRD_TOTAL_PRICE);
+
+                            // เพิ่มข้อมูลในตาราง
+                            $('#dataTable').DataTable().row.add([
+                                data[i].RowNumber,
+                                data[i].DI_MONTH_NAME,
+                                data[i].SUM_TRD_QTY,
+                                data[i].SUM_TRD_TOTAL_PRICE
+                            ]).draw();
                         }
 
                         let chartdata = {
                             labels: DI_MONTH_NAME,
                             datasets: [{
                                 label: label_name,
-                                backgroundColor: 'rgba(46,182,165,0.75)',
-                                borderColor: 'rgba(76,195,199,0.75)',
-                                hoverBackgroundColor: 'rgb(60,181,193)',
-                                hoverBorderColor: 'rgb(45,193,188)',
+                                backgroundColor: 'rgba(243,63,198,0.75)',
+                                borderColor: 'rgba(215,55,161,0.75)',
+                                hoverBackgroundColor: 'rgb(245,92,201)',
+                                hoverBorderColor: 'rgb(245,95,237)',
                                 data: SUM_TRD_QTY
                             }]
                         };
@@ -303,9 +292,7 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-
     </body>
-
     </html>
 
 <?php } ?>

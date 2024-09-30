@@ -105,12 +105,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <div class="form-group mr-3">
                                                             <label for="saleSelect">เลือกชื่อ Sale</label>
                                                             <select id="saleSelect" class="form-control">
-                                                                <option value="">-- เลือก Sale --</option>
-                                                                <?php foreach ($sale_name as $sale): ?>
-                                                                    <option value="<?php echo $sale['SALE_NAME']; ?>">
-                                                                        <?php echo $sale['SALE_NAME']; ?>
+                                                                    <option value="<?php echo $_SESSION['first_name']; ?>">
+                                                                        <?php echo $_SESSION['first_name']; ?>
                                                                     </option>
-                                                                <?php endforeach; ?>
                                                             </select>
                                                         </div>
                                                         <div class="form-group mr-3">
@@ -154,6 +151,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <table id="dataTable" class="table table-striped table-bordered" style="width:100%">
                                                     <thead>
                                                     <tr>
+                                                        <th>ลำดับที่</th>
                                                         <th>เดือน</th>
                                                         <th>จำนวน</th>
                                                         <th>ยอดเงิน</th>
@@ -227,6 +225,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     dataType: "json",
                     success: function (data) {
                         console.log(data);
+                        let RowNumber = [];
                         let DI_MONTH_NAME = [];
                         let SUM_TRD_QTY = [];
                         let SUM_TRD_TOTAL_PRICE = [];
@@ -235,12 +234,14 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#dataTable').DataTable().clear().draw();
 
                         for (let i in data) {
+                            RowNumber.push(data[i].RowNumber);
                             DI_MONTH_NAME.push(data[i].DI_MONTH_NAME);
                             SUM_TRD_QTY.push(data[i].SUM_TRD_QTY);
                             SUM_TRD_TOTAL_PRICE.push(data[i].SUM_TRD_TOTAL_PRICE);
 
                             // เพิ่มข้อมูลในตาราง
                             $('#dataTable').DataTable().row.add([
+                                data[i].RowNumber,
                                 data[i].DI_MONTH_NAME,
                                 data[i].SUM_TRD_QTY,
                                 data[i].SUM_TRD_TOTAL_PRICE

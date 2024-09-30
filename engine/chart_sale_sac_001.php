@@ -17,7 +17,7 @@ $sku_cat = isset($_GET['skuCat']) ? $_GET['skuCat'] : '';
 $sale_name = isset($_GET['sale_name']) ? $_GET['sale_name'] : '';
 
 
-$sql_get = "SELECT DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT
+$sql_get = "SELECT ROW_NUMBER() OVER(ORDER BY DI_MONTH, DI_YEAR) AS RowNumber, DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT
 ,SUM(CAST(TRD_QTY AS DECIMAL(10,2))) as SUM_TRD_QTY
 ,sum(CAST(TRD_TOTAL_PRICE AS DECIMAL(10,2))) as  SUM_TRD_TOTAL_PRICE
 FROM ims_data_sale_sac_all WHERE 1 ";
@@ -40,6 +40,11 @@ if (!empty($sale_name)) {
 
 $sql_get .= " GROUP BY DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT
 ORDER BY CAST(DI_YEAR AS unsigned), CAST(DI_MONTH AS unsigned)";
+
+$txt = $sql_get;
+$my_file = fopen("sale_param.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $txt);
+fclose($my_file);
 
 $stmt = $conn->prepare($sql_get);
 

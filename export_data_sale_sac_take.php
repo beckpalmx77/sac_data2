@@ -114,9 +114,9 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                                 <div class="form-group row mb-3">
                                                                     <div class="col-sm-3">
-                                                                        <label for="SALE_NAME" class="control-label">ค้นหาชื่อ
-                                                                            SALE</label>
-                                                                        <select id="SALE_NAME" name="SALE_NAME"
+                                                                        <label for="TAKE_NAME" class="control-label">ค้นหาชื่อ
+                                                                            TAKE</label>
+                                                                        <select id="TAKE_NAME" name="TAKE_NAME"
                                                                                 class="form-control">
                                                                             <option value="<?php  echo $_SESSION['first_name'] ?>"><?php  echo $_SESSION['first_name'] ?></option>
                                                                         </select>
@@ -406,6 +406,37 @@ if (strlen($_SESSION['alogin']) == "") {
                     // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
                     $('#TRD_AMPHUR').select2({
                         placeholder: "เลือกอำเภอ",
+                        allowClear: true,
+                        width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
+            $.ajax({
+                url: 'model/get_take_name.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#TAKE_NAME');
+                    $.each(data, function (index, take_name) {
+                        select.append($('<option>', {
+                            value: take_name.TAKE_NAME,
+                            text: take_name.TAKE_NAME, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': take_name.TAKE_NAME // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                        }));
+                    });
+
+                    // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
+                    $('#TAKE_NAME').select2({
+                        placeholder: "เลือกชื่อ TAKE",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
                     });

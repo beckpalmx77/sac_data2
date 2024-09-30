@@ -129,7 +129,6 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
                 $importedRows++; // นับแถวที่นำเข้าสำเร็จ
             } else {
-
                 $sql_update = "UPDATE $table_name 
         SET DI_DAY = ?, DI_MONTH_NAME = ?, DI_YEAR = ?, AR_CODE = ?, SKU_CODE = ?, SKU_NAME = ?, DETAIL = ?, BRAND = ?, 
         AR_NAME = ?, SALE_NAME = ?, TAKE_NAME = ?, TRD_QTY = ?, TRD_PRC = ?, TRD_DISCOUNT = ?, TRD_TOTAL_PRICE = ?, 
@@ -138,7 +137,6 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
         TRD_COMPARE = ?, TRD_SHOP = ?, TRD_BY_MOBAPP = ?, TRD_YEAR_OLD = ?, SKU_CAT = ?, DI_MONTH = ?, DI_DATE = ? , seq_record = ? , TRD_SEQ = ?
         WHERE DI_DAY = ? AND DI_MONTH_NAME = ? AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? AND WL_CODE = ? 
         AND TRD_QTY = ? AND TRD_SEQ = ? ";
-
                 $stmt_update = $conn->prepare($sql_update);
                 $stmt_update->execute([
                     $DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $AR_CODE, $SKU_CODE, $SKU_NAME, $DETAIL, $BRAND,
@@ -156,12 +154,11 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
         //echo "Import completed. Total rows: $totalRows, Imported rows: $importedRows, Duplicated rows: $duplicateRows.";
         $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r ปรับปรุงข้อมูลสำเร็จ: $duplicateRows รายการ";
+        echo $import_success;
 
         $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
         $stmt_insert_log = $conn->prepare($sql_insert_log);
         $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);
-
-        echo $import_success;
 
     } catch (Exception $e) {
         error_log("Error processing file: " . $e->getMessage());

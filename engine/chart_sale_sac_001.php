@@ -17,7 +17,9 @@ $sku_cat = isset($_GET['skuCat']) ? $_GET['skuCat'] : '';
 $sale_name = isset($_GET['sale_name']) ? $_GET['sale_name'] : '';
 
 
-$sql_get = "SELECT DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT,SUM(TRD_QTY) AS SUM_TRD_QTY  
+$sql_get = "SELECT DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT
+,SUM(CAST(TRD_QTY AS DECIMAL(10,2))) as SUM_TRD_QTY
+,sum(CAST(TRD_TOTAL_PRICE AS DECIMAL(10,2))) as  SUM_TRD_TOTAL_PRICE
 FROM ims_data_sale_sac_all WHERE 1 ";
 
 if (!empty($month_start) && !empty($month_to)) {

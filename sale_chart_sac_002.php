@@ -137,6 +137,19 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             </select>
                                                         </div>
 
+                                                        <div class="form-group mr-3">
+                                                            <label for="BrandSelect">เลือก BRAND</label>
+                                                            <select id="BrandSelect" class="form-control">
+                                                                <option value="">-- เลือก BRAND --</option>
+                                                                <?php foreach ($brands as $brand): ?>
+                                                                    <option value="<?php echo $brand['BRAND']; ?>">
+                                                                        <?php echo $brand['BRAND']; ?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -227,6 +240,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 let year = $('#yearSelect').val();
                 let skuCat = $('#skuCatSelect').val();
                 let sale_name = $('#saleSelect').val();
+                let BrandSelect = $('#BrandSelect').val();
                 let str_sale_name = sale_name ? "ชื่อ sale " + sale_name : "";
 
                 let label_name = skuCat + " เดือน " + month_start + " ถึง " + month_to + " ปี " + year + str_sale_name;
@@ -244,6 +258,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         month_to: month_to,
                         year: year,
                         skuCat: skuCat,
+                        brand:BrandSelect,
                         sale_name: sale_name
                     },
                     dataType: "json",

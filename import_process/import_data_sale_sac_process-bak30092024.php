@@ -129,6 +129,29 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
                 $importedRows++; // นับแถวที่นำเข้าสำเร็จ
             } else {
+                $sql_update = "UPDATE $table_name 
+        SET DI_DAY = ?, DI_MONTH_NAME = ?, DI_YEAR = ?, AR_CODE = ?, SKU_CODE = ?, SKU_NAME = ?, DETAIL = ?, BRAND = ?, 
+        AR_NAME = ?, SALE_NAME = ?, TAKE_NAME = ?, TRD_QTY = ?, TRD_PRC = ?, TRD_DISCOUNT = ?, TRD_TOTAL_PRICE = ?, 
+        TRD_VAT = ?, TRD_AMOUNT_PRICE = ?, TRD_PER_POINT = ?, TRD_TOTAL_POINT = ?, WL_CODE = ?, TRD_Q_FREE = ?, 
+        TRD_AMPHUR = ?, TRD_PROVINCE = ?, TRD_MARK = ?, TRD_U_POINT = ?, TRD_R_POINT = ?, TRD_S_POINT = ?, TRD_T_POINT = ?, 
+        TRD_COMPARE = ?, TRD_SHOP = ?, TRD_BY_MOBAPP = ?, TRD_YEAR_OLD = ?, SKU_CAT = ?, DI_MONTH = ?, DI_DATE = ? , seq_record = ? , TRD_SEQ = ?
+        WHERE DI_DAY = ? AND DI_MONTH_NAME = ? AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? AND WL_CODE = ? 
+        AND TRD_QTY = ? AND TRD_SEQ = ? ";
+                $stmt_update = $conn->prepare($sql_update);
+                $stmt_update->execute([
+                    $DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $AR_CODE, $SKU_CODE, $SKU_NAME, $DETAIL, $BRAND,
+                    $AR_NAME, $SALE_NAME, $TAKE_NAME, $TRD_QTY, $TRD_PRC, $TRD_DISCOUNT, $TRD_TOTAL_PRICE,
+                    $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT, $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE,
+                    $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK, $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT,
+                    $TRD_COMPARE, $TRD_SHOP, $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE, $seq_record, $totalRows,
+                    // เงื่อนไขใน WHERE
+                    $DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY, $totalRows
+                ]);
+
+                $txt .= $totalRows .  "\n\r";
+                $my_file = fopen("sale_imp_param.txt", "w") or die("Unable to open file!");
+                fwrite($my_file, $txt);
+                fclose($my_file);
 
                 $duplicateRows++; // นับแถวที่ซ้ำ
             }

@@ -129,19 +129,26 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
                 $importedRows++; // นับแถวที่นำเข้าสำเร็จ
             } else {
-                $sql_update = "UPDATE $table_name SET seq_record = ? 
+                $sql_update = "UPDATE " . $table_name . " SET seq_record = ? 
                 WHERE DI_DAY = ? AND DI_MONTH_NAME = ? AND DI_YEAR = ? AND DI_REF = ? 
                 AND AR_CODE = ? AND SKU_CODE = ? AND WL_CODE = ? 
-                AND TRD_QTY = ? AND TRD_SEQ = ? ";
+                AND TRD_QTY = ? AND TRD_SEQ = ?";
                 $stmt_update = $conn->prepare($sql_update);
-                $stmt_update->execute([$seq_record
-                    ,$DI_DAY,$DI_MONTH_NAME,$DI_YEAR,$DI_REF,$AR_CODE,$SKU_CODE,$WL_CODE,$TRD_QTY,$totalRows]);
-
+                $stmt_update->bindValue(1, $seq_record);
+                $stmt_update->bindValue(2, $DI_DAY);
+                $stmt_update->bindValue(3, $DI_MONTH_NAME);
+                $stmt_update->bindValue(4, $DI_YEAR);
+                $stmt_update->bindValue(5, $DI_REF);
+                $stmt_update->bindValue(6, $AR_CODE);
+                $stmt_update->bindValue(7, $SKU_CODE);
+                $stmt_update->bindValue(8, $WL_CODE);
+                $stmt_update->bindValue(9, $TRD_QTY);
+                $stmt_update->bindValue(10, $totalRows);
+                $stmt_update->execute();
                 $duplicateRows++; // นับแถวที่ซ้ำ
             }
         }
 
-        //echo "Import completed. Total rows: $totalRows, Imported rows: $importedRows, Duplicated rows: $duplicateRows.";
         $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r ปรับปรุงข้อมูลสำเร็จ: $duplicateRows รายการ";
         $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
         $stmt_insert_log = $conn->prepare($sql_insert_log);

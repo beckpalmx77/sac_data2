@@ -41,10 +41,12 @@ if (!empty($sale_name)) {
 $sql_get .= " GROUP BY DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT
 ORDER BY CAST(DI_YEAR AS unsigned), CAST(DI_MONTH AS unsigned)";
 
+/*
 $txt = $sql_get;
 $my_file = fopen("sale_param.txt", "w") or die("Unable to open file!");
 fwrite($my_file, $txt);
 fclose($my_file);
+*/
 
 $stmt = $conn->prepare($sql_get);
 

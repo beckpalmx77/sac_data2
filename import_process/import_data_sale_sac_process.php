@@ -129,7 +129,6 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
                 $importedRows++; // นับแถวที่นำเข้าสำเร็จ
             } else {
-
                 $duplicateRows++; // นับแถวที่ซ้ำ
             }
         }

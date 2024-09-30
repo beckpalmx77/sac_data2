@@ -110,7 +110,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? 
             AND WL_CODE = ? AND TRD_QTY = ? AND TRD_PRC = ? AND TRD_AMOUNT_PRICE = ? AND TRD_SEQ = ?");
             $statement->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE
-            , $TRD_QTY, $TRD_PRC, $TRD_AMOUNT_PRICE, $totalRows]);
+                , $TRD_QTY, $TRD_PRC, $TRD_AMOUNT_PRICE, $totalRows]);
             $row = $statement->fetchColumn();
             if ($row === 0) {
                 // Insert new record

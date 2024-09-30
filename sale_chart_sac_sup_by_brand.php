@@ -105,9 +105,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <div class="form-group mr-3">
                                                             <label for="saleSelect">เลือกชื่อ Sale</label>
                                                             <select id="saleSelect" class="form-control">
-                                                                <option value="<?php echo $_SESSION['first_name']; ?>">
-                                                                    <?php echo $_SESSION['first_name']; ?>
-                                                                </option>
+                                                                <option value="">-- เลือก Sale --</option>
+                                                                <?php foreach ($sale_name as $sale): ?>
+                                                                    <option value="<?php echo $sale['SALE_NAME']; ?>">
+                                                                        <?php echo $sale['SALE_NAME']; ?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
                                                             </select>
                                                         </div>
                                                         <div class="form-group mr-3">

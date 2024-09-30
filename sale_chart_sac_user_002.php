@@ -265,10 +265,10 @@ if (strlen($_SESSION['alogin']) == "") {
                             labels: DI_MONTH_NAME,
                             datasets: [{
                                 label: label_name,
-                                backgroundColor: 'rgba(46,182,165,0.75)',
-                                borderColor: 'rgba(76,195,199,0.75)',
-                                hoverBackgroundColor: 'rgb(60,181,193)',
-                                hoverBorderColor: 'rgb(45,193,188)',
+                                backgroundColor: 'rgba(243,63,198,0.75)',
+                                borderColor: 'rgba(215,55,161,0.75)',
+                                hoverBackgroundColor: 'rgb(245,92,201)',
+                                hoverBorderColor: 'rgb(245,95,237)',
                                 data: SUM_TRD_QTY
                             }]
                         };

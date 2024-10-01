@@ -35,10 +35,13 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                             <input class="form-control" type="file" id="excelFile" name="excelFile"
                                                    accept=".xlsx, .xls">
                                         </div>
+                                        <div class="mb-12">
                                         <button type="submit" class="btn btn-primary">Import</button>
                                         <button type="button" id="showImageBtn" class="btn btn-success">ตัวอย่างไฟล์
                                             Excel Format Data สำหรับนำเข้า
                                         </button>
+                                        <div id="input_text"></div>
+                                        </div>
                                     </form>
                                     <br>
                                     <div id="spinner" class="text-center my-3" style="display: none;">
@@ -163,6 +166,23 @@ include('includes/Footer.php');
     $(document).ready(function () {
         $('#showImageBtn').on('click', function () {
             window.open("import_process/template/ims_data_sale_sac_all.xlsx", "_blank");
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        let formData = {screen_name: "ims_data_sale_sac_all", table_name: "log_import_data"};
+        $.ajax({
+            type: "POST",
+            url: 'model/get_last_import.php',
+            data: formData,
+            success: function (response) {
+                $('#input_text').html(response);  // ใช้ jQuery เพื่อใส่ response ลงใน div
+            },
+            error: function (response) {
+                alertify.error("error : " + response);
+            }
         });
     });
 </script>

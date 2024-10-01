@@ -35,6 +35,8 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
         $totalRows = 0;
         $TRD_SEQ = 0;
 
+        $status = "";
+
         $str = rand();
         $seq_record = md5($str);
 
@@ -65,6 +67,12 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
                 // Replace commas and check for #N/A
                 $data[$i] = str_replace(["#", ","], "", ($value === "#N/A" ? "0" : $value));
+            }
+
+            $file_path = "sale_param.txt";
+            if (file_exists($file_path)) {
+                if (unlink($file_path)) {
+                }
             }
 
             // กำหนดตัวแปรต่าง ๆ ตามลำดับคอลัมน์ในฐานข้อมูล
@@ -128,15 +136,19 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE, $seq_record, $totalRows]);
 
                 $importedRows++; // นับแถวที่นำเข้าสำเร็จ
+                $status = "Y";
             } else {
                 $duplicateRows++; // นับแถวที่ซ้ำ
+                $status = "N";
             }
         }
 
         $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r มีข้อมูลซ้ำ: $duplicateRows รายการ";
-        $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
-        $stmt_insert_log = $conn->prepare($sql_insert_log);
-        $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);
+        if ($status==='Y') {
+            $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
+            $stmt_insert_log = $conn->prepare($sql_insert_log);
+            $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);
+        }
         echo $import_success;
 
     } catch (Exception $e) {

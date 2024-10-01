@@ -36,11 +36,15 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                                    accept=".xlsx, .xls">
                                         </div>
                                         <div class="mb-12">
-                                        <button type="submit" class="btn btn-primary">Import</button>
-                                        <button type="button" id="showImageBtn" class="btn btn-success">ตัวอย่างไฟล์
-                                            Excel Format Data สำหรับนำเข้า
-                                        </button>
-                                        <div id="input_text"></div>
+                                            <button type="submit" class="btn btn-primary">Import</button>
+                                            <button type="button" id="showImageBtn" class="btn btn-success">ตัวอย่างไฟล์
+                                                Excel Format Data สำหรับนำเข้า
+                                            </button>
+                                        </div>
+                                        <div class="mb-12">
+                                            <span>
+                                                <div id="input_text" style="white-space: pre-wrap;"></div> <!-- เพิ่ม style white-space -->
+                                            </span>
                                         </div>
                                     </form>
                                     <br>
@@ -178,7 +182,7 @@ include('includes/Footer.php');
             url: 'model/get_last_import.php',
             data: formData,
             success: function (response) {
-                $('#input_text').html(response);  // ใช้ jQuery เพื่อใส่ response ลงใน div
+                $('#input_text').html(response);  // ใส่ response ลงใน div
             },
             error: function (response) {
                 alertify.error("error : " + response);

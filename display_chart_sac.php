@@ -6,7 +6,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
     include("config/connect_db.php");
 
-    $month_num = str_replace('0','',date('m'));
+    $month_num = str_replace('0', '', date('m'));
 
     $sql_curr_month = " SELECT * FROM ims_month where month = '" . $month_num . "'";
 
@@ -39,7 +39,6 @@ if (strlen($_SESSION['alogin']) == "") {
     $stmt_sale_man = $conn->prepare($sql_sale_man);
     $stmt_sale_man->execute();
     $SaleManRecords = $stmt_sale_man->fetchAll();
-
 
     ?>
 
@@ -83,14 +82,17 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <div class="panel">
                                                     <div class="panel-body">
 
-                                                        <form id="myform" name="myform" action="engine/chart_data_daily.php" method="post">
+                                                        <form id="myform" name="myform"
+                                                              action="engine/chart_data_daily.php" method="post">
 
                                                             <div class="row">
                                                                 <div class="col-sm-12">
 
                                                                     <label for="month">เลือกเดือน :</label>
-                                                                    <select name="month" id="month" class="form-control" required>
-                                                                        <option value="<?php echo $month_num;?>" selected><?php echo $month_name;?></option>
+                                                                    <select name="month" id="month" class="form-control"
+                                                                            required>
+                                                                        <option value="<?php echo $month_num; ?>"
+                                                                                selected><?php echo $month_name; ?></option>
                                                                         <?php foreach ($MonthRecords as $row) { ?>
                                                                             <option value="<?php echo $row["month"]; ?>">
                                                                                 <?php echo $row["month_name"]; ?>
@@ -98,7 +100,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <?php } ?>
                                                                     </select>
                                                                     <label for="year">เลือกปี :</label>
-                                                                    <select name="year" id="year" class="form-control" required>
+                                                                    <select name="year" id="year" class="form-control"
+                                                                            required>
                                                                         <?php foreach ($YearRecords as $row) { ?>
                                                                             <option value="<?php echo $row["DI_YEAR"]; ?>">
                                                                                 <?php echo $row["DI_YEAR"]; ?>
@@ -106,7 +109,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <?php } ?>
                                                                     </select>
                                                                     <label for="SALE_NAME">เลือก SALE :</label>
-                                                                    <select name="SALE_NAME" id="SALE_NAME" class="form-control" required>
+                                                                    <select name="SALE_NAME" id="SALE_NAME"
+                                                                            class="form-control" required>
+                                                                        <option value="-">-</option>
                                                                         <?php foreach ($SaleManRecords as $row) { ?>
                                                                             <option value="<?php echo $row["SALE_NAME"]; ?>">
                                                                                 <?php echo $row["SALE_NAME"]; ?>
@@ -116,7 +121,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <br>
                                                                     <div class="row">
                                                                         <div class="col-sm-12">
-                                                                            <button type="button" id="BtnSale" name="BtnSale" class="btn btn-primary mb-3">แสดง
+                                                                            <button type="button" id="BtnSale"
+                                                                                    name="BtnSale"
+                                                                                    class="btn btn-primary mb-3">แสดง
                                                                                 Chart ยอดขาย
                                                                                 รายวัน -
                                                                                 รายเดือน

@@ -54,11 +54,11 @@ if (!empty($sale_name)) {
 $order_by = "order by STR_TO_DATE(DI_DATE, '%d-%m-%Y') ";
 
 // Create SQL query
-$select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE 1 " . $search_Query . $order_by;
+$select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE sale_sac.SALE_NAME NOT LIKE '%R%' " . $search_Query . $order_by;
 
 /*
 $txt = "sql = " . $select_query_sale_sac;
-$my_file = fopen("exp_sale_param.txt", "w") or die("Unable to open file!");
+$my_file = fopen("exp_sale_param1.txt", "w") or die("Unable to open file!");
 fwrite($my_file, $txt);
 fclose($my_file);
 */

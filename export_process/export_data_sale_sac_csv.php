@@ -13,13 +13,14 @@ header('Cache-Control: max-age=0');
 echo "\xEF\xBB\xBF";
 
 // Get POST data
-$doc_date_start = $_POST["doc_date_start"];
-$doc_date_to = $_POST["doc_date_to"];
-$ar_name = $_POST['AR_NAME'];
-$amphur = $_POST['TRD_AMPHUR'];
-$province = $_POST['TRD_PROVINCE'];
-$sale_name = $_POST['SALE_NAME'];
-$sku_cat = $_POST['SKU_CAT'];
+isset( $_POST['doc_date_start'] ) ? $doc_date_start = $_POST['doc_date_start'] : $doc_date_start = "";
+isset( $_POST['doc_date_to'] ) ? $doc_date_to = $_POST['doc_date_to'] : $doc_date_to = "";
+isset( $_POST['AR_NAME'] ) ? $ar_name = $_POST['AR_NAME'] : $ar_name = "";
+isset( $_POST['TRD_AMPHUR'] ) ? $amphur = $_POST['TRD_AMPHUR'] : $amphur = "";
+isset( $_POST['TRD_PROVINCE'] ) ? $province = $_POST['TRD_PROVINCE'] : $province = "";
+isset( $_POST['SALE_NAME'] ) ? $sale_name = $_POST['SALE_NAME'] : $sale_name = "";
+isset( $_POST['SKU_CAT'] ) ? $sku_cat = $_POST['SKU_CAT'] : $sku_cat = "";
+
 
 // แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
 $doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');

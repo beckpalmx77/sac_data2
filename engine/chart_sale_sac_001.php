@@ -22,8 +22,12 @@ $sql_get = "SELECT ROW_NUMBER() OVER(ORDER BY DI_MONTH, DI_YEAR) AS RowNumber, D
 ,sum(CAST(TRD_TOTAL_PRICE AS DECIMAL(10,2))) as  SUM_TRD_TOTAL_PRICE
 FROM ims_data_sale_sac_all WHERE 1 ";
 
-if (!empty($month_start) && !empty($month_to)) {
-    $sql_get .= " AND DI_MONTH BETWEEN '" . $month_start . "' AND '". $month_to ."' ";
+if (!empty($month_start)) {
+    $sql_get .= " AND DI_MONTH >= " . $month_start ;
+}
+
+if (!empty($month_to)) {
+    $sql_get .= " AND DI_MONTH <= " . $month_to ;
 }
 
 if (!empty($year)) {

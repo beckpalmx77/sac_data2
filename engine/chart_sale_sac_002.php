@@ -25,12 +25,18 @@ $sql_where3 = "";
 $sql_where4 = "";
 $sql_where5 = "";
 
+/*
+if (!empty($month_start) && !empty($month_to)) {
+    $sql_where1 .= " AND DI_MONTH BETWEEN '" . $month_start . "' AND '". $month_to ."' ";
+}
+*/
+
 if (!empty($month_start)) {
-    $sql_get .= " AND DI_MONTH >= " . $month_start ;
+    $sql_where1 .= " AND DI_MONTH >= " . $month_start ;
 }
 
 if (!empty($month_to)) {
-    $sql_get .= " AND DI_MONTH <= " . $month_to ;
+    $sql_where1 .= " AND DI_MONTH <= " . $month_to ;
 }
 
 if (!empty($year)) {

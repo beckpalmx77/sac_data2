@@ -127,8 +127,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             SALE</label>
                                                                         <select id="SALE_NAME" name="SALE_NAME"
                                                                                 class="form-control">
-                                                                            <option value="-"
-                                                                            </option>
+                                                                            <option value="-">ค้นหาชื่อ SALE</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class=" col-sm-3

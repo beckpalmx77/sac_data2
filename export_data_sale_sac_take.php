@@ -127,17 +127,18 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             SALE</label>
                                                                         <select id="SALE_NAME" name="SALE_NAME"
                                                                                 class="form-control">
-                                                                            <option value=""</option>
+                                                                            <option value=""
+                                                                            </option>
                                                                         </select>
                                                                     </div>
                                                                     <div class=" col-sm-3
                                                                             ">
-                                                                            <label for="SKU_CAT" class="control-label">ประเภท
-                                                                            </label>
-                                                                            <select id="SKU_CAT" name="SKU_CAT"
-                                                                                    class="form-control">
-                                                                                <option value="">ประเภท</option>
-                                                                            </select>
+                                                                        <label for="SKU_CAT" class="control-label">ประเภท
+                                                                        </label>
+                                                                        <select id="SKU_CAT" name="SKU_CAT"
+                                                                                class="form-control">
+                                                                            <option value="">ประเภท</option>
+                                                                        </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
                                                                         <label for="BRAND" class="control-label">ยี่ห้อ

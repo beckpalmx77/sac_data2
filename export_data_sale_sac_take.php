@@ -49,7 +49,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                               action="export_process/export_data_sale_sac_take_csv.php"
                                                               enctype="multipart/form-data">
                                                             <div class="modal-body">
-                                                                <h5 class="modal-title">ข้อมูลรายการขาย SAC <?php $_SESSION['permission_price'] . " | " . $_SESSION['first_name']?></h5>
+                                                                <h5 class="modal-title">ข้อมูลรายการขาย
+                                                                    SAC <?php $_SESSION['permission_price'] . " | " . $_SESSION['first_name'] ?></h5>
 
                                                                 <div class="form-group row mb-3">
                                                                     <div class="col-sm-3">
@@ -118,16 +119,25 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             TAKE</label>
                                                                         <select id="TAKE_NAME" name="TAKE_NAME"
                                                                                 class="form-control">
-                                                                            <option value="<?php  echo $_SESSION['first_name'] ?>"><?php  echo $_SESSION['first_name'] ?></option>
+                                                                            <option value="<?php echo $_SESSION['first_name'] ?>"><?php echo $_SESSION['first_name'] ?></option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <label for="SKU_CAT" class="control-label">ประเภท
-                                                                        </label>
-                                                                        <select id="SKU_CAT" name="SKU_CAT"
+                                                                        <label for="SALE_NAME" class="control-label">ค้นหาชื่อ
+                                                                            SALE</label>
+                                                                        <select id="SALE_NAME" name="SALE_NAME"
                                                                                 class="form-control">
-                                                                            <option value="">ประเภท</option>
+                                                                            <option value=""</option>
                                                                         </select>
+                                                                    </div>
+                                                                    <div class=" col-sm-3
+                                                                            ">
+                                                                            <label for="SKU_CAT" class="control-label">ประเภท
+                                                                            </label>
+                                                                            <select id="SKU_CAT" name="SKU_CAT"
+                                                                                    class="form-control">
+                                                                                <option value="">ประเภท</option>
+                                                                            </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
                                                                         <label for="BRAND" class="control-label">ยี่ห้อ
@@ -439,6 +449,40 @@ if (strlen($_SESSION['alogin']) == "") {
                         placeholder: "เลือกชื่อ TAKE",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // ดึงข้อมูล Sale Name ผ่าน AJAX
+            $.ajax({
+                url: 'model/get_sale_take_name.php', // หน้า PHP ที่จะดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let select = $('#SALE_NAME');
+                    select.empty(); // ล้างค่าเก่าออกก่อน
+                    select.append('<option value="">ค้นหาชื่อ SALE</option>'); // เพิ่ม option เริ่มต้น
+
+                    // เพิ่มข้อมูลใหม่จากฐานข้อมูล
+                    $.each(data, function (index, sale_take) {
+                        select.append($('<option>', {
+                            value: sale_take.NAME,
+                            text: sale_take.NAME // แสดงชื่อ
+                        }));
+                    });
+
+                    // ใช้งาน Select2
+                    $('#SALE_NAME').select2({
+                        placeholder: "เลือกชื่อ Sale",
+                        allowClear: true,
+                        width: '100%' // ปรับให้เต็มความกว้าง
                     });
                 },
                 error: function (xhr, status, error) {

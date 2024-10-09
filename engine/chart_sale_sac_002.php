@@ -3,13 +3,6 @@ header('Content-Type: application/json');
 
 include("../config/connect_db.php");
 
-$month_start = '1' ;
-$month_to = '9';
-$year = '2024';
-$sku_cat = 'ยางเล็ก';
-$sale_name = 'เมธี(เม) ผู้ใช้';
-$brand = 'LLIT';
-
 $month_start = isset($_GET['month_start']) ? $_GET['month_start'] : '';
 $month_to = isset($_GET['month_to']) ? $_GET['month_to'] : '';
 $year = isset($_GET['year']) ? $_GET['year'] : '';

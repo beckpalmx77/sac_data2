@@ -9,6 +9,8 @@ include '../util/record_util.php'; // Include any utility files
 include '../util/month_convert_util.php'; // Include any utility files
 include '../util/check_format_number.php'; // Include any utility files
 
+$upload_status = "";
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLOAD_ERR_OK) {
@@ -16,15 +18,28 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
     $fileTmp = $_FILES['excelFile']['tmp_name'];
     $fileType = mime_content_type($fileTmp); // ตรวจสอบ MIME type
 
+    // กำหนดโฟลเดอร์ปลายทางที่คุณต้องการเก็บไฟล์
+    $uploadDir = '../uploads/';
+    $uploadFile = $uploadDir . basename($file_Upload);
+
+    // ตรวจสอบ MIME type ของไฟล์ Excel
     if ($fileType !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' &&
         $fileType !== 'application/vnd.ms-excel') {
-        echo "Invalid file type.";
+        $upload_status = "Invalid file type.";
+        exit;
+    }
+
+    // ย้ายไฟล์จากตำแหน่งชั่วคราวไปยังโฟลเดอร์ที่กำหนด
+    if (move_uploaded_file($fileTmp, $uploadFile)) {
+        $upload_status = "Upload File สำเร็จ";
+    } else {
+        $upload_status = "ผิดพลาด Upload File ไม่สำเร็จ";
         exit;
     }
 
     try {
-        // Load the spreadsheet
-        $spreadsheet = IOFactory::load($fileTmp);
+        // หลังจากย้ายไฟล์สำเร็จ ให้ดำเนินการต่อในการอ่านข้อมูลจากไฟล์ Excel
+        $spreadsheet = IOFactory::load($uploadFile);
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
 
@@ -135,22 +150,14 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT, $TRD_COMPARE, $TRD_SHOP,
                     $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE, $seq_record, $totalRows]);
 
-                $importedRows++; // นับแถวที่นำเข้าสำเร็จ
-                $status = "Y";
+                $importedRows++;
             } else {
-                $duplicateRows++; // นับแถวที่ซ้ำ
-                $status = "N";
+                // Duplicate row
+                $duplicateRows++;
             }
         }
 
-        $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r มีข้อมูลซ้ำ: $duplicateRows รายการ";
-        if ($status==='Y') {
-            $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
-            $stmt_insert_log = $conn->prepare($sql_insert_log);
-            $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);
-        }
-        echo $import_success;
-
+        $status = "Data imported successfully.";
     } catch (Exception $e) {
         error_log("Error processing file: " . $e->getMessage());
         echo "Error processing file.";
@@ -158,3 +165,4 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 } else {
     echo "Error uploading file.";
 }
+?>

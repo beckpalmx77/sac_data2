@@ -16,15 +16,28 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
     $fileTmp = $_FILES['excelFile']['tmp_name'];
     $fileType = mime_content_type($fileTmp); // ตรวจสอบ MIME type
 
+    // กำหนดโฟลเดอร์ปลายทางที่คุณต้องการเก็บไฟล์
+    $uploadDir = '../uploads/';
+    $uploadFile = $uploadDir . basename($file_Upload);
+
+    // ตรวจสอบ MIME type ของไฟล์ Excel
     if ($fileType !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' &&
         $fileType !== 'application/vnd.ms-excel') {
-        echo "Invalid file type.";
+        $upload_status = "Invalid file type.";
+        exit;
+    }
+
+    // ย้ายไฟล์จากตำแหน่งชั่วคราวไปยังโฟลเดอร์ที่กำหนด
+    if (move_uploaded_file($fileTmp, $uploadFile)) {
+        $upload_status = "Upload File สำเร็จ";
+    } else {
+        $upload_status = "ผิดพลาด Upload File ไม่สำเร็จ";
         exit;
     }
 
     try {
         // Load the spreadsheet
-        $spreadsheet = IOFactory::load($fileTmp);
+        $spreadsheet = IOFactory::load($uploadFile);
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
 
@@ -33,6 +46,9 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
         $importedRows = 0;
         $duplicateRows = 0;
         $totalRows = 0;
+        $TRD_SEQ = 0;
+
+        $status = "";
 
         $str = rand();
         $seq_record = md5($str);
@@ -48,10 +64,13 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     break;
                 }
             }
+
             if ($isEmptyRow) continue; // ข้ามแถวว่าง
 
-            // นับจำนวนแถวทั้งหมด (ไม่รวมแถวว่าง)
-            $totalRows++;
+            // นับจำนวนแถวทั้งหมด (ไม่รวม Header)
+            if ($index <> 0) {
+                $totalRows++;
+            }
 
             // Map data from Excel row to your table structure
             $data = [];
@@ -61,6 +80,12 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
                 // Replace commas and check for #N/A
                 $data[$i] = str_replace(["#", ","], "", ($value === "#N/A" ? "0" : $value));
+            }
+
+            $file_path = "sale_param.txt";
+            if (file_exists($file_path)) {
+                if (unlink($file_path)) {
+                }
             }
 
             // กำหนดตัวแปรต่าง ๆ ตามลำดับคอลัมน์ในฐานข้อมูล
@@ -104,57 +129,39 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
             $statement = $conn->prepare("SELECT COUNT(*) FROM " . $table_name . " WHERE DI_DAY = ? AND DI_MONTH_NAME = ? 
             AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? 
-            AND WL_CODE = ? AND TRD_QTY = ?");
-            $statement->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY]);
+            AND WL_CODE = ? AND TRD_QTY = ? AND TRD_PRC = ? AND TRD_AMOUNT_PRICE = ? AND TRD_SEQ = ?");
+            $statement->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE
+                , $TRD_QTY, $TRD_PRC, $TRD_AMOUNT_PRICE, $totalRows]);
             $row = $statement->fetchColumn();
             if ($row === 0) {
                 // Insert new record
                 $sql_insert = "INSERT INTO $table_name (DI_DAY, DI_MONTH_NAME, DI_YEAR, AR_CODE, SKU_CODE, SKU_NAME, DETAIL
         , BRAND, DI_REF, AR_NAME, SALE_NAME, TAKE_NAME, TRD_QTY, TRD_PRC, TRD_DISCOUNT, TRD_TOTAL_PRICE, TRD_VAT, TRD_AMOUNT_PRICE
         , TRD_PER_POINT, TRD_TOTAL_POINT, WL_CODE, TRD_Q_FREE, TRD_AMPHUR, TRD_PROVINCE, TRD_MARK, TRD_U_POINT, TRD_R_POINT
-        , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT,DI_MONTH,DI_DATE,seq_record) 
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT,DI_MONTH,DI_DATE,seq_record,TRD_SEQ) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                 $stmt_insert = $conn->prepare($sql_insert);
                 $stmt_insert->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $AR_CODE, $SKU_CODE, $SKU_NAME, $DETAIL,
                     $BRAND, $DI_REF, $AR_NAME, $SALE_NAME, $TAKE_NAME, $TRD_QTY, $TRD_PRC,
                     $TRD_DISCOUNT, $TRD_TOTAL_PRICE, $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT,
                     $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE, $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK,
                     $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT, $TRD_COMPARE, $TRD_SHOP,
-                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE ,$seq_record]);
+                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE, $seq_record, $totalRows]);
 
                 $importedRows++; // นับแถวที่นำเข้าสำเร็จ
+                $status = "Y";
             } else {
-
-                $sql_update = "UPDATE $table_name 
-        SET DI_DAY = ?, DI_MONTH_NAME = ?, DI_YEAR = ?, AR_CODE = ?, SKU_CODE = ?, SKU_NAME = ?, DETAIL = ?, BRAND = ?, 
-        AR_NAME = ?, SALE_NAME = ?, TAKE_NAME = ?, TRD_QTY = ?, TRD_PRC = ?, TRD_DISCOUNT = ?, TRD_TOTAL_PRICE = ?, 
-        TRD_VAT = ?, TRD_AMOUNT_PRICE = ?, TRD_PER_POINT = ?, TRD_TOTAL_POINT = ?, WL_CODE = ?, TRD_Q_FREE = ?, 
-        TRD_AMPHUR = ?, TRD_PROVINCE = ?, TRD_MARK = ?, TRD_U_POINT = ?, TRD_R_POINT = ?, TRD_S_POINT = ?, TRD_T_POINT = ?, 
-        TRD_COMPARE = ?, TRD_SHOP = ?, TRD_BY_MOBAPP = ?, TRD_YEAR_OLD = ?, SKU_CAT = ?, DI_MONTH = ?, DI_DATE = ? , seq_record = ?
-        WHERE DI_DAY = ? AND DI_MONTH_NAME = ? AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? AND WL_CODE = ? AND TRD_QTY = ?";
-
-                $stmt_update = $conn->prepare($sql_update);
-                $stmt_update->execute([
-                    $DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $AR_CODE, $SKU_CODE, $SKU_NAME, $DETAIL, $BRAND,
-                    $AR_NAME, $SALE_NAME, $TAKE_NAME, $TRD_QTY, $TRD_PRC, $TRD_DISCOUNT, $TRD_TOTAL_PRICE,
-                    $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT, $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE,
-                    $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK, $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT,
-                    $TRD_COMPARE, $TRD_SHOP, $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE,$seq_record,
-                    // เงื่อนไขใน WHERE
-                    $DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY
-                ]);
-
                 $duplicateRows++; // นับแถวที่ซ้ำ
+                $status = "N";
             }
         }
 
-        //echo "Import completed. Total rows: $totalRows, Imported rows: $importedRows, Duplicated rows: $duplicateRows.";
-        $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r ปรับปรุงข้อมูลสำเร็จ: $duplicateRows รายการ";
-
-        $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
-        $stmt_insert_log = $conn->prepare($sql_insert_log);
-        $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);
-
+        $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r มีข้อมูลซ้ำ: $duplicateRows รายการ";
+        if ($status==='Y') {
+            $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
+            $stmt_insert_log = $conn->prepare($sql_insert_log);
+            $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);
+        }
         echo $import_success;
 
     } catch (Exception $e) {

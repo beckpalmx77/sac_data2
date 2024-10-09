@@ -16,15 +16,28 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
     $fileTmp = $_FILES['excelFile']['tmp_name'];
     $fileType = mime_content_type($fileTmp); // ตรวจสอบ MIME type
 
+    // กำหนดโฟลเดอร์ปลายทางที่คุณต้องการเก็บไฟล์
+    $uploadDir = '../uploads/';
+    $uploadFile = $uploadDir . basename($file_Upload);
+
+    // ตรวจสอบ MIME type ของไฟล์ Excel
     if ($fileType !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' &&
         $fileType !== 'application/vnd.ms-excel') {
-        echo "Invalid file type.";
+        $upload_status = "Invalid file type.";
+        exit;
+    }
+
+    // ย้ายไฟล์จากตำแหน่งชั่วคราวไปยังโฟลเดอร์ที่กำหนด
+    if (move_uploaded_file($fileTmp, $uploadFile)) {
+        $upload_status = "Upload File สำเร็จ";
+    } else {
+        $upload_status = "ผิดพลาด Upload File ไม่สำเร็จ";
         exit;
     }
 
     try {
         // Load the spreadsheet
-        $spreadsheet = IOFactory::load($fileTmp);
+        $spreadsheet = IOFactory::load($uploadFile);
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
 
@@ -143,12 +156,13 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             }
         }
 
-        $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r มีข้อมูลซ้ำ: $duplicateRows รายการ";
+        $import_success = "จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r มีข้อมูลซ้ำ: $duplicateRows รายการ \n\r $upload_status";
         if ($status==='Y') {
             $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
             $stmt_insert_log = $conn->prepare($sql_insert_log);
             $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);
         }
+
         echo $import_success;
 
     } catch (Exception $e) {

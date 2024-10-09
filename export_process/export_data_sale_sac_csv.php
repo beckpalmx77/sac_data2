@@ -31,20 +31,20 @@ $search_Query = "";
 if (!empty($doc_date_start) && !empty($doc_date_to)) {
     $search_Query .= " AND STR_TO_DATE(DI_DATE, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' ";
 }
-if (!empty($ar_name)) {
+if (!empty($ar_name) && $ar_name!=='-') {
     $search_Query .= " AND sale_sac.AR_NAME = '" . $ar_name . "' ";
 }
-if (!empty($amphur)) {
+if (!empty($amphur) && $amphur!=='-') {
     $search_Query .= " AND sale_sac.TRD_AMPHUR = '" . $amphur . "' ";
 }
-if (!empty($province)) {
+if (!empty($province) && $province!=='-') {
     $search_Query .= " AND sale_sac.TRD_PROVINCE = '" . $province . "' ";
 }
-if (!empty($sku_cat)) {
-    $search_Query .= " AND sale_sac.SKU_CAT = '" . $sku_cat . "' ";
-}
-if (!empty($sale_name)) {
+if (!empty($sale_name) && $sale_name!=='-') {
     $search_Query .= " AND sale_sac.SALE_NAME = '" . $sale_name . "' ";
+}
+if (!empty($sku_cat) && $sku_cat!=='-') {
+    $search_Query .= " AND sale_sac.SKU_CAT = '" . $sku_cat . "' ";
 }
 
 $order_by = "order by STR_TO_DATE(DI_DATE, '%d-%m-%Y') ";

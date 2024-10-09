@@ -90,7 +90,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             ลูกค้า</label>
                                                                         <select id="AR_NAME" name="AR_NAME"
                                                                                 class="form-control">
-                                                                            <option value="">ค้นหาชื่อ ลูกค้า</option>
+                                                                            <option value="-">ค้นหาชื่อ ลูกค้า</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
@@ -98,7 +98,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </label>
                                                                         <select id="TRD_AMPHUR" name="TRD_AMPHUR"
                                                                                 class="form-control">
-                                                                            <option value="">อำเภอ</option>
+                                                                            <option value="-">อำเภอ</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
@@ -106,7 +106,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </label>
                                                                         <select id="TRD_PROVINCE" name="TRD_PROVINCE"
                                                                                 class="form-control">
-                                                                            <option value="">จังหวัด</option>
+                                                                            <option value="-">จังหวัด</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -126,7 +126,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </label>
                                                                         <select id="SKU_CAT" name="SKU_CAT"
                                                                                 class="form-control">
-                                                                            <option value="">ประเภท</option>
+                                                                            <option value="-">ประเภท</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
@@ -134,7 +134,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </label>
                                                                         <select id="BRAND" name="BRAND"
                                                                                 class="form-control">
-                                                                            <option value="">ยี่ห้อ</option>
+                                                                            <option value="-">ยี่ห้อ</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>

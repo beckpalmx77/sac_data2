@@ -91,7 +91,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             ลูกค้า</label>
                                                                         <select id="AR_NAME" name="AR_NAME"
                                                                                 class="form-control">
-                                                                            <option value="">ค้นหาชื่อ ลูกค้า</option>
+                                                                            <option value="-">ค้นหาชื่อ ลูกค้า</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
@@ -99,7 +99,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </label>
                                                                         <select id="TRD_AMPHUR" name="TRD_AMPHUR"
                                                                                 class="form-control">
-                                                                            <option value="">อำเภอ</option>
+                                                                            <option value="-">อำเภอ</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
@@ -107,7 +107,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </label>
                                                                         <select id="TRD_PROVINCE" name="TRD_PROVINCE"
                                                                                 class="form-control">
-                                                                            <option value="">จังหวัด</option>
+                                                                            <option value="-">จังหวัด</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -127,7 +127,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             SALE</label>
                                                                         <select id="SALE_NAME" name="SALE_NAME"
                                                                                 class="form-control">
-                                                                            <option value=""
+                                                                            <option value="-"
                                                                             </option>
                                                                         </select>
                                                                     </div>
@@ -137,7 +137,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </label>
                                                                         <select id="SKU_CAT" name="SKU_CAT"
                                                                                 class="form-control">
-                                                                            <option value="">ประเภท</option>
+                                                                            <option value="-">ประเภท</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-sm-3">
@@ -145,7 +145,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </label>
                                                                         <select id="BRAND" name="BRAND"
                                                                                 class="form-control">
-                                                                            <option value="">ยี่ห้อ</option>
+                                                                            <option value="-">ยี่ห้อ</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -460,37 +460,37 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
-        $(document).ready(function () {
-            // ดึงข้อมูล Sale Name ผ่าน AJAX
-            $.ajax({
-                url: 'model/get_sale_take_name.php', // หน้า PHP ที่จะดึงข้อมูล
-                method: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    let select = $('#SALE_NAME');
-                    select.empty(); // ล้างค่าเก่าออกก่อน
-                    select.append('<option value="">ค้นหาชื่อ SALE</option>'); // เพิ่ม option เริ่มต้น
 
-                    // เพิ่มข้อมูลใหม่จากฐานข้อมูล
-                    $.each(data, function (index, sale_take) {
-                        select.append($('<option>', {
-                            value: sale_take.NAME,
-                            text: sale_take.NAME // แสดงชื่อ
-                        }));
-                    });
+        // ดึงข้อมูล Sale Name ผ่าน AJAX
+        $.ajax({
+            url: 'model/get_sale_take_name.php', // หน้า PHP ที่จะดึงข้อมูล
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                let select = $('#SALE_NAME');
+                select.empty(); // ล้างค่าเก่าออกก่อน
+                select.append('<option value="">ค้นหาชื่อ SALE</option>'); // เพิ่ม option เริ่มต้น
 
-                    // ใช้งาน Select2
-                    $('#SALE_NAME').select2({
-                        placeholder: "เลือกชื่อ Sale",
-                        allowClear: true,
-                        width: '100%' // ปรับให้เต็มความกว้าง
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
-                }
-            });
+                // เพิ่มข้อมูลใหม่จากฐานข้อมูล
+                $.each(data, function (index, sale_take) {
+                    select.append($('<option>', {
+                        value: sale_take.NAME,
+                        text: sale_take.NAME // แสดงชื่อ
+                    }));
+                });
+
+                // ใช้งาน Select2
+                $('#SALE_NAME').select2({
+                    placeholder: "เลือกชื่อ Sale",
+                    allowClear: true,
+                    width: '100%' // ปรับให้เต็มความกว้าง
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+            }
         });
+
     </script>
 
     </body>

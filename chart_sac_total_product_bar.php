@@ -46,7 +46,7 @@ if ($_POST['SALE_NAME']==='-') {
     function DisplayGraph_Monthly() {
         const year = $("#year").val(), SALE_NAME = $("#SALE_NAME").val(), SKU_CAT = $("#SKU_CAT").val();
         $.post("engine/get_data_by_brand_list.php", {year, SKU_CAT, SALE_NAME}, function (data) {
-            data.forEach((item, index) => showGraph_Monthly(index + 1, item.BRAND,SALE_NAME));
+            data.forEach((item, index) => showGraph_Monthly(index + 1, item.BRAND,SALE_NAME,SKU_CAT));
         });
     }
 
@@ -58,7 +58,7 @@ if ($_POST['SALE_NAME']==='-') {
         ['#f65439', '#f87858', '#f84a2e', '#fc9053']
     ];
 
-    function showGraph_Monthly(graph_number, BRAND,SALE_NAME) {
+    function showGraph_Monthly(graph_number, BRAND,SALE_NAME,SKU_CAT) {
         const [bgColor, borderColor, hoverBgColor, hoverBorderColor] = colors[(graph_number - 1) % colors.length];
         const graphTarget = $(`#graphCanvas_Monthly${graph_number}`);
 
@@ -66,7 +66,8 @@ if ($_POST['SALE_NAME']==='-') {
             month: $("#month").val(),
             year: $("#year").val(),
             BRAND,
-            SALE_NAME
+            SALE_NAME,
+            SKU_CAT
         }, function (data) {
             const monthLabels = data.map(item => `${item.DI_MONTH_NAME} จำนวน ${item.TRD_QTY} เส้น`);
             const totals = data.map(item => item.TRD_AMOUNT_PRICE);

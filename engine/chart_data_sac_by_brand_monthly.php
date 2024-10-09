@@ -6,12 +6,17 @@ include("../config/connect_db.php");
 $year = $_POST["year"];
 $BRAND = $_POST["BRAND"];
 $SALE_NAME = $_POST["SALE_NAME"];
+$SKU_CAT = $_POST["SKU_CAT"];
 $Cond_Query = "";
 
 if ($SALE_NAME!=='-') {
     $Cond_Query .= " AND SALE_NAME = '" . $SALE_NAME . "' ";
 } else {
     $Cond_Query .= " AND SALE_NAME NOT LIKE '%R%' ";
+}
+
+if ($SKU_CAT!=='-') {
+    $Cond_Query .= " AND SKU_CAT = '" . $SKU_CAT . "' ";
 }
 
 /*

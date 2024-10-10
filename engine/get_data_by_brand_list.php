@@ -10,9 +10,8 @@ $Cond_Query = "";
 
 if ($SALE_NAME!=='-') {
     $Cond_Query .= " AND SALE_NAME = '" . $SALE_NAME . "' ";
-} else {
-    $Cond_Query .= " AND SALE_NAME NOT LIKE '%R%' ";
 }
+    $Cond_Query .= " AND DI_REF NOT LIKE 'DS03%' AND DI_REF NOT LIKE 'IS02%' ";
 /*
 $myfile = fopen("param-brn.txt", "w") or die("Unable to open file!");
 fwrite($myfile, "Year = " . $year . " | " . $SKU_CAT . " | " . $SALE_NAME . " | " . $Cond_Query);

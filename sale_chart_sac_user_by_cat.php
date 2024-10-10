@@ -185,7 +185,8 @@ if (strlen($_SESSION['alogin']) == "") {
     <!-- Scripts -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!--script src="https://cdn.jsdelivr.net/npm/chart.js"></script-->
+    <script src="js/chartjs-4.4.4.js"></script>
     <!-- DataTables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>

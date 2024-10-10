@@ -1,12 +1,52 @@
 <?php include("config/connect_db.php"); ?>
 <?php
+
+$Cond_Query = "";
+
+// ตรวจสอบ SALE_NAME
 if ($_POST['SALE_NAME'] === '-') {
     $sale_name = "*";
+    $Cond_Query .= " AND SALE_NAME NOT LIKE '%R%' ";
 } else {
     $sale_name = $_POST['SALE_NAME'];
+    $Cond_Query .= " AND SALE_NAME = '" . $sale_name . "' ";
+}
+
+$year = $_POST['year'];
+$SKU_CAT = $_POST['SKU_CAT'];
+
+// คำสั่ง SQL สำหรับนับจำนวน BRAND ที่ไม่ซ้ำกัน
+$sql_count = "SELECT COUNT(DISTINCT BRAND) as brand_count
+              FROM ims_data_sale_sac_all
+              WHERE SKU_CAT = :sku_cat 
+              AND DI_YEAR = :year 
+              " . $Cond_Query;
+
+// เขียนค่าลงในไฟล์สำหรับตรวจสอบ
+/*
+$myfile = fopen("a-param-brn.txt", "w") or die("Unable to open file!");
+fwrite($myfile, "Year = " . $year . " | SKU_CAT = " . $SKU_CAT . " | SALE_NAME = " . $sale_name . " | Cond_Query = " . $Cond_Query . " | SQL = " . $sql_count);
+fclose($myfile);
+*/
+
+// เตรียมการคิวรีและผูกค่า
+$stmt_count = $conn->prepare($sql_count);
+$stmt_count->bindParam(':sku_cat', $SKU_CAT);
+$stmt_count->bindParam(':year', $year);
+$stmt_count->execute();
+
+// ดึงผลลัพธ์
+$row_count = $stmt_count->fetch(PDO::FETCH_ASSOC);
+
+// แสดงจำนวนแบรนด์ที่พบ
+
+if ($row_count) {
+    $brand_count = $row_count["brand_count"];
+    //echo "จำนวนแบรนด์ทั้งหมด: " . $brand_count;
 }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +83,7 @@ if ($_POST['SALE_NAME'] === '-') {
         ปี <?php echo $_POST["year"] . " SALE [ " . $sale_name . " ]"; ?>
     </div>
     <div class="card-body">
-        <?php for ($i = 1; $i <= 28; $i++): ?>
+        <?php for ($i = 1; $i <= $brand_count; $i++): ?>
             <div class="chart-container">
                 <canvas id="graphCanvas_Monthly<?php echo $i; ?>"></canvas>
             </div>

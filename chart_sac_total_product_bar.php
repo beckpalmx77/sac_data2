@@ -81,7 +81,7 @@ if ($_POST['SALE_NAME'] === '-') {
             SALE_NAME,
             SKU_CAT
         }, function (data) {
-            const monthLabels = data.map(item => `${item.DI_MONTH_NAME} จำนวน ${item.TRD_QTY} เส้น`);
+            const monthLabels = data.map(item => `${item.DI_MONTH_NAME} จำนวน ${item.TRD_QTY} `);
             const totals = data.map(item => parseFloat(item.TRD_AMOUNT_PRICE)); // จัดการให้ตัวเลขเป็นตัวเลขจริง
 
             new Chart(graphTarget, {

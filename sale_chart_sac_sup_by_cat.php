@@ -249,8 +249,8 @@ if (strlen($_SESSION['alogin']) == "") {
                             $('#dataTable').DataTable().row.add([
                                 data[i].RowNumber,
                                 data[i].DI_MONTH_NAME,
-                                data[i].SUM_TRD_QTY,
-                                data[i].SUM_TRD_TOTAL_PRICE
+                                formatNumber(data[i].SUM_TRD_QTY),
+                                formatNumber(data[i].SUM_TRD_TOTAL_PRICE)
                             ]).draw();
                         }
 
@@ -283,6 +283,13 @@ if (strlen($_SESSION['alogin']) == "") {
                 });
             });
         });
+    </script>
+
+    <script>
+        function formatNumber(number) {
+            // แปลงตัวเลขให้มีเครื่องหมาย , และจุดทศนิยม 2 ตำแหน่ง
+            return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(number);
+        }
     </script>
 
     </body>

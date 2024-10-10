@@ -52,7 +52,7 @@ if (!empty($brand)) {
 
     $sql_where6 = " AND DI_REF NOT LIKE 'DS03%' AND DI_REF NOT LIKE 'IS02%' ";
 
-$sql_get = "SELECT ROW_NUMBER() OVER(ORDER BY DI_MONTH, DI_YEAR) AS RowNumber, DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT" . $field
+$sql_get = "SELECT ROW_NUMBER() OVER(ORDER BY CAST(DI_MONTH AS unsigned), DI_YEAR) AS RowNumber, DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT" . $field
     . ",SUM(CAST(TRD_QTY AS DECIMAL(10,2))) as SUM_TRD_QTY
 ,sum(CAST(TRD_TOTAL_PRICE AS DECIMAL(10,2))) as  SUM_TRD_TOTAL_PRICE
 FROM ims_data_sale_sac_all WHERE 1 " . $sql_where1 . $sql_where2 . $sql_where3 . $sql_where4 . $sql_where5 . $sql_where6;

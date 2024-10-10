@@ -13,6 +13,7 @@ $sql_get = "
  SELECT SLMN_NAME,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as  TRD_G_KEYIN
  FROM ims_product_sale_sac 
  WHERE STR_TO_DATE(DI_DATE,'%d/%m/%Y') BETWEEN CAST('" . $date . "' AS DATE) AND CAST('" . $date . "' AS DATE)
+ AND SLMN_NAME NOT LIKE '%R%'
  GROUP BY  SLMN_NAME
  ORDER BY SLMN_NAME
 ";

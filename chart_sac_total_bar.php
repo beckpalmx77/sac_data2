@@ -22,7 +22,9 @@ $sale_name = $_POST["SALE_NAME"];
     <meta date="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <script src="js/jquery-3.6.0.js"></script>
-    <script src="js/chartjs-2.9.0.js"></script>
+    <!--script src="js/chartjs-2.9.0.js"></script-->
+    <script src="js/chartjs-4.4.4.js"></script>
+    <!--script src=" https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js "></script-->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="fontawesome/css/font-awesome.css">
@@ -66,8 +68,162 @@ $sale_name = $_POST["SALE_NAME"];
     </div>
 </div>
 
+<script>
+    function showGraph_Daily() {
+        {
+
+            let month = $("#month").val();
+            let year = $("#year").val();
+            let SALE_NAME = $("#SALE_NAME").val();
+
+            let backgroundColor = '#0a4dd3';
+            let borderColor = '#46d5f1';
+
+            let hoverBackgroundColor = '#a2a1a3';
+            let hoverBorderColor = '#a2a1a3';
+
+            $.post("engine/chart_data_sac_daily.php", {
+                month: month,
+                year: year,
+                SALE_NAME: SALE_NAME
+            }, function (data) {
+                console.log(data);
+                let date = [];
+                let total = [];
+
+                for (let i in data) {
+                    date.push(data[i].DI_DAY);
+                    total.push(parseFloat(data[i].TRD_AMOUNT_PRICE)); // เก็บเป็นตัวเลข
+                }
+
+                let chartdata = {
+                    labels: date,
+                    datasets: [{
+                        label: 'ยอดขายรายวัน รวม VAT (Daily)',
+                        backgroundColor: backgroundColor,
+                        borderColor: borderColor,
+                        hoverBackgroundColor: hoverBackgroundColor,
+                        hoverBorderColor: hoverBorderColor,
+                        data: total
+                    }]
+                };
+
+                let graphTarget = $('#graphCanvas_Daily');
+                let barGraph = new Chart(graphTarget, {
+                    type: 'bar',
+                    data: chartdata,
+                    options: {
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function (value) {
+                                        return value.toLocaleString('th-TH', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toLocaleString('th-TH', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+</script>
 
 <script>
+
+    function showGraph_Monthly() {
+        {
+
+            let month = $("#month").val();
+            let year = $("#year").val();
+            let SALE_NAME = $("#SALE_NAME").val();
+
+            let backgroundColor = '#bd58fa';
+            let borderColor = '#46d5f1';
+
+            let hoverBackgroundColor = '#a2a1a3';
+            let hoverBorderColor = '#a2a1a3';
+
+            $.post("engine/chart_data_sac_monthly.php", {
+                month: month,
+                year: year,
+                SALE_NAME: SALE_NAME
+            }, function (data) {
+                console.log(data);
+                let month = [];
+                let total = [];
+
+                for (let i in data) {
+                    month.push(data[i].DI_MONTH_NAME);
+                    total.push(parseFloat(data[i].TRD_AMOUNT_PRICE)); // เก็บเป็นตัวเลข
+                }
+
+                let chartdata = {
+                    labels: month,
+                    datasets: [{
+                        label: 'ยอดขายรายเดือน รวม VAT (Monthly)',
+                        backgroundColor: backgroundColor,
+                        borderColor: borderColor,
+                        hoverBackgroundColor: hoverBackgroundColor,
+                        hoverBorderColor: hoverBorderColor,
+                        data: total
+                    }]
+                };
+
+                let graphTarget = $('#graphCanvas_Monthly');
+                let barGraph = new Chart(graphTarget, {
+                    type: 'bar',
+                    data: chartdata,
+                    options: {
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function (value) {
+                                        return value.toLocaleString('th-TH', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toLocaleString('th-TH', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+</script>
+
+<!--script>
     function showGraph_Monthly() {
         {
 
@@ -110,6 +266,10 @@ $sale_name = $_POST["SALE_NAME"];
         }
     }
 
+</script-->
+
+<!--script>
+
     function showGraph_Daily() {
         {
 
@@ -123,7 +283,11 @@ $sale_name = $_POST["SALE_NAME"];
             let hoverBackgroundColor = '#a2a1a3';
             let hoverBorderColor = '#a2a1a3';
 
-            $.post("engine/chart_data_sac_daily.php", {month: month, year: year, SALE_NAME: SALE_NAME}, function (data) {
+            $.post("engine/chart_data_sac_daily.php", {
+                month: month,
+                year: year,
+                SALE_NAME: SALE_NAME
+            }, function (data) {
                 console.log(data);
                 let date = [];
                 let total = [];
@@ -152,6 +316,7 @@ $sale_name = $_POST["SALE_NAME"];
         }
     }
 
-</script>
+</script-->
+
 </body>
 </html>

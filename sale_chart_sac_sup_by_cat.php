@@ -239,6 +239,16 @@ if (strlen($_SESSION['alogin']) == "") {
                         // ล้างข้อมูลใน DataTable ก่อน
                         $('#dataTable').DataTable().clear().draw();
 
+                        $('#dataTable').DataTable({
+                            destroy: true, // เพิ่มเพื่อให้ DataTable ถูกล้างข้อมูลก่อนโหลดใหม่
+                            columnDefs: [
+                                { targets: 0, className: 'text-left' },  // คอลัมน์ที่ 0 (RowNumber) จัดชิดซ้าย
+                                { targets: 1, className: 'text-left' },  // คอลัมน์ที่ 1 (DI_MONTH_NAME) จัดชิดซ้าย
+                                { targets: 2, className: 'text-right' }, // คอลัมน์ที่ 2 (SUM_TRD_QTY) จัดชิดขวา
+                                { targets: 3, className: 'text-right' }  // คอลัมน์ที่ 3 (SUM_TRD_TOTAL_PRICE) จัดชิดขวา
+                            ]
+                        });
+
                         for (let i in data) {
                             RowNumber.push(data[i].RowNumber);
                             DI_MONTH_NAME.push(data[i].DI_MONTH_NAME);

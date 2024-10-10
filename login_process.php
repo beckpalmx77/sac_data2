@@ -3,6 +3,7 @@ session_start();
 error_reporting(0);
 include('config/connect_db.php');
 include('config/lang.php');
+include('util/network.php');
 
 
 if ($_SESSION['alogin'] != '') {
@@ -56,6 +57,15 @@ if ($query->rowCount() == 1) {
                 setcookie("remember_chk", "");
             }
             //echo $result->dashboard_page . ".php";
+            $ip_address = getClientIP();
+
+            $sql = "INSERT INTO log_user_login(user_id,ip_address) 
+            VALUES (:user_id,:ip_address)";
+            $query = $conn->prepare($sql);
+            $query->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_STR);
+            $query->bindParam(':ip_address', $ip_address, PDO::PARAM_STR);
+            $query->execute();
+
             echo $result->dashboard_page;
 
         } else {

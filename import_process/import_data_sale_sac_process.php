@@ -156,8 +156,12 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             }
         }
 
+        $sql_update = "UPDATE " . $table_name . " SET DI_DAY = CAST(DI_DAY AS UNSIGNED) WHERE DI_DAY IN (01, 02, 03, 04, 05, 06, 07, 08, 09) ";
+        $stmt_update = $conn->prepare($sql_update);
+        $stmt_update->execute();
+
         $import_success = "$file_Upload \n\r $upload_status \n\r จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r มีข้อมูลซ้ำ: $duplicateRows รายการ";
-        if ($status==='Y') {
+        if ($status === 'Y') {
             $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
             $stmt_insert_log = $conn->prepare($sql_insert_log);
             $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);

@@ -8,16 +8,7 @@ $product_group = $_POST["product_group"];
 
 switch ($product_group) {
     case 'P1' :
-        $product_group_name = "ยาง";
-        break;
-    case 'P2' :
-        $product_group_name = "อะไหล่";
-        break;
-    case 'P3' :
-        $product_group_name = "ค่าแรง-ค่าบริการ";
-        break;
-    case 'P4' :
-        $product_group_name = "อื่นๆ";
+        $product_group_name = "ยางเล็ก";
         break;
 }
 

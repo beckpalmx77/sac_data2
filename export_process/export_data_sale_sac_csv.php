@@ -18,8 +18,23 @@ isset( $_POST['doc_date_to'] ) ? $doc_date_to = $_POST['doc_date_to'] : $doc_dat
 isset( $_POST['AR_NAME'] ) ? $ar_name = $_POST['AR_NAME'] : $ar_name = "";
 isset( $_POST['TRD_AMPHUR'] ) ? $amphur = $_POST['TRD_AMPHUR'] : $amphur = "";
 isset( $_POST['TRD_PROVINCE'] ) ? $province = $_POST['TRD_PROVINCE'] : $province = "";
-isset( $_POST['SALE_NAME'] ) ? $sale_name = $_POST['SALE_NAME'] : $sale_name = "";
+//isset( $_POST['SALE_NAME'] ) ? $sale_name = $_POST['SALE_NAME'] : $sale_name = "";
 isset( $_POST['SKU_CAT'] ) ? $sku_cat = $_POST['SKU_CAT'] : $sku_cat = "";
+
+$sale_name = isset($_POST['SALE_NAME']) ? $_POST['SALE_NAME'] : [];
+
+// ตรวจสอบค่า
+if (!empty($sale_name)) {
+    // สร้างสตริงในรูปแบบ 'value1','value2'
+    $sale_name = "(" . "'" . implode("','", array_map('htmlspecialchars', $sale_name)) . "'" . ")";
+}
+
+/*
+$txt = "sale = " . $sale_name;
+$my_file = fopen("exp_sale_param2.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $txt);
+fclose($my_file);
+*/
 
 
 // แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
@@ -41,13 +56,13 @@ if (!empty($province) && $province!=='-') {
     $search_Query .= " AND sale_sac.TRD_PROVINCE = '" . $province . "' ";
 }
 if (!empty($sale_name) && $sale_name!=='-') {
-    $search_Query .= " AND sale_sac.SALE_NAME = '" . $sale_name . "' ";
+    $search_Query .= " AND sale_sac.SALE_NAME IN " . $sale_name ;
 }
 if (!empty($sku_cat) && $sku_cat!=='-') {
     $search_Query .= " AND sale_sac.SKU_CAT = '" . $sku_cat . "' ";
 }
 
-$order_by = "order by STR_TO_DATE(DI_DATE, '%d-%m-%Y') ";
+$order_by = "order by SALE_NAME,STR_TO_DATE(DI_DATE, '%d-%m-%Y') ";
 
 // Create SQL query
 $select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE sale_sac.SALE_NAME NOT LIKE '%R%' " . $search_Query . $order_by;

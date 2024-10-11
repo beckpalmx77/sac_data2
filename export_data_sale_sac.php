@@ -109,14 +109,24 @@ if (strlen($_SESSION['alogin']) == "") {
 
 
                                                                 <div class="form-group row mb-3">
-                                                                    <div class="col-sm-3">
+                                                                    <!--div class="col-sm-3">
                                                                         <label for="SALE_NAME" class="control-label">ค้นหาชื่อ
                                                                             SALE</label>
                                                                         <select id="SALE_NAME" name="SALE_NAME"
                                                                                 class="form-control">
                                                                             <option value="-">ค้นหาชื่อ SALE</option>
                                                                         </select>
+                                                                    </div-->
+
+                                                                    <div class="col-sm-3">
+                                                                        <label for="SALE_NAME" class="control-label">ค้นหาชื่อ
+                                                                            SALE</label>
+                                                                        <select id="SALE_NAME" name="SALE_NAME[]" multiple="multiple"
+                                                                                class="SALE_NAME">
+                                                                            <option value="-">ค้นหาชื่อ SALE</option>
+                                                                        </select>
                                                                     </div>
+
                                                                     <div class="col-sm-3">
                                                                         <label for="SKU_CAT" class="control-label">ประเภท
                                                                         </label>
@@ -207,6 +217,7 @@ if (strlen($_SESSION['alogin']) == "") {
     <!-- Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- Bootstrap Datepicker -->
     <script src="vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     <!-- Bootstrap Touchspin -->
@@ -490,6 +501,12 @@ if (strlen($_SESSION['alogin']) == "") {
 
             return true;
         }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('.SALE_NAME').select2();
+        });
     </script>
 
     </body>

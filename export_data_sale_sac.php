@@ -44,10 +44,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <div class="col-md-12 col-md-offset-2">
                                                 <div class="panel">
                                                     <div class="panel-body">
-                                                        <form id="from_data" method="post" action="" enctype="multipart/form-data">
+                                                        <form id="from_data" method="post" action=""
+                                                              enctype="multipart/form-data">
                                                             <div class="modal-body">
                                                                 <h5 class="modal-title">ข้อมูลรายการขาย SAC</h5>
+
+                                                                <!-- แถว 1: จากวันที่, ถึงวันที่ -->
                                                                 <div class="form-group row mb-3">
+                                                                    <!-- จากวันที่ -->
                                                                     <div class="col-sm-3">
                                                                         <label for="doc_date_start"
                                                                                class="control-label">จากวันที่</label>
@@ -64,6 +68,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <!-- ถึงวันที่ -->
                                                                     <div class="col-sm-3">
                                                                         <label for="doc_date_to" class="control-label">ถึงวันที่</label>
                                                                         <div class="input-group">
@@ -80,7 +85,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </div>
                                                                 </div>
 
+                                                                <!-- แถว 2: ค้นหาชื่อลูกค้า, อำเภอ, จังหวัด -->
                                                                 <div class="form-group row mb-3">
+                                                                    <!-- ค้นหาชื่อลูกค้า -->
                                                                     <div class="col-sm-3">
                                                                         <label for="AR_NAME" class="control-label">ค้นหาชื่อ
                                                                             ลูกค้า</label>
@@ -89,17 +96,17 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             <option value="-">ค้นหาชื่อ ลูกค้า</option>
                                                                         </select>
                                                                     </div>
+                                                                    <!-- อำเภอ -->
                                                                     <div class="col-sm-3">
-                                                                        <label for="TRD_AMPHUR" class="control-label">อำเภอ
-                                                                        </label>
+                                                                        <label for="TRD_AMPHUR" class="control-label">อำเภอ</label>
                                                                         <select id="TRD_AMPHUR" name="TRD_AMPHUR"
                                                                                 class="form-control">
                                                                             <option value="-">อำเภอ</option>
                                                                         </select>
                                                                     </div>
+                                                                    <!-- จังหวัด -->
                                                                     <div class="col-sm-3">
-                                                                        <label for="TRD_PROVINCE" class="control-label">จังหวัด
-                                                                        </label>
+                                                                        <label for="TRD_PROVINCE" class="control-label">จังหวัด</label>
                                                                         <select id="TRD_PROVINCE" name="TRD_PROVINCE"
                                                                                 class="form-control">
                                                                             <option value="-">จังหวัด</option>
@@ -107,37 +114,20 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </div>
                                                                 </div>
 
-
+                                                                <!-- แถว 3: ประเภท, ยี่ห้อ -->
                                                                 <div class="form-group row mb-3">
-                                                                    <!--div class="col-sm-3">
-                                                                        <label for="SALE_NAME" class="control-label">ค้นหาชื่อ
-                                                                            SALE</label>
-                                                                        <select id="SALE_NAME" name="SALE_NAME"
-                                                                                class="form-control">
-                                                                            <option value="-">ค้นหาชื่อ SALE</option>
-                                                                        </select>
-                                                                    </div-->
-
+                                                                    <!-- ประเภท -->
                                                                     <div class="col-sm-3">
-                                                                        <label for="SALE_NAME" class="control-label">ค้นหาชื่อ
-                                                                            SALE</label>
-                                                                        <select id="SALE_NAME" name="SALE_NAME[]" multiple="multiple"
-                                                                                class="SALE_NAME">
-                                                                            <option value="-">ค้นหาชื่อ SALE</option>
-                                                                        </select>
-                                                                    </div>
-
-                                                                    <div class="col-sm-3">
-                                                                        <label for="SKU_CAT" class="control-label">ประเภท
-                                                                        </label>
+                                                                        <label for="SKU_CAT" class="control-label">ประเภท</label>
                                                                         <select id="SKU_CAT" name="SKU_CAT"
                                                                                 class="form-control">
                                                                             <option value="-">ประเภท</option>
                                                                         </select>
                                                                     </div>
+                                                                    <!-- ยี่ห้อ -->
                                                                     <div class="col-sm-3">
-                                                                        <label for="BRAND" class="control-label">ยี่ห้อ
-                                                                        </label>
+                                                                        <label for="BRAND"
+                                                                               class="control-label">ยี่ห้อ</label>
                                                                         <select id="BRAND" name="BRAND"
                                                                                 class="form-control">
                                                                             <option value="-">ยี่ห้อ</option>
@@ -145,8 +135,21 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </div>
                                                                 </div>
 
+                                                                <!-- แถว 4: ค้นหาชื่อ SALE (แบบ multiple) -->
+                                                                <div class="form-group row mb-3">
+                                                                    <div class="col-sm-12">
+                                                                        <label for="SALE_NAME" class="control-label">ค้นหาชื่อ
+                                                                            SALE</label>
+                                                                        <select id="SALE_NAME" name="SALE_NAME[]"
+                                                                                multiple="multiple"
+                                                                                class="form-control">
+                                                                            <option value="-">ค้นหาชื่อ SALE</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
                                                             </div>
 
+                                                            <!-- Footer: ปุ่ม Export และ Spin Loader -->
                                                             <div class="modal-footer">
                                                                 <input type="hidden" name="id" id="id"/>
                                                                 <input type="hidden" name="save_status"
@@ -275,8 +278,12 @@ if (strlen($_SESSION['alogin']) == "") {
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 
@@ -495,7 +502,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
             // ซ่อน loader หลังจากการส่ง
             // ใช้ setTimeout เพื่อจำลองการทำงาน
-            setTimeout(function() {
+            setTimeout(function () {
                 document.getElementById('spinner').style.display = 'none';
             }, 4000); // ปรับเวลาตามต้องการ
 
@@ -504,7 +511,7 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.SALE_NAME').select2();
         });
     </script>

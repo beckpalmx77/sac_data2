@@ -29,7 +29,7 @@ include('includes/CheckDevice.php');
     $(document).ready(function () {
         let username = '<?php if (isset($_COOKIE["username"])) {
             echo $_COOKIE["username"];
-        } ?>';
+        } ?>';cd cron
         let password = '<?php if (isset($_COOKIE["password"])) {
             echo $_COOKIE["password"];
         } ?>';

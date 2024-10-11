@@ -171,7 +171,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             </div>
                                                         </form>
 
-
                                                         <div id="result"></div>
 
                                                     </div>

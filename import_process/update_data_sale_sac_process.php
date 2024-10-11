@@ -21,7 +21,7 @@ try {
     $file_Upload = "temp_file.txt";
 
     // อ่านข้อมูลจากตาราง
-    $stmt = $conn->query("SELECT id,DI_DAY, DI_MONTH_NAME, DI_YEAR FROM " . $table_name ." WHERE 1 ORDER BY id DESC ");
+    $stmt = $conn->query("SELECT id,DI_DAY, DI_MONTH_NAME, DI_YEAR FROM " . $table_name ." WHERE 1 AND DI_DATE = '-' ORDER BY id DESC ");
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($rows as $row) {

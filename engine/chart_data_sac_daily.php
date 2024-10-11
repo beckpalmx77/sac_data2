@@ -22,7 +22,7 @@ $sql_get = "
  SELECT DAY(STR_TO_DATE(DI_DATE,'%d/%m/%Y')) as DI_DATE,DI_DAY,sum(CAST(TRD_AMOUNT_PRICE AS DECIMAL(10,2))) as  TRD_AMOUNT_PRICE
  FROM ims_data_sale_sac_all 
  WHERE DI_YEAR = '" . $year . "'   AND DI_MONTH = '" . $month . "'" . $Cond_Query
- . " GROUP BY  DI_DATE,DI_DAY ORDER BY STR_TO_DATE(DI_DATE,'%d/%m/%Y') ";
+ . " GROUP BY  DI_DATE,DI_DAY ORDER BY CAST(DI_DAY AS UNSIGNED) ";
 
 $return_arr = array();
 

@@ -154,6 +154,57 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                 $duplicateRows++; // นับแถวที่ซ้ำ
                 $status = "N";
             }
+
+
+            if ($SALE_NAME !== 'READY QUICK' && strpos($SALE_NAME, "RQ") === false && $TAKE_NAME !== 'READY QUICK' && strpos($TAKE_NAME, "RQ") === false) {
+                for ($loop = 1; $loop <= 2; $loop++) {
+                    if ($loop === 1) {
+                        $f_name = $SALE_NAME;
+                        $type = 'SALE'; // กำหนดค่า type เป็น SALE
+                    } else {
+                        $f_name = $TAKE_NAME;
+                        $type = 'TAKE'; // กำหนดค่า type เป็น TAKE
+                    }
+
+                    if (!empty($f_name)) {
+                        // ตรวจสอบว่ามี f_name อยู่ใน ims_sale_take_name หรือไม่
+                        $stmt = $conn->prepare("SELECT f_name FROM ims_sale_take_name WHERE f_name = :f_name AND type = :type");
+                        $stmt->bindParam(':f_name', $f_name, PDO::PARAM_STR);
+                        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+                        $stmt->execute();
+                        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        if (!$result) {
+                            // ดึง type_order ล่าสุดเฉพาะประเภทนั้น ๆ
+                            $stmt = $conn->prepare("SELECT MAX(type_order) FROM ims_sale_take_name WHERE type = :type");
+                            $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+                            $stmt->execute();
+                            $latest_type_order = $stmt->fetchColumn();
+
+                            // ตรวจสอบลำดับล่าสุด และกำหนดลำดับใหม่
+                            if ($latest_type_order === null) {
+                                // หากไม่มีลำดับ ให้เริ่มที่ 10
+                                $new_type_order = 1;
+                            } else {
+                                // เพิ่ม 1 จากลำดับล่าสุด
+                                $new_type_order = (int)$latest_type_order + 1;
+                            }
+
+                            $status = 'Y';
+
+                            // INSERT ข้อมูลใหม่ลงใน ims_sale_take_name
+                            $stmt = $conn->prepare("INSERT INTO ims_sale_take_name (type, type_order, f_name, status) VALUES (:type, :type_order, :f_name, :status)");
+                            $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+                            $stmt->bindParam(':type_order', $new_type_order, PDO::PARAM_INT);
+                            $stmt->bindParam(':f_name', $f_name, PDO::PARAM_STR);
+                            $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+                            $stmt->execute();
+                        }
+                    }
+                }
+            }
+
+
         }
 
         $sql_update = "UPDATE " . $table_name . " SET DI_DAY = CAST(DI_DAY AS UNSIGNED) WHERE DI_DAY IN (01, 02, 03, 04, 05, 06, 07, 08, 09) ";

@@ -89,7 +89,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             }
 
             // กำหนดตัวแปรต่าง ๆ ตามลำดับคอลัมน์ในฐานข้อมูล
-            $DI_DAY = $data[0];
+            $DI_DAY = trim($data[0]);
             $DI_MONTH_NAME = $data[1];
             $DI_YEAR = $data[2];
             $AR_CODE = $data[3];

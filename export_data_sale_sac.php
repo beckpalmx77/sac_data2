@@ -139,7 +139,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <div class="form-group row mb-3">
                                                                     <div class="col-sm-12">
                                                                         <label for="SALE_NAME" class="control-label">ค้นหาชื่อ
-                                                                            SALE</label>
+                                                                            SALE (เลือกได้มากกว่า 1 ชื่อ)</label>
                                                                         <select id="SALE_NAME" name="SALE_NAME[]"
                                                                                 multiple="multiple"
                                                                                 class="form-control">

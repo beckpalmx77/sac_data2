@@ -161,9 +161,13 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                     if ($loop === 1) {
                         $f_name = $SALE_NAME;
                         $type = 'SALE'; // กำหนดค่า type เป็น SALE
+                        $user_text = 'sale'; // กำหนดค่า text เป็น SALE
+                        $account_type = "sale_user";
                     } else {
                         $f_name = $TAKE_NAME;
                         $type = 'TAKE'; // กำหนดค่า type เป็น TAKE
+                        $user_text = 'take'; // กำหนดค่า text เป็น SALE
+                        $account_type = "take";
                     }
 
                     if (!empty($f_name)) {
@@ -190,15 +194,46 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                                 $new_type_order = (int)$latest_type_order + 1;
                             }
 
-                            $status = 'Y';
+
+                            $formattedUserOrder = str_pad($new_type_order, 3, '0', STR_PAD_LEFT);
+                            $user_id = $user_text . $formattedUserOrder . "@sac.com";
+                            $default_password = "123456";
+                            $password = password_hash($default_password, PASSWORD_DEFAULT);
+                            $user_status = 'Active';
+                            $u_status = 'Y';
+                            $last_name = "SAC";
+                            $picture = "img/icon/user-001.png";
+
 
                             // INSERT ข้อมูลใหม่ลงใน ims_sale_take_name
-                            $stmt = $conn->prepare("INSERT INTO ims_sale_take_name (type, type_order, f_name, status) VALUES (:type, :type_order, :f_name, :status)");
+                            $stmt = $conn->prepare("INSERT INTO ims_sale_take_name (type, type_order, f_name, status) VALUES (:type, :type_order, :f_name, :u_status)");
                             $stmt->bindParam(':type', $type, PDO::PARAM_STR);
                             $stmt->bindParam(':type_order', $new_type_order, PDO::PARAM_INT);
                             $stmt->bindParam(':f_name', $f_name, PDO::PARAM_STR);
-                            $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+                            $stmt->bindParam(':u_status', $u_status, PDO::PARAM_STR);
                             $stmt->execute();
+
+                            // INSERT ข้อมูลใหม่ลงใน ims_user เพื่อสร้าง User Login
+                            $sql = "INSERT INTO ims_user(user_id,email,password,first_name,last_name,account_type,picture,status)
+                            VALUES (:user_id,:email,:password,:first_name,:last_name,:account_type,:picture,:user_status)";
+                            $query = $conn->prepare($sql);
+                            $query->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+                            $query->bindParam(':email', $user_id, PDO::PARAM_STR);
+                            $query->bindParam(':password', $password, PDO::PARAM_STR);
+                            $query->bindParam(':first_name', $f_name, PDO::PARAM_STR);
+                            $query->bindParam(':last_name', $last_name, PDO::PARAM_STR);
+                            $query->bindParam(':account_type', $account_type, PDO::PARAM_STR);
+                            $query->bindParam(':picture', $picture, PDO::PARAM_STR);
+                            $query->bindParam(':user_status', $user_status, PDO::PARAM_STR);
+                            $query->execute();
+
+                            $sql_line_no_update = "SET @new_line_no = 0;
+                            UPDATE ims_user
+                            SET line_no = (@new_line_no := @new_line_no + 1)
+                            ORDER BY id;";
+                            $stmt_line_no_update = $conn->prepare($sql_line_no_update);
+                            $stmt_line_no_update->execute();
+
                         }
                     }
                 }

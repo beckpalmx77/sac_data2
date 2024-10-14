@@ -3,7 +3,7 @@ include "../config/connect_db.php";
 
 $sql_get = "SELECT AR_CODE,AR_NAME,SALE_NAME,TAKE_NAME 
 FROM ims_data_sale_sac_all 
-WHERE AR_CODE LIKE 'SAC%'
+WHERE 1
 GROUP BY AR_CODE,AR_NAME,SALE_NAME,TAKE_NAME 
 ORDER BY AR_CODE,AR_NAME,SALE_NAME,TAKE_NAME " ;
 $stmt = $conn->prepare($sql_get);

@@ -18,7 +18,7 @@ isset( $_POST['doc_date_to'] ) ? $doc_date_to = $_POST['doc_date_to'] : $doc_dat
 isset( $_POST['AR_NAME'] ) ? $ar_name = $_POST['AR_NAME'] : $ar_name = "";
 isset( $_POST['TRD_AMPHUR'] ) ? $amphur = $_POST['TRD_AMPHUR'] : $amphur = "";
 isset( $_POST['TRD_PROVINCE'] ) ? $province = $_POST['TRD_PROVINCE'] : $province = "";
-//isset( $_POST['SALE_NAME'] ) ? $sale_name = $_POST['SALE_NAME'] : $sale_name = "";
+isset( $_POST['BRAND'] ) ? $brand = $_POST['BRAND'] : $brand = "";
 isset( $_POST['SKU_CAT'] ) ? $sku_cat = $_POST['SKU_CAT'] : $sku_cat = "";
 
 $sale_name = isset($_POST['SALE_NAME']) ? $_POST['SALE_NAME'] : [];
@@ -58,6 +58,9 @@ if (!empty($province) && $province!=='-') {
 if (!empty($sale_name) && $sale_name!=='-') {
     $search_Query .= " AND sale_sac.SALE_NAME IN " . $sale_name ;
 }
+if (!empty($brand) && $brand!=='-') {
+    $search_Query .= " AND sale_sac.BRAND = '" . $brand . "' ";
+}
 if (!empty($sku_cat) && $sku_cat!=='-') {
     $search_Query .= " AND sale_sac.SKU_CAT = '" . $sku_cat . "' ";
 }
@@ -66,12 +69,14 @@ $order_by = "order by SALE_NAME,STR_TO_DATE(DI_DATE, '%d-%m-%Y') ";
 
 // Create SQL query
 $select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE DI_REF NOT LIKE 'DS03%' AND DI_REF NOT LIKE 'IS02%' " . $search_Query . $order_by;
+
 /*
 $txt = "sql = " . $select_query_sale_sac;
 $my_file = fopen("exp_sale_param2.txt", "w") or die("Unable to open file!");
 fwrite($my_file, $txt);
 fclose($my_file);
 */
+
 $query = $conn->prepare($select_query_sale_sac);
 $query->execute();
 $results = $query->fetchAll(PDO::FETCH_OBJ);

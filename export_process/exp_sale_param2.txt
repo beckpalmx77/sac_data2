@@ -1,0 +1,1 @@
+sql = SELECT * FROM ims_data_sale_sac_all sale_sac WHERE DI_REF NOT LIKE 'DS03%' AND DI_REF NOT LIKE 'IS02%'  AND STR_TO_DATE(DI_DATE, '%d-%m-%Y') BETWEEN '2024-10-01' AND '2024-10-14'  AND sale_sac.SALE_NAME IN ('ธนัสวลัย (หนิง) ') AND sale_sac.BRAND = 'LLIT' order by SALE_NAME,STR_TO_DATE(DI_DATE, '%d-%m-%Y') 

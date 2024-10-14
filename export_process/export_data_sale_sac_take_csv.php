@@ -19,6 +19,7 @@ isset( $_POST['TRD_AMPHUR'] ) ? $amphur = $_POST['TRD_AMPHUR'] : $amphur = "";
 isset( $_POST['TRD_PROVINCE'] ) ? $province = $_POST['TRD_PROVINCE'] : $province = "";
 isset( $_POST['TAKE_NAME'] ) ? $take_name = $_POST['TAKE_NAME'] : $take_name = "";
 isset( $_POST['SALE_NAME'] ) ? $sale_name = $_POST['SALE_NAME'] : $sale_name = "";
+isset( $_POST['BRAND'] ) ? $brand = $_POST['BRAND'] : $brand = "";
 isset( $_POST['SKU_CAT'] ) ? $sku_cat = $_POST['SKU_CAT'] : $sku_cat = "";
 
 // แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
@@ -44,6 +45,9 @@ if (!empty($take_name) && $take_name!=='-') {
 }
 if (!empty($sale_name) && $sale_name!=='-') {
     $search_Query .= " AND sale_sac.SALE_NAME = '" . $sale_name . "' ";
+}
+if (!empty($brand) && $brand!=='-') {
+    $search_Query .= " AND sale_sac.BRAND = '" . $brand . "' ";
 }
 if (!empty($sku_cat) && $sku_cat!=='-') {
     $search_Query .= " AND sale_sac.SKU_CAT = '" . $sku_cat . "' ";

@@ -2,6 +2,7 @@
 include('../config/connect_db.php');
 
 $return_arr = array();
+$data = "";
 $table_name = $_POST["table_name"];
 $screen_name = $_POST["screen_name"];
 $sql_get = "SELECT * FROM " . $table_name . " WHERE screen_name = '" . $screen_name . "'";

@@ -75,12 +75,12 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $SALE_NAME = isset($row[2]) ? trim($row[2]) : "0";
             $TAKE_NAME = isset($row[3]) ? trim($row[3]) : "0";
 
-/*
-            $txt = $AR_CODE . " | " . $AR_NAME . " | " . $SALE_NAME;
-            $myfile = fopen("sac_cust_param.txt", "w") or die("Unable to open file!");
-            fwrite($myfile, $txt);
-            fclose($myfile);
-*/
+            /*
+                        $txt = $AR_CODE . " | " . $AR_NAME . " | " . $SALE_NAME;
+                        $myfile = fopen("sac_cust_param.txt", "w") or die("Unable to open file!");
+                        fwrite($myfile, $txt);
+                        fclose($myfile);
+            */
 
             // Check if the record exists
             $statement = $conn->prepare("SELECT COUNT(*) FROM $table_name WHERE AR_CODE = ?");

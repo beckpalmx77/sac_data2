@@ -11,7 +11,7 @@ $search_value = $_POST['search_value'];
 $doc_date_start = $_POST['doc_date_start'];
 $doc_date_to = $_POST['doc_date_to'];
 $car_no = $_POST['car_no_main'];
-$brand = $_POST['brand'];
+//$brand = $_GET['brand'];
 
 $where_cond = "";
 $where_brand = "";
@@ -21,9 +21,11 @@ if ($car_no !== '-') {
     $where_cond = " AND vo.car_no = " . $car_no;
 }
 
+/*
 if ($brand!=='-') {
-    $where_brand = " AND vo.product_id LIKE '" . $brand . "%' ";
+    $where_brand = " AND product_id LIKE '" . $brand . "%' ";
 }
+*/
 
 // แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
 $doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');

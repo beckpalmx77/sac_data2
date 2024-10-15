@@ -79,7 +79,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <option value="<?php echo $car_no ?>"><?php echo $car_no ?></option>
                                                     <?php } ?>
                                                 </select>
-                                                <!-- for="brand"
+                                                <!--for="brand"
                                                        class="control-label mb-0"><b>ยี่ห้อ</b></label>
                                                 <select name="brand" id="brand" class="form-control" required>
                                                     <option value="-">-</option>
@@ -516,6 +516,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         d.doc_date_start = $('#doc_date_start').val();
                         d.doc_date_to = $('#doc_date_to').val();
                         d.car_no = $('#car_no_main').val();
+                        // d.brand = $('#brand').val();  // เพิ่มค่า brand ที่ดึงมาจาก select
                         d.status = $('#status').val();
                         d.action = "GET_MOVEMENT_OUT";
                         d.sub_action = "GET_MASTER";
@@ -546,8 +547,9 @@ if (strlen($_SESSION['alogin']) == "") {
                 let car_no = $('#car_no_main').val();
                 let status = $('#status').val();
                 let brand = $('#brand').val();
-                //alert(brand);
-                console.log("Selected status: ", status);  // ใช้ตรวจสอบว่าได้ค่า status หรือไม่
+
+                // ตรวจสอบว่าได้ค่าจาก select option หรือไม่
+                console.log("Selected brand: ", brand);  // ตรวจสอบค่าที่ถูกเลือกจาก select
                 dataRecords.ajax.reload();  // Reload ข้อมูลใหม่
             });
 

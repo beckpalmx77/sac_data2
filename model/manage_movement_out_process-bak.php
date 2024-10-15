@@ -293,11 +293,13 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
 
     $searchArray = array();
 
-    ## Search
+## Search
     $searchQuery = " ";
     if ($searchValue != '') {
-        $searchQuery .= " AND vo.doc_id LIKE :doc_id ";
-        $searchArray['doc_id'] = "%$searchValue%";
+        $searchQuery = " AND vo.doc_id LIKE :doc_id ";
+        $searchArray = array(
+            'doc_id' => "%$searchValue%",
+        );
     }
 
     $doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
@@ -307,70 +309,73 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
         $where_filter .= " AND STR_TO_DATE(vo.doc_date, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' " ;
     }
 
-
     if ($car_no !== '-' && !empty($car_no)) {
-        $where_filter .= " AND vo.car_no = :car_no ";
-        $searchArray['car_no'] = $car_no;
+        $where_filter .= " AND vo.car_no = '" . $car_no . "' ";
     }
 
     if ($brand_main !== '-' && !empty($brand_main)) {
-        $where_filter .= " AND vo.brand LIKE :brand_main ";
-        $searchArray['brand_main'] = "$brand_main%";
+        $where_filter .= " AND vo.brand LIKE '" . $brand_main . "%' ";
     }
 
-    ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out vo WHERE 1");
+    //echo "doc_id: " . $searchArray['doc_id'];
+
+## Total number of records without filtering
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out vo WHERE 1 ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
-    ## Total number of records with filtering
-    $sql_count = "SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out vo WHERE 1 " . $where_filter . $searchQuery;
-    $stmt = $conn->prepare($sql_count);
-
-    // Bind search array
-    foreach ($searchArray as $key => $value) {
-        $stmt->bindValue(':' . $key, $value);
-    }
-
-    $stmt->execute();
+## Total number of records with filtering
+    $sql_count = "SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out vo WHERE 1 " . $where_filter . $searchQuery ;
+    $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
-    ## Fetch filtered records
     $sql_get = "SELECT 
-        vo.id, vo.doc_date, vo.doc_id, vo.line_no, vo.brand, vo.product_id, vo.product_name, vo.wh_org, vo.wh_week_id, vo.location_org,
-        vo.sale_take, vo.customer_name, vo.car_no, vo.doc_user_id, vo.qty, vb.total_qty, vo.create_by, vo.create_date, vo.status 
-        FROM v_wh_stock_movement_out vo 
-        LEFT JOIN v_wh_stock_balance vb ON vb.product_id = vo.product_id AND vb.wh = vo.wh_org AND vb.wh_week_id = vo.wh_week_id AND vb.location = vo.location_org 
-        WHERE 1 " . $where_filter . $searchQuery . " 
-        ORDER BY $columnName $columnSortOrder 
-        LIMIT :limit OFFSET :offset";
-/*
-    $txt = $sql_get;
-    $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-    fwrite($my_file, $txt);
-    fclose($my_file);
-*/
-    $stmt = $conn->prepare($sql_get);
+    vo.id,vo.doc_date,vo.doc_id, vo.line_no,vo.brand,vo.product_id,vo.product_name,vo.wh_org,vo.wh_week_id,vo.location_org
+    ,vo.sale_take,vo.customer_name,vo.car_no,vo.doc_user_id
+    ,vo.qty,vb.total_qty,vo.create_by,vo.create_date,vo.status 
+FROM 
+    v_wh_stock_movement_out vo
+LEFT JOIN 
+    v_wh_stock_balance vb 
+ON 
+    vb.product_id = vo.product_id 
+    AND vb.wh = vo.wh_org 
+    AND vb.wh_week_id = vo.wh_week_id 
+    AND vb.location = vo.location_org 
+WHERE 1 ";
 
-    // Bind search values and pagination
-    foreach ($searchArray as $key => $value) {
-        $stmt->bindValue(':' . $key, $value);
+    $sql_str = $sql_get . $where_filter . $searchQuery
+        . " ORDER BY vo.create_date DESC,vo.doc_id DESC LIMIT :limit,:offset";
+
+    $stmt = $conn->prepare($sql_str);
+
+// Bind values
+    foreach ($searchArray as $key => $search) {
+        $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
     }
-    $stmt->bindValue(':limit', (int)$rowperpage, PDO::PARAM_INT);
-    $stmt->bindValue(':offset', (int)$row, PDO::PARAM_INT);
 
+    $stmt->bindValue(':limit', (int)$row, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
     $stmt->execute();
     $empRecords = $stmt->fetchAll();
     $data = array();
 
     foreach ($empRecords as $row) {
         if ($_POST['sub_action'] === "GET_MASTER") {
+
             $doc_id = $row['doc_id'];
             $status = $row['status'];
-            $doc_id_html = ($status == 'Y') ? '<span style="color:green;">' . $doc_id . '</span>' : '<span style="color:red;">' . $doc_id . '</span>';
-            $status_html = ($status == 'Y') ? '<span style="color:green;">' . $status . '</span>' : '<span style="color:red;">' . $status . '</span>';
+
+            // กำหนด HTML พร้อมสไตล์สีสำหรับสถานะ
+            if ($status == 'Y') {
+                $doc_id_html = '<span style="color:green;">' . $doc_id . '</span>';
+                $status_html = '<span style="color:green;">' . $status . '</span>';
+            } else {
+                $doc_id_html = '<span style="color:red;">' . $doc_id . '</span>';
+                $status_html = '<span style="color:red;">' . $status . '</span>';
+            }
 
             $data[] = array(
                 "id" => $row['id'],
@@ -395,20 +400,22 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
                 "user_name" => $row['user_name'],
                 "status" => $status_html,
                 "remark" => $row['remark'],
-                "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update'>Update</button>",
-                "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete'>Delete</button>"
+                "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
+                "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>"
             );
         } else {
             $data[] = array(
                 "id" => $row['id'],
                 "doc_date" => $row['doc_date'],
                 "product_id" => $row['product_id'],
-                "select" => "<button type='button' name='select' id='" . $row['doc_date'] . "@" . $row['product_id'] . "' class='btn btn-outline-success btn-xs select'>select</button>",
+                "select" => "<button type='button' name='select' id='" . $row['doc_date'] . "@" . $row['product_id'] . "' class='btn btn-outline-success btn-xs select' data-toggle='tooltip' title='select'>select <i class='fa fa-check' aria-hidden='true'></i>
+</button>",
             );
         }
+
     }
 
-    ## Response Return Value
+## Response Return Value
     $response = array(
         "draw" => intval($draw),
         "iTotalRecords" => $totalRecords,
@@ -417,4 +424,5 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     );
 
     echo json_encode($response);
+
 }

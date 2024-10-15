@@ -292,6 +292,13 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $doc_date_start = $_POST['doc_date_start'];
     $doc_date_to = $_POST['doc_date_to'];
     $car_no = $_POST['car_no'];
+    $brand = $_POST['BRAND'];
+
+    $txt = "Value status = " . $status . " doc_date_start = " . $doc_date_start . " doc_date_to = " . $doc_date_to . " car_no = " . $car_no
+        . " brand = " . $brand;
+    $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
+    fwrite($my_file, $txt);
+    fclose($my_file);
 
     // ตรวจสอบว่า create_by เป็น '-' หรือไม่
     if ($status == '-' || empty($status)) {
@@ -310,20 +317,21 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     if (!empty($doc_date_start) && !empty($doc_date_to)) {
         $where_filter_date .= " AND STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' " ;
     }
-
-    // ตรวจสอบว่า create_by เป็น '-' หรือไม่
     if ($car_no == '-' || empty($car_no)) {
-        // ถ้า create_by เป็น '-' หรือว่าง ให้ดึงข้อมูลทั้งหมด
         $where_filter_car_no = "";
     } else {
-        // ถ้ามีค่า create_by และไม่ใช่ '-' ให้กรองตาม create_by
         $where_filter_car_no = " AND car_no = '" . $car_no . "'";
     }
-
-    $searchArray = array();
+    if ($brand == '-' || empty($brand)) {
+        $where_filter_brand = "";
+    } else {
+        $where_filter_brand = " AND product_id LIKE '" . $brand . "%'";
+    }
 
 ## Search
     $searchQuery = " ";
+
+    $searchArray = array();
 
     if ($searchValue != '') {
         $searchQuery = " AND (doc_id LIKE :doc_id) ";
@@ -332,6 +340,7 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
         );
     }
 
+
 ## Total number of records without filtering
     $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 ");
     $stmt->execute();
@@ -339,7 +348,7 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 " . $searchQuery . $where_filter_status . $where_filter_date . $where_filter_car_no);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_wh_stock_movement_out WHERE 1 " . $searchQuery . $where_filter_status . $where_filter_date . $where_filter_car_no . $where_filter_brand);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
@@ -365,7 +374,7 @@ WHERE 1 ";
             WHERE 1 " . $where_doc_user_id . $searchQuery
             . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset");
     */
-    $sql_get = $sql_get . $searchQuery . $where_filter_status . $where_filter_date . $where_filter_car_no
+    $sql_get = $sql_get . $searchQuery . $where_filter_status . $where_filter_date . $where_filter_car_no . $where_filter_brand
         . " ORDER BY create_date DESC,doc_id DESC " . " LIMIT :limit,:offset";
 
     $stmt = $conn->prepare($sql_get);

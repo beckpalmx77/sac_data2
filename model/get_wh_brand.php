@@ -2,7 +2,7 @@
 
 include('../config/connect_db.php');
 
-$sql_get_brand = "select DISTINCT(substr(product_id,1,2)) AS BRAND from v_wh_stock_movement_out where product_id REGEXP '^[A-Z]'";
+$sql_get_brand = " select DISTINCT(brand) AS brand from v_wh_stock_movement_out where brand REGEXP '^[A-Z]' ORDER BY brand ";
 
 // ดึงข้อมูลจากตารางสินค้า
 $query = $conn->query($sql_get_brand);

@@ -11,18 +11,18 @@ $search_value = $_POST['search_value'];
 $doc_date_start = $_POST['doc_date_start'];
 $doc_date_to = $_POST['doc_date_to'];
 $car_no = $_POST['car_no_main'];
-$BRAND = $_POST['BRAND'];
+$brand = $_POST['brand'];
 
 $where_cond = "";
-$where_BRAND = "";
+$where_brand = "";
 $search_Query = "";
 
 if ($car_no !== '-') {
     $where_cond = " AND vo.car_no = " . $car_no;
 }
 
-if ($BRAND!=='-') {
-    $where_BRAND = " AND vo.product_id LIKE '" . $BRAND . "%' ";
+if ($brand!=='-') {
+    $where_brand = " AND vo.product_id LIKE '" . $brand . "%' ";
 }
 
 // แปลงจากรูปแบบ DD-MM-YYYY เป็น YYYY-MM-DD
@@ -48,7 +48,7 @@ ON
     AND vb.location = vo.location_org 
 WHERE 1 ";
 
-$select_query_wh_movement = $sql_get . $search_Query . $where_cond . $where_BRAND . " ORDER BY vo.doc_id ";
+$select_query_wh_movement = $sql_get . $search_Query . $where_cond . $where_brand . " ORDER BY vo.doc_id ";
 
 /*
 $txt = "sql = " . $select_query_wh_movement ;

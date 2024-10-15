@@ -292,13 +292,7 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $doc_date_start = $_POST['doc_date_start'];
     $doc_date_to = $_POST['doc_date_to'];
     $car_no = $_POST['car_no'];
-    $brand = $_POST['BRAND'];
-
-    $txt = "Value status = " . $status . " doc_date_start = " . $doc_date_start . " doc_date_to = " . $doc_date_to . " car_no = " . $car_no
-        . " brand = " . $brand;
-    $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-    fwrite($my_file, $txt);
-    fclose($my_file);
+    $brand = $_POST['brand'];
 
     // ตรวจสอบว่า create_by เป็น '-' หรือไม่
     if ($status == '-' || empty($status)) {
@@ -325,7 +319,7 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     if ($brand == '-' || empty($brand)) {
         $where_filter_brand = "";
     } else {
-        $where_filter_brand = " AND product_id LIKE '" . $brand . "%'";
+        $where_filter_brand = " AND vo.brand LIKE '" . $brand . "%'";
     }
 
 ## Search
@@ -334,9 +328,10 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $searchArray = array();
 
     if ($searchValue != '') {
-        $searchQuery = " AND (doc_id LIKE :doc_id) ";
+        $searchQuery = " AND (doc_id LIKE :doc_id) OR (brand LIKE :brand) ";
         $searchArray = array(
             'doc_id' => "%$searchValue%",
+            'brand' => "%$searchValue%",
         );
     }
 
@@ -354,7 +349,7 @@ if ($_POST["action"] === 'GET_MOVEMENT_OUT') {
     $totalRecordwithFilter = $records['allcount'];
 
     $sql_get = "SELECT 
-    vo.id,vo.doc_date,vo.doc_id, vo.line_no,vo.product_id,vo.product_name,vo.wh_org,vo.wh_week_id,vo.location_org
+    vo.id,vo.doc_date,vo.doc_id, vo.line_no,vo.brand,vo.product_id,vo.product_name,vo.wh_org,vo.wh_week_id,vo.location_org
     ,vo.sale_take,vo.customer_name,vo.car_no,vo.doc_user_id
     ,vo.qty,vb.total_qty,vo.create_by,vo.create_date,vo.status 
 FROM 
@@ -417,6 +412,7 @@ WHERE 1 ";
                 "doc_id" => $doc_id_html,
                 "doc_date" => $row['doc_date'],
                 "product_id" => $row['product_id'],
+                "brand" => $row['brand'],
                 "product_name" => $row['product_name'],
                 "customer_name" => $row['customer_name'],
                 "sale_take" => $row['sale_take'],

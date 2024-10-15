@@ -1,6 +1,8 @@
 <?php
 
 include('includes/Header.php');
+include("config/connect_db.php");
+
 $curr_date = date("d-m-Y");
 
 if (strlen($_SESSION['alogin']) == "") {
@@ -9,7 +11,10 @@ if (strlen($_SESSION['alogin']) == "") {
     $create_by = $_SESSION['user_id'];
     $doc_user_id = $_SESSION['doc_user_id'];
 
-
+    $sql_brand = " select DISTINCT(brand) AS brand from v_wh_stock_movement_out where brand REGEXP '^[A-Z]' ORDER BY brand ";
+    $stmt_brand = $conn->prepare($sql_brand);
+    $stmt_brand->execute();
+    $BrandRecords = $stmt_brand->fetchAll();
 
     ?>
 
@@ -74,12 +79,16 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <option value="<?php echo $car_no ?>"><?php echo $car_no ?></option>
                                                     <?php } ?>
                                                 </select>
-                                                <label for="BRAND"
+                                                <!-- for="brand"
                                                        class="control-label mb-0"><b>ยี่ห้อ</b></label>
-                                                <select id="BRAND" name="BRAND"
-                                                        class="form-control">
-                                                    <option value="-">ยี่ห้อ</option>
-                                                </select>
+                                                <select name="brand" id="brand" class="form-control" required>
+                                                    <option value="-">-</option>
+                                                    <?php foreach ($BrandRecords as $row) { ?>
+                                                        <option value="<?php echo $row["brand"]; ?>">
+                                                            <?php echo $row["brand"]; ?>
+                                                        </option>
+                                                    <?php } ?>
+                                                </select-->
 
                                                 <input type="hidden" id="status" name="status" value="-">
 
@@ -106,6 +115,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <thead>
                                                 <tr>
                                                     <th>วันที่</th>
+                                                    <th>ยี่ห้อ</th>
                                                     <th>รหัสสินค้า</th>
                                                     <th>รายละเอียด</th>
                                                     <th>จำนวน</th>
@@ -124,6 +134,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <tfoot>
                                                 <tr>
                                                     <th>วันที่</th>
+                                                    <th>ยี่ห้อ</th>
                                                     <th>รหัสสินค้า</th>
                                                     <th>รายละเอียด</th>
                                                     <th>จำนวน</th>
@@ -479,7 +490,7 @@ if (strlen($_SESSION['alogin']) == "") {
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
-                    search: 'ค้นหาตามเลขที่เอกสาร', lengthMenu: 'แสดง _MENU_ รายการ',
+                    search: 'ค้นหาตามเลขที่เอกสาร / ยี่ห้อ(Brand)', lengthMenu: 'แสดง _MENU_ รายการ',
                     info: 'หน้าที่ _PAGE_ จาก _PAGES_',
                     infoEmpty: 'ไม่มีข้อมูล',
                     zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
@@ -512,6 +523,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 },
                 'columns': [
                     {data: 'doc_date'},
+                    {data: 'brand'},
                     {data: 'product_id'},
                     {data: 'product_name'},
                     {data: 'qty'},
@@ -533,14 +545,14 @@ if (strlen($_SESSION['alogin']) == "") {
                 let doc_date_to = $('#doc_date_to').val();
                 let car_no = $('#car_no_main').val();
                 let status = $('#status').val();
-                let BRAND = $('#BRAND').val();
-                //alert(BRAND);
+                let brand = $('#brand').val();
+                //alert(brand);
                 console.log("Selected status: ", status);  // ใช้ตรวจสอบว่าได้ค่า status หรือไม่
                 dataRecords.ajax.reload();  // Reload ข้อมูลใหม่
             });
 
             //setInterval(function () {
-                //dataRecords.ajax.reload(null, false); // รีเฟรชตาราง
+            //dataRecords.ajax.reload(null, false); // รีเฟรชตาราง
             //}, 30000);
         });
 
@@ -895,25 +907,25 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             // AJAX เพื่อดึงข้อมูลจากฐานข้อมูล
             $.ajax({
-                url: 'model/get_wh_BRAND.php', // หน้า PHP ที่จะดึงข้อมูล
+                url: 'model/get_wh_brand.php', // หน้า PHP ที่จะดึงข้อมูล
                 method: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    let select = $('#BRAND');
-                    $.each(data, function (index, wh_BRAND) {
+                    let select = $('#brand');
+                    $.each(data, function (index, wh_brand) {
                         select.append($('<option>', {
-                            value: wh_BRAND.BRAND,
-                            text: wh_BRAND.BRAND, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
-                            'data-name': wh_BRAND.BRAND // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
+                            value: wh_brand.brand,
+                            text: wh_brand.brand, // เปลี่ยนเป็นชื่อของข้อมูลที่คุณต้องการแสดง
+                            'data-name': wh_brand.brand // เก็บข้อมูลชื่อใน attribute เพื่อใช้ภายหลัง
                         }));
                     });
 
                     // แปลง select เป็น select2 หลังจากข้อมูลถูกเพิ่ม
-                    $('#BRAND').select2({
+                    $('#brand').select2({
                         placeholder: "เลือกยี่ห้อ",
                         allowClear: true,
                         width: '100%' // กำหนดขนาดให้เต็ม 100% เพื่อให้ตรงกับ element อื่น
@@ -924,7 +936,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 }
             });
         });
-    </script>
+    </script-->
 
     <script>
         function ReloadDataTable() {
@@ -946,6 +958,7 @@ if (strlen($_SESSION['alogin']) == "") {
             let doc_date_start = $('#doc_date_start').val();
             let doc_date_to = $('#doc_date_to').val();
             let car_no_main = $('#car_no_main').val();
+            let brand = $('#brand').val();
 
             // ตรวจสอบค่าที่ได้มา
             alert("กำลังส่งออกข้อมูล: " + searchValue);
@@ -955,6 +968,7 @@ if (strlen($_SESSION['alogin']) == "") {
             document.getElementById("doc_date_start_value").value = doc_date_start;
             document.getElementById("doc_date_to_value").value = doc_date_to;
             document.getElementById("car_no_main_value").value = car_no_main;
+            document.getElementById("brand_value").value = brand;
 
             // ตั้งค่า action ให้ไปที่ PHP ที่จะทำการส่งออกเป็น CSV
             form.action = "export_process/export_process_data_wh_movement_out.php"; // PHP ที่จะสร้างไฟล์ CSV
@@ -974,8 +988,8 @@ if (strlen($_SESSION['alogin']) == "") {
             let doc_date_start = $('#doc_date_start').val();
             let doc_date_to = $('#doc_date_to').val();
             let car_no_main = $('#car_no_main').val();
-            let BRAND = $('#BRAND').val();
-            window.open('print_process/print_wh_out_process.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to + '&car_no_main=' + car_no_main + '&BRAND=' + BRAND + '&searchValue=' + searchValue, '_blank');
+            let brand = $('#brand').val();
+            window.open('print_process/print_wh_out_process.php?doc_date_start=' + doc_date_start + '&doc_date_to=' + doc_date_to + '&car_no_main=' + car_no_main + '&brand=' + brand + '&searchValue=' + searchValue, '_blank');
         }
     </script>
 

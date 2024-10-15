@@ -5,7 +5,7 @@ include('../config/connect_db.php');
 $doc_date_start = $_GET['doc_date_start'];
 $doc_date_to = $_GET['doc_date_to'];
 $car_no = $_GET['car_no_main'];
-$BRAND = $_GET['BRAND'];
+$brand = $_GET['brand'];
 
 $where_cond = "";
 
@@ -13,11 +13,11 @@ if ($car_no!=='-') {
     $where_cond = " AND car_no = " . $car_no;
 }
 
-if ($BRAND!=='-') {
-    $where_BRAND = " AND product_id LIKE '" . $BRAND . "%' ";
+if ($brand!=='-') {
+    $where_brand = " AND product_id LIKE '" . $brand . "%' ";
 }
 
-$stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out WHERE doc_date BETWEEN :start_date AND :end_date " . $where_cond . $where_BRAND);
+$stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out WHERE doc_date BETWEEN :start_date AND :end_date " . $where_cond . $where_brand);
 $stmt->execute(['start_date' => $doc_date_start, 'end_date' => $doc_date_to]);
 $data = $stmt->fetchAll();
 ?>

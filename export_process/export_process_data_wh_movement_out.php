@@ -8,10 +8,11 @@ date_default_timezone_set('Asia/Bangkok');
 
 // ดึงข้อมูลตามวันที่เริ่มต้นและสิ้นสุดที่ส่งมาจาก form
 $search_value = $_POST['search_value'];
-$doc_date_start = $_GET['doc_date_start'];
-$doc_date_to = $_GET['doc_date_to'];
-$car_no = $_GET['car_no_main'];
-$brand = $_GET['brand_main'];
+$doc_date_start = $_POST['doc_date_start'];
+$doc_date_to = $_POST['doc_date_to'];
+$car_no = $_POST['car_no_main'];
+$brand = $_POST['brand_main'];
+
 
 $where_cond = "";
 $where_brand = "";

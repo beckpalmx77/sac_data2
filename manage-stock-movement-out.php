@@ -10,12 +10,12 @@ if (strlen($_SESSION['alogin']) == "") {
 } else {
     $create_by = $_SESSION['user_id'];
     $doc_user_id = $_SESSION['doc_user_id'];
-/*
-    $sql_brand = " select DISTINCT(brand) AS brand from v_wh_stock_movement_out where brand REGEXP '^[A-Z]' ORDER BY brand ";
-    $stmt_brand = $conn->prepare($sql_brand);
-    $stmt_brand->execute();
-    $BrandRecords = $stmt_brand->fetchAll();
-*/
+    /*
+        $sql_brand = " select DISTINCT(brand) AS brand from v_wh_stock_movement_out where brand REGEXP '^[A-Z]' ORDER BY brand ";
+        $stmt_brand = $conn->prepare($sql_brand);
+        $stmt_brand->execute();
+        $BrandRecords = $stmt_brand->fetchAll();
+    */
     ?>
 
     <!DOCTYPE html>

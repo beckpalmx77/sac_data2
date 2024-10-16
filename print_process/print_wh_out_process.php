@@ -15,7 +15,7 @@ if ($car_no!=='-') {
 }
 
 if ($brand!=='-') {
-    $where_brand = " AND vo.brand LIKE '" . $brand . "%' ";
+    $where_brand = " AND brand LIKE '" . $brand . "%' ";
 }
 
 $stmt = $conn->prepare("SELECT * FROM v_wh_stock_movement_out WHERE doc_date BETWEEN :start_date AND :end_date " . $where_cond . $where_brand);

@@ -11,7 +11,7 @@ $Cond_Query = "";
 if ($SALE_NAME!=='-') {
     $Cond_Query .= " AND SALE_NAME = '" . $SALE_NAME . "' ";
 } else {
-    $Cond_Query .= " AND SALE_NAME NOT LIKE '%R%' ";
+    $Cond_Query .= " AND 1  ";
 }
 
 //$myfile = fopen("param.txt", "w") or die("Unable to open file!");

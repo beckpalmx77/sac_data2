@@ -35,7 +35,7 @@ if (!empty($sale_name)) {
     $sql_get .= " AND SALE_NAME = '" . $sale_name . "' ";
 }
 
-$sql_get .= " AND DI_REF NOT LIKE 'DS03%' AND DI_REF NOT LIKE 'IS02%' ";
+$sql_get .= "  ";
 
 $sql_get .= " GROUP BY DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT
 ORDER BY CAST(DI_YEAR AS unsigned),CAST(DI_MONTH AS unsigned)";

@@ -50,7 +50,8 @@ if (!empty($brand)) {
     $group = ",BRAND";
 }
 
-    $sql_where6 = " AND DI_REF NOT LIKE 'DS03%' AND DI_REF NOT LIKE 'IS02%' ";
+    //$sql_where6 = " AND DI_REF NOT LIKE 'DS03%' AND DI_REF NOT LIKE 'IS02%' ";
+    $sql_where6 = "  ";
 
 $sql_get = "SELECT ROW_NUMBER() OVER(ORDER BY CAST(DI_MONTH AS unsigned), DI_YEAR) AS RowNumber, DI_MONTH,DI_MONTH_NAME,DI_YEAR,SKU_CAT" . $field
     . ",SUM(CAST(TRD_QTY AS DECIMAL(10,2))) as SUM_TRD_QTY

@@ -12,7 +12,7 @@ $Cond_Query = "";
 if ($SALE_NAME!=='-') {
     $Cond_Query .= " AND SALE_NAME = '" . $SALE_NAME . "' ";
 } else {
-    $Cond_Query .= " AND SALE_NAME NOT LIKE '%R%' ";
+    $Cond_Query .= " AND 1  ";
 }
 
 if ($SKU_CAT!=='-') {

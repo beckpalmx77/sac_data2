@@ -33,7 +33,7 @@ if (strlen($_SESSION['alogin']) == "") {
     $stmt_year->execute();
     $YearRecords = $stmt_year->fetchAll();
 
-    $sql_sale = " SELECT DISTINCT(SALE_NAME) AS SALE_NAME FROM ims_data_sale_sac_all WHERE SALE_NAME NOT LIKE '%R%' ";
+    $sql_sale = " SELECT DISTINCT(SALE_NAME) AS SALE_NAME FROM ims_data_sale_sac_all WHERE 1  ";
     $stmt_sale = $conn->prepare($sql_sale);
     $stmt_sale->execute();
     $SaleRecords = $stmt_sale->fetchAll();

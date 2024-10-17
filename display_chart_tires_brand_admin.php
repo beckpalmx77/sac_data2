@@ -50,12 +50,20 @@
                 $year = date("Y");
                 $total = 0;
                 $total_sale = 0;
+/*
+                $sql_brand = "SELECT BRN_CODE,BRN_NAME,sum(CAST(TRD_QTY AS DECIMAL(10,2))) as  TRD_QTY,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TRD_G_KEYIN
+                                        FROM ims_product_sale_sac
+                                        WHERE PGROUP IN ('P1')
+                                        AND DI_YEAR = '" . $year . "'
+                                        AND SLMN_NAME NOT LIKE '%R%'
+                                        GROUP BY BRN_CODE,BRN_NAME
+                                        ORDER BY BRN_CODE ";
+*/
 
                 $sql_brand = "SELECT BRN_CODE,BRN_NAME,sum(CAST(TRD_QTY AS DECIMAL(10,2))) as  TRD_QTY,sum(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TRD_G_KEYIN 
                                         FROM ims_product_sale_sac                                        
                                         WHERE PGROUP IN ('P1')                                        
-                                        AND DI_YEAR = '" . $year . "'
-                                        AND SLMN_NAME NOT LIKE '%R%'
+                                        AND DI_YEAR = '" . $year . "'                                        
                                         GROUP BY BRN_CODE,BRN_NAME
                                         ORDER BY BRN_CODE ";
 

@@ -4,7 +4,7 @@ include('../config/connect_db.php');
 
 $field = "SALE_NAME";
 $table_name = "ims_data_sale_sac_all";
-$where = " WHERE SALE_NAME NOT LIKE '%R%'";
+$where = " WHERE 1 ";
 
 /*
 if(isset($_SESSION['first_name'])) {

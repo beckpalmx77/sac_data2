@@ -30,7 +30,7 @@ if (strlen($_SESSION['alogin']) == "") {
     $brands = $stmt_brands->fetchAll(PDO::FETCH_ASSOC);
 
     // Query to get unique Sale Name
-    $sql_sale = "SELECT DISTINCT SALE_NAME FROM ims_data_sale_sac_all WHERE SALE_NAME NOT LIKE '%R%' ORDER BY SALE_NAME";
+    $sql_sale = "SELECT DISTINCT SALE_NAME FROM ims_data_sale_sac_all WHERE 1  ORDER BY SALE_NAME";
     $stmt_sale = $conn->prepare($sql_sale);
     $stmt_sale->execute();
     $sale_name = $stmt_sale->fetchAll(PDO::FETCH_ASSOC);

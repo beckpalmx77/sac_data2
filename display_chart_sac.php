@@ -34,7 +34,7 @@ if (strlen($_SESSION['alogin']) == "") {
     $YearRecords = $stmt_year->fetchAll();
 
     $sql_sale_man = " SELECT DISTINCT(SALE_NAME) AS SALE_NAME
-    FROM ims_data_sale_sac_all WHERE DI_YEAR >= 2019 AND SALE_NAME NOT LIKE '%R%'
+    FROM ims_data_sale_sac_all WHERE DI_YEAR >= 2019 AND 1 
     order by SALE_NAME ";
     $stmt_sale_man = $conn->prepare($sql_sale_man);
     $stmt_sale_man->execute();

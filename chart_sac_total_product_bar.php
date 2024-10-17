@@ -6,7 +6,7 @@ $Cond_Query = "";
 // ตรวจสอบ SALE_NAME
 if ($_POST['SALE_NAME'] === '-') {
     $sale_name = "*";
-    $Cond_Query .= " AND SALE_NAME NOT LIKE '%R%' ";
+    $Cond_Query .= " AND 1  ";
 } else {
     $sale_name = $_POST['SALE_NAME'];
     $Cond_Query .= " AND SALE_NAME = '" . $sale_name . "' ";

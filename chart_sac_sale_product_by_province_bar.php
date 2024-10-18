@@ -82,7 +82,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <title>สงวนออโต้คาร์</title>
     <style>
         body {
-            width: 1600px;
+            width: 1400px;
             margin: 3rem auto;
         }
         #chart-container {

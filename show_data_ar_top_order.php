@@ -1,4 +1,9 @@
 <?php
+include('includes/Header.php');
+if (strlen($_SESSION['alogin']) == "") {
+    header("Location: index.php");
+} else {
+
 include 'config/connect_db.php';
 
 $year = $_POST["year"] ?? '';
@@ -22,6 +27,8 @@ foreach ($MonthCurr as $row_curr) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ยอดขายสินค้า</title>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <!--link href="img/logo/logo.png" rel="icon"-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -122,7 +129,7 @@ foreach ($MonthCurr as $row_curr) {
     });
 </script>
 
-
-
 </body>
 </html>
+
+<?php } ?>

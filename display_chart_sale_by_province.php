@@ -27,21 +27,34 @@ if (strlen($_SESSION['alogin']) == "") {
     $MonthRecords = $stmt_month->fetchAll();
 
     $sql_year = " SELECT DISTINCT(DI_YEAR) AS DI_YEAR
-    FROM ims_data_sale_sac_all WHERE DI_YEAR >= 2019
+    FROM ims_data_sale_sac_all WHERE 1
     order by DI_YEAR desc ";
     $stmt_year = $conn->prepare($sql_year);
     $stmt_year->execute();
     $YearRecords = $stmt_year->fetchAll();
 
-    $sql_sale = " SELECT DISTINCT(SALE_NAME) AS SALE_NAME FROM ims_data_sale_sac_all WHERE 1  ";
-    $stmt_sale = $conn->prepare($sql_sale);
-    $stmt_sale->execute();
-    $SaleRecords = $stmt_sale->fetchAll();
+    $sql_sale_man = " SELECT DISTINCT(SALE_NAME) AS SALE_NAME
+    FROM ims_data_sale_sac_all WHERE 1 
+    order by SALE_NAME ";
+    $stmt_sale_man = $conn->prepare($sql_sale_man);
+    $stmt_sale_man->execute();
+    $SaleManRecords = $stmt_sale_man->fetchAll();
 
-    $sql_sku_cat = " SELECT DISTINCT(SKU_CAT) AS SKU_CAT FROM ims_data_sale_sac_all WHERE 1 ";
+    $sql_sku_cat = " SELECT DISTINCT(SKU_CAT) AS SKU_CAT
+    FROM ims_data_sale_sac_all WHERE 1 
+    order by SKU_CAT ";
     $stmt_sku_cat = $conn->prepare($sql_sku_cat);
     $stmt_sku_cat->execute();
-    $SKUCATRecords = $stmt_sku_cat->fetchAll();
+    $skuRecords = $stmt_sku_cat->fetchAll();
+
+/*
+    $sql_province = " SELECT DISTINCT(TRD_PROVINCE) AS TRD_PROVINCE
+    FROM ims_data_sale_sac_all WHERE 1 
+    order by TRD_PROVINCE ";
+    $stmt_province = $conn->prepare($sql_province);
+    $stmt_province->execute();
+    $ProvinceRecords = $stmt_province->fetchAll();
+*/
 
     ?>
 
@@ -85,51 +98,63 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <div class="panel">
                                                     <div class="panel-body">
 
-                                                        <form id="myform" name="myform" method="post">
+                                                        <form id="myform" name="myform"
+                                                              action="engine/chart_data_daily.php" method="post">
 
                                                             <div class="row">
                                                                 <div class="col-sm-12">
+
+                                                                    <label for="month">เลือกเดือน :</label>
+                                                                    <select name="month" id="month" class="form-control"
+                                                                            required>
+                                                                        <option value="<?php echo $month_num; ?>"
+                                                                                selected><?php echo $month_name; ?></option>
+                                                                        <?php foreach ($MonthRecords as $row) { ?>
+                                                                            <option value="<?php echo $row["month"]; ?>">
+                                                                                <?php echo $row["month_name"]; ?>
+                                                                            </option>
+                                                                        <?php } ?>
+                                                                    </select>
                                                                     <label for="year">เลือกปี :</label>
                                                                     <select name="year" id="year" class="form-control"
                                                                             required>
-                                                                        <?php foreach ($YearRecords as $year_row) { ?>
-                                                                            <option value="<?php echo $year_row["DI_YEAR"]; ?>">
-                                                                                <?php echo $year_row["DI_YEAR"]; ?>
+                                                                        <?php foreach ($YearRecords as $row) { ?>
+                                                                            <option value="<?php echo $row["DI_YEAR"]; ?>">
+                                                                                <?php echo $row["DI_YEAR"]; ?>
                                                                             </option>
                                                                         <?php } ?>
                                                                     </select>
-                                                                    <br>
-                                                                    <label for="SALE_NAME">เลือก Sale :</label>
-                                                                    <select name="SALE_NAME" id="SALE_NAME" class="form-control"
-                                                                            required>
-                                                                        <option value="-">-</option>
-                                                                        <?php foreach ($SaleRecords as $sale_row) { ?>
-                                                                            <option value="<?php echo $sale_row["SALE_NAME"]; ?>">
-                                                                                <?php echo $sale_row["SALE_NAME"]; ?>
-                                                                            </option>
-                                                                        <?php } ?>
-                                                                    </select>
-                                                                    <br>
                                                                     <label for="SKU_CAT">เลือก SKU CAT :</label>
-                                                                    <select name="SKU_CAT" id="SKU_CAT" class="form-control"
-                                                                            required>
+                                                                    <select name="SKU_CAT" id="SKU_CAT"
+                                                                            class="form-control" required>
                                                                         <option value="-">-</option>
-                                                                        <?php foreach ($SKUCATRecords as $sku_cat_row) { ?>
-                                                                            <option value="<?php echo $sku_cat_row["SKU_CAT"]; ?>">
-                                                                                <?php echo $sku_cat_row["SKU_CAT"]; ?>
+                                                                        <?php foreach ($skuRecords as $row) { ?>
+                                                                            <option value="<?php echo $row["SKU_CAT"]; ?>">
+                                                                                <?php echo $row["SKU_CAT"]; ?>
                                                                             </option>
                                                                         <?php } ?>
                                                                     </select>
+                                                                    <label for="SALE_NAME">เลือก SALE :</label>
+                                                                    <select name="SALE_NAME" id="SALE_NAME"
+                                                                            class="form-control" required>
+                                                                        <option value="-">-</option>
+                                                                        <?php foreach ($SaleManRecords as $row) { ?>
+                                                                            <option value="<?php echo $row["SALE_NAME"]; ?>">
+                                                                                <?php echo $row["SALE_NAME"]; ?>
+                                                                            </option>
+                                                                        <?php } ?>
+                                                                    </select>
+
                                                                     <br>
                                                                     <div class="row">
                                                                         <div class="col-sm-12">
                                                                             <button type="button" id="BtnSale"
                                                                                     name="BtnSale"
-                                                                                    class="btn btn-primary mb-3">แสดง
-                                                                                Chart ยอดขายแต่ละยี่ห้อ
+                                                                                    class="btn btn-primary mb-3">แสดง Chart ยอดขาย
                                                                             </button>
                                                                         </div>
                                                                     </div>
+
                                                                 </div>
                                                             </div>
                                                         </form>
@@ -196,31 +221,14 @@ if (strlen($_SESSION['alogin']) == "") {
     <script src="js/MyFrameWork/framework_util.js"></script>
 
     <script>
+
         $("#BtnSale").click(function () {
-            show();
+            document.forms['myform'].action = 'chart_sac_sale_product_by_province_bar';
+            document.forms['myform'].target = '_blank';
+            document.forms['myform'].submit();
+            return true;
         });
-    </script>
 
-    <script>
-        $(document).keyup(function (event) {
-            if (event.which === 13) {
-                show();
-            }
-        });
-    </script>
-
-    <script>
-        function show() {
-            if ($("#SKU_CAT").val()!=='-') {
-                document.forms['myform'].action = 'chart_sac_total_product_bar';
-                document.forms['myform'].target = '_blank';
-                document.forms['myform'].submit();
-                return true;
-            } else {
-                alertify.error("เลือก SKU CAT");
-            }
-
-        }
     </script>
 
     </body>

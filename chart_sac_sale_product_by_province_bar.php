@@ -82,7 +82,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <title>สงวนออโต้คาร์</title>
     <style>
         body {
-            width: 1398px;
+            width: 1600px;
             margin: 3rem auto;
         }
         #chart-container {
@@ -93,7 +93,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     <style>
         .table-responsive {
-            max-height: 400px; /* กำหนดความสูงสูงสุด */
+            max-height: 600px; /* กำหนดความสูงสูงสุด */
             overflow-y: auto; /* แสดง scroll bar ถ้าต้องการ */
         }
 
@@ -131,7 +131,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         </div>
 
         <!-- แสดงข้อมูลเป็นตาราง -->
-        <div class="table-responsive mt-12">
+        <div class="table-responsive">
             <h5 class="mb-3">ข้อมูลยอดขายรายวันตามจังหวัดในเดือน <?php echo $month_name . ' ปี ' . $year; ?></h5>
             <table class="table table-bordered table-striped">
                 <thead>

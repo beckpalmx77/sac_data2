@@ -214,10 +214,14 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
 
         $("#BtnSale").click(function () {
-            document.forms['myform'].action = 'chart_sac_sale_product_by_sku_brand_bar';
-            document.forms['myform'].target = '_blank';
-            document.forms['myform'].submit();
-            return true;
+            if ($("#SKU_CAT").val()!=='-') {
+                document.forms['myform'].action = 'chart_sac_sale_product_by_sku_brand_bar';
+                document.forms['myform'].target = '_blank';
+                document.forms['myform'].submit();
+                return true;
+            } else {
+                alertify.error("เลือก SKU CAT");
+            }
         });
 
     </script>

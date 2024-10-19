@@ -28,7 +28,7 @@ foreach ($MonthRecords as $row) {
 $sql = "SELECT BRAND, DI_DAY,
         SUM(CAST(TRD_QTY AS DECIMAL(10, 2))) AS TRD_QTY,
         SUM(CAST(TRD_AMOUNT_PRICE AS DECIMAL(10, 2))) AS TRD_AMOUNT_PRICE
-    FROM v_ims_data_sale_sac_all_ml_tire
+    FROM v_ims_data_sale_sac_all_sm_tire
     WHERE DI_YEAR = :DI_YEAR AND DI_MONTH = :DI_MONTH AND SALE_NAME LIKE :SALE_NAME
     GROUP BY BRAND, DI_DAY 
     ORDER BY BRAND, CAST(DI_DAY AS UNSIGNED)";

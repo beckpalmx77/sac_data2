@@ -5,6 +5,9 @@ $year = $_POST["year"] ?? '';
 $month = $_POST["month"] ?? '';
 $sale = $_POST["SALE_NAME"] ?? '';
 
+$sale = $_POST["SALE_NAME"] ?? '';
+$sale = ($sale === '' || $sale === '-') ? "" : $sale;
+
 /*
 $myfile = fopen("param.txt", "w") or die("Unable to open file!");
 fwrite($myfile, "year = " . $year . "| month = " . $month . " | sale = " . $sale);
@@ -21,10 +24,17 @@ $sql = "SELECT AR_NAME,
             FROM ims_data_sale_sac_all
             WHERE DI_MONTH = '" . $month . "' 
                   AND DI_YEAR = '" . $year . "'
-                  AND SALE_NAME = '" . $sale . "'" .
+                  AND SALE_NAME LIKE '%" . $sale . "%'" .
     " AND SKU_CAT IN ('LTB', 'LTR', 'TBB', 'TBR', 'ยางเล็ก')
             GROUP BY AR_NAME
             ORDER BY SUM DESC ";
+
+/*
+$myfile = fopen("param1.txt", "w") or die("Unable to open file!");
+fwrite($myfile, "year = " . $year . "| month = " . $month . " | sale = " . $sale);
+fclose($myfile);
+*/
+
 
 /*
 

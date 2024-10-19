@@ -48,7 +48,7 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    var tbody = '';
+                    let tbody = '';
                     $.each(data, function(index, item) {
                         tbody += '<tr>';
                         tbody += '<td>' + (index + 1) + '</td>'; // เพิ่มลำดับที่

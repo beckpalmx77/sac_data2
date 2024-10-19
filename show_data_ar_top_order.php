@@ -10,6 +10,13 @@ $year = $_POST["year"] ?? '';
 $month = $_POST["month"] ?? '';
 $sale_name = $_POST["SALE_NAME"] ?? '';
 
+/*
+$txt = $sale_name . "  | " .$month ;
+$myfile = fopen("sale_value.txt", "w") or die("Unable to open file!");
+fwrite($myfile, $sql_get);
+fclose($myfile);
+*/
+
 $sql_curr_month = "SELECT * FROM ims_month WHERE month = :month";
 
 $stmt_curr_month = $conn->prepare($sql_curr_month);

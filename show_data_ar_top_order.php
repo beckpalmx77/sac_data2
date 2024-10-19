@@ -102,7 +102,7 @@ foreach ($MonthCurr as $row_curr) {
                         tbody += '<td class="text-right">' + formatNumber(item.LTR) + '</td>'; // จัดรูปแบบตัวเลข
                         tbody += '<td class="text-right">' + formatNumber(item.TBB) + '</td>'; // จัดรูปแบบตัวเลข
                         tbody += '<td class="text-right">' + formatNumber(item.TBR) + '</td>'; // จัดรูปแบบตัวเลข
-                        tbody += '<td class="text-right">' + formatNumber(item.ยางเล็ก) + '</td>'; // จัดรูปแบบตัวเลข
+                        tbody += '<td class="text-right">' + formatNumber(item.SMT) + '</td>'; // จัดรูปแบบตัวเลข
                         tbody += '<td class="text-right">' + formatNumber(item.SUM) + '</td>'; // จัดรูปแบบตัวเลข
                         tbody += '</tr>';
                     });

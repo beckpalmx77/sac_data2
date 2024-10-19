@@ -60,7 +60,7 @@ foreach ($MonthCurr as $row_curr) {
         <thead>
         <tr>
             <th>ลำดับ</th>
-            <th>AR_NAME</th>
+            <th>ลูกค้า</th>
             <th class="text-right">LTB</th>
             <th class="text-right">LTR</th>
             <th class="text-right">TBB</th>

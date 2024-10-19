@@ -88,7 +88,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="row">
                                                                 <div class="col-sm-12">
 
-                                                                    <label for="month">เลือกเดือน :</label>
+                                                                    <!--label for="month">เลือกเดือน :</label>
                                                                     <select name="month" id="month" class="form-control"
                                                                             required>
                                                                         <option value="<?php echo $month_num; ?>"
@@ -98,7 +98,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                 <?php echo $row["month_name"]; ?>
                                                                             </option>
                                                                         <?php } ?>
-                                                                    </select>
+                                                                    </select-->
+                                                                    <input type="hidden" id="month" value="<?php echo $month_num; ?>">
                                                                     <label for="year">เลือกปี :</label>
                                                                     <select name="year" id="year" class="form-control"
                                                                             required>

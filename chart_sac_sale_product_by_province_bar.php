@@ -132,7 +132,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         <!-- แสดงข้อมูลเป็นตาราง -->
         <div class="table-responsive">
-            <h5 class="mb-3">ข้อมูลยอดขายรายวันตามจังหวัด ประเภท <?php echo $sku_cat . " ชื่อ Sale " . $sale_name . " เดือน " . $month_name . " ปี " . $year; ?></h5>
+            <h5 class="mb-3">ข้อมูลยอดขายรายวันตามจังหวัด ตามประเภท <?php echo $sku_cat . " " . $month_name . ' ปี ' . $year . " Sale " . $sale_name ; ?></h5>
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="table-primary">

@@ -167,7 +167,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 foreach ($data as $month_name => $days) {
                     $sum = 0;
                     echo "<tr>";
-                    echo "<td class=\"table-primary\" style='text-align: left;'>{$month_name}</td>"; // ชื่อเดือนชิดซ้าย
+                    echo "<td class='table-success' style='text-align: left;'>{$month_name}</td>"; // ชื่อเดือนชิดซ้าย
                     for ($day = 1; $day <= $daysInMonth; $day++) {
                         $value = isset($days[$day]) ? number_format($days[$day], 2) : number_format(0, 2); // จัดรูปแบบตัวเลข
                         echo "<td>{$value}</td>";

@@ -149,7 +149,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     echo "</tr>";
                 }
                 ?>
-                <?php /*
+                <?php /* ?>
                 <tr class="table-success">
                     <td><strong>ยอดรวม</strong></td>
                     <?php foreach ($dailySums as $dailySum) {
@@ -157,8 +157,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     } ?>
                     <td><strong><?= number_format($totalSum, 2) ?></strong></td> <!-- จัดรูปแบบตัวเลขยอดรวมทั้งหมด -->
                 </tr>
+                 <?php */?>
                 </tbody>
-                <?php */?>
             </table>
         </div>
 

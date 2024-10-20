@@ -126,7 +126,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <?php for ($day = 1; $day <= $daysInMonth; $day++) { ?>
                         <th><?= $day ?></th>
                     <?php } ?>
-                    <th>ยอดรวม</th>
+                    <!--th>ยอดรวม</th-->
                 </tr>
                 </thead>
                 <tbody>
@@ -144,11 +144,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         $sum += (float)$value;
                         $dailySums[$day] += (float)$value;
                     }
-                    echo "<td>" . number_format($sum, 2) . "</td>"; // แสดงยอดรวมด้วยการจัดรูปแบบ
+                    //echo "<td>" . number_format($sum, 2) . "</td>"; // แสดงยอดรวมด้วยการจัดรูปแบบ
                     $totalSum += $sum;
                     echo "</tr>";
                 }
                 ?>
+                <?php /*
                 <tr class="table-success">
                     <td><strong>ยอดรวม</strong></td>
                     <?php foreach ($dailySums as $dailySum) {
@@ -157,12 +158,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <td><strong><?= number_format($totalSum, 2) ?></strong></td> <!-- จัดรูปแบบตัวเลขยอดรวมทั้งหมด -->
                 </tr>
                 </tbody>
+                <?php */?>
             </table>
         </div>
 
-        <div id="chart-container">
+        <!--div id="chart-container">
             <canvas id="graphCanvas_Monthly"></canvas>
-        </div>
+        </div-->
     </div>
 </div>
 

@@ -29,6 +29,22 @@ if (!empty($month)) {
 // ตรวจสอบจำนวนวันในเดือนที่เลือก
 $daysInMonth = getDaysInMonth($month, $year);
 
+$sql_sum = "SELECT 
+            SUM(CAST(TRD_QTY AS DECIMAL(10, 2))) AS TRD_QTY,
+            SUM(CAST(TRD_AMOUNT_PRICE AS DECIMAL(10, 2))) AS TRD_AMOUNT_PRICE
+        FROM ims_data_sale_sac_all
+        WHERE DI_YEAR = :DI_YEAR AND SALE_NAME = :SALE_NAME ";
+
+$stmt_sum = $conn->prepare($sql_sum);
+$stmt_sum->bindParam(':DI_YEAR', $year);
+$stmt_sum->bindParam(':SALE_NAME', $sale_name);
+$stmt_sum->execute();
+
+while ($row_sum = $stmt_sum->fetch(PDO::FETCH_ASSOC)) {
+    $total_qty = $row_sum['TRD_QTY'];
+    $total_amount_price= $row_sum['TRD_AMOUNT_PRICE'];
+}
+
 $sql = "SELECT DI_MONTH_NAME, DI_DAY,
             SUM(CAST(TRD_QTY AS DECIMAL(10, 2))) AS TRD_QTY,
             SUM(CAST(TRD_AMOUNT_PRICE AS DECIMAL(10, 2))) AS TRD_AMOUNT_PRICE
@@ -104,7 +120,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 <body>
 <div class="card">
     <div class="card-header bg-success text-white">
-        <i class="fa fa-bar-chart" aria-hidden="true"></i> กราฟแสดงยอดขาย รายวัน - รายเดือน
+        <i class="fa fa-table" aria-hidden="true"></i> รายงานแสดงยอดขาย รายวัน - รายเดือน
         <?php echo $sale_name . " ปี " . $year; ?>
     </div>
     <input type="hidden" name="month" id="month" value="<?php echo $month; ?>">
@@ -118,7 +134,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         <!-- แสดงข้อมูลเป็นตาราง -->
         <div class="table-responsive">
-            <h5 class="mb-3">ข้อมูลยอดขายรายวัน <?php echo  " ปี " . $year . " Sale " . $sale_name; ?></h5>
+            <h5 class="mb-3">ข้อมูลยอดขายรายวัน <?php echo  " ปี " . $year . " Sale " . $sale_name , " รวมทั้งสิ้น : " . number_format($total_amount_price, 2); ?></h5>
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="table-primary">

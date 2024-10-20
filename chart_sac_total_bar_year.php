@@ -3,7 +3,8 @@
 include("config/connect_db.php");
 
 // ฟังก์ชันในการคำนวณจำนวนวันในเดือนที่เลือก
-function getDaysInMonth($month, $year) {
+function getDaysInMonth($month, $year)
+{
     return cal_days_in_month(CAL_GREGORIAN, $month, $year);
 }
 
@@ -42,7 +43,7 @@ $stmt_sum->execute();
 
 while ($row_sum = $stmt_sum->fetch(PDO::FETCH_ASSOC)) {
     $total_qty = $row_sum['TRD_QTY'];
-    $total_amount_price= $row_sum['TRD_AMOUNT_PRICE'];
+    $total_amount_price = $row_sum['TRD_AMOUNT_PRICE'];
 }
 
 $sql = "SELECT DI_MONTH_NAME, DI_DAY,
@@ -101,19 +102,31 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             width: 1400px;
             margin: 3rem auto;
         }
+
         #chart-container {
             width: 100%;
             height: auto;
         }
+
         .table td {
             text-align: right; /* จัดตัวเลขชิดขวา */
         }
+
         .table td:nth-child(1) {
             width: 150px; /* กำหนดความกว้างของคอลัมน์ชื่อเดือน */
             white-space: nowrap; /* ไม่ให้ชื่อเดือนแสดงในหลายบรรทัด */
             overflow: hidden; /* ซ่อนข้อความที่เกิน */
             text-overflow: ellipsis; /* แสดง ... ถ้าข้อความยาวเกิน */
         }
+
+        .table th:first-child,
+        .table td:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #f8f9fa; /* สีพื้นหลังสำหรับคอลัมน์ที่ fix ไว้ */
+            z-index: 1; /* ให้คอลัมน์นี้อยู่ด้านบนสุด */
+        }
+
     </style>
 </head>
 
@@ -133,12 +146,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         </div>
 
         <!-- แสดงข้อมูลเป็นตาราง -->
+        <h5 class="mb-3">
+            ข้อมูลยอดขายรายวัน <?php echo " ปี " . $year . " Sale " . $sale_name, " รวมทั้งสิ้น : " . number_format($total_amount_price, 2); ?></h5>
         <div class="table-responsive">
-            <h5 class="mb-3">ข้อมูลยอดขายรายวัน <?php echo  " ปี " . $year . " Sale " . $sale_name , " รวมทั้งสิ้น : " . number_format($total_amount_price, 2); ?></h5>
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="table-primary">
-                    <th style="text-align: left;">เดือน</th> <!-- จัดชิดซ้ายสำหรับหัวข้อเดือน -->
+                    <th style="text-align: left;">เดือน/วัน</th> <!-- จัดชิดซ้ายสำหรับหัวข้อเดือน -->
                     <?php for ($day = 1; $day <= $daysInMonth; $day++) { ?>
                         <th><?= $day ?></th>
                     <?php } ?>
@@ -153,7 +167,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 foreach ($data as $month_name => $days) {
                     $sum = 0;
                     echo "<tr>";
-                    echo "<td style='text-align: left;'>{$month_name}</td>"; // ชื่อเดือนชิดซ้าย
+                    echo "<td class=\"table-primary\" style='text-align: left;'>{$month_name}</td>"; // ชื่อเดือนชิดซ้าย
                     for ($day = 1; $day <= $daysInMonth; $day++) {
                         $value = isset($days[$day]) ? number_format($days[$day], 2) : number_format(0, 2); // จัดรูปแบบตัวเลข
                         echo "<td>{$value}</td>";
@@ -173,7 +187,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     } ?>
                     <td><strong><?= number_format($totalSum, 2) ?></strong></td> <!-- จัดรูปแบบตัวเลขยอดรวมทั้งหมด -->
                 </tr>
-                 <?php */?>
+                 <?php */ ?>
                 </tbody>
             </table>
         </div>
@@ -190,7 +204,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         let year = $("#year").val();
         let SALE_NAME = $("#SALE_NAME").val();
 
-        $.post("engine/chart_data_sac_daily.php", { month: month, year: year, SALE_NAME: SALE_NAME }, function (data) {
+        $.post("engine/chart_data_sac_daily.php", {month: month, year: year, SALE_NAME: SALE_NAME}, function (data) {
             let date = [];
             let total = [];
 
@@ -220,7 +234,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         y: {
                             ticks: {
                                 callback: function (value) {
-                                    return value.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                    return value.toLocaleString('th-TH', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
                                 }
                             }
                         }
@@ -229,7 +246,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         tooltip: {
                             callbacks: {
                                 label: function (tooltipItem) {
-                                    return tooltipItem.raw.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                    return tooltipItem.raw.toLocaleString('th-TH', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
                                 }
                             }
                         }
@@ -243,7 +263,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         let year = $("#year").val();
         let SALE_NAME = $("#SALE_NAME").val();
 
-        $.post("engine/chart_data_sac_monthly.php", { year: year, SALE_NAME: SALE_NAME }, function (data) {
+        $.post("engine/chart_data_sac_monthly.php", {year: year, SALE_NAME: SALE_NAME}, function (data) {
             let month = [];
             let total = [];
 
@@ -273,7 +293,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         y: {
                             ticks: {
                                 callback: function (value) {
-                                    return value.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                    return value.toLocaleString('th-TH', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
                                 }
                             }
                         }
@@ -282,7 +305,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         tooltip: {
                             callbacks: {
                                 label: function (tooltipItem) {
-                                    return tooltipItem.raw.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                    return tooltipItem.raw.toLocaleString('th-TH', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
                                 }
                             }
                         }

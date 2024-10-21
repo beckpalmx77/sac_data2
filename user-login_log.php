@@ -53,15 +53,15 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <thead>
                                                 <tr>
                                                     <th>User Login</th>
-                                                    <th>วันที่-เวลา Login</th>
-                                                    <th>ip_address</th>
+                                                    <th>Login Timestamp</th>
+                                                    <th>IP Address</th>
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
                                                 <tr>
                                                     <th>User Login</th>
-                                                    <th>วันที่-เวลา Login</th>
-                                                    <th>ip_address</th>
+                                                    <th>Login Timestamp</th>
+                                                    <th>IP Address</th>
                                                 </tr>
                                                 </tfoot>
                                             </table>

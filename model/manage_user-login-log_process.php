@@ -152,7 +152,7 @@ if ($_POST["action"] === 'GET_LOGIN_LOG') {
 
 ## Fetch records
     $stmt = $conn->prepare("SELECT * FROM log_user_login WHERE 1 " . $searchQuery
-        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+        . " ORDER BY id DESC " . " LIMIT :limit,:offset");
 
 // Bind values
     foreach ($searchArray as $key => $search) {

@@ -99,7 +99,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             </option>
                                                                         <?php } ?>
                                                                     </select-->
-                                                                    <input type="hidden" id="month" value="<?php echo $month_num; ?>">
+                                                                    <input type="hidden" id="month"
+                                                                           value="<?php echo $month_num; ?>">
                                                                     <label for="year">เลือกปี :</label>
                                                                     <select name="year" id="year" class="form-control"
                                                                             required>
@@ -124,7 +125,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <div class="col-sm-12">
                                                                             <button type="button" id="BtnSale"
                                                                                     name="BtnSale"
-                                                                                    class="btn btn-primary mb-3">แสดงรายงานยอดขาย
+                                                                                    class="btn btn-primary mb-3">
+                                                                                แสดงรายงานยอดขาย
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -197,10 +199,15 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
 
         $("#BtnSale").click(function () {
-            document.forms['myform'].action = 'chart_sac_total_bar_year';
-            document.forms['myform'].target = '_blank';
-            document.forms['myform'].submit();
-            return true;
+            if ($("#SALE_NAME").val() !== '-') {
+                document.forms['myform'].action = 'chart_sac_total_bar_year';
+                document.forms['myform'].target = '_blank';
+                document.forms['myform'].submit();
+                return true;
+            } else {
+                alertify.error("เลือก SALE_NAME");
+            }
+
         });
 
     </script>

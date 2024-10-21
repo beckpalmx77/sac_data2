@@ -94,7 +94,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                             <div class="row">
                                                                 <div class="col-sm-12">
-
                                                                     <label for="month">เลือกเดือน :</label>
                                                                     <select name="month" id="month" class="form-control"
                                                                             required>

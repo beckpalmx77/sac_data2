@@ -38,7 +38,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <section class="container-fluid">
 
-                                        <div class="col-md-12 col-md-offset-2">
+                                        <!--div class="col-md-12 col-md-offset-2">
                                             <label for="login_timestamp"
                                                    class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
 
@@ -46,7 +46,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     class='btn btn-primary btn-xs'>Add
                                                 <i class="fa fa-plus"></i>
                                             </button>
-                                        </div>
+                                        </div-->
 
                                         <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
@@ -55,8 +55,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>User Login</th>
                                                     <th>วันที่-เวลา Login</th>
                                                     <th>ip_address</th>
-                                                    <th>Action</th>
-                                                    <th>Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
@@ -64,8 +62,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                     <th>User Login</th>
                                                     <th>วันที่-เวลา Login</th>
                                                     <th>ip_address</th>
-                                                    <th>Action</th>
-                                                    <th>Action</th>
                                                 </tr>
                                                 </tfoot>
                                             </table>
@@ -294,9 +290,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 'columns': [
                     {data: 'user_id'},
                     {data: 'login_timestamp'},
-                    {data: 'ip_address'},
-                    {data: 'update'},
-                    {data: 'delete'}
+                    {data: 'ip_address'}
                 ]
             });
 

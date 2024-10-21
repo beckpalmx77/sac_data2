@@ -9,7 +9,7 @@ function getDaysInMonth($month, $year) {
 
 $year = $_POST["year"] ?? '';
 $month = $_POST["month"] ?? '';
-$sale_name = $_POST["SALE_NAME"]!=='-'  ? $_POST["SALE_NAME"] : '%';
+$sale_name = $_POST["SALE_NAME"] ?? '%';
 
 // ตรวจสอบจำนวนวันในเดือนที่เลือก
 $daysInMonth = getDaysInMonth($month, $year);
@@ -32,14 +32,6 @@ $sql = "SELECT BRAND, DI_DAY,
     WHERE DI_YEAR = :DI_YEAR AND DI_MONTH = :DI_MONTH AND SALE_NAME LIKE :SALE_NAME
     GROUP BY BRAND, DI_DAY 
     ORDER BY BRAND, CAST(DI_DAY AS UNSIGNED)";
-
-$txt = $year . " | " . $month . " | " . $sale_name;
-
-/*
-$myfile = fopen("sale-param.txt", "w") or die("Unable to open file!");
-fwrite($myfile, $sql . " \ " . $txt);
-fclose($myfile);
-*/
 
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':DI_YEAR', $year);

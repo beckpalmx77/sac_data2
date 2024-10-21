@@ -9,7 +9,7 @@ function getDaysInMonth($month, $year) {
 
 $year = $_POST["year"] ?? '';
 $month = $_POST["month"] ?? '';
-$sale_name = $_POST["SALE_NAME"]!=='-'  ? $_POST["SALE_NAME"] : '%';
+$sale_name = $_POST["SALE_NAME"] ?? '%';
 
 // ตรวจสอบจำนวนวันในเดือนที่เลือก
 $daysInMonth = getDaysInMonth($month, $year);
@@ -28,7 +28,7 @@ foreach ($MonthRecords as $row) {
 $sql = "SELECT BRAND, DI_DAY,
         SUM(CAST(TRD_QTY AS DECIMAL(10, 2))) AS TRD_QTY,
         SUM(CAST(TRD_AMOUNT_PRICE AS DECIMAL(10, 2))) AS TRD_AMOUNT_PRICE
-    FROM v_ims_data_sale_sac_all_sm_tire
+    FROM v_ims_data_sale_sac_all_ml_tire
     WHERE DI_YEAR = :DI_YEAR AND DI_MONTH = :DI_MONTH AND SALE_NAME LIKE :SALE_NAME
     GROUP BY BRAND, DI_DAY 
     ORDER BY BRAND, CAST(DI_DAY AS UNSIGNED)";
@@ -115,7 +115,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 <div class="card">
     <div class="card-header bg-success text-white">
         <i class="fa fa-bar-chart" aria-hidden="true"></i> กราฟแสดงยอดขาย
-        <?php echo "ประเภท ยางเล็ก " . " ชื่อ Sale " . $sale_name . " เดือน " . $month_name . " ปี " . $year; ?>
+        <?php echo "ประเภท ยางกลาง-ใหญ่ " . " ชื่อ Sale " . $sale_name . " เดือน " . $month_name . " ปี " . $year; ?>
     </div>
     <input type="hidden" name="month" id="month" value="<?php echo $month; ?>">
     <input type="hidden" name="month_name" id="month_name" value="<?php echo $month_name; ?>">
@@ -130,7 +130,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         <!-- แสดงข้อมูลเป็นตาราง -->
         <div class="table-responsive">
-            <h5 class="mb-3">ข้อมูลยอดขายรายวัน ยางเล็ก ตามยี่ห้อ  <?php echo $month_name . ' ปี ' . $year . " Sale " . $sale_name ; ?></h5>
+            <h5 class="mb-3">ข้อมูลยอดขายรายวัน ยางกลาง-ใหญ่ ตามยี่ห้อ  <?php echo $month_name . ' ปี ' . $year . " Sale " . $sale_name ; ?></h5>
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="table-primary">
@@ -197,7 +197,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     const saleName = '<?php echo $sale_name; ?>';
     const monthName = '<?php echo $month_name; ?>';
     const year = '<?php echo $year; ?>';
-    const titleText = `ยอดขาย ยางเล็ก รายยี่ห้อในเดือน ${monthName} ปี ${year} สำหรับ ${saleName}`;
+    const titleText = `ยอดขาย ยางกลาง-ใหญ่ รายยี่ห้อในเดือน ${monthName} ปี ${year} สำหรับ ${saleName}`;
 
     // จัดรูปแบบข้อมูลสำหรับกราฟ
     const labels = Array.from({length: daysInMonth}, (_, i) => i + 1); // จำนวนวันที่สอดคล้องกับเดือนที่เลือก

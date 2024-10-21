@@ -124,7 +124,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <div class="col-sm-12">
                                                                             <button type="button" id="BtnSale"
                                                                                     name="BtnSale"
-                                                                                    class="btn btn-primary mb-3">แสดง Chart ยอดขาย
+                                                                                    class="btn btn-primary mb-3">แสดงรายงานยอดขาย
                                                                             </button>
                                                                         </div>
                                                                     </div>

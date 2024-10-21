@@ -234,8 +234,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         display: true,
                         text: 'วันที่'
                     },
-                    barPercentage: 1, // ปรับขนาดแท่งให้กว้างขึ้น
-                    categoryPercentage: 1 // ปรับขนาดของกลุ่มแท่ง
+                    barPercentage: 100, // ปรับขนาดแท่งให้กว้างขึ้น
+                    categoryPercentage: 100 // ปรับขนาดของกลุ่มแท่ง
                 },
                 y: {
                     title: {

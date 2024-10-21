@@ -73,7 +73,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             // Map data from Excel row to your table structure
             $SKU_CODE = isset($row[0]) && trim($row[0]) !== "-" && trim($row[0]) !== "" ? trim($row[0]) : "-";
             $SKU_NAME = isset($row[1]) && trim($row[1]) !== "-" && trim($row[1]) !== "" ? trim($row[1]) : "-";
-            $BRAND = isset($row[2]) && trim($row[2]) !== "-" && trim($row[2]) !== "" ? trim($row[2]) : "-";
+            $BRAND = isset($row[2]) && trim($row[2]) !== "-" && trim($row[2]) !== "" ? strtoupper(trim($row[2])) : "0";
             $SKU_CAT = isset($row[3]) && trim($row[3]) !== "-" && trim($row[3]) !== "" ? trim($row[3]) : "-";
             $TIRES_EDGE = isset($row[4]) && trim($row[4]) !== "-" && trim($row[4]) !== "" ? trim($row[4]) : "-";
             $TRD_U_POINT = isset($row[5]) && is_numeric(trim($row[5])) && trim($row[5]) !== "-" ? trim($row[5]) : "0";

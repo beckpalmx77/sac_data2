@@ -39,8 +39,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                     <section class="container-fluid">
 
                                         <div class="col-md-12 col-md-offset-2">
-                                            <ar_name for="ar_name"
-                                                   class="control-ar_name"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></ar_name>
+                                            <label for="ar_name"
+                                                   class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
 
                                             <button type='button' name='btnAdd' id='btnAdd'
                                                     class='btn btn-primary btn-xs'>Add
@@ -54,22 +54,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 <tr>
                                                     <th>รหัสลูกค้า</th>
                                                     <th>ชื่อลูกค้า</th>
-                                                    <th>status</th>
+                                                    <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
-                                                <tfoot>
-                                                <tr>
-                                                    <th>รหัสลูกค้า</th>
-                                                    <th>ชื่อลูกค้า</th>
-                                                    <th>status</th>
-                                                    <th>Icon</th>
-                                                    <th>Privilege</th>
-                                                    <th>Action</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                                </tfoot>
                                             </table>
 
                                             <div id="result"></div>
@@ -89,32 +78,33 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <div class="modal-body">
                                                             <div class="modal-body">
 
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-4">
-                                                                        <ar_name for="ar_code" class="control-ar_name">รหัสลูกค้า</ar_name>
-                                                                        <input type="ar_code" class="form-control"
-                                                                               id="ar_code" name="ar_code"
-                                                                               readonly="true"
-                                                                               placeholder="รหัสลูกค้า">
-                                                                    </div>
-                                                                    <div class="col-sm-8">
-                                                                        <ar_name for="ar_name"
-                                                                               class="control-ar_name">ชื่อลูกค้า</ar_name>
-                                                                        <input type="text" class="form-control"
-                                                                               id="ar_name"
-                                                                               name="ar_name"
-                                                                               required="required"
-                                                                               placeholder="ชื่อลูกค้า">
-                                                                    </div>
+                                                                <div class="form-group">
+                                                                    <label for="ar_code" class="control-label">รหัสลูกค้า</label>
+                                                                    <input type="ar_code" class="form-control"
+                                                                           id="ar_code" name="ar_code"
+                                                                           readonly="true"
+                                                                           placeholder="สร้างอัตโนมัติ">
                                                                 </div>
 
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-6">
-                                                                        <ar_name for="status" class="control-ar_name">status</ar_name>
-                                                                        <input type="status" class="form-control"
-                                                                               id="status" name="status"
-                                                                               placeholder="status">
-                                                                    </div>
+                                                                <div class="form-group">
+                                                                    <label for="ar_name"
+                                                                           class="control-label">ชื่อลูกค้า</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="ar_name"
+                                                                           name="ar_name"
+                                                                           required="required"
+                                                                           placeholder="ชื่อลูกค้า">
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="status"
+                                                                           class="control-label">Status</label>
+                                                                    <select id="status" name="status"
+                                                                            class="form-control" data-live-search="true"
+                                                                            title="Please select">
+                                                                        <option>Y</option>
+                                                                        <option>N</option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -138,6 +128,46 @@ if (strlen($_SESSION['alogin']) == "") {
                                         </div>
 
 
+                                        <div class="modal fade" id="SearchModal">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Modal title</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-hidden="true">×
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="container"></div>
+                                                    <div class="modal-body">
+
+                                                        <div class="modal-body">
+
+                                                            <table cellpadding="0" cellspacing="0" border="0"
+                                                                   class="display"
+                                                                   id="TableUnitList"
+                                                                   width="100%">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>รหัส</th>
+                                                                    <th>ยี่ห้อ-ชื่อทางการค้า</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tfoot>
+                                                                <tr>
+                                                                    <th>รหัส</th>
+                                                                    <th>ยี่ห้อ-ชื่อทางการค้า</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
                                 </div>
                             </div>
                         </div>
@@ -169,13 +199,13 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <!--script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
-    <status rel="stylesheet" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.min.css"/>
-    <status rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"/-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"/-->
 
     <script src="vendor/datatables/v11/bootbox.min.js"></script>
     <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
-    <status rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
-    <status rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
+    <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 
     <style>
 
@@ -207,11 +237,12 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
 
-        $("#ar_code").blur(function () {
+        $("#ar_name").blur(function () {
             let method = $('#action').val();
             if (method === "ADD") {
                 let ar_code = $('#ar_code').val();
-                let formData = {action: "SEARCH", ar_code: ar_code};
+                let ar_name = $('#ar_name').val();
+                let formData = {action: "SEARCH", ar_code: ar_code, ar_name: ar_name};
                 $.ajax({
                     url: 'model/manage-ar-shop-process.php',
                     method: "POST",
@@ -231,7 +262,7 @@ if (strlen($_SESSION['alogin']) == "") {
         $(document).ready(function () {
             let formData = {action: "GET_AR_SHOP", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
+                'lengthMenu': [[6, 10, 20, 50, 100], [6, 10, 20, 50, 100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
                     info: 'หน้าที่ _PAGE_ จาก _PAGES_',
@@ -289,7 +320,6 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#id').val("");
                 $('#ar_code').val("");
                 $('#ar_name').val("");
-                $('#status').val("");
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');

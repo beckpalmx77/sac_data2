@@ -43,6 +43,7 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
         $user_id = $_SESSION['user_id'];
         $table_name = "ims_sac_tires_point";
+        $insertRows = 0;
         $updatetedRows = 0;
         $duplicateRows = 0;
         $totalRows = 0;
@@ -70,21 +71,22 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $totalRows++;
 
             // Map data from Excel row to your table structure
-            $SKU_CODE = isset($row[0]) ? trim($row[0]) : "0";
-            $SKU_NAME = isset($row[1]) ? trim($row[1]) : "0";
-            $BRAND = isset($row[2]) ? trim($row[2]) : "0";
-            $SKU_CAT = isset($row[3]) ? trim($row[3]) : "0";
-            $TIRES_EDGE = isset($row[4]) ? trim($row[4]) : "0";
-            $TRD_U_POINT = isset($row[5]) ? trim($row[5]) : "0";
-            $TRD_S_POINT = isset($row[6]) ? trim($row[6]) : "0";
+            $SKU_CODE = isset($row[0]) && trim($row[0]) !== "-" && trim($row[0]) !== "" ? trim($row[0]) : "-";
+            $SKU_NAME = isset($row[1]) && trim($row[1]) !== "-" && trim($row[1]) !== "" ? trim($row[1]) : "-";
+            $BRAND = isset($row[2]) && trim($row[2]) !== "-" && trim($row[2]) !== "" ? trim($row[2]) : "-";
+            $SKU_CAT = isset($row[3]) && trim($row[3]) !== "-" && trim($row[3]) !== "" ? trim($row[3]) : "-";
+            $TIRES_EDGE = isset($row[4]) && trim($row[4]) !== "-" && trim($row[4]) !== "" ? trim($row[4]) : "-";
+            $TRD_U_POINT = isset($row[5]) && is_numeric(trim($row[5])) && trim($row[5]) !== "-" ? trim($row[5]) : "0";
+            $TRD_S_POINT = isset($row[6]) && is_numeric(trim($row[6])) && trim($row[6]) !== "-" ? trim($row[6]) : "0";
 
-
-            /*
-                        $txt = $SKU_CAT . " | " . $SKU_CODE . " | " . $SKU_NAME;
-                        $myfile = fopen("sac_cust_param.txt", "w") or die("Unable to open file!");
-                        fwrite($myfile, $txt);
-                        fclose($myfile);
-            */
+            // เขียนข้อมูลลงไฟล์ txt
+/*
+            $txt .= $SKU_CODE . " | " . $SKU_NAME . " | " . $BRAND . " | " . $SKU_CAT . " | " . $TIRES_EDGE . " | "
+                . $TRD_U_POINT . " | " . $TRD_S_POINT . " Total Row = " . $totalRows . "\n\r";
+            $myfile = fopen("sac_tires_point_param.txt", "a") or die("Unable to open file!"); // เปลี่ยนเป็น append
+            fwrite($myfile, $txt);
+            fclose($myfile);
+*/
 
             // Check if the record exists
             $statement = $conn->prepare("SELECT COUNT(*) FROM $table_name WHERE SKU_CODE = ?");
@@ -92,8 +94,9 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $rowCount = $statement->fetchColumn();
 
             if ($rowCount >= 1) {
-                $sql_update = "UPDATE $table_name SET SKU_NAME = :SKU_NAME , BRAND = :BRAND , SKU_CAT = :SKU_CAT , TIRES_EDGE =:TIRES_EDGE ,
-                , TRD_U_POINT = :TRD_U_POINT , TRD_S_POINT = :TRD_S_POINT 
+                // คำสั่ง SQL ถูกต้องหลังจากแก้ไข
+                $sql_update = "UPDATE $table_name SET SKU_NAME = :SKU_NAME , BRAND = :BRAND , SKU_CAT = :SKU_CAT , TIRES_EDGE =:TIRES_EDGE,
+                TRD_U_POINT = :TRD_U_POINT , TRD_S_POINT = :TRD_S_POINT 
                 WHERE SKU_CODE = :SKU_CODE";
                 $stmt_update = $conn->prepare($sql_update);
                 $stmt_update->bindParam(':SKU_NAME', $SKU_NAME, PDO::PARAM_STR);
@@ -105,10 +108,10 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                 $stmt_update->bindParam(':SKU_CODE', $SKU_CODE, PDO::PARAM_STR);
                 $stmt_update->execute();
                 $updatetedRows++; // นับแถวที่นำเข้าสำเร็จ
-                $status = "Y";
+                $status = "U";
             } else {
                 $sql_update = "INSERT INTO $table_name (SKU_CODE,SKU_NAME,BRAND,SKU_CAT,TIRES_EDGE,TRD_U_POINT,TRD_S_POINT) 
-                VALUES (:SKU_CODE,:SKU_NAME,:BRAND,:SKU_CAT,:TIRES_EDGE,:TRD_U_POINT,:TRD_S_POINT) ";
+                VALUES (:SKU_CODE,:SKU_NAME,:BRAND,:SKU_CAT,:TIRES_EDGE,:TRD_U_POINT,:TRD_S_POINT)";
                 $stmt_update = $conn->prepare($sql_update);
                 $stmt_update->bindParam(':SKU_CODE', $SKU_CODE, PDO::PARAM_STR);
                 $stmt_update->bindParam(':SKU_NAME', $SKU_NAME, PDO::PARAM_STR);
@@ -119,16 +122,21 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                 $stmt_update->bindParam(':TRD_S_POINT', $TRD_S_POINT, PDO::PARAM_STR);
                 $stmt_update->execute();
                 $insertRows++; // นับแถวที่นำเข้าสำเร็จ
-                $status = "Y";
+                $status = "I";
             }
         }
 
-        $import_success = "$file_Upload \n\r $upload_status \n\r จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r";
+        if ($status === 'U') {
+            $import_success = "$file_Upload \n\r $upload_status \n\r จำนวนที่ Upload จาก Excel : $totalRows รายการ Update สำเร็จ $updatetedRows\n\r";
+        } else {
+            $import_success = "$file_Upload \n\r $upload_status \n\r จำนวนที่ Insert จาก Excel : $totalRows รายการ insert สำเร็จ $insertRows \n\r";
+        }
+
         echo $import_success;
 
     } catch (Exception $e) {
+        echo "Error processing file: " . $e->getMessage();
         error_log("Error processing file: " . $e->getMessage());
-        echo "Error processing file.";
     }
 } else {
     echo "Error uploading file.";

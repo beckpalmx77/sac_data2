@@ -227,14 +227,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $("#scrollLeft").on("click", function () {
             $(".scroll-table").animate({
                 scrollLeft: "-=100" // เลื่อนซ้ายทีละ 100px
-            }, 400); // เวลาในการเลื่อน (400ms)
+            }, 200); // เวลาในการเลื่อน (400ms)
         });
 
         // เมื่อคลิกปุ่ม Scroll Right
         $("#scrollRight").on("click", function () {
             $(".scroll-table").animate({
                 scrollLeft: "+=100" // เลื่อนขวาทีละ 100px
-            }, 400); // เวลาในการเลื่อน (400ms)
+            }, 200); // เวลาในการเลื่อน (400ms)
         });
     });
 </script>

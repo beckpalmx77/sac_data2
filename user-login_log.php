@@ -52,8 +52,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
-                                                    <th>รหัสยี่ห้อ-ชื่อทางการค้า</th>
-                                                    <th>ชื่อยี่ห้อ-ชื่อทางการค้า</th>
+                                                    <th>User Login</th>
+                                                    <th>วันที่-เวลา Login</th>
                                                     <th>ip_address</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -61,8 +61,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </thead>
                                                 <tfoot>
                                                 <tr>
-                                                    <th>รหัสยี่ห้อ-ชื่อทางการค้า</th>
-                                                    <th>ชื่อยี่ห้อ-ชื่อทางการค้า</th>
+                                                    <th>User Login</th>
+                                                    <th>วันที่-เวลา Login</th>
                                                     <th>ip_address</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -88,7 +88,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="modal-body">
 
                                                                 <div class="form-group">
-                                                                    <label for="user_id" class="control-label">รหัสยี่ห้อ-ชื่อทางการค้า</label>
+                                                                    <label for="user_id" class="control-label">User Login</label>
                                                                     <input type="user_id" class="form-control"
                                                                            id="user_id" name="user_id"
                                                                            readonly="true"
@@ -97,12 +97,12 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                                 <div class="form-group">
                                                                     <label for="login_timestamp"
-                                                                           class="control-label">ชื่อยี่ห้อ-ชื่อทางการค้า</label>
+                                                                           class="control-label">วันที่-เวลา Login</label>
                                                                     <input type="text" class="form-control"
                                                                            id="login_timestamp"
                                                                            name="login_timestamp"
                                                                            required="required"
-                                                                           placeholder="ชื่อยี่ห้อ-ชื่อทางการค้า">
+                                                                           placeholder="วันที่-เวลา Login">
                                                                 </div>
 
                                                                 <div class="form-group">

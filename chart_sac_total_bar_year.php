@@ -130,10 +130,17 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     </style>
 
     <style>
+
         /* กำหนดขนาดของตาราง */
+/*
         .scroll-table {
-            max-width: 1400px; /* ความกว้างที่ต้องการให้ scrollbar ปรากฏ */
+            max-width: 1400px;
             overflow-x: scroll;
+        }
+*/
+        .scroll-table {
+            max-width: 100%;
+            overflow-x: auto;
         }
 
         .scroll-buttons {

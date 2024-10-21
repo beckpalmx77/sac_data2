@@ -9,7 +9,7 @@ function getDaysInMonth($month, $year) {
 
 $year = $_POST["year"] ?? '';
 $month = $_POST["month"] ?? '';
-$sale_name = $_POST["SALE_NAME"] ?? '%';
+$sale_name = $_POST["SALE_NAME"]!=='-'  ? $_POST["SALE_NAME"] : '%';
 
 // ตรวจสอบจำนวนวันในเดือนที่เลือก
 $daysInMonth = getDaysInMonth($month, $year);

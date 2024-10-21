@@ -32,7 +32,7 @@ foreach ($MonthCurr as $row_curr) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ยอดขายสินค้า</title>
+    <title>สรุปคะแนนลูกค้า</title>
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -117,15 +117,13 @@ foreach ($MonthCurr as $row_curr) {
         function loadSalesData() {
             let year = $('#year').val();
             let month = $('#month').val();
-            let sale_name = $('#sale').val();
-
+            let title = 'สรุปคะแนนลูกค้า-เดือน-' + month + "-" + year;
             $.ajax({
                 url: 'model/fetch_data_tires_point_ar_name.php',
                 type: 'POST',
                 data: {
                     year: year,
                     month: month,
-                    SALE_NAME: sale_name
                 },
                 dataType: 'json',
                 success: function (data) {
@@ -159,7 +157,7 @@ foreach ($MonthCurr as $row_curr) {
                         buttons: [
                             {
                                 extend: 'excelHtml5',
-                                title: 'สรุปคะแนนลูกค้า',
+                                title: title,
                                 text: 'Export Excel'
                             }
                         ]

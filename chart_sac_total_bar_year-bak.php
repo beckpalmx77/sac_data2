@@ -132,7 +132,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <style>
         /* กำหนดขนาดของตาราง */
         .scroll-table {
-            max-width: 1400px; /* ความกว้างที่ต้องการให้ scrollbar ปรากฏ */
+            max-width: 300px; /* ความกว้างที่ต้องการให้ scrollbar ปรากฏ */
             overflow-x: scroll;
         }
 
@@ -165,7 +165,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         <!-- แสดงข้อมูลเป็นตาราง -->
         <h5 class="mb-3">
             ข้อมูลยอดขายรายวัน <?php echo " ปี " . $year . " Sale " . $sale_name, " รวมทั้งสิ้น : " . number_format($total_amount_price, 2); ?></h5>
-        <div class="scroll-table">
+        <div class="table-responsive">
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="table-primary">
@@ -208,17 +208,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 </tbody>
             </table>
         </div>
-    </div>
-    <h5 class="mb-3">Click Scroll Bar ใต้ตารางเพื่อเลื่อนดูข้อมูลเพิ่มเติม -></h5>
-    <div class="scroll-buttons text-center">
-        <button id="scrollLeft" class="btn btn-primary">เลื่อนซ้าย</button>
-        <button id="scrollRight" class="btn btn-primary">เลื่อนขวา</button>
-    </div>
+        <h5 class="mb-3">Click Scroll Bar ใต้ตารางเพื่อเลื่อนดูข้อมูลเพิ่มเติม -></h5>
+        <div class="scroll-buttons text-center">
+            <button id="scrollLeft" class="btn btn-primary">Scroll Left</button>
+            <button id="scrollRight" class="btn btn-primary">Scroll Right</button>
+        </div>
 
-    <!--div id="chart-container">
-        <canvas id="graphCanvas_Monthly"></canvas>
-    </div-->
-</div>
+        <!--div id="chart-container">
+            <canvas id="graphCanvas_Monthly"></canvas>
+        </div-->
+    </div>
 </div>
 
 <script>

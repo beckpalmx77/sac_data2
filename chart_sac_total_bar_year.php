@@ -208,12 +208,15 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 </tbody>
             </table>
         </div>
+
+        <h5 class="mb-3">Click Scroll Bar ใต้ตารางเพื่อเลื่อนดูข้อมูลเพิ่มเติม -></h5>
+        <div class="scroll-buttons text-center">
+            <button id="scrollLeft" class="btn btn-primary">เลื่อนซ้าย</button>
+            <button id="scrollRight" class="btn btn-primary">เลื่อนขวา</button>
+        </div>
+
     </div>
-    <h5 class="mb-3">Click Scroll Bar ใต้ตารางเพื่อเลื่อนดูข้อมูลเพิ่มเติม -></h5>
-    <div class="scroll-buttons text-center">
-        <button id="scrollLeft" class="btn btn-primary">เลื่อนซ้าย</button>
-        <button id="scrollRight" class="btn btn-primary">เลื่อนขวา</button>
-    </div>
+
 
     <!--div id="chart-container">
         <canvas id="graphCanvas_Monthly"></canvas>

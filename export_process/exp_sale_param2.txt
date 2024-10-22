@@ -1,0 +1,1 @@
+sql = SELECT * FROM ims_data_sale_sac_all sale_sac WHERE 1  AND STR_TO_DATE(DI_DATE, '%d-%m-%Y') BETWEEN '2024-01-01' AND '2024-10-21' order by SALE_NAME,STR_TO_DATE(DI_DATE, '%d-%m-%Y') 

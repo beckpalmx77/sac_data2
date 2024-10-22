@@ -11,8 +11,13 @@ $month = $_POST["month"] ?? '';
 $month = ($month === '' || $month === '-') ? "" : $month;
 
 /*
+$shop_type = $_POST["shop_type"] ?? '';
+$shop_type = ($shop_type === '' || $shop_type === '-') ? "" : $shop_type;
+*/
+
+/*
 $myfile = fopen("param.txt", "w") or die("Unable to open file!");
-fwrite($myfile, "year = " . $year . "| month = " . $month . " | sale = " . $sale);
+fwrite($myfile, "year = " . $year . "| month = " . $month);
 fclose($myfile);
 */
 
@@ -28,7 +33,7 @@ $sql = "SELECT
   SUM(COALESCE(total_points, 0)) AS total_points
 FROM v_sac_tires_summary_point_1
 WHERE 1 
-  AND DI_MONTH LIKE '%" . $month . "%'" . " AND DI_YEAR LIKE '%" . $year . "%' GROUP BY AR_CODE;";
+  AND DI_MONTH LIKE '%" . $month . "%'" . " AND DI_YEAR LIKE '%" . $year . "%' AND status LIKE '%' GROUP BY AR_CODE;";
 
 /*
 $myfile = fopen("param1.txt", "w") or die("Unable to open file!");

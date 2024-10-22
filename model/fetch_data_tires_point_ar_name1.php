@@ -9,7 +9,10 @@ $year = ($year === '' || $year === '-') ? "" : $year;
 
 $month = $_POST["month"] ?? '';
 $month = ($month === '' || $month === '-') ? "" : $month;
-
+/*
+$shop_type = $_POST["shop_type"] ?? '';
+$shop_type = ($shop_type === '' || $shop_type === '-') ? "" : $shop_type;
+*/
 /*
 $myfile = fopen("param.txt", "w") or die("Unable to open file!");
 fwrite($myfile, "year = " . $year . "| month = " . $month . " | sale = " . $sale);
@@ -36,7 +39,7 @@ $sql = "SELECT
     LEFT JOIN ims_ar_shop s ON s.AR_CODE = a.AR_CODE
     WHERE 1  
         AND a.DI_MONTH LIKE '%" . $month . "%'
-        AND a.DI_YEAR LIKE '%" . $year . "%%'
+        AND a.DI_YEAR LIKE '%" . $year . "%'        
         AND a.TRD_U_POINT > 0
         AND a.SKU_CODE NOT LIKE 'CL%'  
     GROUP BY a.AR_CODE, a.SKU_CODE
@@ -44,7 +47,7 @@ $sql = "SELECT
 
 /*
 $myfile = fopen("param1.txt", "w") or die("Unable to open file!");
-fwrite($myfile, "year = " . $year . "| month = " . $month . " | sale = " . $sale . " | " . $sql);
+fwrite($myfile, "year = " . $year . "| month = " . $month . " | " . $sql);
 fclose($myfile);
 */
 

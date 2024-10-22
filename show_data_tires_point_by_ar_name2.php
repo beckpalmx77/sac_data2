@@ -98,6 +98,15 @@ foreach ($MonthCurr as $row_curr) {
 
 <div class="container mt-5">
     <h3>สรุปคะแนนลูกค้า เดือน <?php echo $month_name . " ปี "  . $year  ?></h3>
+    <!--div class="row mb-3">
+    <div class="col-md-4">
+        <label for="filterShop_type">เลือกประเภทร้าน:</label>
+        <select id="filterShop_type" class="form-control">
+            <option value="">-- ประเภท --</option>
+            <option value="Y">SHOP</option>
+        </select>
+    </div>
+    </div-->
     <div class="table-responsive">
         <table class="table table-striped" id="salesTable">
             <thead>
@@ -128,6 +137,7 @@ foreach ($MonthCurr as $row_curr) {
 
             let year = $('#year').val();
             let month = $('#month').val();
+            //let shop_type = $('#filterShop_type').val();
             let title = 'สรุปคะแนนลูกค้า-เดือน-' + month + "-" + year;
 
             $.ajax({
@@ -136,6 +146,7 @@ foreach ($MonthCurr as $row_curr) {
                 data: {
                     year: year,
                     month: month,
+                    //shop_type:shop_type,
                 },
                 dataType: 'json',
                 success: function (data) {
@@ -183,6 +194,12 @@ foreach ($MonthCurr as $row_curr) {
                 }
             });
         }
+/*
+        $('#filterShop_type').on('change', function () {
+            loadSalesData(); // โหลดข้อมูลใหม่ตามที่เลือก
+        });
+
+ */
 
         function formatNumber(num) {
             return parseFloat(num).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});

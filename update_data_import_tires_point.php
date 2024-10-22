@@ -63,7 +63,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                                 <th>ยี่ห้อ</th>
                                                 <th>กลุ่มสินค้า</th>
                                                 <th>ขอบ</th>
-                                                <th>คะแนนร้านทั้วไป</th>
+                                                <th>คะแนนร้านทั่วไป</th>
                                                 <th>คะแนน Shop</th>
                                             </tr>
                                             </thead>
@@ -74,7 +74,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                                 <th>ยี่ห้อ</th>
                                                 <th>กลุ่มสินค้า</th>
                                                 <th>ขอบ</th>
-                                                <th>คะแนนร้านทั้วไป</th>
+                                                <th>คะแนนร้านทั่วไป</th>
                                                 <th>คะแนน Shop</th>
                                             </tr>
                                             </tfoot>

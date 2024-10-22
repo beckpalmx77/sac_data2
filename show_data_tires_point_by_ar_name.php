@@ -45,6 +45,8 @@ foreach ($MonthCurr as $row_curr) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 
+    <link href="css/spinner_over.css" rel="stylesheet"/>
+
     <style>
         /* กำหนดให้คอลัมน์ที่ 1 และ 2 อยู่คงที่ */
         .table-responsive {
@@ -88,9 +90,9 @@ foreach ($MonthCurr as $row_curr) {
 <input type="hidden" name="month_name" id="month_name" value="<?php echo $month_name; ?>">
 <input type="hidden" name="year" id="year" value="<?php echo $year; ?>">
 
-<div id="spinner" class="d-flex justify-content-center" style="display: none;">
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+<div id="spinner" class="text-center my-3" style="display: none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
     </div>
 </div>
 
@@ -119,13 +121,15 @@ foreach ($MonthCurr as $row_curr) {
 </div>
 
 <script>
+
     $(document).ready(function () {
         function loadSalesData() {
+            // แสดง spinner ก่อนเริ่มการโหลด
+            $('#spinner').show();
+
             let year = $('#year').val();
             let month = $('#month').val();
             let title = 'สรุปคะแนนลูกค้า-เดือน-' + month + "-" + year;
-
-            $('#spinner').show();
 
             $.ajax({
                 url: 'model/fetch_data_tires_point_ar_name.php',
@@ -152,19 +156,16 @@ foreach ($MonthCurr as $row_curr) {
                     });
                     $('#salesTable tbody').html(tbody);
 
-                    $('#spinner').hide();
-
                     // ทำลาย DataTables ก่อนถ้ามีการใช้งานอยู่แล้ว
                     if ($.fn.DataTable.isDataTable('#salesTable')) {
                         $('#salesTable').DataTable().destroy();
                     }
 
-                    // เรียกใช้งาน DataTables พร้อมตัวเลือก buttons สำหรับการ export
+                    // เรียกใช้งาน DataTables
                     $('#salesTable').DataTable({
                         "lengthMenu": [ [10, 20, 30, 50, 100], [10, 20, 30, 50, 100] ],
                         "pageLength": 10,
-                        "destroy": true,
-                        dom: 'Bfrtip', // เพิ่มส่วนของปุ่ม
+                        dom: 'Bfrtip',
                         buttons: [
                             {
                                 extend: 'excelHtml5',
@@ -173,9 +174,13 @@ foreach ($MonthCurr as $row_curr) {
                             }
                         ]
                     });
+
+                    // ซ่อน spinner เมื่อโหลดข้อมูลเสร็จ
+                    $('#spinner').hide();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error('Error loading sales data: ', textStatus, errorThrown);
+                    // ซ่อน spinner ในกรณีเกิดข้อผิดพลาด
                     $('#spinner').hide();
                 }
             });
@@ -187,6 +192,9 @@ foreach ($MonthCurr as $row_curr) {
 
         loadSalesData();
     });
+
+
+
 </script>
 
 </body>

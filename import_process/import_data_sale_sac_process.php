@@ -127,34 +127,131 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $DI_MONTH = convertMonthToNumberSingle(trim($DI_MONTH_NAME));
             $DI_DATE = formatNumber($DI_DAY, 2) . "-" . formatNumber($DI_MONTH, 2) . "-" . $DI_YEAR;
 
-            $statement = $conn->prepare("SELECT COUNT(*) FROM " . $table_name . " WHERE DI_DAY = ? AND DI_MONTH_NAME = ? 
-            AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? 
-            AND WL_CODE = ? AND TRD_QTY = ? AND TRD_PRC = ? AND TRD_AMOUNT_PRICE = ? AND TRD_SEQ = ?");
-            $statement->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE
-                , $TRD_QTY, $TRD_PRC, $TRD_AMOUNT_PRICE, $totalRows]);
-            $row = $statement->fetchColumn();
-            if ($row === 0) {
-                // Insert new record
-                $sql_insert = "INSERT INTO $table_name (DI_DAY, DI_MONTH_NAME, DI_YEAR, AR_CODE, SKU_CODE, SKU_NAME, DETAIL
-        , BRAND, DI_REF, AR_NAME, SALE_NAME, TAKE_NAME, TRD_QTY, TRD_PRC, TRD_DISCOUNT, TRD_TOTAL_PRICE, TRD_VAT, TRD_AMOUNT_PRICE
-        , TRD_PER_POINT, TRD_TOTAL_POINT, WL_CODE, TRD_Q_FREE, TRD_AMPHUR, TRD_PROVINCE, TRD_MARK, TRD_U_POINT, TRD_R_POINT
-        , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT,DI_MONTH,DI_DATE,seq_record,TRD_SEQ) 
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                $stmt_insert = $conn->prepare($sql_insert);
-                $stmt_insert->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $AR_CODE, $SKU_CODE, $SKU_NAME, $DETAIL,
-                    $BRAND, $DI_REF, $AR_NAME, $SALE_NAME, $TAKE_NAME, $TRD_QTY, $TRD_PRC,
-                    $TRD_DISCOUNT, $TRD_TOTAL_PRICE, $TRD_VAT, $TRD_AMOUNT_PRICE, $TRD_PER_POINT,
-                    $TRD_TOTAL_POINT, $WL_CODE, $TRD_Q_FREE, $TRD_AMPHUR, $TRD_PROVINCE, $TRD_MARK,
-                    $TRD_U_POINT, $TRD_R_POINT, $TRD_S_POINT, $TRD_T_POINT, $TRD_COMPARE, $TRD_SHOP,
-                    $TRD_BY_MOBAPP, $TRD_YEAR_OLD, $SKU_CAT, $DI_MONTH, $DI_DATE, $seq_record, $totalRows]);
+            $statement = $conn->prepare("SELECT id FROM " . $table_name . " WHERE DI_DAY = ? AND DI_MONTH_NAME = ? 
+    AND DI_YEAR = ? AND DI_REF = ? AND AR_CODE = ? AND SKU_CODE = ? 
+    AND WL_CODE = ? AND TRD_QTY = ? AND TRD_PRC = ? AND TRD_AMOUNT_PRICE = ? AND TRD_SEQ = ?");
+            $statement->execute([$DI_DAY, $DI_MONTH_NAME, $DI_YEAR, $DI_REF, $AR_CODE, $SKU_CODE, $WL_CODE, $TRD_QTY, $TRD_PRC, $TRD_AMOUNT_PRICE, $totalRows]);
 
-                $importedRows++; // นับแถวที่นำเข้าสำเร็จ
-                $status = "Y";
-            } else {
+            $row = $statement->fetch(PDO::FETCH_ASSOC); // ดึงข้อมูลแถวที่ตรงกัน
+
+            if ($row) {
+                $id = $row['id'];
+
+                // คำสั่ง UPDATE พร้อมกับฟิลด์ต่างๆ
+                $sql_update = "UPDATE $table_name 
+        SET AR_CODE = :AR_CODE, SKU_CODE = :SKU_CODE, SKU_NAME = :SKU_NAME, DETAIL = :DETAIL, BRAND = :BRAND, 
+        DI_REF = :DI_REF, AR_NAME = :AR_NAME, SALE_NAME = :SALE_NAME, TAKE_NAME = :TAKE_NAME, TRD_QTY = :TRD_QTY, 
+        TRD_PRC = :TRD_PRC, TRD_DISCOUNT = :TRD_DISCOUNT, TRD_TOTAL_PRICE = :TRD_TOTAL_PRICE, TRD_VAT = :TRD_VAT, 
+        TRD_AMOUNT_PRICE = :TRD_AMOUNT_PRICE, TRD_PER_POINT = :TRD_PER_POINT, TRD_TOTAL_POINT = :TRD_TOTAL_POINT, 
+        WL_CODE = :WL_CODE, TRD_Q_FREE = :TRD_Q_FREE, TRD_AMPHUR = :TRD_AMPHUR, TRD_PROVINCE = :TRD_PROVINCE, 
+        TRD_MARK = :TRD_MARK, TRD_U_POINT = :TRD_U_POINT, TRD_R_POINT = :TRD_R_POINT, TRD_S_POINT = :TRD_S_POINT, 
+        TRD_T_POINT = :TRD_T_POINT, TRD_COMPARE = :TRD_COMPARE, TRD_SHOP = :TRD_SHOP, TRD_BY_MOBAPP = :TRD_BY_MOBAPP, 
+        TRD_YEAR_OLD = :TRD_YEAR_OLD, SKU_CAT = :SKU_CAT, DI_MONTH = :DI_MONTH, DI_DATE = :DI_DATE, 
+        seq_record = :seq_record, TRD_SEQ = :TRD_SEQ 
+        WHERE id = :id";
+                $query = $conn->prepare($sql_update);
+
+                // การ bindParam สำหรับค่าฟิลด์ที่ต้องการอัปเดต
+                $query->bindParam(':AR_CODE', $AR_CODE, PDO::PARAM_STR);
+                $query->bindParam(':SKU_CODE', $SKU_CODE, PDO::PARAM_STR);
+                $query->bindParam(':SKU_NAME', $SKU_NAME, PDO::PARAM_STR);
+                $query->bindParam(':DETAIL', $DETAIL, PDO::PARAM_STR);
+                $query->bindParam(':BRAND', $BRAND, PDO::PARAM_STR);
+                $query->bindParam(':DI_REF', $DI_REF, PDO::PARAM_STR);
+                $query->bindParam(':AR_NAME', $AR_NAME, PDO::PARAM_STR);
+                $query->bindParam(':SALE_NAME', $SALE_NAME, PDO::PARAM_STR);
+                $query->bindParam(':TAKE_NAME', $TAKE_NAME, PDO::PARAM_STR);
+                $query->bindParam(':TRD_QTY', $TRD_QTY, PDO::PARAM_STR);
+                $query->bindParam(':TRD_PRC', $TRD_PRC, PDO::PARAM_STR);
+                $query->bindParam(':TRD_DISCOUNT', $TRD_DISCOUNT, PDO::PARAM_STR);
+                $query->bindParam(':TRD_TOTAL_PRICE', $TRD_TOTAL_PRICE, PDO::PARAM_STR);
+                $query->bindParam(':TRD_VAT', $TRD_VAT, PDO::PARAM_STR);
+                $query->bindParam(':TRD_AMOUNT_PRICE', $TRD_AMOUNT_PRICE, PDO::PARAM_STR);
+                $query->bindParam(':TRD_PER_POINT', $TRD_PER_POINT, PDO::PARAM_STR);
+                $query->bindParam(':TRD_TOTAL_POINT', $TRD_TOTAL_POINT, PDO::PARAM_STR);
+                $query->bindParam(':WL_CODE', $WL_CODE, PDO::PARAM_STR);
+                $query->bindParam(':TRD_Q_FREE', $TRD_Q_FREE, PDO::PARAM_STR);
+                $query->bindParam(':TRD_AMPHUR', $TRD_AMPHUR, PDO::PARAM_STR);
+                $query->bindParam(':TRD_PROVINCE', $TRD_PROVINCE, PDO::PARAM_STR);
+                $query->bindParam(':TRD_MARK', $TRD_MARK, PDO::PARAM_STR);
+                $query->bindParam(':TRD_U_POINT', $TRD_U_POINT, PDO::PARAM_STR);
+                $query->bindParam(':TRD_R_POINT', $TRD_R_POINT, PDO::PARAM_STR);
+                $query->bindParam(':TRD_S_POINT', $TRD_S_POINT, PDO::PARAM_STR);
+                $query->bindParam(':TRD_T_POINT', $TRD_T_POINT, PDO::PARAM_STR);
+                $query->bindParam(':TRD_COMPARE', $TRD_COMPARE, PDO::PARAM_STR);
+                $query->bindParam(':TRD_SHOP', $TRD_SHOP, PDO::PARAM_STR);
+                $query->bindParam(':TRD_BY_MOBAPP', $TRD_BY_MOBAPP, PDO::PARAM_STR);
+                $query->bindParam(':TRD_YEAR_OLD', $TRD_YEAR_OLD, PDO::PARAM_STR);
+                $query->bindParam(':SKU_CAT', $SKU_CAT, PDO::PARAM_STR);
+                $query->bindParam(':DI_MONTH', $DI_MONTH, PDO::PARAM_STR);
+                $query->bindParam(':DI_DATE', $DI_DATE, PDO::PARAM_STR);
+                $query->bindParam(':seq_record', $seq_record, PDO::PARAM_STR);
+                $query->bindParam(':TRD_SEQ', $totalRows, PDO::PARAM_STR);
+                $query->bindParam(':id', $id, PDO::PARAM_INT); // การ bind id เพื่ออัปเดตข้อมูล
+
+                $query->execute();
+                echo $save_success;
                 $duplicateRows++; // นับแถวที่ซ้ำ
                 $status = "N";
-            }
 
+            } else {
+                // คำสั่ง INSERT ที่ bindParam แทนการใช้ execute ตรงๆ
+                $sql_insert = "INSERT INTO $table_name (DI_DAY, DI_MONTH_NAME, DI_YEAR, AR_CODE, SKU_CODE, SKU_NAME, DETAIL
+    , BRAND, DI_REF, AR_NAME, SALE_NAME, TAKE_NAME, TRD_QTY, TRD_PRC, TRD_DISCOUNT, TRD_TOTAL_PRICE, TRD_VAT, TRD_AMOUNT_PRICE
+    , TRD_PER_POINT, TRD_TOTAL_POINT, WL_CODE, TRD_Q_FREE, TRD_AMPHUR, TRD_PROVINCE, TRD_MARK, TRD_U_POINT, TRD_R_POINT
+    , TRD_S_POINT, TRD_T_POINT, TRD_COMPARE, TRD_SHOP, TRD_BY_MOBAPP, TRD_YEAR_OLD, SKU_CAT, DI_MONTH, DI_DATE, seq_record, TRD_SEQ) 
+    VALUES (:DI_DAY, :DI_MONTH_NAME, :DI_YEAR, :AR_CODE, :SKU_CODE, :SKU_NAME, :DETAIL, :BRAND, :DI_REF,
+    :AR_NAME, :SALE_NAME, :TAKE_NAME, :TRD_QTY, :TRD_PRC, :TRD_DISCOUNT, :TRD_TOTAL_PRICE, :TRD_VAT, :TRD_AMOUNT_PRICE,
+    :TRD_PER_POINT, :TRD_TOTAL_POINT, :WL_CODE, :TRD_Q_FREE, :TRD_AMPHUR, :TRD_PROVINCE, :TRD_MARK, :TRD_U_POINT,
+    :TRD_R_POINT, :TRD_S_POINT, :TRD_T_POINT, :TRD_COMPARE, :TRD_SHOP, :TRD_BY_MOBAPP, :TRD_YEAR_OLD, :SKU_CAT,
+    :DI_MONTH, :DI_DATE, :seq_record, :TRD_SEQ)";
+
+                $stmt_insert = $conn->prepare($sql_insert);
+
+                // bindParam สำหรับการ Insert
+                $stmt_insert->bindParam(':DI_DAY', $DI_DAY, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':DI_MONTH_NAME', $DI_MONTH_NAME, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':DI_YEAR', $DI_YEAR, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':AR_CODE', $AR_CODE, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':SKU_CODE', $SKU_CODE, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':SKU_NAME', $SKU_NAME, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':DETAIL', $DETAIL, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':BRAND', $BRAND, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':DI_REF', $DI_REF, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':AR_NAME', $AR_NAME, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':SALE_NAME', $SALE_NAME, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TAKE_NAME', $TAKE_NAME, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_QTY', $TRD_QTY, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_PRC', $TRD_PRC, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_DISCOUNT', $TRD_DISCOUNT, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_TOTAL_PRICE', $TRD_TOTAL_PRICE, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_VAT', $TRD_VAT, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_AMOUNT_PRICE', $TRD_AMOUNT_PRICE, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_PER_POINT', $TRD_PER_POINT, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_TOTAL_POINT', $TRD_TOTAL_POINT, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':WL_CODE', $WL_CODE, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_Q_FREE', $TRD_Q_FREE, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_AMPHUR', $TRD_AMPHUR, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_PROVINCE', $TRD_PROVINCE, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_MARK', $TRD_MARK, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_U_POINT', $TRD_U_POINT, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_R_POINT', $TRD_R_POINT, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_S_POINT', $TRD_S_POINT, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_T_POINT', $TRD_T_POINT, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_COMPARE', $TRD_COMPARE, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_SHOP', $TRD_SHOP, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_BY_MOBAPP', $TRD_BY_MOBAPP, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_YEAR_OLD', $TRD_YEAR_OLD, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':SKU_CAT', $SKU_CAT, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':DI_MONTH', $DI_MONTH, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':DI_DATE', $DI_DATE, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':seq_record', $seq_record, PDO::PARAM_STR);
+                $stmt_insert->bindParam(':TRD_SEQ', $totalRows, PDO::PARAM_STR);
+
+                $stmt_insert->execute();
+                echo $save_success;
+                $status = "Y";
+            }
 
             if ($SALE_NAME !== 'READY QUICK' && strpos($SALE_NAME, "RQ") === false && $TAKE_NAME !== 'READY QUICK' && strpos($TAKE_NAME, "RQ") === false) {
                 for ($loop = 1; $loop <= 2; $loop++) {

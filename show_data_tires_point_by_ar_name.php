@@ -88,6 +88,12 @@ foreach ($MonthCurr as $row_curr) {
 <input type="hidden" name="month_name" id="month_name" value="<?php echo $month_name; ?>">
 <input type="hidden" name="year" id="year" value="<?php echo $year; ?>">
 
+<div id="spinner" class="d-flex justify-content-center" style="display: none;">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
 <div class="container mt-5">
     <h3>สรุปคะแนนลูกค้า ตาม Size ยาง เดือน <?php echo $month_name . " ปี "  . $year  ?></h3>
     <div class="table-responsive">
@@ -118,6 +124,9 @@ foreach ($MonthCurr as $row_curr) {
             let year = $('#year').val();
             let month = $('#month').val();
             let title = 'สรุปคะแนนลูกค้า-เดือน-' + month + "-" + year;
+
+            $('#spinner').show();
+
             $.ajax({
                 url: 'model/fetch_data_tires_point_ar_name.php',
                 type: 'POST',
@@ -143,6 +152,8 @@ foreach ($MonthCurr as $row_curr) {
                     });
                     $('#salesTable tbody').html(tbody);
 
+                    $('#spinner').hide();
+
                     // ทำลาย DataTables ก่อนถ้ามีการใช้งานอยู่แล้ว
                     if ($.fn.DataTable.isDataTable('#salesTable')) {
                         $('#salesTable').DataTable().destroy();
@@ -165,6 +176,7 @@ foreach ($MonthCurr as $row_curr) {
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error('Error loading sales data: ', textStatus, errorThrown);
+                    $('#spinner').hide();
                 }
             });
         }

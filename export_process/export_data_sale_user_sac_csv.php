@@ -28,7 +28,7 @@ $doc_date_to = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d'
 // สร้างเงื่อนไขในการค้นหาข้อมูล
 $search_Query = "";
 if (!empty($doc_date_start) && !empty($doc_date_to)) {
-    $search_Query .= " AND STR_TO_DATE(DI_DATE, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' ";
+    $search_Query .= " AND STR_TO_DATE(sale_sac.DI_DATE, '%d-%m-%Y') BETWEEN '" . $doc_date_start . "' AND '". $doc_date_to ."' ";
 }
 if (!empty($ar_name) && $ar_name!=='-') {
     $search_Query .= " AND sale_sac.AR_NAME = '" . $ar_name . "' ";
@@ -40,7 +40,7 @@ if (!empty($province) && $province!=='-') {
     $search_Query .= " AND sale_sac.TRD_PROVINCE = '" . $province . "' ";
 }
 if (!empty($sale_name) && $sale_name!=='-') {
-    $search_Query .= " AND sale_sac.SALE_NAME = '" . $sale_name . "' ";
+    $search_Query .= " AND sale_sac.SALE_NAME LIKE '%" . $sale_name . "%' ";
 }
 if (!empty($brand) && $brand!=='-') {
     $search_Query .= " AND sale_sac.BRAND = '" . $brand . "' ";
@@ -50,16 +50,16 @@ if (!empty($sku_cat) && $sku_cat!=='-') {
 }
 
 
-$order_by = "order by STR_TO_DATE(DI_DATE, '%d-%m-%Y') ";
+$order_by = " ORDER BY STR_TO_DATE(sale_sac.DI_DATE, '%d-%m-%Y') ";
 
 // Create SQL query
-$select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE DI_REF NOT LIKE 'DS03%' AND DI_REF NOT LIKE 'IS02%' " . $search_Query . $order_by;
+$select_query_sale_sac = "SELECT * FROM ims_data_sale_sac_all sale_sac WHERE 1 " . $search_Query . $order_by;
 
-/*
+
 $my_file = fopen("sql_str1.txt", "w") or die("Unable to open file!");
 fwrite($my_file, $select_query_sale_sac);
 fclose($my_file);
-*/
+
 
 $query = $conn->prepare($select_query_sale_sac);
 $query->execute();

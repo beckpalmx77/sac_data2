@@ -191,6 +191,17 @@ if (strlen($_SESSION['alogin']) == "") {
 
     </script>
 
+    <script>
+
+        $("#BtnSale").click(function () {
+            document.forms['myform'].action = 'show_data_tires_point_by_ar_name';
+            document.forms['myform'].target = '_blank';
+            document.forms['myform'].submit();
+            return true;
+        });
+
+    </script>
+
     </body>
 
     </html>

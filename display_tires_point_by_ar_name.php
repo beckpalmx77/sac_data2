@@ -108,10 +108,14 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <br>
                                                                     <div class="row">
                                                                         <div class="col-sm-12">
-                                                                            <button type="button" id="BtnSale"
-                                                                                    name="BtnSale"
+                                                                            <button type="button" id="BtnSale1"
+                                                                                    name="BtnSale1"
                                                                                     class="btn btn-primary mb-3">แสดงยอดขาย
                                                                             </button>
+                                                                            <!--button type="button" id="BtnSale2"
+                                                                                    name="BtnSale2"
+                                                                                    class="btn btn-primary mb-3">แสดงยอดขาย 2
+                                                                            </button-->
                                                                         </div>
                                                                     </div>
 
@@ -182,8 +186,8 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
 
-        $("#BtnSale").click(function () {
-            document.forms['myform'].action = 'show_data_tires_point_by_ar_name';
+        $("#BtnSale1").click(function () {
+            document.forms['myform'].action = 'show_data_tires_point_by_ar_name1';
             document.forms['myform'].target = '_blank';
             document.forms['myform'].submit();
             return true;
@@ -193,8 +197,8 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
 
-        $("#BtnSale").click(function () {
-            document.forms['myform'].action = 'show_data_tires_point_by_ar_name';
+        $("#BtnSale2").click(function () {
+            document.forms['myform'].action = 'show_data_tires_point_by_ar_name2';
             document.forms['myform'].target = '_blank';
             document.forms['myform'].submit();
             return true;

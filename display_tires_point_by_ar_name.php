@@ -110,11 +110,11 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <div class="col-sm-12">
                                                                             <button type="button" id="BtnSale1"
                                                                                     name="BtnSale1"
-                                                                                    class="btn btn-primary mb-3">แสดงยอดขาย
+                                                                                    class="btn btn-primary mb-3">แสดงยอดขาย ตาม ลูกค้า - Size ยาง
                                                                             </button>
                                                                             <button type="button" id="BtnSale2"
                                                                                     name="BtnSale2"
-                                                                                    class="btn btn-primary mb-3">แสดงยอดขาย 2
+                                                                                    class="btn btn-primary mb-3">แสดงยอดขาย ตาม ลูกค้า
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -187,10 +187,15 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
 
         $("#BtnSale1").click(function () {
+            if ($("#year").val() !== '-') {
             document.forms['myform'].action = 'show_data_tires_point_by_ar_name1';
             document.forms['myform'].target = '_blank';
             document.forms['myform'].submit();
             return true;
+            } else {
+                alertify.error("เลือก ปี");
+            }
+
         });
 
     </script>
@@ -198,10 +203,14 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
 
         $("#BtnSale2").click(function () {
+            if ($("#year").val() !== '-') {
             document.forms['myform'].action = 'show_data_tires_point_by_ar_name2';
             document.forms['myform'].target = '_blank';
             document.forms['myform'].submit();
             return true;
+            } else {
+                alertify.error("เลือก ปี");
+            }
         });
 
     </script>

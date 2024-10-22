@@ -1,1 +1,0 @@
-SELECT * FROM ims_data_sale_sac_all sale_sac WHERE 1  AND STR_TO_DATE(sale_sac.DI_DATE, '%d-%m-%Y') BETWEEN '2024-10-01' AND '2024-10-22'  AND sale_sac.SALE_NAME LIKE '%เมธี (เม) ผู้ใช้%'  ORDER BY STR_TO_DATE(sale_sac.DI_DATE, '%d-%m-%Y') 

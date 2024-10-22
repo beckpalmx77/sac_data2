@@ -103,8 +103,6 @@ foreach ($MonthCurr as $row_curr) {
             <thead>
             <tr>
                 <th>ชื่อลูกค้า</th>
-                <th>รายละเอียดสินค้า</th>
-                <th>ขอบ</th>
                 <th class="text-right">จำนวน</th>
                 <th class="text-right">คะแนนร้านทั่วไป</th>
                 <th class="text-right">คะแนนรวมร้านทั่วไป</th>
@@ -144,14 +142,12 @@ foreach ($MonthCurr as $row_curr) {
                     $.each(data, function (index, item) {
                         tbody += '<tr>';
                         tbody += '<td>' + item.AR_NAME + '</td>';
-                        tbody += '<td>' + item.SKU_NAME + '</td>';
-                        tbody += '<td>' + item.TIRES_EDGE + '</td>';
-                        tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_QTY) + '</td>';
-                        tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_U_POINT) + '</td>';
-                        tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_U_POINT_TOTAL) + '</td>';
-                        tbody += '<td class="text-right">' + formatNumber(item.TRD_S_POINT) + '</td>';
-                        tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_S_POINT_TOTAL) + '</td>';
-                        tbody += '<td class="text-right">' + formatNumber(item.TOTAL_POINTS) + '</td>';
+                        tbody += '<td class="text-right">' + formatNumber(item.qty_all) + '</td>';
+                        tbody += '<td class="text-right">' + formatNumber(item.u_point) + '</td>';
+                        tbody += '<td class="text-right">' + formatNumber(item.u_point_all) + '</td>';
+                        tbody += '<td class="text-right">' + formatNumber(item.s_point) + '</td>';
+                        tbody += '<td class="text-right">' + formatNumber(item.s_point_all) + '</td>';
+                        tbody += '<td class="text-right">' + formatNumber(item.total_points) + '</td>';
                         tbody += '</tr>';
                     });
                     $('#salesTable tbody').html(tbody);

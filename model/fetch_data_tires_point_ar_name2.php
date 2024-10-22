@@ -17,35 +17,23 @@ fclose($myfile);
 */
 
 $sql = "SELECT 
-  a.AR_CODE,
-  a.AR_NAME, 
-  a.SKU_CODE,
-  a.SKU_NAME,
-  p.TIRES_EDGE, 
-  SUM(a.TRD_QTY) AS SUM_TRD_QTY,
-  SUM(a.TRD_U_POINT) AS SUM_TRD_U_POINT,
-  SUM(a.TRD_QTY) * SUM(a.TRD_U_POINT) AS SUM_TRD_U_POINT_TOTAL,
-  CASE WHEN s.status = 'Y' THEN p.TRD_S_POINT ELSE 0 END AS TRD_S_POINT,
-  CASE WHEN s.status = 'Y' THEN SUM(a.TRD_QTY) * SUM(a.TRD_S_POINT) ELSE 0 END AS SUM_TRD_S_POINT_TOTAL,
-  SUM(a.TRD_QTY) * SUM(a.TRD_U_POINT) + 
-  CASE WHEN s.status = 'Y' THEN SUM(a.TRD_QTY) * SUM(a.TRD_S_POINT) ELSE 0 END AS TOTAL_POINTS,
-  CASE WHEN s.status = 'Y' THEN 'Y' ELSE 'N' END AS status
-    FROM ims_data_sale_sac_all a
-    LEFT JOIN ims_sac_tires_point p ON p.SKU_CODE = a.SKU_CODE
-    LEFT JOIN ims_ar_shop s ON s.AR_CODE = a.AR_CODE
-    WHERE 1  
-        AND a.DI_MONTH LIKE '%" . $month . "%'
-        AND a.DI_YEAR LIKE '%" . $year . "%%'
-        AND a.TRD_U_POINT > 0
-        AND a.SKU_CODE NOT LIKE 'CL%'  
-    GROUP BY a.AR_CODE, a.SKU_CODE
-    ORDER BY a.AR_CODE, a.SKU_CODE; ";
+  AR_CODE, 
+  AR_NAME, 
+  SUM(COALESCE(sum_trd_qty, 0)) AS qty_all, 
+  SUM(COALESCE(sum_trd_u_point, 0)) AS u_point, 
+  SUM(COALESCE(sum_trd_u_point_total, 0)) AS u_point_all, 
+  SUM(COALESCE(sum_trd_s_point, 0)) AS s_point, 
+  SUM(COALESCE(sum_trd_s_point_total, 0)) AS s_point_all,  
+  SUM(COALESCE(total_points, 0)) AS total_points
+FROM v_sac_tires_summary_point_1
+WHERE 1 
+  AND DI_MONTH LIKE '%" . $month . "%'" . " AND DI_YEAR LIKE '%" . $year . "%' GROUP BY AR_CODE;";
 
-/*
+
 $myfile = fopen("param1.txt", "w") or die("Unable to open file!");
-fwrite($myfile, "year = " . $year . "| month = " . $month . " | sale = " . $sale . " | " . $sql);
+fwrite($myfile, "year = " . $year . "| month = " . $month . " | " . $sql);
 fclose($myfile);
-*/
+
 
 // ดำเนินการคำสั่ง SQL
 $stmt = $conn->query($sql);

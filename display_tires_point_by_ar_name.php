@@ -112,10 +112,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                     name="BtnSale1"
                                                                                     class="btn btn-primary mb-3">แสดงยอดขาย
                                                                             </button>
-                                                                            <!--button type="button" id="BtnSale2"
+                                                                            <button type="button" id="BtnSale2"
                                                                                     name="BtnSale2"
                                                                                     class="btn btn-primary mb-3">แสดงยอดขาย 2
-                                                                            </button-->
+                                                                            </button>
                                                                         </div>
                                                                     </div>
 

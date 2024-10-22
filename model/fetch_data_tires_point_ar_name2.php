@@ -19,6 +19,7 @@ fclose($myfile);
 $sql = "SELECT 
   AR_CODE, 
   AR_NAME, 
+  shop_type,
   SUM(COALESCE(sum_trd_qty, 0)) AS qty_all, 
   SUM(COALESCE(sum_trd_u_point, 0)) AS u_point, 
   SUM(COALESCE(sum_trd_u_point_total, 0)) AS u_point_all, 
@@ -29,11 +30,11 @@ FROM v_sac_tires_summary_point_1
 WHERE 1 
   AND DI_MONTH LIKE '%" . $month . "%'" . " AND DI_YEAR LIKE '%" . $year . "%' GROUP BY AR_CODE;";
 
-
+/*
 $myfile = fopen("param1.txt", "w") or die("Unable to open file!");
 fwrite($myfile, "year = " . $year . "| month = " . $month . " | " . $sql);
 fclose($myfile);
-
+*/
 
 // ดำเนินการคำสั่ง SQL
 $stmt = $conn->query($sql);

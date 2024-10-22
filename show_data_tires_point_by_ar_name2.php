@@ -103,6 +103,7 @@ foreach ($MonthCurr as $row_curr) {
             <thead>
             <tr>
                 <th>ชื่อลูกค้า</th>
+                <th>ประเภทร้าน</th>
                 <th class="text-right">จำนวน</th>
                 <th class="text-right">คะแนนร้านทั่วไป</th>
                 <th class="text-right">คะแนนรวมร้านทั่วไป</th>
@@ -142,6 +143,7 @@ foreach ($MonthCurr as $row_curr) {
                     $.each(data, function (index, item) {
                         tbody += '<tr>';
                         tbody += '<td>' + item.AR_NAME + '</td>';
+                        tbody += '<td>' + item.shop_type + '</td>';
                         tbody += '<td class="text-right">' + formatNumber(item.qty_all) + '</td>';
                         tbody += '<td class="text-right">' + formatNumber(item.u_point) + '</td>';
                         tbody += '<td class="text-right">' + formatNumber(item.u_point_all) + '</td>';

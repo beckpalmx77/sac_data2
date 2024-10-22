@@ -74,6 +74,8 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $AR_NAME = isset($row[1]) ? trim($row[1]) : "0";
             $SALE_NAME = isset($row[2]) ? trim($row[2]) : "0";
             $TAKE_NAME = isset($row[3]) ? trim($row[3]) : "0";
+            $TRD_AMPHUR = isset($row[4]) ? trim($row[4]) : "0";
+            $TRD_PROVINCE = isset($row[5]) ? trim($row[5]) : "0";
 
             /*
                         $txt = $AR_CODE . " | " . $AR_NAME . " | " . $SALE_NAME;
@@ -93,6 +95,8 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
                 $stmt_update->bindParam(':AR_NAME', $AR_NAME, PDO::PARAM_STR);
                 $stmt_update->bindParam(':SALE_NAME', $SALE_NAME, PDO::PARAM_STR);
                 $stmt_update->bindParam(':TAKE_NAME', $TAKE_NAME, PDO::PARAM_STR);
+                $stmt_update->bindParam(':TRD_AMPHUR', $TRD_AMPHUR, PDO::PARAM_STR);
+                $stmt_update->bindParam(':TRD_PROVINCE', $TRD_PROVINCE, PDO::PARAM_STR);
                 $stmt_update->bindParam(':AR_CODE', $AR_CODE, PDO::PARAM_STR);
                 $stmt_update->execute();
                 $updatetedRows++; // นับแถวที่นำเข้าสำเร็จ

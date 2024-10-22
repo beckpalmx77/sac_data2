@@ -62,6 +62,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                                 <th>ชื่อลูกค้า</th>
                                                 <th>ชื่อ Sale</th>
                                                 <th>ชื่อ Take</th>
+                                                <th>อำเภอ</th>
+                                                <th>จังหวัด</th>
                                             </tr>
                                             </thead>
                                             <tfoot>
@@ -70,6 +72,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                                 <th>ชื่อลูกค้า</th>
                                                 <th>ชื่อ Sale</th>
                                                 <th>ชื่อ Take</th>
+                                                <th>อำเภอ</th>
+                                                <th>จังหวัด</th>
                                             </tr>
                                             </tfoot>
                                         </table>
@@ -148,7 +152,9 @@ include('includes/Footer.php');
                 {"data": "AR_CODE"},
                 {"data": "AR_NAME"},
                 {"data": "SALE_NAME"},
-                {"data": "TAKE_NAME"}
+                {"data": "TAKE_NAME"},
+                {"data": "TRD_AMPHUR"},
+                {"data": "TRD_PROVINCE"}
             ]
         });
     });

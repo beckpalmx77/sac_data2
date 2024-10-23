@@ -36,15 +36,26 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                                    accept=".xlsx, .xls">
                                         </div>
                                         <div class="mb-12">
-                                            <button type="submit" class="btn btn-primary">Import</button>
+                                            <button type="button" class="btn btn-primary">Import</button>
                                             <button type="button" id="showImageBtn" class="btn btn-success">ตัวอย่างไฟล์
                                                 Excel Format Data สำหรับนำเข้า
                                             </button>
                                         </div>
                                         <div class="mb-12">
                                             <span>
-                                                <div id="input_text" style="white-space: pre-wrap;"></div> <!-- เพิ่ม style white-space -->
+                                                <div id="input_text" style="white-space: pre-wrap;"></div>
+                                                <!-- เพิ่ม style white-space -->
                                             </span>
+                                        </div>
+                                        <div class="row mb-4">
+                                            <div class="col-md-4">
+                                                <label for="deleteDate" class="form-label">เลือกวันที่ที่จะลบ</label>
+                                                <input type="date" class="form-control" id="deleteDate">
+                                            </div>
+                                            <div class="col-md-6 align-self-end">
+                                                <button id="deleteButton" class="btn btn-danger">ลบข้อมูลตามวันที่
+                                                </button>
+                                            </div>
                                         </div>
                                     </form>
                                     <br>
@@ -123,31 +134,6 @@ include('includes/Footer.php');
 <script>
     $(document).ready(function () {
 
-        $('#uploadForm').on('submit', function (e) {
-            e.preventDefault();
-            $("#spinner").show();
-
-            let formData = new FormData(this);
-
-            $.ajax({
-                url: 'import_process/import_data_sale_sac_process.php',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    $('#spinner').hide();
-                    alertify.alert(response);
-                    $('#TableRecordList').DataTable().ajax.reload();
-                    alertify.alert("Notification", "Data imported successfully.");
-                },
-                error: function (xhr, status, error) {
-                    $('#spinner').hide();
-                    alertify.alert("Notification", "An error occurred: " + error);
-                }
-            });
-        });
-
         $('#TableRecordList').DataTable({
             "lengthMenu": [[6, 10, 20, 50, 100], [6, 10, 20, 50, 100]],
             "ajax": "model/fetch_data_sale_sac.php",
@@ -189,6 +175,102 @@ include('includes/Footer.php');
             }
         });
     });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#uploadBtn').on('click', function () {
+            $("#spinner").show(); // แสดง spinner ขณะทำการอัปโหลด
+
+            let formData = new FormData($('#uploadForm')[0]); // เก็บข้อมูลฟอร์ม
+
+            $.ajax({
+                url: 'import_process/import_data_sale_sac_process.php',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $('#spinner').hide();
+                    alertify.alert(response);
+                    $('#TableRecordList').DataTable().ajax.reload();
+                    alertify.alert("Notification", "Data imported successfully.");
+                },
+                error: function (xhr, status, error) {
+                    $('#spinner').hide();
+                    alertify.alert("Notification", "An error occurred: " + error);
+                }
+            });
+        });
+    });
+</script>
+
+<!--script>
+    $('#uploadForm').on('submit', function (e) {
+        e.preventDefault();
+        $("#spinner").show();
+
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: 'import_process/import_data_sale_sac_process.php',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                $('#spinner').hide();
+                alertify.alert(response);
+                $('#TableRecordList').DataTable().ajax.reload();
+                alertify.alert("Notification", "Data imported successfully.");
+            },
+            error: function (xhr, status, error) {
+                $('#spinner').hide();
+                alertify.alert("Notification", "An error occurred: " + error);
+            }
+        });
+    });
+
+</script-->
+
+<script>
+    $(document).ready(function () {
+        $('#deleteButton').on('click', function () {
+            let di_date = $('#deleteDate').val();  // รับค่าวันที่จาก input
+
+            if (di_date === "") {
+                alert("กรุณาเลือกวันที่ที่จะลบ");
+                return;
+            }
+
+            let formattedDate = formatDate(di_date);  // แปลงวันที่เป็นรูปแบบ DD-MM-YYYY
+
+            if (confirm("คุณต้องการลบข้อมูลวันที่ " + formattedDate + " จริงหรือไม่?")) {
+                $.ajax({
+                    url: 'model/manage_data_sale_sac.php',
+                    type: 'POST',
+                    data: {action: 'DELETE_BY_DATE' , DI_DATE: formattedDate},  // ส่งวันที่ในรูปแบบ DD-MM-YYYY ไปที่ PHP
+                    success: function (response) {
+                        alert(response);
+                        $('#TableRecordList').DataTable().ajax.reload();  // รีเฟรชข้อมูลในตารางหลังจากลบ
+                    },
+                    error: function (xhr, status, error) {
+                        alert("เกิดข้อผิดพลาด: " + error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<script>
+    function formatDate(date) {
+        let d = new Date(date);
+        let day = String(d.getDate()).padStart(2, '0');
+        let month = String(d.getMonth() + 1).padStart(2, '0'); // เดือนเริ่มจาก 0 ต้องบวก 1
+        let year = d.getFullYear();
+        return day + '-' + month + '-' + year;
+    }
 </script>
 
 </body>

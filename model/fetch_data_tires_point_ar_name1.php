@@ -20,6 +20,7 @@ fclose($myfile);
 */
 
 $sql = "SELECT 
+  a.DI_REF,
   a.AR_CODE,
   a.AR_NAME, 
   a.SKU_CODE,

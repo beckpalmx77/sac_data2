@@ -142,11 +142,24 @@ if ($row_count) {
                         y: {
                             ticks: {
                                 callback: function (value) {
+                                    // แปลงค่าในแกน Y ให้เป็นรูปแบบสกุลเงินบาท (มีจุดทศนิยม 2 ตำแหน่ง)
                                     return value.toLocaleString('th-TH', {
+                                        style: 'currency',
+                                        currency: 'THB',
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
                                     });
                                 }
+                            },
+                            title: {
+                                display: true,
+                                text: 'ยอดขาย (บาท)' // เพิ่มชื่อแกน Y ว่าเป็นยอดขายในสกุลเงิน
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'เดือน' // ชื่อแกน X เป็นเดือน
                             }
                         }
                     },
@@ -154,7 +167,10 @@ if ($row_count) {
                         tooltip: {
                             callbacks: {
                                 label: function (tooltipItem) {
+                                    // แสดงยอดขายเป็นสกุลเงินบาทใน tooltip
                                     return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toLocaleString('th-TH', {
+                                        style: 'currency',
+                                        currency: 'THB',
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
                                     });

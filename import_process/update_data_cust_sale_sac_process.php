@@ -90,7 +90,8 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
             $rowCount = $statement->fetchColumn();
 
             if ($rowCount >= 1) {
-                $sql_update = "UPDATE $table_name SET AR_NAME = :AR_NAME, SALE_NAME = :SALE_NAME , TAKE_NAME = :TAKE_NAME WHERE AR_CODE = :AR_CODE";
+                $sql_update = "UPDATE $table_name SET AR_NAME = :AR_NAME, SALE_NAME = :SALE_NAME , TAKE_NAME = :TAKE_NAME 
+                               ,TRD_AMPHUR = :TRD_AMPHUR , TRD_PROVINCE =:TRD_PROVINCE WHERE AR_CODE = :AR_CODE";
                 $stmt_update = $conn->prepare($sql_update);
                 $stmt_update->bindParam(':AR_NAME', $AR_NAME, PDO::PARAM_STR);
                 $stmt_update->bindParam(':SALE_NAME', $SALE_NAME, PDO::PARAM_STR);
@@ -109,8 +110,8 @@ if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLO
 
     } catch (Exception $e) {
         error_log("Error processing file: " . $e->getMessage());
-        echo "Error processing file.";
+        echo "Error processing file." . $e->getMessage();
     }
 } else {
-    echo "Error uploading file.";
+    echo "Error uploading file " . $e->getMessage();
 }

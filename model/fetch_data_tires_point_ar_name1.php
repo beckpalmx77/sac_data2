@@ -24,6 +24,7 @@ $sql = "SELECT
   a.AR_NAME, 
   a.SKU_CODE,
   a.SKU_NAME,
+  a.BRAND,
   p.TIRES_EDGE, 
   SUM(a.TRD_QTY) AS SUM_TRD_QTY,
   SUM(a.TRD_U_POINT) AS SUM_TRD_U_POINT,
@@ -40,10 +41,12 @@ $sql = "SELECT
     WHERE 1  
         AND a.DI_MONTH LIKE '%" . $month . "%'
         AND a.DI_YEAR LIKE '%" . $year . "%'        
-        AND a.TRD_U_POINT > 0
-        AND a.SKU_CODE NOT LIKE 'CL%'  
+        AND a.TRD_U_POINT > 0        
+        AND (a.SKU_CODE LIKE 'LL%' OR a.SKU_CODE LIKE 'LE%' OR a.SKU_CODE LIKE 'AT%')          
     GROUP BY a.AR_CODE, a.SKU_CODE
     ORDER BY a.AR_CODE, a.SKU_CODE; ";
+
+//AND a.SKU_CODE NOT LIKE 'CL%'
 
 /*
 $myfile = fopen("param1.txt", "w") or die("Unable to open file!");

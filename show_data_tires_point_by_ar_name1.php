@@ -47,7 +47,14 @@ if (strlen($_SESSION['alogin']) == "") {
 
         <link href="css/spinner_over.css" rel="stylesheet"/>
 
+
         <style>
+
+            .container-fluid {
+                max-width: 100%;
+            }
+
+
             /* กำหนดให้คอลัมน์ที่ 1 และ 2 อยู่คงที่ */
             .table-responsive {
                 position: relative;
@@ -97,24 +104,15 @@ if (strlen($_SESSION['alogin']) == "") {
         </div>
     </div>
 
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <h3>สรุปคะแนนลูกค้า ตาม Size ยาง เดือน <?php echo $month_name . " ปี " . $year ?></h3>
-        <!--div class="row mb-3">
-            <div class="col-md-4">
-                <label for="filterShop_type">เลือกประเภทร้าน:</label>
-                <select id="filterShop_type" class="form-control">
-                    <option value="">-- ประเภท --</option>
-                    <option value="Y">SHOP</option>
-                </select>
-            </div>
-        </div-->
-
         <div class="table-responsive">
             <table class="table table-striped" id="salesTable">
                 <thead>
                 <tr>
                     <th>ชื่อลูกค้า</th>
                     <th>รายละเอียดสินค้า</th>
+                    <th>BRAND</th>
                     <th>ร้าน/Shop</th>
                     <th>ขอบ</th>
                     <th class="text-right">จำนวน</th>
@@ -159,6 +157,7 @@ if (strlen($_SESSION['alogin']) == "") {
                             tbody += '<tr>';
                             tbody += '<td>' + item.AR_NAME + '</td>';
                             tbody += '<td>' + item.SKU_NAME + '</td>';
+                            tbody += '<td>' + item.BRAND + '</td>';
                             tbody += '<td>' + item.shop_type + '</td>';
                             tbody += '<td>' + item.TIRES_EDGE + '</td>';
                             tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_QTY) + '</td>';
@@ -178,8 +177,8 @@ if (strlen($_SESSION['alogin']) == "") {
 
                         // เรียกใช้งาน DataTables
                         $('#salesTable').DataTable({
-                            "lengthMenu": [[10, 20, 30, 50, 100], [10, 20, 30, 50, 100]],
-                            "pageLength": 10,
+                            "lengthMenu": [[15, 30, 50, 100], [15, 30, 50, 100]],
+                            "pageLength": 15,
                             dom: 'Bfrtip',
                             buttons: [
                                 {

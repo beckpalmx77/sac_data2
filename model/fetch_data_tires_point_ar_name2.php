@@ -23,7 +23,7 @@ fclose($myfile);
 
 $sql = "SELECT 
   AR_CODE, 
-  AR_NAME, 
+  AR_NAME,
   shop_type,
   SUM(COALESCE(sum_trd_qty, 0)) AS qty_all, 
   SUM(COALESCE(sum_trd_u_point, 0)) AS u_point, 
@@ -33,7 +33,9 @@ $sql = "SELECT
   SUM(COALESCE(total_points, 0)) AS total_points
 FROM v_sac_tires_summary_point_1
 WHERE 1 
-  AND DI_MONTH LIKE '%" . $month . "%'" . " AND DI_YEAR LIKE '%" . $year . "%' AND status LIKE '%' GROUP BY AR_CODE;";
+  AND DI_MONTH LIKE '%" . $month . "%'" . " AND DI_YEAR LIKE '%" . $year . "%'
+  AND (SKU_CODE LIKE 'LL%' OR SKU_CODE LIKE 'LE%' OR SKU_CODE LIKE 'AT%') 
+  GROUP BY AR_CODE;";
 
 /*
 $myfile = fopen("param1.txt", "w") or die("Unable to open file!");

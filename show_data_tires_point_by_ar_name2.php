@@ -172,8 +172,8 @@ foreach ($MonthCurr as $row_curr) {
 
                     // เรียกใช้งาน DataTables
                     $('#salesTable').DataTable({
-                        "lengthMenu": [ [10, 20, 30, 50, 100], [10, 20, 30, 50, 100] ],
-                        "pageLength": 10,
+                        "lengthMenu": [[15, 30, 50, 100], [15, 30, 50, 100]],
+                        "pageLength": 15,
                         dom: 'Bfrtip',
                         buttons: [
                             {

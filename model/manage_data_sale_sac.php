@@ -17,7 +17,16 @@ if (isset($_POST['action']) && $_POST['action'] === 'DELETE_BY_DATE') {
         fclose($myfile);
 */
         if ($stmt->execute()) {
+
+            $delete_success = "$file_Upload \n\r $upload_status \n\r จำนวนที่ Upload จาก Excel : $totalRows รายการ \n\r นำเข้าใหม่สำเร็จ: $importedRows รายการ \n\r มีข้อมูลซ้ำ: $duplicateRows รายการ";
+
+                $sql_insert_log = "INSERT INTO log_import_data (screen_name,total_record,import_record,detail1,detail2,seq_record,create_by) VALUES (?,?,?,?,?,?,?)";
+                $stmt_insert_log = $conn->prepare($sql_insert_log);
+                $stmt_insert_log->execute([$table_name, $totalRows, $importedRows, $import_success, $file_Upload, $seq_record, $user_id]);
+
+
             echo "ลบข้อมูลสำเร็จ";
+
         } else {
             echo "เกิดข้อผิดพลาดในการลบข้อมูล";
         }

@@ -86,7 +86,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <select name="month" id="month" class="form-control"
                                                                             required>
                                                                         <option value="-"
-                                                                                selected>-</option>
+                                                                                selected>ทุกเดือน</option>
                                                                         <?php foreach ($MonthRecords as $row) { ?>
                                                                             <option value="<?php echo $row["month"]; ?>">
                                                                                 <?php echo $row["month_name"]; ?>

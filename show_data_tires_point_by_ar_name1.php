@@ -111,8 +111,9 @@ if (strlen($_SESSION['alogin']) == "") {
                 <thead>
                 <tr>
                     <th>ชื่อลูกค้า</th>
+                    <th>รหัสสินค้า</th>
                     <th>รายละเอียดสินค้า</th>
-                    <th>BRAND</th>
+                    <!--th>BRAND</th-->
                     <th>ร้าน/Shop</th>
                     <th>ขอบ</th>
                     <th class="text-right">จำนวน</th>
@@ -156,8 +157,9 @@ if (strlen($_SESSION['alogin']) == "") {
                         $.each(data, function (index, item) {
                             tbody += '<tr>';
                             tbody += '<td>' + item.AR_NAME + '</td>';
+                            tbody += '<td>' + item.SKU_CODE + '</td>';
                             tbody += '<td>' + item.SKU_NAME + '</td>';
-                            tbody += '<td>' + item.BRAND + '</td>';
+                            //tbody += '<td>' + item.BRAND + '</td>';
                             tbody += '<td>' + item.shop_type + '</td>';
                             tbody += '<td>' + item.TIRES_EDGE + '</td>';
                             tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_QTY) + '</td>';

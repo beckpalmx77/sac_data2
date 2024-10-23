@@ -36,7 +36,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['sale_name_id']) == ""
                                                    accept=".xlsx, .xls">
                                         </div>
                                         <div class="mb-12">
-                                            <button type="button" class="btn btn-primary">Import</button>
+                                            <button type="button" class="btn btn-primary" id="uploadBtn" name="uploadBtn">Import</button>
                                             <button type="button" id="showImageBtn" class="btn btn-success">ตัวอย่างไฟล์
                                                 Excel Format Data สำหรับนำเข้า
                                             </button>
@@ -183,6 +183,9 @@ include('includes/Footer.php');
             $("#spinner").show(); // แสดง spinner ขณะทำการอัปโหลด
 
             let formData = new FormData($('#uploadForm')[0]); // เก็บข้อมูลฟอร์ม
+
+            //alert(formData);
+
 
             $.ajax({
                 url: 'import_process/import_data_sale_sac_process.php',

@@ -115,7 +115,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         <!-- แสดงข้อมูลเป็นตาราง -->
         <div class="table-responsive">
-            <h5 class="mb-3">ข้อมูลยอดขายรายวัน <?php echo $month_name . ' ปี ' . $year . " Sale " . $sale_name; ?></h5>
+            <h5 class="mb-3">ข้อมูลยอดขายรายวัน <?php echo $month_name . ' ปี ' . $year . " Sale " . $sale_name ; ?></h5>
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="table-primary">
@@ -136,14 +136,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     echo "<tr>";
                     echo "<td>{$month_name}</td>";
                     for ($day = 1; $day <= $daysInMonth; $day++) {
-                        $value = isset($days[$day]) ? (float)$days[$day] : 0; // แทนที่ค่าว่างด้วย 0
-                        $formattedValue = number_format($value, 2); // จัดรูปแบบตัวเลข
-                        echo "<td>{$formattedValue}</td>"; // แสดงข้อมูลวัน
-                        $sum += $value; // คำนวณยอดรวมของจังหวัด
-                        $dailySums[$day] += $value; // คำนวณยอดรวมของทุกจังหวัดในแต่ละวัน
+                        $value = isset($days[$day]) ? $days[$day] : 0; // แทนที่ค่าว่างด้วย 0
+                        echo "<td>{$value}</td>"; // แสดงข้อมูลวัน
+                        $sum += (float)$value; // คำนวณยอดรวมของจังหวัด
+                        $dailySums[$day] += (float)$value; // คำนวณยอดรวมของทุกจังหวัดในแต่ละวัน
                     }
-                    $formattedSum = number_format($sum, 2); // จัดรูปแบบยอดรวมของจังหวัด
-                    echo "<td>{$formattedSum}</td>"; // แสดงยอดรวมของจังหวัด
+                    echo "<td>{$sum}</td>"; // แสดงยอดรวมของจังหวัด
                     $totalSum += $sum; // คำนวณยอดรวมทั้งหมด
                     echo "</tr>";
                 }
@@ -153,16 +151,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <?php
                     // แสดงยอดรวมของแต่ละวัน
                     foreach ($dailySums as $dailySum) {
-                        $formattedDailySum = number_format($dailySum, 2); // จัดรูปแบบยอดรวมของแต่ละวัน
-                        echo "<td>{$formattedDailySum}</td>";
+                        echo "<td>{$dailySum}</td>";
                     }
                     ?>
-                    <td><strong><?= number_format($totalSum, 2) ?></strong></td> <!-- แสดงยอดรวมทั้งหมด -->
+                    <td><strong><?= $totalSum ?></strong></td> <!-- แสดงยอดรวมทั้งหมด -->
                 </tr>
                 </tbody>
             </table>
         </div>
-
 
         <div id="chart-container">
             <canvas id="graphCanvas_Monthly"></canvas>
@@ -216,31 +212,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     data: chartdata,
                     options: {
                         scales: {
-                            x: {  // เพิ่มชื่อให้กับแกน X
-                                title: {
-                                    display: true,
-                                    text: 'วันที่',
-                                    font: {
-                                        size: 14
-                                    },
-                                    padding: {
-                                        top: 10,
-                                        bottom: 10
-                                    }
-                                }
-                            },
-                            y: {  // เพิ่มชื่อให้กับแกน Y
-                                title: {
-                                    display: true,
-                                    text: 'ยอดขาย (บาท)',
-                                    font: {
-                                        size: 14
-                                    },
-                                    padding: {
-                                        top: 10,
-                                        bottom: 10
-                                    }
-                                },
+                            y: {
                                 ticks: {
                                     callback: function (value) {
                                         return value.toLocaleString('th-TH', {
@@ -261,15 +233,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         });
                                     }
                                 }
-                            },
-                            // กำหนดข้อความเหนือกราฟ
-                            title: {
-                                display: true,
-                                text: 'ข้อความที่คุณต้องการแสดงเหนือกราฟ',
-                                padding: {
-                                    top: 10,
-                                    bottom: 30
-                                }
                             }
                         }
                     }
@@ -277,10 +240,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             });
         }
     }
+
 </script>
 
-
 <script>
+
     function showGraph_Monthly() {
         {
 
@@ -326,31 +290,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     data: chartdata,
                     options: {
                         scales: {
-                            x: {  // เพิ่มชื่อให้กับแกน X
-                                title: {
-                                    display: true,
-                                    text: 'เดือน',
-                                    font: {
-                                        size: 14
-                                    },
-                                    padding: {
-                                        top: 10,
-                                        bottom: 10
-                                    }
-                                }
-                            },
-                            y: {  // เพิ่มชื่อให้กับแกน Y
-                                title: {
-                                    display: true,
-                                    text: 'ยอดขาย (บาท)',
-                                    font: {
-                                        size: 14
-                                    },
-                                    padding: {
-                                        top: 10,
-                                        bottom: 10
-                                    }
-                                },
+                            y: {
                                 ticks: {
                                     callback: function (value) {
                                         return value.toLocaleString('th-TH', {
@@ -371,15 +311,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         });
                                     }
                                 }
-                            },
-                            // เพิ่มข้อความเหนือกราฟ
-                            title: {
-                                display: true,
-                                text: 'ยอดขายรายเดือน (บาท) ประจำปี ' + year,
-                                padding: {
-                                    top: 10,
-                                    bottom: 30
-                                }
                             }
                         }
                     }
@@ -387,6 +318,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             });
         }
     }
+
 </script>
 
 

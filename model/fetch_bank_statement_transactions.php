@@ -6,7 +6,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $end_date = $_POST['end_date'];
     $bank = $_POST['bank'];
 
-    // Query ข้อมูลตามวันที่และธนาคาร
+    // Query ยอดยกมา
+    $sql_start_balance = "SELECT * FROM BSTMPERIOD 
+                          WHERE BSTMP_BNKAC = :bank 
+                          AND BSTMP_ST_DATE BETWEEN :start_date AND :end_date";
+    $stmt_start = $conn_sqlsvr->prepare($sql_start_balance);
+    $stmt_start->execute([':bank' => $bank, ':start_date' => $start_date, ':end_date' => $end_date]);
+    $row_start = $stmt_start->fetch(PDO::FETCH_ASSOC);
+    $start_balance = 0;
+
+    if ($row_start) {
+        $start_balance = $row_start['BSTMP_TOWARD'];
+    }
+
+    // Query รายการธุรกรรม
     $sql_transactions = "SELECT                             
                                 FORMAT(BANKSTATEMENT.BSTM_RECNL_DD, 'dd/MM/yyyy') AS BSTM_RECNL_DD,
                                 BANKACCOUNT.BNKAC_CODE, 
@@ -34,13 +47,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
     $transactions = $stmt_transactions->fetchAll(PDO::FETCH_ASSOC);
 
-    // แสดงข้อมูลในตาราง
+    // แสดงยอดยกมา
+    $current_balance = $start_balance;
+    echo "<tr>
+            <td colspan='6'>ยอดยกมา</td>
+            <td></td>
+            <td>" . number_format($current_balance, 2) . "</td>
+            <td></td>
+            <td></td>
+          </tr>";
+
+    // แสดงรายการธุรกรรม
     foreach ($transactions as $transaction) {
+        $current_balance = $current_balance - $transaction['BSTM_CREDIT'] + $transaction['BSTM_DEBIT'];
+
         echo "<tr>            
                 <td>{$transaction['BSTM_RECNL_DD']}</td>            
                 <td>{$transaction['BNKAC_NAME']}</td>
                 <td>" . number_format($transaction['BSTM_CREDIT'], 2) . "</td>
                 <td>" . number_format($transaction['BSTM_DEBIT'], 2) . "</td>
+                <td>" . number_format($current_balance, 2) . "</td>
                 <td>{$transaction['BSTM_REMARK']}</td>            
                 <td>{$transaction['DI_DATE']}</td>     
                 <td>{$transaction['DI_REF']}</td>            
@@ -48,59 +74,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <td>{$transaction['BSTM_CHEQUE_NO']}</td>
               </tr>";
     }
-
-    // Export to Excel
-    if (isset($_POST['export_excel'])) {
-        exportToExcel($transactions);
-    }
-}
-
-// ฟังก์ชัน Export to Excel
-function exportToExcel($data)
-{
-    // ต้องใช้ PhpSpreadsheet สำหรับการ export เป็น Excel
-    require '../vendor/autoload.php';
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
-    $spreadsheet = new Spreadsheet();
-    $sheet = $spreadsheet->getActiveSheet();
-
-    // กำหนดหัวคอลัมน์
-    $sheet->setCellValue('A1', 'BSTM_RECNL_DD');
-    $sheet->setCellValue('B1', 'BNKAC_NAME');
-    $sheet->setCellValue('C1', 'BSTM_CREDIT');
-    $sheet->setCellValue('D1', 'BSTM_DEBIT');
-    $sheet->setCellValue('E1', 'ยอดคงเหลือ');
-    $sheet->setCellValue('F1', 'BSTM_REMARK');
-    $sheet->setCellValue('G1', 'DI_DATE');
-    $sheet->setCellValue('H1', 'DI_REF');
-    $sheet->setCellValue('I1', 'CQBK_CHEQUE_DD');
-    $sheet->setCellValue('J1', 'BSTM_CHEQUE_NO');
-
-    // ใส่ข้อมูล
-    $row = 2;
-    foreach ($data as $transaction) {
-        $sheet->setCellValue('A' . $row, $transaction['BSTM_RECNL_DD']);
-        $sheet->setCellValue('B' . $row, $transaction['BNKAC_NAME']);
-        $sheet->setCellValue('C' . $row, number_format($transaction['BSTM_CREDIT'], 2));
-        $sheet->setCellValue('D' . $row, number_format($transaction['BSTM_DEBIT'], 2));
-        $sheet->setCellValue('F' . $row, $transaction['BSTM_REMARK']);
-        $sheet->setCellValue('G' . $row, $transaction['DI_DATE']);
-        $sheet->setCellValue('H' . $row, $transaction['DI_REF']);
-        $sheet->setCellValue('I' . $row, $transaction['CQBK_CHEQUE_DD']);
-        $sheet->setCellValue('J' . $row, $transaction['BSTM_CHEQUE_NO']);
-        $row++;
-    }
-
-    // เขียนไฟล์ Excel
-    $writer = new Xlsx($spreadsheet);
-    $filename = 'bank_transactions.xlsx';
-
-    // ตั้งค่า Header เพื่อดาวน์โหลดไฟล์ Excel
-    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment; filename="' . $filename . '"');
-    $writer->save('php://output');
 }
 ?>

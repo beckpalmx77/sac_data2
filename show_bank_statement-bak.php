@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+
 <?php
 include("config/connect_sqlserver40_syy.php");
 
@@ -42,27 +44,29 @@ $stmt_transactions->execute();
 $transactions = $stmt_transactions->fetchAll(PDO::FETCH_ASSOC);
 
 // เริ่มแสดงข้อมูล
-echo "<table border='1'>";
-echo "<tr>
-        <th>BSTM_RECNL_DD</th>
-        <th>BNKAC_NAME</th>
-        <th>BSTM_CREDIT</th>
-        <th>BSTM_DEBIT</th>
-        <th>ยอดคงเหลือ</th> <!-- แสดงยอดคงเหลือ -->
-        <th>BSTM_REMARK</th>
-        <th>DI_DATE</th>
-        <th>DI_REF</th>        
-        <th>CQBK_CHEQUE_DD</th>
-        <th>BSTM_CHEQUE_NO</th>
-      </tr>";
+echo '<table class="table">';
+echo '<thead>
+        <tr>
+            <th>BSTM_RECNL_DD</th>
+            <th>BNKAC_NAME</th>
+            <th>BSTM_CREDIT</th>
+            <th>BSTM_DEBIT</th>
+            <th>ยอดคงเหลือ</th> <!-- แสดงยอดคงเหลือ -->
+            <th>BSTM_REMARK</th>
+            <th>DI_DATE</th>
+            <th>DI_REF</th>        
+            <th>CQBK_CHEQUE_DD</th>
+            <th>BSTM_CHEQUE_NO</th>
+        </tr>
+      </thead>
+      <tbody>';
 
 // แสดงยอดยกมา
 $current_balance = $start_balance;  // กำหนดยอดยกมาเป็นยอดเริ่มต้น
-echo "<tr>        
-        <td colspan='3'></td>
-        <td><b>ยอดยกมา</b></td>
-        <td><b>" . number_format($current_balance, 2) . "</b></td>
+echo "<tr class='table-active'>
+        <td colspan='6'>ยอดยกมา</td>
         <td></td>
+        <td>" . number_format($current_balance, 2) . "</td>
         <td></td>
         <td></td>
       </tr>";
@@ -87,4 +91,5 @@ foreach ($transactions as $transaction) {
           </tr>";
 }
 
-echo "</table>";
+echo "</tbody></table>";
+?>

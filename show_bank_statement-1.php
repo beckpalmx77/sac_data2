@@ -58,11 +58,10 @@ echo "<tr>
 
 // แสดงยอดยกมา
 $current_balance = $start_balance;  // กำหนดยอดยกมาเป็นยอดเริ่มต้น
-echo "<tr>        
-        <td colspan='3'></td>
-        <td><b>ยอดยกมา</b></td>
-        <td><b>" . number_format($current_balance, 2) . "</b></td>
+echo "<tr>
+        <td colspan='6'>ยอดยกมา</td>
         <td></td>
+        <td>" . number_format($current_balance, 2) . "</td>
         <td></td>
         <td></td>
       </tr>";

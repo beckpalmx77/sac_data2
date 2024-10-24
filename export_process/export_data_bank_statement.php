@@ -53,6 +53,7 @@ if ($row_start) {
 
 // เขียนหัวตาราง
 fputcsv($output, [
+    'ลำดับที่',
     'วันที่',
     'ธนาคาร',
     'เครดิต',
@@ -87,11 +88,17 @@ $sql_transactions = "SELECT
                      LEFT JOIN CHEQUEBOOK ON CHEQUEBOOK.CQBK_REFER_REF = DOCINFO.DI_REF
                      WHERE BANKACCOUNT.BNKAC_KEY = " . $bank . "   
                      AND BANKSTATEMENT.BSTM_RECNL_DD BETWEEN '" . $doc_date_start . "' AND '" . $doc_date_to . "' 
-                     ORDER BY BANKSTATEMENT.BSTM_RECNL_DD";
+                     ORDER BY BANKSTATEMENT.BSTM_RECNL_DD,BANKSTATEMENT.BSTM_RECNL_SEQ ";
+
+$myfile = fopen("abank-param.txt", "w") or die("Unable to open file!");
+fwrite($myfile, $sql_transactions);
+fclose($myfile);
 
 $stmt_transactions = $conn_sqlsvr->prepare($sql_transactions);
 $stmt_transactions->execute();
 $transactions = $stmt_transactions->fetchAll(PDO::FETCH_ASSOC);
+
+$index = 1; // เริ่มลำดับที่ 1
 
 // Loop แสดงรายการธุรกรรม
 foreach ($transactions as $transaction) {
@@ -100,12 +107,13 @@ foreach ($transactions as $transaction) {
 
     // แสดงผลในแต่ละบรรทัด
     fputcsv($output, [
+        $index++,  // เพิ่มลำดับที่
         $transaction['BSTM_RECNL_DD'],
         $transaction['BNKAC_NAME'],
         number_format($transaction['BSTM_CREDIT'], 2),
         number_format($transaction['BSTM_DEBIT'], 2),
         number_format($current_balance, 2),
-        $transaction['BSTM_REMARK'],
+        trim($transaction['BSTM_REMARK']),
         $transaction['DI_DATE'],
         $transaction['DI_REF'],
         $transaction['CQBK_CHEQUE_DD'],

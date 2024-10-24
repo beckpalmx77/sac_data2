@@ -159,15 +159,14 @@ if (strlen($_SESSION['alogin']) == "") {
                             tbody += '<td>' + item.AR_NAME + '</td>';
                             tbody += '<td>' + item.SKU_CODE + '</td>';
                             tbody += '<td>' + item.SKU_NAME + '</td>';
-                            //tbody += '<td>' + item.BRAND + '</td>';
-                            tbody += '<td>' + item.shop_type + '</td>';
+                            tbody += '<td>' + item.SHOP_TYPE + '</td>';
                             tbody += '<td>' + item.TIRES_EDGE + '</td>';
-                            tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_QTY) + '</td>';
-                            tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_U_POINT) + '</td>';
-                            tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_U_POINT_TOTAL) + '</td>';
+                            tbody += '<td class="text-right">' + formatNumber(item.TRD_QTY) + '</td>';
+                            tbody += '<td class="text-right">' + formatNumber(item.TRD_U_POINT) + '</td>';
+                            tbody += '<td class="text-right">' + formatNumber(item.TRD_R_POINT) + '</td>';
                             tbody += '<td class="text-right">' + formatNumber(item.TRD_S_POINT) + '</td>';
-                            tbody += '<td class="text-right">' + formatNumber(item.SUM_TRD_S_POINT_TOTAL) + '</td>';
-                            tbody += '<td class="text-right">' + formatNumber(item.TOTAL_POINTS) + '</td>';
+                            tbody += '<td class="text-right">' + formatNumber(item.TRD_T_POINT) + '</td>';
+                            tbody += '<td class="text-right">' + formatNumber(item.TRD_TOTAL_POINT_ALL) + '</td>';
                             tbody += '</tr>';
                         });
                         $('#salesTable tbody').html(tbody);
@@ -179,8 +178,8 @@ if (strlen($_SESSION['alogin']) == "") {
 
                         // เรียกใช้งาน DataTables
                         $('#salesTable').DataTable({
-                            "lengthMenu": [[15, 30, 50, 100], [15, 30, 50, 100]],
-                            "pageLength": 15,
+                            "lengthMenu": [[12, 30, 50, 100], [12, 30, 50, 100]],
+                            "pageLength": 12,
                             dom: 'Bfrtip',
                             buttons: [
                                 {

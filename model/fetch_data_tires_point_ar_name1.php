@@ -19,33 +19,15 @@ fwrite($myfile, "year = " . $year . "| month = " . $month . " | sale = " . $sale
 fclose($myfile);
 */
 
-$sql = "SELECT 
-  a.DI_REF,
-  a.AR_CODE,
-  a.AR_NAME, 
-  a.SKU_CODE,
-  a.SKU_NAME,
-  a.BRAND,
-  p.TIRES_EDGE, 
-  SUM(a.TRD_QTY) AS SUM_TRD_QTY,
-  SUM(a.TRD_U_POINT) AS SUM_TRD_U_POINT,
-  SUM(a.TRD_QTY) * SUM(a.TRD_U_POINT) AS SUM_TRD_U_POINT_TOTAL,
-  CASE WHEN s.status = 'Y' THEN p.TRD_S_POINT ELSE 0 END AS TRD_S_POINT,
-  CASE WHEN s.status = 'Y' THEN SUM(a.TRD_QTY) * SUM(a.TRD_S_POINT) ELSE 0 END AS SUM_TRD_S_POINT_TOTAL,
-  SUM(a.TRD_QTY) * SUM(a.TRD_U_POINT) + 
-  CASE WHEN s.status = 'Y' THEN SUM(a.TRD_QTY) * SUM(a.TRD_S_POINT) ELSE 0 END AS TOTAL_POINTS,
-  CASE WHEN s.status = 'Y' THEN 'Y' ELSE 'N' END AS status,
-  CASE WHEN s.status = 'Y' THEN 'SHOP' ELSE 'ร้านทั่วไป' END AS shop_type
-    FROM ims_data_sale_sac_all a
-    LEFT JOIN ims_sac_tires_point p ON p.SKU_CODE = a.SKU_CODE
-    LEFT JOIN ims_ar_shop s ON s.AR_CODE = a.AR_CODE
-    WHERE 1  
-        AND a.DI_MONTH LIKE '%" . $month . "%'
-        AND a.DI_YEAR LIKE '%" . $year . "%'        
-        AND a.TRD_U_POINT > 0        
-        AND (a.SKU_CODE LIKE 'LL%' OR a.SKU_CODE LIKE 'LE%' OR a.SKU_CODE LIKE 'AT%')          
-    GROUP BY a.AR_CODE, a.SKU_CODE
-    ORDER BY a.AR_CODE, a.SKU_CODE; ";
+$sql = "SELECT a.AR_CODE,a.AR_NAME,a.SKU_CODE,a.SKU_NAME,p.TIRES_EDGE,CASE WHEN s.status = 'Y' THEN 'SHOP' ELSE 'ร้านทั่วไป' END AS SHOP_TYPE
+,a.TRD_QTY,a.TRD_U_POINT,a.TRD_R_POINT ,a.TRD_S_POINT,a.TRD_T_POINT,a.TRD_R_POINT + a.TRD_T_POINT AS TRD_TOTAL_POINT_ALL
+FROM `ims_data_sale_sac_all`a
+LEFT JOIN ims_ar_shop s ON s.ar_code = a.AR_CODE
+LEFT JOIN ims_sac_tires_point p ON p.sku_code = a.SKU_CODE
+WHERE (a.SKU_CODE LIKE 'LL%' OR a.SKU_CODE LIKE 'LE%' OR a.SKU_CODE LIKE 'AT%') AND a.SKU_CODE NOT LIKE 'CL%' 
+AND COALESCE(a.TRD_U_POINT,0) > 0 
+AND DI_MONTH LIKE '%" . $month . "%'" . " AND DI_YEAR LIKE '%" . $year . "%'
+ORDER BY AR_CODE,SKU_CODE ";
 
 //AND a.SKU_CODE NOT LIKE 'CL%'
 

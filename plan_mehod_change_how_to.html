@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>วิธีการเปลี่ยนไปใช้ข้อมูลยอดขายจริงจาก Database (Live Data Integration)</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1100px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #c0392b; margin-top: 30px; border-left: 5px solid #e74c3c; padding-left: 10px; }
+        .info-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .formula { background: #f8f9fa; border: 1px dashed #7f8c8d; padding: 15px; border-radius: 5px; font-family: 'Courier New', Courier, monospace; color: #2980b9; font-weight: bold; }
+        .code-block { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; font-family: monospace; overflow-x: auto; margin: 10px 0; font-size: 0.9em; }
+        .highlight-text { color: #d35400; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #bdc3c7; padding: 10px; text-align: left; }
+        th { background: #ecf0f1; }
+    </style>
+</head>
+<body>
+    <h1>คู่มือการดึงข้อมูลยอดขายจริงจาก ims_data_sale_sac_all มาแทนการ Import</h1>
+
+    <p>แนวทางนี้จะช่วยให้หน้าจอ <b>forecast_plan_display.php</b> แสดงผลยอดขายที่ "สดใหม่" (Live) เสมอ โดยการดึงตัวเลขมาจากฐานข้อมูลธุรกรรมโดยตรง แทนการใช้ตัวเลขคงที่จากไฟล์ Excel</p>
+
+    <h2>1. โครงสร้าง SQL ที่ต้องใช้ (Query Structure)</h2>
+    <div class="info-card">
+        <p>เราจะใช้เทคนิค <b>Conditional Aggregation</b> (CASE WHEN) เพื่อรวมยอดขายตามเงื่อนไขเวลาที่ต้องการในคำสั่งเดียว:</p>
+        <div class="code-block">
+SELECT 
+    SKU_CODE, AR_CODE,
+    -- ยอดขายย้อนหลัง 3 เดือน
+    SUM(CASE WHEN DI_MONTH = 1 AND DI_YEAR = 2024 THEN TRD_QTY ELSE 0 END) as sales_m1,
+    SUM(CASE WHEN DI_MONTH = 2 AND DI_YEAR = 2024 THEN TRD_QTY ELSE 0 END) as sales_m2,
+    SUM(CASE WHEN DI_MONTH = 3 AND DI_YEAR = 2024 THEN TRD_QTY ELSE 0 END) as sales_m3,
+    -- ค่าเฉลี่ยปีก่อนหน้า (ทั้งปี / 12)
+    SUM(CASE WHEN DI_YEAR = 2023 THEN TRD_QTY ELSE 0 END) / 12 as last_year_avg
+FROM ims_data_sale_sac_all
+WHERE AR_CODE = 'SACXXX' AND SKU_CODE = 'SKUXXX'
+GROUP BY SKU_CODE, AR_CODE
+        </div>
+    </div>
+
+    <h2>2. วิธีการคำนวณ (Calculation Logic)</h2>
+    <div class="info-card">
+        <table>
+            <tr>
+                <th>รายการ</th>
+                <th>สูตรการคำนวณ (Live Calculation)</th>
+            </tr>
+            <tr>
+                <td><b>ยอดขายย้อนหลัง (M-1, M-2, M-3)</b></td>
+                <td>ดึงจากผลรวมของฟิลด์ <code>TRD_QTY</code> ในตาราง <code>ims_data_sale_sac_all</code> ตามเดือนและปีที่ระบุ</td>
+            </tr>
+            <tr>
+                <td><b>ค่าเฉลี่ย 12 เดือนปีก่อนหน้า</b></td>
+                <td><div class="formula">LastYearSum / 12</div></td>
+            </tr>
+            <tr>
+                <td><b>ค่าเฉลี่ย 3 เดือน (ย้อนหลัง)</b></td>
+                <td><div class="formula">(sales_m1 + sales_m2 + sales_m3) / 3</div> <br>(ใช้ฟังก์ชันปัดเศษ: เศษ >= 0.5 ปัดขึ้น, < 0.5 ปัดลง)</td>
+            </tr>
+            <tr>
+                <td><b>เทียบคาดการณ์ยอดขาย (%)</b></td>
+                <td><div class="formula">((Forecast - Avg3M) / Avg3M) * 100</div></td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>3. ขั้นตอนการลงมือทำ (Implementation Steps)</h2>
+    
+    <h3>ขั้นตอนที่ 1: แก้ไขไฟล์ forecast_plan_fetch.php</h3>
+    <div class="info-card">
+        <p>เปลี่ยนจากการ Query <code>SELECT * FROM ims_tires_plan_forecast</code> เพียงอย่างเดียว เป็นการ <b>LEFT JOIN</b> กับยอดขายจริง:</p>
+        <ol>
+            <li>สร้าง SQL ย่อย (Sub-query) เพื่อหาผลรวมยอดขายจาก <code>ims_data_sale_sac_all</code></li>
+            <li>Join กับตารางหลัก <code>ims_tires_plan_forecast</code> โดยใช้ <code>AR_CODE</code> และ <code>SKU_CODE</code> เป็นตัวเชื่อม (Key)</li>
+            <li>นำค่าจากผล Join มาแสดงแทนค่าที่อยู่ในตารางหลัก</li>
+        </ol>
+    </div>
+
+    <h3>ขั้นตอนที่ 2: การจัดการเดือนย้อนหลังใน PHP</h3>
+    <div class="info-card">
+        <p>ใช้ Logic ในการคำนวณเดือนย้อนหลังอัตโนมัติ เพื่อส่งเข้าไปใน SQL:</p>
+        <div class="code-block">
+$target_month = 6; // เดือนที่กำลังวางแผน
+$m1 = $target_month - 1; if($m1 <= 0) { $m1 += 12; $y1 = $year-1; }
+$m2 = $target_month - 2; // ... คำนวณถอยหลังไปเรื่อยๆ ...
+        </div>
+    </div>
+
+    <h3>ขั้นตอนที่ 3: ปรับปรุงการแสดงผล (UI Synchronization)</h3>
+    <div class="info-card">
+        <ul>
+            <li>แก้ไขหน้าจอให้แสดง <span class="highlight-text">Live Data</span> ในคอลัมน์ยอดขาย</li>
+            <li>เมื่อผู้ใช้แก้ค่าในช่อง <b>Target (เป้าหมาย)</b> หรือ <b>Forecast (คาดการณ์)</b> ระบบจะนำค่า "ยอดขายจริง" ที่เพิ่งดึงมาได้ ไปคำนวณหา % ต่างๆ ทันที</li>
+        </ul>
+    </div>
+
+    <div style="background: #eaf2f8; border: 1px solid #2980b9; padding: 15px; border-radius: 5px; margin-top: 30px;">
+        <b>ข้อควรระวัง:</b> การ JOIN ข้อมูลขนาดใหญ่ใน <code>ims_data_sale_sac_all</code> อาจทำให้หน้าจอโหลดช้าลง แนะนำให้สร้าง <b>Index</b> ที่ฟิลด์ <code>AR_CODE</code>, <code>SKU_CODE</code>, <code>DI_MONTH</code> และ <code>DI_YEAR</code> ในฐานข้อมูลเพื่อประสิทธิภาพสูงสุด
+    </div>
+
+</body>
+</html>

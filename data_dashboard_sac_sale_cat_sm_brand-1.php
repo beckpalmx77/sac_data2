@@ -1,0 +1,205 @@
+<?php
+
+include("config/connect_db.php");
+
+// 1. ปรับปรุง Logic การหาปี
+// ถ้ามีการส่งค่า year มาผ่าน method POST ให้ใช้ค่านั้น ถ้าไม่มีให้ใช้ปีปัจจุบัน
+$current_year = date("Y");
+if (isset($_POST['year'])) {
+    $year = $_POST['year'];
+} else {
+    $year = $current_year;
+}
+
+$month = "1";
+// ตรวจสอบ session ว่ามีอยู่หรือไม่ (ป้องกัน error)
+$sale_name = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
+
+$monthsInMonth = 12;
+
+$sale_name_clean = str_replace(' ', '', $sale_name);
+$sale_name_with_wildcard = "%" . $sale_name . "%";
+$sale_name_clean_wildcard = "%" . $sale_name_clean . "%";
+
+// ส่วนดึงชื่อเดือน (เหมือนเดิม)
+$month_name = "";
+$sql_month = "SELECT * FROM ims_month WHERE month = :month";
+$stmt_month = $conn->prepare($sql_month);
+$stmt_month->bindParam(':month', $month);
+$stmt_month->execute();
+$MonthRecords = $stmt_month->fetchAll();
+
+foreach ($MonthRecords as $row) {
+    $month_name = $row["month_name"];
+}
+
+// SQL Query หลัก (เหมือนเดิม แต่ year จะเปลี่ยนไปตามตัวแปร $year ด้านบน)
+$sql = "SELECT BRAND, DI_MONTH,
+        SUM(CAST(TRD_QTY AS DECIMAL(10, 2))) AS TRD_QTY,
+        SUM(CAST(TRD_AMOUNT_PRICE AS DECIMAL(10, 2))) AS TRD_AMOUNT_PRICE
+    FROM v_ims_data_sale_sac_all_sm_tire
+    WHERE DI_YEAR = :DI_YEAR AND (SALE_NAME LIKE :SALE_NAME OR REPLACE(SALE_NAME, ' ', '') LIKE :SALE_NAME_CLEAN)
+    GROUP BY BRAND, DI_MONTH
+    ORDER BY BRAND, CAST(DI_MONTH AS UNSIGNED)";
+
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':DI_YEAR', $year); // ตรงนี้จะใช้ค่าปีที่เลือก
+$stmt->bindParam(':SALE_NAME', $sale_name_with_wildcard);
+$stmt->bindParam(':SALE_NAME_CLEAN', $sale_name_clean_wildcard);
+$stmt->execute();
+
+$data = [];
+$amountData = [];
+$brands = [];
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $brand = $row['BRAND'];
+    $month = (int)$row['DI_MONTH'];
+    $qty = (float)$row['TRD_QTY'];
+    $amount = (float)$row['TRD_AMOUNT_PRICE'];
+
+    if (!isset($data[$brand])) {
+        $data[$brand] = array_fill(1, $monthsInMonth, 0);
+        $amountData[$brand] = array_fill(1, $monthsInMonth, 0);
+    }
+
+    $data[$brand][$month] = $qty;
+    $amountData[$brand][$month] = $amount;
+
+    if (!in_array($brand, $brands)) {
+        $brands[] = $brand;
+    }
+}
+
+// ฟังก์ชันสำหรับชื่อเดือนภาษาอังกฤษ (เผื่อในโค้ดเดิมไม่มีการ include มา)
+if (!function_exists('getMonthNameEng')) {
+    function getMonthNameEng($monthNum) {
+        $dateObj = DateTime::createFromFormat('!m', $monthNum);
+        return $dateObj->format('F');
+    }
+}
+
+?>
+
+<style>
+    .table-responsive {
+        overflow-x: auto;
+    }
+    #salesTableSM th:first-child,
+    #salesTableSM td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: #ffffff;
+        z-index: 10;
+        border-right: 1px solid #dee2e6;
+    }
+    .select-year-form {
+        display: inline-block;
+        margin-left: 10px;
+    }
+</style>
+
+<form id="myform" name="myform" action="" method="post">
+    <input type="hidden" id="SALE_NAME" name="SALE_NAME" value="<?php echo htmlspecialchars($sale_name); ?>">
+    <input type="hidden" id="year" name="year" value="<?php echo htmlspecialchars($year); ?>">
+</form>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-success text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fa fa-bar-chart" aria-hidden="true"></i> ข้อมูลยอดขาย
+                <?php echo "ประเภท ยางเล็ก | ชื่อ Sale: " . htmlspecialchars($sale_name); ?>
+
+                <form method="post" action="" class="select-year-form">
+                    <label for="year_select" class="mb-0 text-white">เลือกปี: </label>
+                    <select name="year" id="year_select" class="form-control form-control-sm d-inline-block w-auto" onchange="this.form.submit()">
+                        <?php
+                        for ($i = 0; $i <= 7; $i++) {
+                            $option_year = $current_year - $i;
+                            $selected = ($option_year == $year) ? 'selected' : '';
+                            echo "<option value='$option_year' $selected>$option_year</option>";
+                        }
+                        ?>
+                    </select>
+                </form>
+            </div>
+
+            <div>
+                <button type="button" id="ChartButton1" class="btn btn-light text-primary btn-sm fw-bold">Click For Chart</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="salesTableSM" class="table table-bordered table-striped w-100">
+                <thead>
+                <tr class="table-primary">
+                    <th>ยี่ห้อ (ปี <?php echo $year; ?>)</th> 
+                    <?php for ($month = 1; $month <= $monthsInMonth; $month++) {
+                        $month_eng_name = getMonthNameEng($month);
+                        ?>
+                        <th><?= $month_eng_name ?></th>
+                    <?php } ?>
+                    <th>ยอดรวม</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                $dailySums = array_fill(1, $monthsInMonth, 0);
+                $totalSum = 0;
+
+                foreach ($data as $brand => $months) {
+                    $sum = 0;
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($brand) . "</td>";
+                    for ($month = 1; $month <= $monthsInMonth; $month++) {
+                        $value = isset($months[$month]) ? $months[$month] : 0;
+                        echo "<td>" . number_format($value, 2) . "</td>";
+                        $sum += (float)$value;
+                        $dailySums[$month] += (float)$value;
+                    }
+                    echo "<td>" . number_format($sum, 2) . "</td>";
+                    $totalSum += $sum;
+                    echo "</tr>";
+                }
+                ?>
+                <tr class="table-success font-weight-bold">
+                    <td><strong>ยอดรวมทุกยี่ห้อ</strong></td>
+                    <?php
+                    foreach ($dailySums as $dailySum) {
+                        echo "<td>" . number_format($dailySum, 2) . "</td>";
+                    }
+                    ?>
+                    <td><strong><?= number_format($totalSum, 2) ?></strong></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#salesTableSM').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "lengthChange": true,
+            "scrollX": true,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/Thai.json"
+            }
+        });
+    });
+</script>
+
+<script>
+    $('#ChartButton1').click(function() {
+        document.forms['myform'].action = 'chart_sac_sale_product_by_month_sm_tires_brand_bar';
+        document.forms['myform'].target = '_blank';
+        document.forms['myform'].submit();
+        return true;
+    });
+</script>

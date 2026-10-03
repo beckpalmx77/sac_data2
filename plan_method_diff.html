@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>เปรียบเทียบวิธีการดึงข้อมูลและคำนวณยอดขาย</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        th, td { padding: 12px 15px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .method-box { background: #ecf0f1; border-left: 5px solid #2980b9; padding: 15px; margin: 10px 0; }
+        .highlight { font-weight: bold; color: #e74c3c; }
+        code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>เปรียบเทียบวิธีการจัดการข้อมูล: Tires Plan vs. Sales Report</h1>
+
+    <h2>1. วิธีการดึงข้อมูล (Data Sourcing)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>หัวข้อ</th>
+                <th>forecast_plan_display.php (Tires Plan)</th>
+                <th>forecast_sales_report_detail.php (Sales Report)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>แหล่งที่มาข้อมูล</b></td>
+                <td>นำเข้าจากไฟล์ Excel (Template)</td>
+                <td>ดึงจากฐานข้อมูลธุรกรรมโดยตรง (Live Query)</td>
+            </tr>
+            <tr>
+                <td><b>การคำนวณพื้นฐาน</b></td>
+                <td><span class="highlight">คำนวณใน Excel</span> ( Formulas) ก่อนนำเข้า</td>
+                <td><span class="highlight">คำนวณด้วย SQL/PHP</span> ขณะเปิดหน้าจอ</td>
+            </tr>
+            <tr>
+                <td><b>ความสดใหม่</b></td>
+                <td>เป็นข้อมูล Snapshot (ตามเวลาที่นำเข้าไฟล์)</td>
+                <td>เป็นข้อมูลปัจจุบันตามฐานข้อมูล (Real-time)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. รายละเอียดการคำนวณยอดขาย (Sales Metrics)</h2>
+    
+    <div class="method-box">
+        <b>ยอดขาย 12 เดือนปีก่อนหน้า (Avg/Min/Max):</b>
+        <ul>
+            <li><b>Tires Plan:</b> ใช้ค่าคงที่จาก Excel ที่ถูกบันทึกลงคอลัมน์ <code>avg_per_month_year</code>, <code>max_qty_year</code>, <code>min_qty_year</code></li>
+            <li><b>Sales Report:</b> ดึงข้อมูลสรุปรายปีจาก SQL และแสดงผ่านคอลัมน์ <code>avg_monthly_last_year</code></li>
+        </ul>
+    </div>
+
+    <div class="method-box">
+        <b>ยอดขายย้อนหลัง 3 เดือน:</b>
+        <ul>
+            <li><b>Tires Plan:</b> บันทึกแยกเป็น 3 คอลัมน์ (<code>sales_month_1, 2, 3</code>) โดยดึงค่าจากไฟล์ Excel</li>
+            <li><b>Sales Report:</b> คำนวณหาเดือนย้อนหลัง 3 เดือนจากระบบ และดึงยอดขายสะสมรายเดือนมาแสดง</li>
+        </ul>
+    </div>
+
+    <h2>3. การหาค่าเฉลี่ยและเปอร์เซ็นต์ (Calculation Logic)</h2>
+    
+    <div class="method-box">
+        <b>ค่าเฉลี่ย 3 เดือน:</b>
+        <ul>
+            <li><b>Tires Plan:</b> ใช้ค่าที่คำนวณมาแล้วจาก Excel (Column <code>avg_3_month</code>)</li>
+            <li><b>Sales Report:</b> ใช้ฟังก์ชัน PHP <code>round_avg_3month()</code> เพื่อปัดเศษ (ถ้าเศษ >= 0.5 ปัดขึ้น)</li>
+        </ul>
+    </div>
+
+    <div class="method-box">
+        <b>การคำนวณ % และค่าเปรียบเทียบ:</b>
+        <ul>
+            <li><b>Tires Plan:</b> ข้อมูลเป็นค่าคงที่ (Static) ที่ถูกนำเข้ามาพร้อมไฟล์</li>
+            <li><b>Sales Report:</b> <span class="highlight">คำนวณแบบ Interactive (JavaScript)</span> เมื่อมีการแก้ตัวเลขในช่อง "คาดการณ์ยอดขาย" ระบบจะคำนวณค่าใหม่ทันทีที่หน้าจอ</li>
+            <li><b>สูตรคำนวณ:</b> <code>((forecast_qty - avg_3month) / avg_3month) * 100</code></li>
+        </ul>
+    </div>
+
+    <h2>4. สรุปความแตกต่างหลัก</h2>
+    <ul>
+        <li><b>Tires Plan Display:</b> เน้นการแสดงผลที่รวดเร็วและเป็นทางการตามเอกสาร Excel ที่อนุมัติมาแล้ว ข้อมูลจะไม่เปลี่ยนแปลงถ้าไม่มีการนำเข้าไฟล์ใหม่</li>
+        <li><b>Sales Report Detail:</b> เน้นความยืดหยุ่นและการทำงานแบบโต้ตอบ (Interactive) เซลส์สามารถจำลองตัวเลขคาดการณ์และเห็นผลลัพธ์การเปรียบเทียบ % ได้ทันที</li>
+    </ul>
+
+</body>
+</html>

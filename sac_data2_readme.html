@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือระบบงาน sac_data2 - Sanguan Auto Car</title>
+    
+    <!-- Google Fonts: Prompt & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151d30;
+            --accent-color: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #24324f;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Prompt', 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #0d1527;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-brand img {
+            width: 45px;
+            height: auto;
+            filter: drop-shadow(0 0 8px var(--accent-glow));
+        }
+
+        .sidebar-brand h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            color: #ffffff;
+            background-color: rgba(59, 130, 246, 0.15);
+            box-shadow: inset 3px 0 0 var(--accent-color);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        /* Header / Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            z-index: 1;
+        }
+
+        .hero-section * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid var(--accent-color);
+            color: #93c5fd;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .hero-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 800px;
+        }
+
+        /* Section Headings */
+        section {
+            margin-bottom: 50px;
+            scroll-margin-top: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .section-header i {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Tech Badge Grid */
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .badge i {
+            font-size: 1rem;
+        }
+
+        .badge.php { border-color: #777bb4; color: #aeb2f5; }
+        .badge.mysql { border-color: #00758f; color: #82e2f7; }
+        .badge.sqlserver { border-color: #cc292b; color: #ff8587; }
+        .badge.line { border-color: #06c755; color: #7aff9e; }
+        .badge.jquery { border-color: #0769ad; color: #7cd5ff; }
+
+        /* General Card Styling */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--accent-color);
+        }
+
+        /* Table Explorer Styles */
+        .table-controls {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: #0d1527;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 12px 12px 40px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .filter-select {
+            background-color: #0d1527;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .custom-table th, .custom-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .custom-table th {
+            background-color: #0d1527;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .custom-table tr {
+            background-color: var(--card-bg);
+            transition: background-color 0.2s ease;
+        }
+
+        .custom-table tr:hover {
+            background-color: #1a243d;
+        }
+
+        .table-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Flow Chart Styles (HTML/CSS Based) */
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #0d1527;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .flow-node {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 16px 24px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 280px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .flow-node h4 {
+            color: #ffffff;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .flow-node p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .flow-arrow {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+            60% { transform: translateY(-4px); }
+        }
+
+        /* Code Block Styling */
+        pre {
+            background-color: #0d1527;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+
+        code {
+            color: #3b82f6;
+        }
+
+        pre code {
+            color: #a5f3fc;
+        }
+
+        /* Lists */
+        ul.custom-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul.custom-list li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+        }
+
+        ul.custom-list li::before {
+            content: "\f058";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--success-color);
+        }
+
+        /* Directory Tree UI */
+        .dir-tree {
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            background-color: #0d1527;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        .dir-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .dir-item.dir { color: #f59e0b; }
+        .dir-item.file { color: #9ca3af; }
+        .dir-indent { margin-left: 24px; border-left: 1px dashed var(--border-color); padding-left: 12px; }
+
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Side Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <img src="img/logo/Logo-01.png" alt="SAC Logo" onerror="this.src='https://via.placeholder.com/45'">
+            <h1>SAC Data System</h1>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#overview" class="active"><i class="fa-solid fa-circle-info"></i> ภาพรวมระบบ</a></li>
+            <li><a href="#directories"><i class="fa-solid fa-folder-tree"></i> โครงสร้างไดเรกทอรี</a></li>
+            <li><a href="#database"><i class="fa-solid fa-database"></i> ตัวช่วยค้นหาฐานข้อมูล</a></li>
+            <li><a href="#sync-flow"><i class="fa-solid fa-arrows-spin"></i> การทำงานของ Sync Flow</a></li>
+            <li><a href="#dev-rules"><i class="fa-solid fa-code"></i> กฎการพัฒนาระบบ</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>&copy; 2026 Sanguan Auto Car</p>
+            <p>Internal documentation</p>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-badge">
+                <i class="fa-solid fa-shield-halved"></i> เอกสารภายในสำหรับทีมพัฒนา
+            </div>
+            <h2 class="hero-title">ระบบจัดเก็บและวิเคราะห์ยอดขาย Siam Auto Car (sac_data2)</h2>
+            <p class="hero-subtitle">
+                ระบบหลังบ้านที่เชื่อมโยงฐานข้อมูลการทำงานภายใน คลังสินค้า การออกรถขนส่ง ตารางตรวจเยี่ยมนัดพบลูกค้า CRM และเป้ายอดขายสินค้า ของบริษัท สงวนออโต้คาร์ จำกัด
+            </p>
+        </div>
+
+        <!-- Section 1: Overview -->
+        <section id="overview">
+            <div class="section-header">
+                <i class="fa-solid fa-circle-info"></i>
+                <h3 class="section-title">1. ภาพรวมและเทคโนโลยีที่ใช้</h3>
+            </div>
+            <div class="card">
+                <p style="margin-bottom: 20px;">
+                    ระบบ <strong>sac_data2</strong> ทำหน้าที่หลักในการดึงข้อมูลดิบจาก <strong>ERP Business Plus</strong> (MS SQL Server) เพื่อมาประมวลผลคำนวณและแสดงผลในรูปแบบสรุปย่อ แผนภูมิ และสรุปยอดสะสม เพื่อให้ทีมผู้บริหารและฝ่ายขายนำไปประเมินเป้าและออกโปรแกรมรางวัลลูกค้าได้ทันที
+                </p>
+                
+                <h4 style="margin-bottom: 12px; color: #ffffff;">เทคโนโลยีหลักที่ใช้ในการทำงาน (Stack):</h4>
+                <div class="tech-badges">
+                    <span class="badge php"><i class="fa-brands fa-php"></i> PHP 8.x (PDO Object-oriented)</span>
+                    <span class="badge mysql"><i class="fa-solid fa-database"></i> MySQL 8.x (Local Database)</span>
+                    <span class="badge sqlserver"><i class="fa-solid fa-server"></i> MS SQL Server (ERP System Source)</span>
+                    <span class="badge line"><i class="fa-brands fa-line"></i> LINE Bot & Notify APIs</span>
+                    <span class="badge jquery"><i class="fa-solid fa-code"></i> jQuery / AJAX / Bootstrap</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Directories -->
+        <section id="directories">
+            <div class="section-header">
+                <i class="fa-solid fa-folder-tree"></i>
+                <h3 class="section-title">2. โครงสร้างไดเรกทอรีโครงการ</h3>
+            </div>
+            <div class="card">
+                <div class="dir-tree">
+                    <div class="dir-item dir"><i class="fa-solid fa-folder"></i> D:/website/sac_data2</div>
+                    <div class="dir-indent">
+                        <div class="dir-item dir"><i class="fa-solid fa-folder"></i> config/ <span style="color:var(--text-muted); font-size:0.8rem; margin-left:10px;">-- เก็บการตั้งค่าฐานข้อมูลต่างๆ (MySQL, Postgres, SQL Server)</span></div>
+                        <div class="dir-indent">
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> connect_db.php</div>
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> connect_sqlserver.php</div>
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> lang.php</div>
+                        </div>
+                        
+                        <div class="dir-item dir"><i class="fa-solid fa-folder"></i> cronjob/ <span style="color:var(--text-muted); font-size:0.8rem; margin-left:10px;">-- สคริปต์คอมมานด์ไลน์ (.bat/.php) เพื่อดึงข้อมูลอัตโนมัติจาก ERP</span></div>
+                        <div class="dir-indent">
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> import_data_sale_sac.php</div>
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> import_data_wh_stock.php</div>
+                        </div>
+
+                        <div class="dir-item dir"><i class="fa-solid fa-folder"></i> model/ <span style="color:var(--text-muted); font-size:0.8rem; margin-left:10px;">-- ตัวจัดการโค้ดฝั่งเซิร์ฟเวอร์ CRUD ที่รับค่าผ่าน AJAX</span></div>
+                        <div class="dir-indent">
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> manage_account_process.php</div>
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> manage_crm_process.php</div>
+                        </div>
+
+                        <div class="dir-item dir"><i class="fa-solid fa-folder"></i> engine/ <span style="color:var(--text-muted); font-size:0.8rem; margin-left:10px;">-- คิวรีข้อมูลสรุปเป็นแบบอาเรย์/JSON ส่งให้ Chart.js นำไปพล็อตกราฟ</span></div>
+                        <div class="dir-indent">
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> chart_data_sac_monthly.php</div>
+                        </div>
+
+                        <div class="dir-item dir"><i class="fa-solid fa-folder"></i> api/ <span style="color:var(--text-muted); font-size:0.8rem; margin-left:10px;">-- API ดึงข้อมูลจังหวัด/อำเภอ/รายการสินค้าแบบสแตติก</span></div>
+                        <div class="dir-indent">
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> product_api.php</div>
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> provinces_api.php</div>
+                        </div>
+
+                        <div class="dir-item dir"><i class="fa-solid fa-folder"></i> includes/ <span style="color:var(--text-muted); font-size:0.8rem; margin-left:10px;">-- ไฟล์เลย์เอาต์แชร์ร่วมกัน เช่น เมนูด้านข้างและด้านบน</span></div>
+                        <div class="dir-indent">
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> Side-Bar.php</div>
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> Top-Bar.php</div>
+                        </div>
+
+                        <div class="dir-item dir"><i class="fa-solid fa-folder"></i> util/ <span style="color:var(--text-muted); font-size:0.8rem; margin-left:10px;">-- ฟังก์ชันอำนวยความสะดวก เช่น ตัวแจ้งเตือน Line API, ฟอร์แมตตัวเลข</span></div>
+                        <div class="dir-indent">
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> send_message.php</div>
+                            <div class="dir-item file"><i class="fa-solid fa-file-code"></i> network.php</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Database Tables -->
+        <section id="database">
+            <div class="section-header">
+                <i class="fa-solid fa-database"></i>
+                <h3 class="section-title">3. ตารางข้อมูลในฐานข้อมูล (Database Tables Explorer)</h3>
+            </div>
+            
+            <div class="card">
+                <p style="margin-bottom: 20px; color: var(--text-muted);">
+                    ฐานข้อมูลมีตารางข้อมูลหลายหมวดหมู่ เลือกหมวดหมู่หรือพิมพ์ค้นหาชื่อตารางที่ต้องการเพื่อหาบทบาทการทำงานในระบบ
+                </p>
+
+                <!-- Table Filter Controls -->
+                <div class="table-controls">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="tableSearch" class="search-input" placeholder="พิมพ์ค้นหาชื่อตาราง...">
+                    </div>
+                    <select id="moduleFilter" class="filter-select">
+                        <option value="ALL">เลือกทุกโมดูล</option>
+                        <option value="RBAC">สิทธิ์และการเข้าใช้งาน (RBAC)</option>
+                        <option value="CRM">จัดการความสัมพันธ์ลูกค้า (CRM)</option>
+                        <option value="SALES">ยอดขายและเป้าหมาย (Sales)</option>
+                        <option value="TIRES">งานบริหารจัดเก็บยางรถยนต์ (Tires)</option>
+                        <option value="WMS">คลังสินค้าและจัดส่ง (WMS)</option>
+                        <option value="INTEGRATION">การเชื่อมต่อ APIs ภายนอก</option>
+                    </select>
+                </div>
+
+                <!-- Tables List Grid -->
+                <div class="table-responsive">
+                    <table class="custom-table" id="dbTables">
+                        <thead>
+                            <tr>
+                                <th>ชื่อตาราง (MySQL Table Name)</th>
+                                <th>โมดูลระบบ</th>
+                                <th>คำอธิบายหน้าที่และบทบาทในระบบ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Users / RBAC -->
+                            <tr data-module="RBAC">
+                                <td><code>ims_user</code></td>
+                                <td><span class="table-tag" style="background:#3b82f620; color:#93c5fd;">RBAC</span></td>
+                                <td>ตารางเก็บยูสเซอร์เข้าสู่ระบบ รหัสผ่านแบบ hashed และกำหนดประเภทบัญชี (Account Type)</td>
+                            </tr>
+                            <tr data-module="RBAC">
+                                <td><code>ims_permission</code></td>
+                                <td><span class="table-tag" style="background:#3b82f620; color:#93c5fd;">RBAC</span></td>
+                                <td>ตารางจับคู่ระหว่างระดับผู้ใช้ กับเมนูหลัก/เมนูย่อยที่เข้าถึงได้ รวมถึงหน้า Dashboard เริ่มต้น</td>
+                            </tr>
+                            <tr data-module="RBAC">
+                                <td><code>menu_main</code> / <code>menu_sub</code></td>
+                                <td><span class="table-tag" style="background:#3b82f620; color:#93c5fd;">RBAC</span></td>
+                                <td>เก็บไอคอน ลิงก์ปลายทาง ชื่อภาษาไทยและอังกฤษของเมนูข้างทางซ้ายมือทั้งหมด</td>
+                            </tr>
+
+                            <!-- CRM -->
+                            <tr data-module="CRM">
+                                <td><code>ims_customer_crm</code></td>
+                                <td><span class="table-tag" style="background:#10b98120; color:#a7f3d0;">CRM</span></td>
+                                <td>ข้อมูลลูกค้าสัมพันธ์ ที่อยู่ พิกัดภูมิศาสตร์ และแท็กประเภทร้านค้า</td>
+                            </tr>
+                            <tr data-module="CRM">
+                                <td><code>ims_customer_crm_check_header</code> / <code>detail</code></td>
+                                <td><span class="table-tag" style="background:#10b98120; color:#a7f3d0;">CRM</span></td>
+                                <td>หัวข้อรายละเอียดการตรวจสุขภาพร้านค้า นัดเยี่ยม และรายงานบันทึกของเซลส์</td>
+                            </tr>
+                            <tr data-module="CRM">
+                                <td><code>checkins</code></td>
+                                <td><span class="table-tag" style="background:#10b98120; color:#a7f3d0;">CRM</span></td>
+                                <td>พิกัดละติจูด/ลองจิจูดของพนักงานขาย เพื่อเช็กอินกับร้านค้าปลายทางตามวัน-เวลาจริง</td>
+                            </tr>
+
+                            <!-- Sales -->
+                            <tr data-module="SALES">
+                                <td><code>ims_product_sale_sac</code></td>
+                                <td><span class="table-tag" style="background:#f59e0b20; color:#fde68a;">SALES</span></td>
+                                <td>ข้อมูลธุรกรรมยอดขายรายวันของสงวนออโต้คาร์ ที่ดึงมาจาก MS SQL Server ERP</td>
+                            </tr>
+                            <tr data-module="SALES">
+                                <td><code>ims_sale_target</code></td>
+                                <td><span class="table-tag" style="background:#f59e0b20; color:#fde68a;">SALES</span></td>
+                                <td>ตารางเก็บเป้าหมายรายเดือนของพนักงานขายแต่ละท่านสำหรับใช้คำนวณ Progress Bar</td>
+                            </tr>
+                            <tr data-module="SALES">
+                                <td><code>ims_sale_team</code></td>
+                                <td><span class="table-tag" style="background:#f59e0b20; color:#fde68a;">SALES</span></td>
+                                <td>จับกลุ่มพนักงานขายภายใต้สังกัดหัวหน้าทีม เช่น แผนกค้าส่ง แผนกค้าปลีก</td>
+                            </tr>
+
+                            <!-- Tires -->
+                            <tr data-module="TIRES">
+                                <td><code>ims_tires_number</code></td>
+                                <td><span class="table-tag" style="background:#8b5cf620; color:#ddd6fe;">TIRES</span></td>
+                                <td>เก็บรหัสซีเรียลนัมเบอร์ของยางแต่ละเส้น พร้อมประวัติการเข้าคลังและจำหน่ายออก</td>
+                            </tr>
+                            <tr data-module="TIRES">
+                                <td><code>ims_tires_plan_forecast</code></td>
+                                <td><span class="table-tag" style="background:#8b5cf620; color:#ddd6fe;">TIRES</span></td>
+                                <td>เก็บแผนการคาดการณ์ยอดขายยางเปรียบเทียบกับค่าเฉลี่ย 3 เดือน และเป้ายอดขายล่วงหน้า 2 เดือน</td>
+                            </tr>
+                            <tr data-module="TIRES">
+                                <td><code>ims_sac_tires_point</code></td>
+                                <td><span class="table-tag" style="background:#8b5cf620; color:#ddd6fe;">TIRES</span></td>
+                                <td>คะแนนสะสมของแต่ละร้านค้า สำหรับการซื้อยางบางแบรนด์เพื่อแลกสิทธิ์หรือของรางวัล</td>
+                            </tr>
+
+                            <!-- WMS -->
+                            <tr data-module="WMS">
+                                <td><code>wh_warehouse</code> / <code>wh_location</code></td>
+                                <td><span class="table-tag" style="background:#ec489920; color:#fbcfe8;">WMS</span></td>
+                                <td>ตารางระบุตัวตนคลังสินค้า และพิกัดระบุตำแหน่งเก็บสินค้า (Bin Locations)</td>
+                            </tr>
+                            <tr data-module="WMS">
+                                <td><code>wh_stock_transaction</code></td>
+                                <td><span class="table-tag" style="background:#ec489920; color:#fbcfe8;">WMS</span></td>
+                                <td>ประวัติการเคลื่อนย้ายสินค้าทั้งหมดเข้า/ออก/โอนย้ายคลังรายรายการ</td>
+                            </tr>
+                            <tr data-module="WMS">
+                                <td><code>ims_sale_logistic_plan</code></td>
+                                <td><span class="table-tag" style="background:#ec489920; color:#fbcfe8;">WMS</span></td>
+                                <td>แผนการขนส่งสินค้า จัดคิวรถคาร์โค้ด วันส่งของ และสถานะการจัดส่ง</td>
+                            </tr>
+
+                            <!-- Integration -->
+                            <tr data-module="INTEGRATION">
+                                <td><code>aline_api</code></td>
+                                <td><span class="table-tag" style="background:#10b98120; color:#a7f3d0;">INTEGRATION</span></td>
+                                <td>เก็บชุด Token และ Channel Key สำหรับเชื่อมการส่งข้อความผ่าน LINE API</td>
+                            </tr>
+                            <tr data-module="INTEGRATION">
+                                <td><code>log_line_send</code></td>
+                                <td><span class="table-tag" style="background:#10b98120; color:#a7f3d0;">INTEGRATION</span></td>
+                                <td>บันทึกประวัติการยิง Push API ของระบบไปที่ LINE บอท เพื่อใช้วิเคราะห์กรณีส่งข้อความไม่ผ่าน</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Data Sync Workflow -->
+        <section id="sync-flow">
+            <div class="section-header">
+                <i class="fa-solid fa-arrows-spin"></i>
+                <h3 class="section-title">4. การเชื่อมโยงและนำเข้าข้อมูล (Data Sync Workflow)</h3>
+            </div>
+            
+            <div class="card">
+                <p style="margin-bottom: 20px;">
+                    ข้อมูลธุรกรรมหลัก (เช่น ยอดขาย บิลซื้อ รายการคลังสินค้า) จะถูกนำเข้าผ่านไฟล์สคริปต์คอมมานด์ในห้อง [`cronjob`](file:///D:/website/sac_data2/cronjob) เพื่อประมวลผลดึงข้อมูลข้ามเซิร์ฟเวอร์
+                </p>
+
+                <!-- SVG/HTML-based flowchart representation -->
+                <div class="flowchart">
+                    <div class="flow-node">
+                        <h4>1. Business Plus ERP (MS SQL Server)</h4>
+                        <p>ฐานข้อมูลธุรกรรมหลัก ณ เครื่องเซิร์ฟเวอร์หลัก (IP: 192.168.88.13)</p>
+                    </div>
+                    <div class="flow-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="flow-node">
+                        <h4>2. CLI Cronjob Executed (.bat / .php)</h4>
+                        <p>เช็กประเภทใบสำคัญคัดเฉพาะรหัส DS02, IS01, IS02, IV01</p>
+                    </div>
+                    <div class="flow-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="flow-node">
+                        <h4>3. Data Processing & Return Sign Checks</h4>
+                        <p>สคริปต์ตรวจหากพบประเภทการคืนของ (DT_PROPERTIES 308/337) จะทำการบังคับให้จำนวนค่าขายติดลบ</p>
+                    </div>
+                    <div class="flow-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="flow-node">
+                        <h4>4. Target MySQL DB (sac_data2)</h4>
+                        <p>บันทึกผลลัพธ์ลงสู่ตาราง <code>ims_product_sale_sac</code> ทันทีเพื่อพร้อมพล็อตกราฟ</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Development Guidelines -->
+        <section id="dev-rules">
+            <div class="section-header">
+                <i class="fa-solid fa-code"></i>
+                <h3 class="section-title">5. กฎระเบียบและข้อควรระวังสำหรับนักพัฒนา</h3>
+            </div>
+            
+            <div class="card">
+                <ul class="custom-list">
+                    <li>
+                        <strong>ระบบความปลอดภัยการเข้าถึงหน้าเว็บ</strong>: หน้าเว็บหลักทุกหน้าจะถูกตรวจจับ Session เสมอ:
+                        <pre><code>if (strlen($_SESSION['alogin']) == "") {
+    header("Location: index.php");
+}</code></pre>
+                        ในการสร้างไฟล์ใหม่ ต้องครอบเงื่อนไขนี้ที่บรรทัดบนสุดเสมอเพื่อป้องกันการลักลอบเปิดดูข้อมูลหลังบ้านโดยตรง
+                    </li>
+                    <li>
+                        <strong>การป้องกันการฉีดโค้ดแปลกปลอม (SQL Injection Protection)</strong>: ทุกการเขียนคิวรีฐานข้อมูล SQL ห้ามต่อสตริงตัวแปรเปล่าแบบดิบๆ ต้องทำการ Bind parameter ผ่าน PDO เสมอ
+                    </li>
+                    <li>
+                        <strong>การเขียนบันทึกประวัติการส่งข้อมูลภายนอก</strong>: เมื่อเรียกใช้ LINE Message API ผ่านฟังก์ชันจากไฟล์ [`send_message.php`](file:///D:/website/sac_data2/util/send_message.php) ฟังก์ชันจะทำการเขียน Log ลงตาราง `log_line_send` อัตโนมัติ ห้ามนำฟังก์ชัน cURL ไปเขียนซ้ำซ้อนในหน้ารายงานย่อย
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Interactive script to filter tables list dynamically -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tableSearch = document.getElementById('tableSearch');
+            const moduleFilter = document.getElementById('moduleFilter');
+            const tableRows = document.querySelectorAll('#dbTables tbody tr');
+
+            const filterTables = () => {
+                const query = tableSearch.value.toLowerCase().trim();
+                const selectedModule = moduleFilter.value;
+
+                tableRows.forEach(row => {
+                    const tableName = row.cells[0].textContent.toLowerCase();
+                    const tableDesc = row.cells[2].textContent.toLowerCase();
+                    const rowModule = row.getAttribute('data-module');
+
+                    const matchesQuery = tableName.includes(query) || tableDesc.includes(query);
+                    const matchesModule = selectedModule === 'ALL' || rowModule === selectedModule;
+
+                    if (matchesQuery && matchesModule) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            };
+
+            tableSearch.addEventListener('input', filterTables);
+            moduleFilter.addEventListener('change', filterTables);
+
+            // Active sidebar highlighting on scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.sidebar-menu a');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - 150)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

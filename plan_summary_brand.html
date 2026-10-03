@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการพัฒนา: ระบบสรุปยอดตามยี่ห้อ (Brand Summary) - Updated</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; padding: 30px; line-height: 1.6; background-color: #f4f7f6; }
+        .plan-card { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 30px; margin-bottom: 30px; }
+        .step-num { background: #198754; color: white; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; font-weight: bold; }
+        .feature-list { list-style: none; padding-left: 0; }
+        .feature-list li::before { content: "✓"; color: #198754; font-weight: bold; margin-right: 10px; }
+        .highlight-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .security-box { background: #f8d7da; border-left: 5px solid #dc3545; padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; color: #842029; }
+        code { color: #d63384; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-5 text-success">แผนการเพิ่มระบบสรุปยอดตามยี่ห้อ (Brand Summary) <br><small class="text-muted" style="font-size: 0.5em;">[อัปเดตล่าสุด: ระบบความปลอดภัยและการกรองข้อมูล]</small></h1>
+        
+        <div class="plan-card">
+            <h3><i class="fas fa-bullseye"></i> วัตถุประสงค์</h3>
+            <p>เพิ่มความสามารถในการรวมยอดคำนวณแยกตามยี่ห้อ (Brand) ในหน้าจอ <code>forecast_plan_display_new.php</code> โดยมุ่งเน้นความถูกต้องของข้อมูลตามสิทธิ์การเข้าถึง และความสอดคล้องกับตัวกรองหลัก</p>
+        </div>
+
+        <div class="plan-card">
+            <h3><span class="step-num">!</span> การควบคุมสิทธิ์และการกรองข้อมูล (Critical)</h3>
+            <div class="security-box">
+                <strong>ความปลอดภัยเป็นลำดับแรก:</strong> การดึงข้อมูลสรุปต้องตรวจสอบ <code>account_type</code> จาก Session ทุกครั้งเพื่อให้แน่ใจว่า:
+            </div>
+            <ul class="feature-list">
+                <li><strong>Admin:</strong> สามารถดูยอดสรุปได้ทั้งหมดทุกยี่ห้อ ทุกเซลส์ ทุกลูกค้า</li>
+                <li><strong>Sale User:</strong> ดูได้เฉพาะยอดสรุปในส่วนที่ตนเองเป็นพนักงานขาย (<code>sale_name = session.first_name</code>)</li>
+                <li><strong>Take User:</strong> ดูได้เฉพาะยอดสรุปในส่วนที่ตนเองเป็นคนเทค (<code>take_name = session.first_name</code>)</li>
+            </ul>
+            <div class="highlight-box">
+                <strong>การกรองข้อมูลแบบ Real-time:</strong> ยอดใน Modal ต้องเปลี่ยนตาม Filter ที่ผู้ใช้เลือกหน้าจอหลัก (เดือน, ปี, ชื่อพนักงาน, ชื่อลูกค้า) เพื่อให้ยอดรวม "ตรงกัน" กับรายการที่แสดงในตารางหลัก
+            </div>
+        </div>
+
+        <div class="plan-card">
+            <h3><span class="step-num">1</span> การปรับปรุง UI (User Interface)</h3>
+            <ul class="feature-list">
+                <li>แทรกปุ่ม <strong>"สรุปยอดตามยี่ห้อ"</strong> (สีเหลืองหรือสีฟ้า) ถัดจากปุ่มกรองข้อมูล</li>
+                <li>เพิ่ม <strong>Bootstrap Modal</strong> โครงสร้างตารางประกอบด้วย:
+                    <br>- ยี่ห้อ, เฉลี่ย 12ด., ยอดขาย M-1/M-2/M-3, เฉลี่ย 3ด., วางแผนการขาย, % เทียบวางแผนการขาย
+                </li>
+            </ul>
+        </div>
+
+        <div class="plan-card">
+            <h3><span class="step-num">2</span> ตรรกะการดึงข้อมูล (Backend Logic)</h3>
+            <p>สร้างไฟล์ <code>forecast_fetch_brand_summary.php</code> เพื่อคำนวณยอดด้วย SQL:</p>
+            <ul>
+                <li>ใช้คำสั่ง <code>SUM()</code> สำหรับทุกคอลัมน์ที่เป็นตัวเลข</li>
+                <li>ใช้คำสั่ง <code>GROUP BY brand_code</code></li>
+                <li><strong>หัวใจสำคัญ:</strong> ต้องมี <code>WHERE</code> clause ที่รองรับทั้ง <code>account_type</code> และเงื่อนไขจากตัวกรองหน้าเว็บ</li>
+            </ul>
+        </div>
+
+        <div class="plan-card">
+            <h3><span class="step-num">3</span> ขั้นตอนการดำเนินการ</h3>
+            <ol>
+                <li><strong>Backend:</strong> พัฒนา API สำหรับสรุปยอดที่รองรับการเช็ค Session และสิทธิ์การเข้าถึง</li>
+                <li><strong>Frontend (HTML):</strong> เพิ่ม Modal Template ใน <code>forecast_plan_display_new.php</code></li>
+                <li><strong>Frontend (JS):</strong> เขียนฟังก์ชันส่งค่า Filter ปัจจุบันไปยัง API และรับผลลัพธ์มา Render ลงใน Modal</li>
+                <li><strong>Validation:</strong> ตรวจสอบยอดรวมใน Modal เทียบกับยอดรวมในตารางหลักเพื่อให้มั่นใจว่า Logic ถูกต้อง</li>
+            </ol>
+        </div>
+
+        <div class="alert alert-info mt-4">
+            <strong>ข้อสรุป:</strong> การอัปเดตครั้งนี้จะเน้นที่ความปลอดภัยของข้อมูลเป็นหลัก โดยใช้ <code>account_type</code> เป็นตัวกำหนดขอบเขตข้อมูล (Data Scope) เพื่อป้องกันไม่ให้พนักงานเห็นข้อมูลของผู้อื่นในขณะดูยอดสรุป
+        </div>
+    </div>
+</body>
+</html>

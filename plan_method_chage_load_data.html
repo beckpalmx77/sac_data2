@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>การปรับปรุงประสิทธิภาพการโหลดข้อมูล (Load Optimization)</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #f39c12; padding-bottom: 10px; }
+        h2 { color: #e67e22; margin-top: 30px; border-left: 5px solid #f39c12; padding-left: 10px; }
+        .step-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .code-block { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; font-family: monospace; overflow-x: auto; margin: 10px 0; }
+        .highlight { color: #d35400; font-weight: bold; }
+        .note { background: #fff9db; border-left: 5px solid #fcc419; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>การปรับปรุงประสิทธิภาพการโหลดข้อมูลเริ่มต้น (Initial Load Optimization)</h1>
+
+    <div class="step-card">
+        <p>เนื่องจากการดึงข้อมูลในหน้าจอ <b>Tires Plan Forecast (Interactive)</b> มีการเชื่อมโยงกับยอดขายจริงจากฐานข้อมูลขนาดใหญ่ ซึ่งทำให้การโหลดหน้าจอครั้งแรกที่มีข้อมูลทั้งหมดทำได้ช้ามาก จึงได้ดำเนินการปรับปรุงดังนี้:</p>
+    </div>
+
+    <h2>1. การปรับปรุงฝั่ง Server (forecast_plan_fetch_new.php)</h2>
+    <div class="step-card">
+        <p>เพิ่มเงื่อนไขการตรวจสอบพารามิเตอร์ <b>เดือน (Month)</b> และ <b>ปี (Year)</b> ก่อนเริ่มการประมวลผล SQL:</p>
+        <div class="code-block">
+// หากไม่มีการระบุเดือนและปี ให้ส่งค่าว่างกลับทันทีเพื่อประหยัดทรัพยากร
+if (empty($month) && empty($year)) {
+    echo json_encode([
+        "draw" => intval($_POST['draw']),
+        "recordsTotal" => 0,
+        "recordsFiltered" => 0,
+        "data" => []
+    ]);
+    exit;
+}
+        </div>
+        <p>ผลที่ได้: ระบบจะไม่ทำการคำนวณยอดขายย้อนหลัง (Subquery) ที่ซับซ้อนหากผู้ใช้ยังไม่ได้ระบุเงื่อนไขการกรอง</p>
+    </div>
+
+    <h2>2. การปรับปรุงฝั่ง UI (forecast_plan_display_new.php)</h2>
+    <div class="step-card">
+        <ul>
+            <li><b>Dropdown Default:</b> เปลี่ยนค่าเริ่มต้นของ "เดือน" และ "ปี" ให้เป็น <span class="highlight">"-- เลือกเดือน --"</span> และ <span class="highlight">"-- เลือกปี --"</span> (ค่าว่าง)</li>
+            <li><b>Empty Table:</b> เมื่อเปิดหน้าจอขึ้นมา ตาราง DataTables จะแสดงเป็นตารางว่าง (Zero Records) ทันทีแทนการโหลดข้อมูลทั้งหมด</li>
+            <li><b>Filter Requirement:</b> ผู้ใช้งานต้องทำการเลือก เดือน และ ปี ที่ต้องการก่อน แล้วจึงกดปุ่ม <span class="highlight">"กรองข้อมูล"</span> เพื่อดึงข้อมูลเฉพาะส่วนที่ต้องการออกมา</li>
+        </ul>
+    </div>
+
+    <h2>3. ประโยชน์ที่ได้รับ</h2>
+    <div class="step-card">
+        <ol>
+            <li><b>Page Load Speed:</b> หน้าจอเปิดขึ้นมาได้ทันทีโดยไม่ต้องรอการประมวลผลข้อมูล</li>
+            <li><b>Server Performance:</b> ลดภาระการทำงานของ Database Server ในการ Query ข้อมูลที่ไม่ได้ใช้งาน</li>
+            <li><b>User Experience:</b> ผู้ใช้งานสามารถเจาะจงดูข้อมูลที่สนใจได้โดยตรง ช่วยลดความสับสนจากข้อมูลที่มากเกินไป</li>
+        </ol>
+    </div>
+
+    <div class="note">
+        <b>ข้อแนะนำ:</b> หากระบบยังคงช้าหลังจากการกรองข้อมูลแล้ว แนะนำให้ตรวจสอบการสร้าง Index ในตาราง <code>ims_data_sale_sac_all</code> และ <code>ims_tires_plan_forecast</code> เพื่อเพิ่มความเร็วในการ JOIN ข้อมูล
+    </div>
+
+</body>
+</html>

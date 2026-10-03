@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>วิธีการทำงานของระบบบันทึกข้อมูล (How to Save Data)</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #f1c40f; padding-bottom: 10px; }
+        h2 { color: #f39c12; margin-top: 30px; border-left: 5px solid #f1c40f; padding-left: 10px; }
+        .logic-card { background: #fffdf0; border: 1px solid #f9e79f; border-radius: 8px; padding: 20px; margin: 15px 0; }
+        .highlight { color: #d35400; font-weight: bold; }
+        .code-block { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; font-family: monospace; overflow-x: auto; margin: 10px 0; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #bdc3c7; padding: 10px; text-align: left; }
+        th { background: #fdf2e9; }
+        .process-step { margin-bottom: 20px; padding-left: 20px; border-left: 3px solid #f39c12; }
+    </style>
+</head>
+<body>
+    <h1>ขั้นตอนและกลไกการบันทึกข้อมูล (Save Process)</h1>
+
+    <p>ระบบบันทึกข้อมูลในหน้าจอ <code>forecast_plan_display_new.php</code> ถูกออกแบบมาให้ทำงานแบบ <b>"Batch Update"</b> เพื่อความรวดเร็วและลดจำนวนครั้งในการติดต่อกับ Server โดยมีรายละเอียดดังนี้:</p>
+
+    <h2>1. ข้อมูลที่ถูกบันทึก (What is saved?)</h2>
+    <p>เมื่อกดปุ่ม <span class="highlight">"บันทึกการแก้ไขทั้งหมด"</span> ระบบจะรวบรวมข้อมูลจาก <b>ทุกแถวที่แสดงผลอยู่ในหน้าปัจจุบัน</b> โดยบันทึกฟิลด์ดังต่อไปนี้:</p>
+    <table>
+        <tr>
+            <th>ฟิลด์ข้อมูล</th>
+            <th>คำอธิบาย</th>
+        </tr>
+        <tr>
+            <td><code>target_qty_month</code></td>
+            <td>เป้าหมายการขายที่ผู้ใช้แก้ไขในช่อง Input</td>
+        </tr>
+        <tr>
+            <td><code>forecast_qty_month_1</code></td>
+            <td>ยอดคาดการณ์ที่ผู้ใช้แก้ไขในช่อง Input</td>
+        </tr>
+        <tr>
+            <td><code>compare_forecast_month_1</code></td>
+            <td>ส่วนต่างระหว่าง "ยอดคาดการณ์" เทียบกับ "ค่าเฉลี่ย 3 เดือน" (คำนวณให้อัตโนมัติ)</td>
+        </tr>
+        <tr>
+            <td><code>compare_sales_percent</code></td>
+            <td>เปอร์เซ็นต์ส่วนต่างเทียบยอดขาย (คำนวณให้อัตโนมัติ)</td>
+        </tr>
+        <tr>
+            <td><code>remark</code></td>
+            <td>หมายเหตุเพิ่มเติมที่พนักงานขายกรอก</td>
+        </tr>
+    </table>
+
+    <h2>2. ลำดับขั้นตอนการทำงาน (Workflow)</h2>
+    
+    <div class="process-step">
+        <b>ขั้นตอนที่ 1: การรวบรวมข้อมูล (Client-side Data Gathering)</b>
+        <p>JavaScript จะทำการวนลูป (Iterate) ผ่านแถวของ DataTable เพื่อดึงค่าจาก <code>input</code> และดึง <code>data-id</code> ของแต่ละแถวมาเก็บไว้ในตัวแปรแบบ Array ในรูปแบบ JSON</p>
+    </div>
+
+    <div class="process-step">
+        <b>ขั้นตอนที่ 2: การคำนวณแบบ Real-time (Auto Calculation)</b>
+        <p>ในขณะที่ผู้ใช้พิมพ์ตัวเลข ระบบจะมีฟังก์ชัน <code>calculateRow()</code> ทำงานเบื้องหลังเพื่อคำนวณส่วนต่างและ % ทันที และจะนำค่าที่คำนวณได้นี้ส่งไปบันทึกด้วย เพื่อให้ข้อมูลใน Database ตรงกับสิ่งที่ผู้เห็นบนหน้าจอ</p>
+    </div>
+
+    <div class="process-step">
+        <b>ขั้นตอนที่ 3: การส่งข้อมูล (Ajax Transmission)</b>
+        <p>ข้อมูลทั้งหมดจะถูกส่งไปยังไฟล์ <code>forecast_update_plan_new.php</code> ผ่าน Ajax (POST Method) พร้อมการแสดงสถานะ Loading ด้วย SweetAlert2</p>
+    </div>
+
+    <div class="process-step">
+        <b>ขั้นตอนที่ 4: การประมวลผลที่ Backend (Server-side Processing)</b>
+        <div class="logic-card">
+            <ul>
+                <li>ตรวจสอบสิทธิการเข้าถึง (Session Check)</li>
+                <li>ใช้ <b>Database Transaction</b> (Begin Transaction) เพื่อรับประกันว่าข้อมูลทุกแถวต้องบันทึกสำเร็จทั้งหมด หากมีแถวใดผิดพลาดจะทำการ Rollback ทันที</li>
+                <li>วนลูป Execute คำสั่ง <code>UPDATE</code> ตาม ID ที่ได้รับมา</li>
+                <li>อัปเดตฟิลด์ <code>import_date</code> เป็นเวลาปัจจุบัน เพื่อให้ทราบว่าข้อมูลถูกแก้ไขล่าสุดเมื่อใด</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>3. ข้อควรระวัง</h2>
+    <div class="logic-card" style="background-color: #fdedec; border-color: #f5b7b1;">
+        <ul>
+            <li>การบันทึกจะบันทึกเฉพาะ <b>ข้อมูลที่แสดงอยู่ในหน้านั้นๆ</b> (Page current) เท่านั้น</li>
+            <li>หากมีการแก้ไขข้อมูลแล้ว <b>ห้ามกด Refresh หน้าจอ</b> หรือเปลี่ยนหน้า DataTable ก่อนกดปุ่มบันทึก มิฉะนั้นสิ่งที่แก้ไขไว้จะหายไป</li>
+            <li>ระบบรองรับการกรอกตัวเลขที่มีเครื่องหมาย Comma (,) โดยจะทำการลบออกให้อัตโนมัติก่อนส่งไปคำนวณที่ Database</li>
+        </ul>
+    </div>
+
+    <footer style="text-align: center; margin-top: 50px; font-size: 0.85em; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px;">
+        &copy; 2025 BY SAC System Admin
+    </footer>
+</body>
+</html>

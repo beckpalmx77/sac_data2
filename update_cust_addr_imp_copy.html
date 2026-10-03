@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แนวคิดและขั้นตอนการอัปเดตข้อมูลอัตโนมัติ (นำเข้า & คัดลอกข้อมูล)</title>
+    <style>
+        body {
+            font-family: 'Prompt', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 15px;
+            background-color: #f4f7f6;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 5px solid #198754;
+        }
+        h1 {
+            color: #198754;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 30px;
+            border-left: 4px solid #0d6efd;
+            padding-left: 10px;
+        }
+        .concept-card {
+            background-color: #eef1f6;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0d6efd;
+        }
+        .step {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #6c757d;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        pre {
+            background-color: #2b2b2b;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 4px;
+            color: #d63384;
+            font-size: 0.9rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #0d6efd;
+            border-radius: 4px;
+        }
+        .alert {
+            padding: 15px;
+            background-color: #fff3cd;
+            color: #664d03;
+            border: 1px solid #ffecb5;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>💡 แนวคิดและขั้นตอนการปรับปรุงข้อมูลอัตโนมัติ (นำเข้า & คัดลอก)</h1>
+    <p>เอกสารฉบับนี้สรุปแนวคิด วิธีการ และขั้นตอนในการซิงก์ข้อมูล <strong>ที่อยู่ลูกค้า (อำเภอ, จังหวัด)</strong> จากวิวมุมมอง <code>v_customer_data_sale_all_zone</code> และข้อมูล <strong>พนักงานขาย & คนเทคสินค้า (Sale Name, Take Name)</strong> จากวิวมุมมอง <code>v_sale_cust_sac</code> (ซึ่งเพิ่มฟิลด์ <code>TAKE_NAME</code> เรียบร้อยแล้ว) ลงในตาราง <code>ims_tires_plan_forecast</code> อัตโนมัติทุกครั้งที่มีการนำเข้าข้อมูลหรือคัดลอกเป้าหมายยอดขาย</p>
+
+    <div class="concept-card">
+        <h3>🌟 แนวคิดหลัก (Core Concept)</h3>
+        <p>เพื่อป้องกันข้อมูลพนักงานขาย/คนเทค/ที่อยู่ว่างหรือเป็นข้อมูลเก่าเมื่อมีการนำเข้าไฟล์ Excel หรือสั่งคัดลอกข้อมูลข้ามเดือน ระบบจะทำคำสั่งการซิงก์ข้อมูล 2 คำสั่งต่อเนื่องกันในแบบ Real-time <strong>ภายใต้ Transaction เดียวกันก่อนทำการบันทึกข้อมูลจริง</strong> เพื่อรับประกันความถูกต้องสมบูรณ์และรวดเร็วสูงสุด</p>
+    </div>
+
+    <h2>1. การซิงก์ข้อมูล 2 ส่วนพร้อมกันตอนประมวลผล</h2>
+    <div class="step">
+        <div class="step-title">ส่วนที่ 1: ปรับปรุงข้อมูล อำเภอ และ จังหวัด (Address Sync)</div>
+        <p>ดึงข้อมูลที่อยู่อัปเดตล่าสุดจากวิว <code>v_customer_data_sale_all_zone</code> เชื่อมโยงด้วย <code>ar_code</code>:</p>
+        <pre>UPDATE ims_tires_plan_forecast p
+INNER JOIN v_customer_data_sale_all_zone v ON p.ar_code = v.AR_CODE
+SET 
+    p.amphur = v.TRD_AMPHUR,
+    p.province = v.TRD_PROVINCE
+WHERE p.forcast_month = :month AND p.forcast_year = :year
+  AND (v.TRD_AMPHUR IS NOT NULL AND v.TRD_AMPHUR != '' 
+       OR v.TRD_PROVINCE IS NOT NULL AND v.TRD_PROVINCE != '')</pre>
+    </div>
+
+    <div class="step">
+        <div class="step-title">ส่วนที่ 2: ปรับปรุงข้อมูลพนักงานขาย และ คนเทคสินค้า (Sale/Take Sync)</div>
+        <p>ดึงข้อมูลความสัมพันธ์ล่าสุดจากวิว <code>v_sale_cust_sac</code> (ที่มีฟิลด์ <code>TAKE_NAME</code> เพิ่มเข้ามาแล้ว) เชื่อมโยงด้วย <code>ar_code</code>:</p>
+        <pre>UPDATE ims_tires_plan_forecast p
+INNER JOIN v_sale_cust_sac v ON p.ar_code = v.AR_CODE
+SET 
+    p.sale_name = v.SALE_NAME,
+    p.take_name = v.TAKE_NAME
+WHERE p.forcast_month = :month AND p.forcast_year = :year
+  AND (v.SALE_NAME IS NOT NULL AND v.SALE_NAME != '' 
+       OR v.TAKE_NAME IS NOT NULL AND v.TAKE_NAME != '')</pre>
+    </div>
+
+    <h2>2. แฟ้มสะสมงานที่เกี่ยวข้อง</h2>
+    <ul>
+        <li><strong>การนำเข้าข้อมูล (Import Process):</strong> <code>import_process/import_forecast_process.php</code></li>
+        <li><strong>การคัดลอกข้อมูลข้ามเดือน (Copy Process):</strong> <code>forecast_copy_month_process.php</code></li>
+        <li><strong>การซิงก์ข้อมูลด้วยตนเอง (Manual Sync):</strong> <code>sync_address_from_zone_ajax.php</code> และ <code>sync_address_from_zone.php</code></li>
+        <li><strong>หน้าจออินเตอร์เฟสควบคุม (User Interface):</strong> <code>update_addr_cust_display.php</code> (ได้รับการปรับปรุงการแสดงผลให้อ้างอิงการปรับปรุงพนักงานขาย/คนเทคสินค้า พร้อมปุ่มยกเลิก/ย้อนกลับ)</li>
+    </ul>
+
+    <div class="alert">
+        💡 <strong>ข้อดีของการรันพร้อมกันแบบเจาะจง:</strong> การระบุเงื่อนไข <code>forcast_month</code> และ <code>forcast_year</code> ทุกครั้งทำให้อัปเดตได้เฉพาะแถวข้อมูลเป้าหมายที่มีการนำเข้าหรือคัดลอกเท่านั้น ช่วยให้ระบบรันเสร็จสิ้นเร็วขึ้นอย่างมหาศาล และป้องกันปัญหาตารางถูกล็อกเป็นเวลานาน
+    </div>
+</div>
+</body>
+</html>

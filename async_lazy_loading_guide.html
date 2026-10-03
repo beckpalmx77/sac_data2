@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการพัฒนา Asynchronous Lazy Loading - SAC DATA</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #111827;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --glass-bg: rgba(17, 24, 39, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glow-color: rgba(59, 130, 246, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: 'Sarabun', 'Outfit', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Content Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 800px;
+            margin-bottom: 24px;
+            z-index: 1;
+            position: relative;
+        }
+
+        /* Premium Simulation Interactive Sandbox */
+        .sandbox {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.02);
+        }
+
+        .sandbox h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sandbox-controls {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-sync {
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-sync:hover {
+            background: rgba(239, 68, 68, 0.15);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-async {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+        }
+
+        .btn-async:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Screen Simulator Container */
+        .simulator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .simulator {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sim-screen {
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            background: var(--bg-primary);
+            min-height: 380px;
+            position: relative;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .sim-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .sim-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sim-status {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status-sync-waiting {
+            color: var(--accent-danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .status-ready {
+            color: var(--accent-secondary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        /* Skeleton Screen Effect */
+        .skeleton {
+            background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .sim-layout {
+            transition: opacity 0.3s ease;
+        }
+
+        .sim-layout.loading-sync {
+            filter: blur(4px);
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .sim-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .sim-card h4 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        /* Fake charts & tables */
+        .fake-chart {
+            height: 120px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .fake-bar {
+            flex: 1;
+            background: var(--accent-primary);
+            border-radius: 4px 4px 0 0;
+            transition: height 1s ease-out;
+        }
+
+        .fake-table-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 8px 0;
+            font-size: 13px;
+        }
+
+        /* Instruction Cards Grid */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-guide {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card-guide:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-guide h3 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-guide.before {
+            border-left: 4px solid var(--accent-danger);
+        }
+
+        .card-guide.after {
+            border-left: 4px solid var(--accent-secondary);
+        }
+
+        .card-guide ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card-guide li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .card-guide li i {
+            margin-top: 4px;
+        }
+
+        .card-guide.before li i {
+            color: var(--accent-danger);
+        }
+
+        .card-guide.after li i {
+            color: var(--accent-secondary);
+        }
+
+        /* Beautiful Code Section */
+        .code-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .code-section h3 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-header {
+            background: #1e293b;
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-lang {
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-copy:hover {
+            color: #fff;
+        }
+
+        pre {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13.5px;
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            line-height: 1.5;
+        }
+
+        .keyword { color: #f472b6; }
+        .string { color: #34d399; }
+        .variable { color: #818cf8; }
+        .comment { color: #64748b; font-style: italic; }
+        .function { color: #60a5fa; }
+
+        /* Full Screen Overlay for Simulation */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .spinner-custom {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1><i class="fa-solid fa-bolt"></i> Progressive Asynchronous Loading</h1>
+        <div class="sim-status status-ready"><i class="fa-solid fa-check-circle"></i> Best Practices</div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Hero Banner -->
+        <div class="hero">
+            <h2>เปลี่ยนระบบดึงข้อมูลช้าๆ ให้โหลดไวเพียงชั่วพริบตา</h2>
+            <p>
+                แดชบอร์ดหรือรายงานที่มีการประมวลผลฐานข้อมูลขนาดใหญ่มักเป็นสาเหตุหลักของการหน่วงหน้าจอ 
+                การเปลี่ยนมาโหลดโครงสร้างเลย์เอาต์เว็บทันที (0.1 วินาที) แล้วค่อยดึงข้อมูลมาแสดงผลผ่าน AJAX/JSON 
+                จะทำให้ประสบการณ์ผู้ใช้เปลี่ยนไปอย่างมหาศาล สวยงาม พรีเมียม และรวดเร็วขึ้นอย่างเห็นได้ชัด
+            </p>
+            <div style="display: flex; gap: 10px;">
+                <a href="file:///D:/website/sac_data2/Dashboard_sale.php" class="btn" style="text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> กลับไปยังหน้า Dashboard_sale</a>
+            </div>
+        </div>
+
+        <!-- Simulation Interactive Section -->
+        <div class="sandbox">
+            <h3><i class="fa-solid fa-gamepad"></i> ทดลองเปรียบเทียบการโหลดจริง (Interactive Speed Simulation)</h3>
+            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+                ลองกดปุ่มด้านล่างเพื่อเปรียบเทียบความแตกต่างระหว่างสองสถาปัตยกรรมเมื่อข้อมูลในคลังใช้เวลาโหลดจริง 3.5 วินาที
+            </p>
+            
+            <div class="sandbox-controls">
+                <button class="btn btn-sync" onclick="simulateSync()"><i class="fa-solid fa-clock"></i> 1. กดทดสอบแบบเดิม (Synchronous)</button>
+                <button class="btn btn-async" onclick="simulateAsync()"><i class="fa-solid fa-bolt"></i> 2. กดทดสอบแบบใหม่ (Asynchronous)</button>
+            </div>
+
+            <!-- Simulator Wrapper -->
+            <div class="simulator">
+                
+                <!-- Simulator Screen Left (Synchronous) -->
+                <div class="sim-screen" id="screenSync">
+                    <div class="sim-header">
+                        <div class="sim-title"><i class="fa-solid fa-desktop"></i> แบบเดิม: จอขาวค้าง</div>
+                        <div class="sim-status" id="statusSyncText">ไม่ได้รันการทดสอบ</div>
+                    </div>
+                    <!-- Overlay จอขาว/ค้างตอนรัน -->
+                    <div class="overlay" id="overlaySync">
+                        <div class="spinner-custom"></div>
+                        <p style="color: var(--text-muted); font-size: 14px;">บราวน์เซอร์กำลังเชื่อมต่อเซิร์ฟเวอร์...</p>
+                        <p style="color: var(--accent-danger); font-size: 12px; font-weight: bold; margin-top: 4px;">หน้าจอค้างขาว ผู้ใช้กดอะไรไม่ได้เลย</p>
+                    </div>
+                    <!-- หน้าจอผลลัพธ์ -->
+                    <div class="sim-layout" id="layoutSync">
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                            <div class="skeleton" style="width: 100px; height: 30px; border-radius: 4px;"></div>
+                            <div class="skeleton" style="width: 150px; height: 30px; border-radius: 4px;"></div>
+                        </div>
+                        <div class="sim-card">
+                            <h4>ยอดขายรายวันแยกแบรนด์</h4>
+                            <div class="fake-chart" id="chartSync">
+                                <div class="fake-bar" style="height: 40px;"></div>
+                                <div class="fake-bar" style="height: 80px;"></div>
+                                <div class="fake-bar" style="height: 60px;"></div>
+                                <div class="fake-bar" style="height: 100px;"></div>
+                            </div>
+                        </div>
+                        <div class="sim-card">
+                            <div class="fake-table-row"><span>กรุงเทพฯ</span><strong>45,000.-</strong></div>
+                            <div class="fake-table-row"><span>ชลบุรี</span><strong>89,000.-</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulator Screen Right (Asynchronous) -->
+                <div class="sim-screen" id="screenAsync">
+                    <div class="sim-header">
+                        <div class="sim-title"><i class="fa-solid fa-desktop"></i> แบบใหม่: แสดงโครงสร้างทันที</div>
+                        <div class="sim-status" id="statusAsyncText">ไม่ได้รันการทดสอบ</div>
+                    </div>
+                    <!-- หน้าจอผลลัพธ์ดรอปโครงสร้างทันที -->
+                    <div class="sim-layout" id="layoutAsync">
+                        <!-- เมนูและโครงร่างหลักมาทันที -->
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                            <div style="width: 80px; height: 30px; background: rgba(255,255,255,0.1); border-radius: 4px;"></div>
+                            <div style="width: 120px; height: 30px; background: rgba(255,255,255,0.1); border-radius: 4px;"></div>
+                        </div>
+                        <!-- การ์ดตัวชี้วัดหมุนโหลดเบื้องหลัง -->
+                        <div class="sim-card" id="cardAsyncChart">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <h4>ยอดขายรายวันแยกแบรนด์</h4>
+                                <div id="chart-loader" style="display:none;"><i class="fa-solid fa-spinner fa-spin" style="color:var(--accent-primary);"></i> Loading Chart...</div>
+                            </div>
+                            <div class="fake-chart" id="chartAsync" style="opacity: 0.1;">
+                                <div class="fake-bar" style="height: 0px;"></div>
+                                <div class="fake-bar" style="height: 0px;"></div>
+                                <div class="fake-bar" style="height: 0px;"></div>
+                                <div class="fake-bar" style="height: 0px;"></div>
+                            </div>
+                        </div>
+                        <div class="sim-card" id="cardAsyncTable">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <h4>สรุปจังหวัด</h4>
+                                <div id="table-loader" style="display:none;"><i class="fa-solid fa-spinner fa-spin" style="color:var(--accent-primary);"></i> Loading Table...</div>
+                            </div>
+                            <div id="tableAsyncContent" style="opacity: 0.1;">
+                                <div class="fake-table-row"><span>กรุงเทพฯ</span><strong>0.-</strong></div>
+                                <div class="fake-table-row"><span>ชลบุรี</span><strong>0.-</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Before vs After Comparison Guides -->
+        <div class="grid-cards">
+            
+            <!-- Before Card -->
+            <div class="card-guide before">
+                <h3><i class="fa-solid fa-circle-xmark"></i> รูปแบบเดิม (หน่วงความเร็วเว็บ)</h3>
+                <ul>
+                    <li><i class="fa-solid fa-ban"></i> เรียกใช้คำสั่ง `$conn->query($sql)` ฝังอยู่กลางโค้ด HTML ของหน้าเว็บ</li>
+                    <li><i class="fa-solid fa-ban"></i> เบราว์เซอร์ถูกสั่งให้รอให้ฝั่งเซิร์ฟเวอร์รัน SQL และประมวลผล PHP ลูปจนจบก่อนส่งข้อมูล</li>
+                    <li><i class="fa-solid fa-ban"></i> คิวรีหนักๆ หรือมีปัญหา Time-out จะทำให้เว็บค้างขาวทั้งหน้าจอ ใช้งานส่วนอื่นไม่ได้</li>
+                </ul>
+            </div>
+
+            <!-- After Card -->
+            <div class="card-guide after">
+                <h3><i class="fa-solid fa-circle-check"></i> รูปแบบใหม่ (ทำงานเบื้องหลัง)</h3>
+                <ul>
+                    <li><i class="fa-solid fa-bolt"></i> โหลด Layout หลักของเว็บเสร็จใน 0.1 วินาทีแรก เมนู แผงข้าง พร้อมให้กดสั่งงานทันที</li>
+                    <li><i class="fa-solid fa-bolt"></i> ใช้ Javascript ส่ง Request ไปหลังบ้านแบบ Asynchronous ด้วย `fetch()` API</li>
+                    <li><i class="fa-solid fa-bolt"></i> มี Loading Skeleton สวยงามแสดงทดแทนระหว่างรอคอยผลลัพธ์ข้อมูลจาก API</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Code Implementation Section -->
+        <div class="code-section">
+            <h3><i class="fa-solid fa-code"></i> 3. รูปแบบการปรับโครงสร้างโค้ด</h3>
+            <p style="color:var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+                ตัวอย่างการแยกคิวรีข้อมูลหนักๆ ไปทำในสเปค API และใช้ Javascript เรียกข้อมูลจากหลังบ้าน
+            </p>
+            
+            <!-- Code Block 1: API PHP -->
+            <div class="code-header">
+                <span class="code-lang">1. สร้างไฟล์ API หลังบ้าน (PHP) &raquo; api/get_daily_sales_json.php</span>
+                <button class="btn-copy" onclick="copyCode('phpCode')"><i class="fa-solid fa-copy"></i> คัดลอกโค้ด</button>
+            </div>
+            <pre id="phpCode">
+<span class="comment">// ----------------------------------------------------</span>
+<span class="comment">// ไฟล์คืนข้อมูลเป็น JSON เท่านั้น เพื่อส่งกลับไปให้เบราว์เซอร์เอาไปวาดผล</span>
+<span class="comment">// ----------------------------------------------------</span>
+<span class="function">header</span>(<span class="string">'Content-Type: application/json'</span>);
+<span class="keyword">include</span>(<span class="string">'../config/connect_db.php'</span>);
+
+<span class="keyword">try</span> {
+    <span class="variable">$date</span> = <span class="function">date</span>(<span class="string">"d/m/Y"</span>);
+    <span class="variable">$sql</span> = <span class="string">"SELECT BRANCH, SUM(CAST(TRD_G_KEYIN AS DECIMAL(10,2))) as TOTAL_AMT 
+            FROM ims_product_sale_cockpit 
+            WHERE DI_DATE = :di_date 
+            GROUP BY BRANCH"</span>;
+            
+    <span class="variable">$stmt</span> = <span class="variable">$conn</span>-><span class="function">prepare</span>(<span class="variable">$sql</span>);
+    <span class="variable">$stmt</span>-><span class="function">execute</span>([<span class="string">':di_date'</span> => <span class="variable">$date</span>]);
+    <span class="variable">$results</span> = <span class="variable">$stmt</span>-><span class="function">fetchAll</span>(PDO::<span class="keyword">FETCH_ASSOC</span>);
+    
+    <span class="comment">// ส่งข้อมูลกลับไปแบบ JSON อย่างรวดเร็ว</span>
+    <span class="keyword">echo</span> <span class="function">json_encode</span>([
+        <span class="string">'success' => true,
+        'data' => $results</span>
+    ]);
+} <span class="keyword">catch</span> (Exception <span class="variable">$e</span>) {
+    <span class="keyword">echo</span> <span class="function">json_encode</span>([<span class="string">'success'</span> => <span class="keyword">false</span>, <span class="string">'message'</span> => <span class="variable">$e</span>-><span class="function">getMessage</span>()]);
+}</pre>
+
+            <br><br>
+
+            <!-- Code Block 2: Javascript Front -->
+            <div class="code-header">
+                <span class="code-lang">2. เขียนดึงข้อมูลฝั่งหน้าจอ (JS) &raquo; Dashboard_sale.php</span>
+                <button class="btn-copy" onclick="copyCode('jsCode')"><i class="fa-solid fa-copy"></i> คัดลอกโค้ด</button>
+            </div>
+            <pre id="jsCode">
+<span class="comment">// ----------------------------------------------------</span>
+<span class="comment">// ใช้ Fetch API ยิงขอข้อมูลเบื้องหลังหลังจากโครงสร้างเว็บแสดงขึ้นมาแล้ว</span>
+<span class="comment">// ----------------------------------------------------</span>
+<span class="function">document.addEventListener</span>(<span class="string">"DOMContentLoaded"</span>, <span class="keyword">function</span>() {
+    <span class="comment">// โทรไปหา API หลังบ้าน</span>
+    <span class="function">fetch</span>(<span class="string">'api/get_daily_sales_json.php'</span>)
+        .<span class="function">then</span>(<span class="variable">response</span> => <span class="variable">response</span>.<span class="function">json</span>())
+        .<span class="function">then</span>(<span class="variable">res</span> => {
+            <span class="keyword">if</span> (<span class="variable">res</span>.<span class="variable">success</span>) {
+                <span class="keyword">const</span> <span class="variable">tbody</span> = <span class="function">document.getElementById</span>(<span class="string">'tableDailyBody'</span>);
+                <span class="variable">tbody</span>.<span class="variable">innerHTML</span> = <span class="string">''</span>; 
+                
+                <span class="variable">res</span>.<span class="variable">data</span>.<span class="function">forEach</span>(<span class="variable">row</span> => {
+                    <span class="keyword">const</span> <span class="variable">tr</span> = <span class="function">document.createElement</span>(<span class="string">'tr'</span>);
+                    <span class="variable">tr</span>.<span class="variable">innerHTML</span> = <span class="string">`&lt;td&gt;\${row.BRANCH}&lt;/td&gt;
+                                    &lt;td&gt;\${parseFloat(row.TOTAL_AMT).toLocaleString()}&lt;/td&gt;`</span>;
+                    <span class="variable">tbody</span>.<span class="function">appendChild</span>(<span class="variable">tr</span>);
+                });
+                
+                <span class="comment">// ซ่อนตัวหมุน Loading และแสดงผลข้อมูลจริง</span>
+                <span class="function">document.getElementById</span>(<span class="string">'table-loader'</span>).<span class="variable">classList</span>.<span class="function">add</span>(<span class="string">'d-none'</span>);
+                <span class="function">document.getElementById</span>(<span class="string">'tableDaily'</span>).<span class="variable">classList</span>.<span class="function">remove</span>(<span class="string">'d-none'</span>);
+            }
+        });
+});</pre>
+
+        </div>
+
+    </div>
+
+    <!-- Simulator Interactive Logic -->
+    <script>
+        function simulateSync() {
+            // Reset Layouts
+            document.getElementById('layoutSync').classList.add('loading-sync');
+            document.getElementById('overlaySync').classList.add('active');
+            document.getElementById('statusSyncText').className = "sim-status status-sync-waiting";
+            document.getElementById('statusSyncText').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ข้อมูลใช้เวลาคำนวณ...';
+            
+            // Sync Simulation: Entire page blocks, user waits, then reveals
+            setTimeout(() => {
+                document.getElementById('overlaySync').classList.remove('active');
+                document.getElementById('layoutSync').classList.remove('loading-sync');
+                document.getElementById('statusSyncText').className = "sim-status status-ready";
+                document.getElementById('statusSyncText').innerHTML = '<i class="fa-solid fa-check-circle"></i> โหลดเสร็จสิ้น (ใช้เวลา 3.5s)';
+            }, 3500);
+        }
+
+        function simulateAsync() {
+            // Reset layouts
+            document.getElementById('statusAsyncText').className = "sim-status status-sync-waiting";
+            document.getElementById('statusAsyncText').innerHTML = '<i class="fa-solid fa-bolt"></i> โครงหน้าจอแสดงผลแล้วใน 0.1s !';
+            
+            // Reveal loaders immediately
+            document.getElementById('chart-loader').style.display = 'block';
+            document.getElementById('table-loader').style.display = 'block';
+            document.getElementById('chartAsync').style.opacity = '0.1';
+            document.getElementById('tableAsyncContent').style.opacity = '0.1';
+            
+            // Bars animation init
+            const bars = document.querySelectorAll('#chartAsync .fake-bar');
+            bars.forEach(bar => bar.style.height = '0px');
+
+            // API 1: Data for chart finishes in 1.5s (Faster query)
+            setTimeout(() => {
+                document.getElementById('chart-loader').style.display = 'none';
+                document.getElementById('chartAsync').style.opacity = '1';
+                bars[0].style.height = '50px';
+                bars[1].style.height = '90px';
+                bars[2].style.height = '70px';
+                bars[3].style.height = '110px';
+            }, 1500);
+
+            // API 2: Data for Table finishes in 3.5s (Heavy aggregation query)
+            setTimeout(() => {
+                document.getElementById('table-loader').style.display = 'none';
+                document.getElementById('tableAsyncContent').style.opacity = '1';
+                
+                // Set final data in table
+                document.getElementById('tableAsyncContent').innerHTML = `
+                    <div class="fake-table-row"><span>กรุงเทพฯ</span><strong>45,000.-</strong></div>
+                    <div class="fake-table-row"><span>ชลบุรี</span><strong>89,000.-</strong></div>
+                `;
+                
+                document.getElementById('statusAsyncText').className = "sim-status status-ready";
+                document.getElementById('statusAsyncText').innerHTML = '<i class="fa-solid fa-check-circle"></i> ข้อมูลมาครบทั้งหมดแล้ว!';
+            }, 3500);
+        }
+
+        function copyCode(elementId) {
+            const codeText = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                alert("คัดลอกโค้ดไปยังคลิปบอร์ดแล้ว!");
+            });
+        }
+    </script>
+</body>
+</html>

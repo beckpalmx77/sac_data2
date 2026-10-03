@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการนำเข้าข้อมูลและจับคู่เซลส์ (Customer-Sale Mapping Import)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #f8f9fa; color: #444; line-height: 1.6; }
+        .hero-section { background: linear-gradient(135deg, #0d6efd 0%, #0a4ab8 100%); color: white; padding: 50px 0; margin-bottom: 40px; border-radius: 0 0 30px 30px; }
+        .instruction-box { background: white; padding: 30px; border-radius: 20px; border-left: 10px solid #0d6efd; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .badge-number { background: #0d6efd; color: white; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; font-weight: bold; }
+        .highlight-blue { color: #0d6efd; font-weight: bold; }
+        .tip-box { background: #e3f2fd; border-radius: 15px; padding: 20px; border: 1px dashed #2196f3; margin-top: 20px; }
+        .warning-box { background: #fff3cd; border-radius: 15px; padding: 20px; border: 1px dashed #ffc107; margin-top: 20px; }
+        .table-template th { background-color: #e9ecef !important; }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-6 fw-bold"><i class="fas fa-file-import me-2"></i>คู่มือนำเข้าข้อมูลลูกค้าและพนักงานขาย</h1>
+            <p class="lead">สำหรับอัปเดตข้อมูลการจับคู่ร้านค้า Sale, Take, อำเภอ, จังหวัด และแบรนด์สินค้า</p>
+        </div>
+    </div>
+
+    <div class="container mb-5" style="max-width: 900px;">
+        <!-- Objective -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-bullseye me-2 text-danger"></i>1. วัตถุประสงค์ของระบบ</h3>
+            <p class="text-muted">ทำความเข้าใจเป้าหมายของการนำข้อมูลเข้าสู่ระบบ</p>
+            <hr>
+            <p>หน้าจอนี้ใช้สำหรับนำเข้าไฟล์ Excel เพื่อเชื่อมโยงความสัมพันธ์และข้อมูลตั้งต้นของลูกค้าแต่ละรายเข้ากับพนักงานขายที่ดูแล ภูมิศาสตร์ และแบรนด์สินค้า โดยข้อมูลเหล่านี้จะถูกนำไปใช้ใน <b>ระบบวางแผนการขายยาง (Tires Plan)</b> เพื่ออำนวยความสะดวกในการจัดกลุ่มข้อมูล การกรองแสดงผล และการใส่ค่าตั้งต้น (Fallback) ในกรณีที่เกิดช่องข้อมูลเป็นค่าว่างในขั้นตอนจัดทำแผนหลัก</p>
+        </div>
+
+        <!-- Excel Format -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-file-excel me-2 text-success"></i>2. โครงสร้างไฟล์ Excel เทมเพลต</h3>
+            <p class="text-muted">ข้อมูลข้อกำหนดและรูปแบบคอลัมน์ใน Excel ที่ต้องนำเข้า</p>
+            <hr>
+            <p>ไฟล์นำเข้าจะต้องใช้รูปแบบ Excel มาตรฐานที่มีหัวคอลัมน์ (Headers) ดังต่อไปนี้เท่านั้น:</p>
+            
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-template">
+                    <thead>
+                        <tr>
+                            <th>ชื่อคอลัมน์ (Header)</th>
+                            <th>คำอธิบาย</th>
+                            <th>ตัวอย่างข้อมูล</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">AR_CODE</td>
+                            <td>รหัสร้านค้า / รหัสลูกค้า</td>
+                            <td><code>SAC.0000272</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">AR_NAME</td>
+                            <td>ชื่อลูกค้า / ชื่อร้านค้า</td>
+                            <td><code>คุณเกรียงไกร พุ่มกุมาร (เกรียงไกรการยาง)</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">SALE_NAME</td>
+                            <td>ชื่อพนักงานขายหลักที่ดูแล (Sale)</td>
+                            <td><code>วิชชา (บาส)</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">TAKE_NAME</td>
+                            <td>ชื่อพนักงานเทคที่ดูแลร่วม (Take)</td>
+                            <td><code>สมศักดิ์</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">TRD_AMPHUR</td>
+                            <td>อำเภอที่ร้านค้าตั้งอยู่</td>
+                            <td><code>อ.ดอนตูม</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">TRD_PROVINCE</td>
+                            <td>จังหวัดที่ร้านค้าตั้งอยู่</td>
+                            <td><code>จ.นครปฐม</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">SKU_CAT</td>
+                            <td>หมวดหมู่ประเภทสินค้าของลูกค้า</td>
+                            <td><code>ยางรถยนต์</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">BRAND</td>
+                            <td>แบรนด์ยี่ห้อสินค้าของแผนงาน</td>
+                            <td><code>AT</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle text-warning me-2"></i><strong>ข้อสำคัญที่สุด:</strong> 
+                ห้ามทำการแก้ไข สลับตำแหน่ง หรือเขียนชื่อหัวตาราง (Row 1) ในไฟล์ Excel ผิดเพี้ยนไปจากเดิมเด็ดขาด มิฉะนั้นระบบนำเข้าจะไม่สามารถอ่านค่าได้สำเร็จ
+            </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-tasks me-2 text-primary"></i>3. ขั้นตอนและวิธีการนำเข้าข้อมูล</h3>
+            <p class="text-muted">ทำตามขั้นตอนต่อไปนี้เพื่อนำข้อมูลขึ้นระบบ</p>
+            <hr>
+            <p><span class="badge-number">1</span><strong>ดาวน์โหลดเทมเพลตมาตรฐาน:</strong> กดปุ่ม <span class="badge bg-success">ตัวอย่างไฟล์ Excel...</span> เพื่อบันทึกไฟล์ Excel ตั้งต้นลงบนคอมพิวเตอร์ของคุณ</p>
+            <p><span class="badge-number">2</span><strong>กรอกข้อมูลลง Excel:</strong> เปิดไฟล์ที่ดาวน์โหลดมา กรอกรายละเอียดของลูกค้าให้ครบถ้วนในแถวถัดไป (Row 2 เป็นต้นไป)</p>
+            <p><span class="badge-number">3</span><strong>เลือกและอัปโหลดไฟล์:</strong> เข้าหน้าจอนำเข้า คลิกช่อง <strong>"เลือกไฟล์ Excel"</strong> เลือกไฟล์ที่คุณเตรียมไว้ แล้วคลิกปุ่ม <span class="highlight-blue">Import</span></p>
+            <p><span class="badge-number">4</span><strong>รอประมวลผล:</strong> ระบบจะแสดงไอคอนหมุนโหลดข้อมูลชั่วครู่ เมื่อเสร็จสิ้นจะมีหน้าต่าง SweetAlert แจ้งเตือน <code>"Data imported successfully."</code> ขึ้นมา</p>
+        </div>
+
+        <!-- Expected Results -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-check-circle me-2 text-success"></i>4. ผลลัพธ์หลังการนำเข้า</h3>
+            <p class="text-muted">การอัปเดตและพฤติกรรมของข้อมูลในระบบหลังทำงานเสร็จ</p>
+            <hr>
+            <ul>
+                <li class="mb-2"><b>อัปเดตแบบเรียลไทม์:</b> ตารางด้านล่างสุดของหน้าจออัปเดตนำเข้าจะรีเฟรชข้อมูลและแสดงรายชื่อลูกค้าพร้อมข้อมูลเซลส์ชุดล่าสุดให้อัตโนมัติ</li>
+                <li class="mb-2"><b>การแชร์พารามิเตอร์พื้นที่ขาย:</b> ข้อมูล <b>อำเภอ (TRD_AMPHUR)</b> และ <b>จังหวัด (TRD_PROVINCE)</b> จะใช้เป็นฐานข้อมูลอ้างอิงกลาง เพื่อให้ระบบแผนงานขายยาง (Tires Plan) นำไปแสดงผลในตารางหลักได้ทันที</li>
+                <li class="mb-2"><b>อัปเดตยกชุดแบบอัตโนมัติ:</b> ข้อมูลนี้จะเชื่อมโยงกับฟิลเตอร์ค้นหาชื่อลูกค้าหน้าหลักและตัวเติมข้อมูลในฟอร์ม manual เพิ่มยอด เพื่อช่วยเติมค่าอัตโนมัติเมื่อกดพิมพ์เลือกชื่อลูกค้า</li>
+            </ul>
+
+            <div class="tip-box">
+                <i class="fas fa-lightbulb text-primary me-2"></i><strong>คำแนะนำ:</strong> 
+                หากพบว่าข้อมูลจังหวัดหรืออำเภอของลูกค้าในตารางวางแผนหลักแสดงผลไม่ถูกต้อง ให้ตรวจเช็กข้อมูลการนำเข้าที่นี่ หรือไปอัปเดตแก้ไขด้วยตนเองผ่านหน้าจอ <b>"แก้ไขข้อมูลลูกค้า"</b>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-secondary px-4 py-2" onclick="window.close();">
+                <i class="fas fa-times me-1"></i> ปิดหน้านี้
+            </button>
+        </div>
+    </div>
+
+    <footer class="text-center py-4 bg-white border-top mt-5">
+        <p class="small text-muted mb-0">&copy; 2024 SAC Sales Planning System - System Admin</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

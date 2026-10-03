@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการทำงานและการปรับแต่งประสิทธิภาพระบบนำเข้าข้อมูล SAC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-code: #090d16;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-purple: #a855f7;
+            --accent-amber: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --border-highlight: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .badge-success { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .badge-info { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .badge-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-blue);
+        }
+
+        .metric-card h3 {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .metric-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-card h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .section-card h2 .icon {
+            color: var(--accent-blue);
+        }
+
+        .tech-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .tech-item {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+        }
+
+        .tech-item h4 {
+            color: var(--accent-blue);
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tech-item p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(30, 41, 59, 0.9);
+            color: var(--accent-blue);
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight-fast {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .highlight-slow {
+            color: #ef4444;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            color: #e2e8f0;
+            margin-top: 1rem;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+        }
+
+        .cmd-block {
+            background: var(--bg-code);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #38bdf8;
+            margin: 0.75rem 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem 0.5rem; }
+            header h1 { font-size: 1.6rem; }
+            .section-card { padding: 1.25rem; }
+            table { display: block; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>คู่มือการนำเข้าข้อมูลและการปรับแต่งระบบ (SAC Import System)</h1>
+            <p>เอกสารอธิบายสถาปัตยกรรม เทคนิคการเพิ่มความเร็ว และวิธีการใช้งาน script <code>import_data_bill_sac.php</code> และ <code>import_data_sale_sac_today.php</code></p>
+            <div class="badge-container">
+                <span class="badge badge-success">⚡ ประมวลผล < 0.6 วินาที</span>
+                <span class="badge badge-info">🐘 PHP 8.3 + PDO</span>
+                <span class="badge badge-purple">🗄️ MSSQL ➔ MySQL Sync</span>
+            </div>
+        </header>
+
+        <!-- Metric Summary -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>เวลาประมวลผล bill_sac</h3>
+                <div class="metric-value">~0.56 วินาที</div>
+                <div class="metric-sub">จากเดิม 10-100+ วินาที (เร็วขึ้น >95%)</div>
+            </div>
+            <div class="metric-card">
+                <h3>เวลาประมวลผล sale_sac_today</h3>
+                <div class="metric-value">~0.39 วินาที</div>
+                <div class="metric-sub">ดึงและปรับปรุงข้อมูลขายประจำวันแบบ Real-time</div>
+            </div>
+            <div class="metric-card">
+                <h3>จํานวน Query ลดลง</h3>
+                <div class="metric-value">-99%</div>
+                <div class="metric-sub">ตัด SELECT รายรายการ เปลี่ยนเป็น Memory Lookup</div>
+            </div>
+        </div>
+
+        <!-- Section 1: Overview -->
+        <div class="section-card">
+            <h2><span class="icon">📌</span> 1. ภาพรวมของระบบ (System Overview)</h2>
+            <p>ระบบสคริปต์ Cronjob นี้ทำหน้าที่ดึงข้อมูลธุรกรรมการขายและใบเสร็จ/บิลจากฐานข้อมูลระบบใหญ่ (MSSQL Server) เข้ามายังฐานข้อมูล MySQL ของเว็บแอพพลิเคชัน SAC เพื่อใช้ในการประมวลผล รายงาน และแสดงผลบน Dashboard</p>
+            
+            <ul class="tech-list" style="margin-top: 1.25rem;">
+                <li class="tech-item">
+                    <h4>📄 import_data_bill_sac.php</h4>
+                    <p>ดึงข้อมูลเอกสารบิล (Document Bill) จาก MSSQL ย้อนหลัง 1 วัน (Yesterday ถึง Today) นำมา INSERT หรือ UPDATE ลงในตาราง <code>ims_document_bill</code> ใน MySQL</p>
+                </li>
+                <li class="tech-item">
+                    <h4>📊 import_data_sale_sac_today.php</h4>
+                    <p>ดึงข้อมูลการขายสินค้ารายวัน (Product Sale Sac) ของวันนี้ นำมาประมวลผลแยกกลุ่มสินค้า (PGROUP), สาขา (BRANCH) และปรับแต่งยอดติดลบ แล้วบันทึกลงตาราง <code>ims_product_sale_sac</code></p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section 2: Key Optimization Techniques -->
+        <div class="section-card">
+            <h2><span class="icon">⚡</span> 2. เทคนิคการเพิ่มความเร็วการทำงาน (Performance Optimization Techniques)</h2>
+            <div class="tech-list">
+                <div class="tech-item">
+                    <h4>1. Pre-fetching & Memory Key Lookup (O(1))</h4>
+                    <p>แทนที่จะส่งคำสั่ง <code>SELECT</code> ไปถาม MySQL ทีละแถวในลูป (N+1 Problem) ระบบจะดึงรายการ Key ทั้งหมดที่มีใน MySQL ออกมาเก็บใน PHP Array แล้วใช้ <code>isset($array[$key])</code> ตรวจสอบข้อมูลใน Memory แทน ซึ่งใช้เวลาเพียง 0.00001ms</p>
+                </div>
+                <div class="tech-item">
+                    <h4>2. Prepared Statements Outside Loop</h4>
+                    <p>เตรียมโครงสร้างคำสั่ง SQL (<code>prepare()</code>) ของคำสั่ง CHECK, INSERT และ UPDATE เพียงครั้งเดียวนอกลูป แล้วส่งเฉพาะค่า Parameter ไป execute ในลูป ช่วยลด Overhead การ Parse SQL คำสั่งซ้ำๆ</p>
+                </div>
+                <div class="tech-item">
+                    <h4>3. Database Transaction Grouping</h4>
+                    <p>ครอบลูปประมวลผลด้วย <code>$conn->beginTransaction()</code> และ <code>$conn->commit()</code> บันทึกข้อมูลทั้งหมดลง Disk ในคราวเดียว ลด Disk I/O Write Operations จากหลายร้อยครั้งเหลือเพียง 1 ครั้ง</p>
+                </div>
+                <div class="tech-item">
+                    <h4>4. Smart Cleanup Query Check</h4>
+                    <p>ในสคริปต์ <code>import_data_bill_sac.php</code> ปรับคำสั่งลบข้อมูลที่ไม่สมบูรณ์ด้วยการเช็ก <code>SELECT 1 ... LIMIT 1</code> ก่อน หากไม่มีแถวเสีย จะข้ามคำสั่ง <code>DELETE</code> ทันที ไม่ต้อง Scan ตาราง 530,000+ แถวทุกครั้ง</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Performance Comparison -->
+        <div class="section-card">
+            <h2><span class="icon">📈</span> 3. ตารางเปรียบเทียบก่อนและหลังการปรับปรุง</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>หัวข้อวัดผล</th>
+                        <th>แบบเดิม (Unoptimized)</th>
+                        <th>แบบปรับปรุงใหม่ (Optimized)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>SELECT Queries ในลูป</strong></td>
+                        <td class="highlight-slow">N ครั้ง (ตามจำนวนแถว)</td>
+                        <td class="highlight-fast">0 ครั้ง (Pre-fetched เข้า Memory)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>การ Prepare SQL</strong></td>
+                        <td class="highlight-slow">Prepare ใหม่ทุกรอบในลูป</td>
+                        <td class="highlight-fast">Prepare ครั้งเดียว ก่อนเข้าลูป</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disk Commit Overhead</strong></td>
+                        <td class="highlight-slow">Auto-commit ทุกแถว (High Disk I/O)</td>
+                        <td class="highlight-fast">Batch Commit ครั้งเดียวตอนจบ (Transaction)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ความเร็วรวม (Bill Import)</strong></td>
+                        <td class="highlight-slow">10 - 100+ วินาที</td>
+                        <td class="highlight-fast">~0.56 วินาที 🔥</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ความเร็วรวม (Sale Today Import)</strong></td>
+                        <td class="highlight-slow">2 - 5 วินาที</td>
+                        <td class="highlight-fast">~0.39 วินาที 🔥</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 4: How to Run -->
+        <div class="section-card">
+            <h2><span class="icon">💻</span> 4. วิธีการรันสคริปต์และการตั้งค่า Cronjob / BAT File</h2>
+
+            <h3 style="color: var(--accent-blue); font-size: 1.1rem; margin-top: 1rem;">4.1 การสั่งรันผ่าน Command Line (Manual Run)</h3>
+            <p>เปิด Terminal / Command Prompt แล้วไปยังโฟลเดอร์ <code>cronjob</code> จากนั้นใช้คำสั่ง:</p>
+            <div class="cmd-block">
+                # นำเข้าข้อมูลบิลเอกสาร<br>
+                php D:\website\sac_data2\cronjob\import_data_bill_sac.php<br><br>
+                # นำเข้าข้อมูลยอดขายวันนี้<br>
+                php D:\website\sac_data2\cronjob\import_data_sale_sac_today.php
+            </div>
+
+            <h3 style="color: var(--accent-blue); font-size: 1.1rem; margin-top: 1.5rem;">4.2 การรันผ่าน BAT File ใน Windows Task Scheduler</h3>
+            <p>ไฟล์ batch (.bat) สำหรับใช้ตั้งเวลาใน Windows Task Scheduler:</p>
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: var(--text-muted);">
+                <li><code>import_data_bill_sac.bat</code> -> เรียกใช้ <code>import_data_bill_sac.php</code></li>
+                <li><code>import_data_sale_sac_today.bat</code> -> เรียกใช้ <code>import_data_sale_sac_today.php</code></li>
+            </ul>
+        </div>
+
+        <!-- Section 5: Troubleshooting -->
+        <div class="section-card">
+            <h2><span class="icon">🛡️</span> 5. ข้อควรระวังและการดูแลรักษา (Maintenance & Safety)</h2>
+            <ul style="line-height: 1.8; margin-left: 1.5rem; color: var(--text-muted);">
+                <li><strong style="color: var(--text-main);">การ Rollback เมื่อเกิดข้อผิดพลาด:</strong> ทั้งสองสคริปต์ถูกหุ้มด้วย <code>try ... catch</code> หากการเขียนข้อมูลกลางทางเกิดความผิดพลาด ระบบจะเรียก <code>$conn->rollBack()</code> เพื่อยกเลิกรายการทั้งหมด ป้องกันข้อมูลค้างแบบกึ่งสำเร็จกึ่งล้มเหลว</li>
+                <li><strong style="color: var(--text-main);">การตรวจสอบเวลาประมวลผล:</strong> ตอนท้ายสคริปต์จะมีบรรทัด <code>Execution time: X.XXXX seconds</code> เพื่อให้สามารถติดตามความเร็วการทำงานและตรวจสอบปัญหาความช้าของระบบ Network/Database ได้ง่าย</li>
+                <li><strong style="color: var(--text-main);">การเชื่อมต่อ MSSQL (NOLOCK):</strong> คำสั่ง SQL ฝั่ง MSSQL มีการใส่ <code>WITH (NOLOCK)</code> เพื่อป้องกันไม่ให้คำสั่งอ่านข้อมูลไป Lock ตารางในระบบ ERP ใหญ่</li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2026 SAC Data Management System | Dynamic Cronjob Performance Architecture</p>
+        </footer>
+    </div>
+</body>
+</html>

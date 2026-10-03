@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปการปรับปรุง SQL View (v_sale_cust_sac) และ การซิงก์พนักงานขาย/คนเทค</title>
+    <style>
+        body {
+            font-family: 'Prompt', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 15px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-top: 5px solid #ffc107;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-weight: 600;
+        }
+        h2 {
+            color: #198754;
+            margin-top: 30px;
+            border-left: 4px solid #ffc107;
+            padding-left: 12px;
+            font-size: 1.4rem;
+        }
+        .highlight-box {
+            background-color: #fff9db;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #ffc107;
+            color: #664d03;
+        }
+        .step {
+            margin-bottom: 20px;
+            padding: 18px;
+            background-color: #fdfdfd;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .step-title i {
+            color: #ffc107;
+            margin-right: 8px;
+        }
+        pre {
+            background-color: #212529;
+            color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #d63384;
+            font-size: 0.9rem;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #212529;
+            background-color: #ffc107;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <span class="badge">Database & Process Update</span>
+    <h1>📋 รายงานสรุปการปรับปรุงระบบซิงก์พนักงานขาย และ คนเทคสินค้า</h1>
+    
+    <div class="highlight-box">
+        <strong>ข้อมูลการทำงาน:</strong> เอกสารฉบับนี้จัดทำขึ้นเพื่อสรุปการสร้าง/แก้ไข SQL View <code>v_sale_cust_sac</code> เพื่อเพิ่มฟิลด์ <code>TAKE_NAME</code> และการแก้ไขไฟล์โปรแกรมที่เกี่ยวข้อง เพื่อให้ระบบทำการซิงก์ข้อมูลพนักงานขาย และ คนเทคสินค้า (Sale Name & Take Name) เข้าตารางวางแผน <code>ims_tires_plan_forecast</code> โดยอัตโนมัติ
+    </div>
+
+    <h2>1. การปรับปรุงฐานข้อมูล (SQL View)</h2>
+    <div class="step">
+        <div class="step-title">แก้ไขและสร้าง SQL View ใหม่: <code>v_sale_cust_sac</code></div>
+        <p>ทำการแก้ไขโครงสร้าง View เดิม เพื่อดึงฟิลด์ <code>TAKE_NAME</code> เพิ่มเข้ามาจากตารางเก็บประวัติยอดขาย <code>ims_data_sale_sac_all</code> และจัดกลุ่ม (Group By) ข้อมูลลูกค้า:</p>
+        <pre>CREATE OR REPLACE VIEW `v_sale_cust_sac` AS 
+SELECT 
+    `ims_data_sale_sac_all`.`AR_CODE` AS `AR_CODE`,
+    `ims_data_sale_sac_all`.`AR_NAME` AS `AR_NAME`,
+    `ims_data_sale_sac_all`.`SALE_NAME` AS `SALE_NAME`,
+    `ims_data_sale_sac_all`.`TAKE_NAME` AS `TAKE_NAME` 
+FROM `ims_data_sale_sac_all` 
+GROUP BY 
+    `ims_data_sale_sac_all`.`SALE_NAME`,
+    `ims_data_sale_sac_all`.`TAKE_NAME`,
+    `ims_data_sale_sac_all`.`AR_CODE`,
+    `ims_data_sale_sac_all`.`AR_NAME` 
+ORDER BY 
+    `ims_data_sale_sac_all`.`AR_CODE`,
+    `ims_data_sale_sac_all`.`SALE_NAME`;</pre>
+    </div>
+
+    <h2>2. แฟ้มสะสมงานที่ได้รับการแก้ไข</h2>
+    
+    <div class="step">
+        <div class="step-title">1) การนำเข้าข้อมูลแผนยอดขาย (Import Process)</div>
+        <p>ไฟล์ที่แก้ไข: <code>import_process/import_forecast_process.php</code></p>
+        <p><strong>การทำงาน:</strong> หลังจากที่ข้อมูลไฟล์ Excel ถูกจัดเก็บลงฐานข้อมูลเสร็จสิ้น ก่อนจะเรียกใช้งาน <code>$conn->commit()</code> ระบบจะสั่งรันอัปเดตข้อมูลพนักงานขาย และคนเทคสินค้าจาก View ตัวใหม่โดยระบุเจาะจงเฉพาะช่วงเดือนและปีที่ทำงานการนำเข้า เพื่อความรวดเร็วและแม่นยำ</p>
+        <pre>UPDATE ims_tires_plan_forecast p
+INNER JOIN v_sale_cust_sac v ON p.ar_code = v.AR_CODE
+SET 
+    p.sale_name = v.SALE_NAME,
+    p.take_name = v.TAKE_NAME
+WHERE p.forcast_month = ? AND p.forcast_year = ?
+  AND (v.SALE_NAME IS NOT NULL AND v.SALE_NAME != '' 
+       OR v.TAKE_NAME IS NOT NULL AND v.TAKE_NAME != '')</pre>
+    </div>
+
+    <div class="step">
+        <div class="step-title">2) การคัดลอกแผนไปยังเดือนใหม่ (Copy Month Process)</div>
+        <p>ไฟล์ที่แก้ไข: <code>forecast_copy_month_process.php</code></p>
+        <p><strong>การทำงาน:</strong> เมื่อทำการสำเนาคัดลอกข้อมูลยอดคาดการณ์เป้าจากเดือนเก่าไปเดือนใหม่เสร็จสิ้น ระบบจะเรียกการซิงก์ข้อมูลพนักงานขาย และคนเทคสินค้าล่าสุด ลงในแถวรายการของเดือน/ปีเป้าหมายใหม่ทันที</p>
+    </div>
+
+    <div class="step">
+        <div class="step-title">3) การปรับปรุงข้อมูลผ่านหน้าแสดงผลหลัก (Manual Sync Process)</div>
+        <p>ไฟล์ที่แก้ไข: <code>sync_address_from_zone_ajax.php</code> และ <code>sync_address_from_zone.php</code></p>
+        <p><strong>การทำงาน:</strong> ปรับปรุงปุ่ม "เริ่มอัปเดตข้อมูล" ในหน้าจอ <code>update_addr_cust_display</code> ให้มีความสามารถเพิ่มเติม โดยนอกจากจะปรับปรุงอำเภอและจังหวัดของลูกค้าแล้ว ระบบจะทำการดึงข้อมูลพนักงานขาย (Sale) และคนเทคสินค้า (Take) ล่าสุดไปเขียนทับลงในเป้าหมายแผนงานเดิมให้เป็นปัจจุบันที่สุดในคราวเดียวกันด้วย</p>
+    </div>
+
+    <div class="step">
+        <div class="step-title">4) การปรับปรุงส่วนหน้ากากผู้ใช้งาน (User Interface Updates)</div>
+        <p>ไฟล์ที่แก้ไข: <code>update_addr_cust_display.php</code></p>
+        <p><strong>การทำงาน:</strong> อัปเดตอินเตอร์เฟสผู้ใช้งานให้ระบุรายละเอียดในการซิงก์ข้อมูลเพิ่มเติม ปรับชื่อหัวเรื่องและคำอธิบายเป็น <i>"ระบบปรับปรุงข้อมูลลูกค้า (ที่อยู่ & พนักงานขาย & คนเทค)"</i> แสดงฟิลด์ที่จะถูกแก้ ได้แก่ <code>amphur</code>, <code>province</code>, <code>sale_name</code> และ <code>take_name</code> พร้อมทั้งแสดงแหล่งข้อมูลอ้างอิงของวิวทั้ง 2 ชิ้น และเพิ่มปุ่มยกเลิกการทำงานเพื่อย้อนกลับไปยังหน้าหลักอย่างสวยงาม</p>
+    </div>
+
+    <h2>3. โครงสร้างตารางผลลัพธ์</h2>
+    <ul>
+        <li>ตารางที่ได้รับข้อมูล: <code>ims_tires_plan_forecast</code></li>
+        <li>ฟิลด์ปลายทางพนักงานขาย: <code>sale_name</code></li>
+        <li>ฟิลด์ปลายทางผู้เทคสินค้า: <code>take_name</code></li>
+    </ul>
+</div>
+</body>
+</html>

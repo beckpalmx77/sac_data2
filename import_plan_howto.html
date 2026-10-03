@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>วิธีการนำเข้าข้อมูล Tires Plan Forecast (Import Guide)</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #27ae60; padding-bottom: 10px; }
+        h2 { color: #27ae60; margin-top: 30px; }
+        .info-card { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0; }
+        .warning { background: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin: 15px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.9em; }
+        th, td { border: 1px solid #bdc3c7; padding: 8px; text-align: left; }
+        th { background: #ecf0f1; color: #2c3e50; }
+        .highlight { color: #e74c3c; font-weight: bold; }
+        code { background: #eee; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>คู่มือการนำเข้าข้อมูล Tires Plan Forecast</h1>
+
+    <div class="info-card">
+        <p>การนำเข้าข้อมูลใช้ไฟล์ Excel (.xlsx) เป็นหลัก โดยต้องจัดรูปแบบตาม Template ที่กำหนดเพื่อให้ระบบสามารถประมวลผลได้อย่างถูกต้อง</p>
+        <p><b>Template File:</b> <code>import_process/template/template_tire_plan.xlsx</code></p>
+    </div>
+
+    <h2>1. โครงสร้างไฟล์ Excel (Column Mapping)</h2>
+    <p>ข้อมูลต้องเริ่มที่ <span class="highlight">แถวที่ 3</span> เป็นต้นไป โดยมีลำดับคอลัมน์ดังนี้:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>คอลัมน์</th>
+                <th>ข้อมูล</th>
+                <th>คำอธิบาย / เงื่อนไข</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>A (1)</td><td>AR_CODE</td><td><span class="highlight">จำเป็น</span> รหัสร้านค้า</td></tr>
+            <tr><td>B (2)</td><td>AR_NAME</td><td>ชื่อร้านค้า</td></tr>
+            <tr><td>C (3)</td><td>SALE_NAME</td><td>ชื่อพนักงานขาย</td></tr>
+            <tr><td>D (4)</td><td>TAKE_NAME</td><td>ชื่อพนักงานเทค</td></tr>
+            <tr><td>E (5)</td><td>TEAM_NAME</td><td>ชื่อทีม</td></tr>
+            <tr><td>F (6)</td><td>BRAND_CODE</td><td>ยี่ห้อสินค้า</td></tr>
+            <tr><td>G (7)</td><td>SKU_CODE</td><td><span class="highlight">จำเป็น</span> รหัสสินค้า</td></tr>
+            <tr><td>H (8)</td><td>AMPHUR</td><td>อำเภอ</td></tr>
+            <tr><td>I (9)</td><td>PROVINCE</td><td>จังหวัด</td></tr>
+            <tr><td>J (10)</td><td>ZONE</td><td>เขตการขาย</td></tr>
+            <tr><td>K (11)</td><td>AVG_PER_MONTH_YEAR</td><td>ยอดขายเฉลี่ยต่อเดือนปีที่แล้ว</td></tr>
+            <tr><td>L (12)</td><td>MAX_QTY_YEAR</td><td>ยอดขายสูงสุดในปีที่แล้ว</td></tr>
+            <tr><td>M (13)</td><td>MIN_QTY_YEAR</td><td>ยอดขายต่ำสุดในปีที่แล้ว</td></tr>
+            <tr><td>N (14)</td><td>TARGET_QTY_MONTH</td><td>เป้าหมายการขาย (Target)</td></tr>
+            <tr><td>O (15)</td><td>SALES_MONTH_1</td><td>ยอดขาย M-1 (สามารถเว้นว่างไว้ให้ระบบ Sync ได้)</td></tr>
+            <tr><td>P (16)</td><td>SALES_MONTH_2</td><td>ยอดขาย M-2 (สามารถเว้นว่างไว้ให้ระบบ Sync ได้)</td></tr>
+            <tr><td>Q (17)</td><td>SALES_MONTH_3</td><td>ยอดขาย M-3 (สามารถเว้นว่างไว้ให้ระบบ Sync ได้)</td></tr>
+            <tr><td>R (18)</td><td>AVG_3_MONTH</td><td>ค่าเฉลี่ย 3 เดือน</td></tr>
+            <tr><td>S (19)</td><td>TARGET_QTY_MONTH_2</td><td>เป้าหมายสำรอง</td></tr>
+            <tr><td>T (20)</td><td>FORECAST_QTY_MONTH_1</td><td>ยอดคาดการณ์ 1</td></tr>
+            <tr><td>U (21)</td><td>COMPARE_FORECAST_1</td><td>ส่วนต่างเทียบคาดการณ์</td></tr>
+            <tr><td>V (22)</td><td>COMPARE_PERCENT_1</td><td>% เทียบยอดขาย</td></tr>
+            <tr><td>W (23)</td><td>REMARK</td><td>หมายเหตุ</td></tr>
+            <tr><td>X (24)</td><td>FORECAST_QTY_MONTH_2</td><td>ยอดคาดการณ์ 2</td></tr>
+            <tr><td>Y (25)</td><td>COMPARE_FORECAST_2</td><td>ส่วนต่างเทียบคาดการณ์ 2</td></tr>
+            <tr><td>Z (26)</td><td>COMPARE_PERCENT_2</td><td>% เทียบยอดขาย 2</td></tr>
+        </tbody>
+    </table>
+
+    <h2>2. เงื่อนไขสำคัญในการนำเข้า</h2>
+    <div class="warning">
+        <ul>
+            <li><b>ข้อมูลซ้ำ (Duplicate Check):</b> ระบบใช้ <code>Month</code> + <code>Year</code> + <code>AR_CODE</code> + <code>SKU_CODE</code> + <code>SALE_NAME</code> เป็น Key ในการตรวจสอบ หากพบข้อมูลเดิมระบบจะทำการ <span class="highlight">UPDATE</span> ตัวเลขเป้ารายเดือน (คอลัมน์ Q) และตัวเลขคาดการณ์/แพลนยาง (คอลัมน์ R) ด้วยค่าใหม่จากไฟล์ Excel ทันที (รองรับกรณีไม่ได้ป้อนตัวเลขตอนแรก แล้วทำการนำเข้าอัปเดตภายหลัง) พร้อมคำนวณส่วนต่างและ % เปรียบเทียบให้อัตโนมัติ โดยคงค่าประวัติยอดขายเดิมไว้</li>
+            <li><b>การจัดการสูตร (#REF!):</b> ระบบรองรับไฟล์ที่มีสูตรติดมา หากพบ error <code>#REF!</code> ระบบจะพยายามดึงค่าล่าสุดที่คำนวณไว้มาใช้แทน</li>
+            <li><b>ค่าว่าง:</b> หากแถวใดไม่มีทั้ง <code>AR_CODE</code> และ <code>SKU_CODE</code> ระบบจะข้ามแถวนั้นไป</li>
+            <li><b>ระบบ Caching:</b> หลังนำเข้าเสร็จ ค่า <code>load_time</code> จะถูกตั้งเป็น 0 เพื่อให้หน้าจอ Interactive ทำการดึงยอดขายจริงมา Update ให้อัตโนมัติเมื่อมีการเปิดดูครั้งแรก</li>
+        </ul>
+    </div>
+
+    <h2>3. ระบบการดึงยอดขายจริงอัตโนมัติ (Auto-Sync Sales Data)</h2>
+    <div class="info-card" style="border-left: 5px solid #3498db;">
+        <p>เพื่อลดภาระในการจัดเตรียมไฟล์ และความถูกต้องของข้อมูล ระบบได้ออกแบบให้มีการดึงยอดขายจริงจากฐานข้อมูลให้อัตโนมัติ:</p>
+        <ul>
+            <li><b>ประหยัดเวลา:</b> ผู้ใช้งาน <span class="highlight">ไม่จำเป็น</span> ต้องกรอกยอดขายย้อนหลัง (M-1, M-2, M-3) ในไฟล์ Excel สามารถปล่อยเป็นค่าว่างหรือ 0 ได้</li>
+            <li><b>การทำงาน:</b> เมื่อมีการนำเข้าไฟล์ใหม่ หรือเปิดดูข้อมูลเดือน/ปี นั้นเป็นครั้งแรก ระบบจะตรวจพบว่ายังไม่มีการเชื่อมโยงข้อมูล และจะทำการดึงยอดขายจริงจากตาราง <code>ims_data_sale_sac_all</code> มาบันทึกลงในแผนให้ทันที</li>
+            <li><b>ความแม่นยำ:</b> ข้อมูลที่ดึงมาจะรวมถึงยอดขายย้อนหลัง 3 เดือน และค่าเฉลี่ยรายเดือนของปีที่ผ่านมา</li>
+            <li><b>การปรับปรุงข้อมูล:</b> หากมีการขายเกิดขึ้นหลังจากนำเข้าไฟล์ไปแล้ว ผู้ใช้สามารถกดปุ่ม <button style="background: #17a2b8; color: white; border: none; padding: 2px 8px; border-radius: 3px; font-size: 0.8em;">ปรับปรุงข้อมูลยอดขาย</button> ที่หน้าจอหลักเพื่อดึงข้อมูลล่าสุดได้ทุกเมื่อ</li>
+        </ul>
+    </div>
+
+    <h2>4. ขั้นตอนการ Upload</h2>
+    <ol>
+        <li>เข้าที่หน้าจอ <b>"นำเข้าข้อมูล Tires Plan Forecast"</b></li>
+        <li>เลือก <b>เดือน</b> และ <b>ปี</b> ที่ต้องการนำเข้าข้อมูล</li>
+        <li>คลิกที่พื้นที่อัปโหลดเพื่อเลือกไฟล์ Excel จากเครื่อง</li>
+        <li>กดปุ่ม <b>"เริ่มนำเข้าข้อมูล"</b> และรอจนกว่าแถบความเคลื่อนไหวจะเต็ม</li>
+        <li>เมื่อเสร็จสิ้น ระบบจะพาไปยังหน้าจอตรวจสอบข้อมูล (Interactive) เพื่อดูผลลัพธ์</li>
+    </ol>
+
+    <footer style="text-align: center; margin-top: 50px; font-size: 0.85em; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px;">
+        &copy; 2025 BY SAC System Admin
+    </footer>
+</body>
+</html>

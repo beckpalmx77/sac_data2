@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>วิธีการเพิ่มประสิทธิภาพการ Load ข้อมูลด้วยระบบ Caching (Optimized Data Loading)</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1100px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 30px; border-left: 5px solid #3498db; padding-left: 10px; }
+        .info-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .highlight { color: #e67e22; font-weight: bold; }
+        .code-block { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; font-family: monospace; overflow-x: auto; margin: 10px 0; font-size: 0.9em; }
+        .step-list { counter-reset: step-counter; list-style-type: none; padding: 0; }
+        .step-list li { position: relative; padding-left: 45px; margin-bottom: 20px; }
+        .step-list li::before { 
+            content: counter(step-counter); 
+            counter-increment: step-counter;
+            position: absolute; left: 0; top: 0;
+            width: 30px; height: 30px;
+            background: #3498db; color: white;
+            border-radius: 50%; text-align: center;
+            line-height: 30px; font-weight: bold;
+        }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #bdc3c7; padding: 10px; text-align: left; }
+        th { background: #ecf0f1; }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
+        .status-missing { background: #f9ebea; color: #c0392b; }
+        .status-ready { background: #eafaf1; color: #27ae60; }
+    </style>
+</head>
+<body>
+    <h1>แนวคิดการเพิ่มประสิทธิภาพการดึงข้อมูลยอดขาย (Caching Strategy)</h1>
+
+    <p>เนื่องจากตาราง <b>ims_data_sale_sac_all</b> มีข้อมูลจำนวนมหาศาล การคำนวณยอดขายย้อนหลัง (M-1, M-2, M-3) ทุกครั้งที่โหลดหน้าจอจะทำให้ระบบทำงานช้าลงมาก (Performance Bottleneck)</p>
+
+    <div class="info-card" style="background-color: #fcf3cf; border-color: #f1c40f;">
+        <b>หลักการใหม่:</b> "ใช้ฟิลด์ <span class="highlight">load_time</span> เป็นตัวกำกับการโหลดข้อมูล เพื่อให้ระบบทราบว่าข้อมูลชุดนี้ถูกดึงมาจากยอดขายจริงแล้วกี่ครั้ง"
+    </div>
+
+    <h2>1. เงื่อนไขการจัดการข้อมูล (Data Flow Conditions)</h2>
+    <table>
+        <tr>
+            <th>สถานการณ์</th>
+            <th>การทำงานของระบบ</th>
+        </tr>
+        <tr>
+            <td><b>โหลดข้อมูลครั้งแรก (First Load)</b></td>
+            <td>
+                1. ตรวจสอบฟิลด์ <code>load_time</code> หากเท่ากับ <span class="highlight">0</span><br>
+                2. ระบบจะดึงข้อมูลยอดขายจริงจาก <code>ims_data_sale_sac_all</code> <span class="highlight">เสมอ</span><br>
+                3. บันทึกข้อมูลลงตารางหลัก และปรับค่า <code>load_time = 1</code>
+            </td>
+        </tr>
+        <tr>
+            <td><b>การเปิดดูครั้งต่อไป (Subsequent View)</b></td>
+            <td>
+                ตรวจสอบพบ <code>load_time > 0</code><br>
+                ดึงข้อมูลจากตาราง <code>ims_tires_plan_forecast</code> โดยตรง <span class="status-badge status-ready">ไม่ต้องคำนวณใหม่</span>
+            </td>
+        </tr>
+        <tr>
+            <td><b>การกดปุ่ม "ปรับปรุงข้อมูล" (Manual Sync)</b></td>
+            <td>
+                ดึงข้อมูลจริงมา Update ทับข้อมูลเดิม<br>
+                ปรับเพิ่มค่า <code>load_time = load_time + 1</code> เพื่อระบุว่าเป็นข้อมูลชุดที่อัปเดตล่าสุด
+            </td>
+        </tr>
+    </table>
+
+    <h2>2. ขั้นตอนการทำงาน (Step-by-Step Implementation)</h2>
+    
+    <ul class="step-list">
+        <li>
+            <b>ปรับปรุงโครงสร้างการเก็บข้อมูล:</b>
+            <p>เพิ่มคอลัมน์ <code>load_time</code> (INT, default 0) ในตาราง <code>ims_tires_plan_forecast</code></p>
+        </li>
+        <li>
+            <b>ปรับปรุง API การดึงข้อมูล (Sync API):</b>
+            <p>ในไฟล์ <code>forecast_update_sales_data.php</code> ให้เพิ่มการ Update <code>load_time</code>:</p>
+            <div class="code-block">
+SET p.sales_month_1 = s.total, ..., p.load_time = p.load_time + 1
+            </div>
+        </li>
+        <li>
+            <b>แก้ไขหน้าจอแสดงผล (UI Update):</b>
+            <p>เพิ่มปุ่ม <button style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">ปรับปรุงข้อมูลยอดขาย (Sync Data)</button> ที่หน้าจอ <code>forecast_plan_display_new.php</code>:</p>
+            <ul>
+                <li>เมื่อกดปุ่ม จะเรียกใช้ Refresh API ผ่าน Ajax</li>
+                <li>แสดง Loading Spinner ระหว่างประมวลผล</li>
+                <li>เมื่อเสร็จสิ้น สั่งให้ DataTable <code>reload()</code> เพื่อแสดงค่าใหม่ที่บันทึกแล้ว</li>
+            </ul>
+        </li>
+        <li>
+            <b>ปรับจูนประสิทธิภาพการ Query:</b>
+            <p>ในไฟล์ <code>forecast_plan_fetch_new.php</code> ให้ดึงข้อมูลจากฟิลด์ในตาราง <code>p.*</code> โดยตรง แทนการเขียน Sub-query ซ้อนข้างใน</p>
+        </li>
+    </ul>
+
+    <h2>3. ประโยชน์ที่ได้รับ</h2>
+    <div class="info-card">
+        <ul style="margin: 0;">
+            <li><span class="highlight">ความเร็ว:</span> หน้าจอโหลดข้อมูลได้ทันที เพราะไม่ต้องคำนวณใหม่ทุกครั้ง</li>
+            <li><span class="highlight">ความถูกต้อง:</span> ข้อมูลไม่ล้าสมัยเพราะมีระบบ Sync ตามความต้องการของผู้ใช้</li>
+            <li><span class="highlight">การลดภาระ Server:</span> ลดการใช้ทรัพยากร CPU และ Memory ของ Database ในช่วงเวลาที่มีการใช้งานสูง</li>
+        </ul>
+    </div>
+
+    <footer style="text-align: center; margin-top: 50px; font-size: 0.85em; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px;">
+        &copy; 2025 BY SAC System Admin
+    </footer>
+</body>
+</html>

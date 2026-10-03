@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เอกสารการปรับปรุงที่อยู่ลูกค้า (อำเภอ, จังหวัด, โซน)</title>
+    <style>
+        body {
+            font-family: 'Prompt', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 15px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 5px solid #0056b3;
+        }
+        h1 {
+            color: #0056b3;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 30px;
+            border-left: 4px solid #198754;
+            padding-left: 10px;
+        }
+        .step {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f1f3f5;
+            border-radius: 6px;
+            border-left: 4px solid #6c757d;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        pre {
+            background-color: #2b2b2b;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 4px;
+            color: #d63384;
+            font-size: 0.9rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #198754;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+        .badge-info {
+            background-color: #0dcaf0;
+            color: #000;
+        }
+        .alert {
+            padding: 15px;
+            background-color: #fff3cd;
+            color: #664d03;
+            border: 1px solid #ffecb5;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📝 แผนการดำเนินงานและสคริปต์ปรับปรุงข้อมูลที่อยู่ลูกค้า</h1>
+    <p>เอกสารฉบับนี้อธิบายแนวทาง ขั้นตอน และรายละเอียดของระบบซิงค์ที่อยู่ลูกค้า (อำเภอ, จังหวัด) จากมุมมองข้อมูลกลาง <code>v_customer_data_sale_all_zone</code> ไปยังตารางเป้าหมายแผนงาน <code>ims_tires_plan_forecast</code> โดยจับคู่ด้วยรหัสลูกค้า (<code>AR_CODE</code>)</p>
+
+    <h2>1. ข้อมูลโครงสร้างตารางและวิวมุมมองที่เกี่ยวข้อง</h2>
+    <ul>
+        <li><strong>ตารางเป้าหมาย (Destination):</strong> <code>ims_tires_plan_forecast</code>
+            <br>ฟิลด์เป้าหมายที่จะได้รับอัปเดต: <code>amphur</code>, <code>province</code>
+        </li>
+        <li><strong>วิวมุมมองต้นทาง (Source View):</strong> <code>v_customer_data_sale_all_zone</code>
+            <br>ฟิลด์ต้นทางที่ดึงข้อมูล: <code>TRD_AMPHUR</code>, <code>TRD_PROVINCE</code>
+        </li>
+        <li><strong>คีย์การเชื่อมโยง (Join Key):</strong> <code>ar_code</code> ในตารางแผนงานจับคู่กับ <code>AR_CODE</code> ในวิวมุมมองกลาง
+        </li>
+    </ul>
+
+    <h2>2. แผนและขั้นตอนการทำงาน (Step-by-Step Implementation)</h2>
+    
+    <div class="step">
+        <div class="step-title">ขั้นตอนที่ 2.1: เตรียมไฟล์สคริปต์ระบบหลังบ้าน</div>
+        <p>สร้างไฟล์สคริปต์ PHP ชื่อ <code>sync_address_from_zone.php</code> อยู่ที่โฟลเดอร์ราก (Root Directory) ของโครงการเพื่อประมวลผลการทำงานผ่านเว็บ</p>
+    </div>
+
+    <div class="step">
+        <div class="step-title">ขั้นตอนที่ 2.2: กำหนดเงื่อนไขและความปลอดภัยข้อมูล (Data Safety)</div>
+        <ul>
+            <li>กำหนดเงื่อนไข <code>WHERE</code> เพื่อดึงเฉพาะแถวข้อมูลต้นทางที่มีค่าอยู่จริง (ไม่เป็นค่าว่างหรือ NULL)</li>
+            <li>ใช้ระบบ <strong>Database Transaction</strong> เพื่อป้องกันข้อผิดพลาดในการบันทึกข้อมูลกึ่งกลางคัน หากคำสั่งล้มเหลวจะทำการยกเลิก (Rollback) ข้อมูลทั้งหมดเพื่อความปลอดภัย</li>
+            <li>ใช้ระบบสิทธิ์การเข้าใช้งาน <code>session_start()</code> เพื่อป้องกันบุคคลภายนอกที่ไม่ได้รับอนุญาตเข้ามารันสคริปต์นี้</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <div class="step-title">ขั้นตอนที่ 2.3: ออกแบบชุดคำสั่ง SQL (SQL Join Update Query)</div>
+        <p>คำสั่ง SQL หลักที่ใช้ในระบบประมวลผลความเร็วสูง:</p>
+        <pre>UPDATE ims_tires_plan_forecast p
+INNER JOIN v_customer_data_sale_all_zone v ON p.ar_code = v.AR_CODE
+SET 
+    p.amphur = v.TRD_AMPHUR,
+    p.province = v.TRD_PROVINCE
+WHERE (v.TRD_AMPHUR IS NOT NULL AND v.TRD_AMPHUR != '')
+   OR (v.TRD_PROVINCE IS NOT NULL AND v.TRD_PROVINCE != '')</pre>
+    </div>
+
+    <div class="step">
+        <div class="step-title">ขั้นตอนที่ 2.4: หน้าจอแสดงผลลัพธ์และแถบความก้าวหน้า (Progress Bar)</div>
+        <p>สร้างหน้าจออินเตอร์เฟสหลักที่ <a href="update_addr_cust_display.php" target="_blank"><code>update_addr_cust_display.php</code></a> เพื่อให้ผู้ใช้งานเข้ามากดปุ่มเริ่มอัปเดตข้อมูลได้สะดวก โดยระบบจะเรียกงานหลังบ้านผ่าน AJAX ไปยัง <code>sync_address_from_zone_ajax.php</code> และแสดงแถบความก้าวหน้ารวมถึงพิมพ์บันทึก System Log ให้เห็นขั้นตอนการทำงานแบบสด ๆ</p>
+    </div>
+
+    <h2>3. ไฟล์สคริปต์และหน้าจอที่เกี่ยวข้อง</h2>
+    <ul>
+        <li><strong>หน้าจออินเตอร์เฟสหลัก:</strong> <a href="update_addr_cust_display.php" target="_blank"><code>update_addr_cust_display.php</code></a></li>
+        <li><strong>สคริปต์ประมวลผล AJAX:</strong> <a href="sync_address_from_zone_ajax.php" target="_blank"><code>sync_address_from_zone_ajax.php</code></a></li>
+        <li><strong>สคริปต์ประมวลผลแบบรันตรง (Direct Script):</strong> <a href="sync_address_from_zone.php" target="_blank"><code>sync_address_from_zone.php</code></a></li>
+    </ul>
+
+    <div class="alert">
+        💡 <strong>คำแนะนำเพิ่มเติม:</strong> ผู้ดูแลระบบหรือพนักงานที่เกี่ยวข้องสามารถรันหน้านี้ได้ทันทีเมื่อต้องการล้างค่าที่อยู่ของแผนพยากรณ์ยอดขายให้ซิงก์ตรงกับข้อมูลที่อยู่ในฐานข้อมูลกลาง
+    </div>
+</div>
+</body>
+</html>

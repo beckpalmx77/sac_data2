@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เอกสารสรุปการปรับปรุงระบบวางแผนการขาย (Forecast Plan Realtime & Big Tires)</title>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0d6efd, #0b5ed7);
+            --success-gradient: linear-gradient(135deg, #198754, #157347);
+            --warning-gradient: linear-gradient(135deg, #ffc107, #d39e00);
+            --danger-gradient: linear-gradient(135deg, #dc3545, #bb2d3b);
+            --dark-color: #212529;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Prompt', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            color: #334155;
+            line-height: 1.6;
+            padding: 30px 15px;
+        }
+
+        .doc-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .doc-header {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: #ffffff;
+            padding: 40px;
+            position: relative;
+        }
+
+        .doc-header h1 {
+            font-weight: 700;
+            font-size: 1.85rem;
+            margin-bottom: 10px;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.88rem;
+            color: #94a3b8;
+        }
+
+        .header-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .doc-body {
+            padding: 40px;
+        }
+
+        .section-title {
+            font-size: 1.28rem;
+            font-weight: 600;
+            color: #0f172a;
+            border-left: 5px solid #0d6efd;
+            padding-left: 12px;
+            margin-bottom: 20px;
+            margin-top: 35px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .bg-blue-light { background: #e0f2fe; color: #0284c7; }
+        .bg-green-light { background: #dcfce7; color: #16a34a; }
+        .bg-amber-light { background: #fef3c7; color: #d97706; }
+        .bg-purple-light { background: #f3e8ff; color: #9333ea; }
+        .bg-rose-light { background: #ffe4e6; color: #e11d48; }
+
+        .feature-box {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 16px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.88rem;
+            overflow-x: auto;
+            margin: 12px 0;
+            border-left: 4px solid #38bdf8;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .table-custom th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .table-custom td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.88rem;
+            vertical-align: middle;
+        }
+
+        .table-custom tr:last-child td {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .callout-info {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .callout-warning {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background-color: #f8fafc;
+            border-top: 1px solid var(--border-color);
+            padding: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="doc-container">
+    <!-- Header -->
+    <div class="doc-header">
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="badge bg-primary px-3 py-2 rounded-pill"><i class="fas fa-code-branch me-1"></i> Version 2.0 Update</span>
+            <span class="badge bg-success px-3 py-2 rounded-pill"><i class="fas fa-check-circle me-1"></i> Production Ready</span>
+        </div>
+        <h1>บันทึกประวัติการปรับปรุงระบบวางแผนการขาย (Forecast Plan)</h1>
+        <p class="mb-3 text-light opacity-75">การเปิดให้คีย์แก้ไข "เป้ารายเดือน" และ "แพลนยาง" สามารถ Save ข้อมูลได้อิสระแต่ละรายการ และแยกปุ่ม "ยืนยันล็อคเดือนนี้" ครอบคลุมทั้ง<strong>ระบบยางเล็ก</strong>และ<strong>ระบบยางใหญ่ (Big Tires)</strong></p>
+        <div class="header-meta">
+            <span><i class="far fa-calendar-alt"></i> วันที่ปรับปรุงล่าสุด: 2 ตุลาคม 2026</span>
+            <span><i class="fas fa-desktop"></i> ระบบ: SAC Data2 (Tires & Big Tires Forecast Realtime)</span>
+            <span><i class="fas fa-database"></i> ฐานข้อมูล: sac_data2 (192.168.88.7:3307)</span>
+            <span><i class="fas fa-user-shield"></i> สิทธิ์ควบคุม: Admin / Sale Supervisor / Sale User</span>
+        </div>
+    </div>
+
+    <!-- Body -->
+    <div class="doc-body">
+
+        <!-- Executive Summary Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue-light">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="fw-bold text-dark">เปิดให้คีย์ข้อมูล</div>
+                    <small class="text-muted">เป้ารายเดือน และ แพลนยาง แก้ไขได้โดยตรงบนตาราง ทั้งยางเล็กและยางใหญ่</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon bg-green-light">
+                        <i class="fas fa-save"></i>
+                    </div>
+                    <div class="fw-bold text-dark">Save แต่ละรายการได้</div>
+                    <small class="text-muted">กดปุ่ม "บันทึก" รายแถว หรือ "บันทึกทั้งหมด" ได้เรื่อยๆ โดย<strong>ยังไม่ล็อค</strong></small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon bg-rose-light">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="fw-bold text-dark">ยืนยันล็อคทีเดียว</div>
+                    <small class="text-muted">กดปุ่ม <strong>"ยืนยันล็อคเดือนนี้"</strong> เมื่อกรอกและตรวจสอบข้อมูลเสร็จสมบูรณ์</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple-light">
+                        <i class="fas fa-lock-open"></i>
+                    </div>
+                    <div class="fw-bold text-dark">สิทธิ์ปลดล็อค</div>
+                    <small class="text-muted">Admin / Sale Sup สามารถสั่ง "ปลดล็อคเดือนนี้" เพื่อเปิดให้แก้ไขย้อนหลังได้</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1. ที่มาและความต้องการ -->
+        <div class="section-title">
+            <i class="fas fa-bullseye text-primary"></i> 1. วัตถุประสงค์และความต้องการ (Objectives)
+        </div>
+        <div class="feature-box">
+            <ol class="mb-0 ps-3">
+                <li class="mb-2"><strong>เปิดคีย์ข้อมูล 2 คอลัมน์สำคัญ:</strong> บนหน้าจอ <code>forecast_plan_display_realtime.php</code> (ยางเล็ก) และ <code>forecast_plan_display_realtime_big_tires.php</code> (ยางใหญ่) ต้องการเปิดให้พนักงานขายสามารถกรอกและปรับเปลี่ยนตัวเลข <strong>"เป้ารายเดือน"</strong> (<code>target_qty_month</code>) และ <strong>"แพลนยาง"</strong> (<code>forecast_qty_month_1</code>) ได้โดยตรง</li>
+                <li class="mb-2"><strong>Save ข้อมูลแต่ละรายการโดยยังไม่ล็อค (Incremental Save):</strong> ให้ผู้ใช้สามารถกดบันทึกข้อมูลแต่ละแถวผ่านปุ่ม <code><i class="fas fa-save"></i> บันทึก</code> ประจำรายการ หรือกดปุ่ม "บันทึกการแก้ไขทั้งหมด" ได้ตลอดเวลา โดยระบบจะบันทึกตัวเลขลงฐานข้อมูลทันที แต่<strong>ยังคงสถานะ <code>is_locked = 0</code> ไว้</strong> เพื่อให้สามารถกลับมาคีย์ต่อหรือปรับแต่งตัวเลขได้ตามต้องการ</li>
+                <li class="mb-2"><strong>ยืนยันการล็อคทีเดียวผ่านปุ่มควบคุมเฉพาะ:</strong> เมื่อทำการกรอกและตรวจสอบตัวเลขเรียบร้อยแล้ว จึงกดปุ่ม <strong>"ยืนยันล็อคเดือนนี้"</strong> เพื่อล็อคข้อมูลทั้งหมดของเดือนนั้นในคราวเดียว (<code>is_locked = 1</code>) ป้องกันการแก้ไขย้อนหลัง</li>
+                <li><strong>การควบคุมสิทธิ์ (Permission Control):</strong>
+                    <ul>
+                        <li><strong>พนักงานขาย (Sale User):</strong> บันทึกข้อมูลได้อิสระ และเมื่อเสร็จสิ้นสามารถกด "ยืนยันล็อคเดือนนี้" ของตนเองได้</li>
+                        <li><strong>ผู้ดูแลระบบ/หัวหน้างาน (Admin / Sale Sup):</strong> สามารถสั่ง "ยืนยันล็อคเดือนนี้" และเป็นกลุ่มเดียวที่สามารถกดปุ่ม <strong>"ปลดล็อคเดือนนี้"</strong> ได้</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <!-- 2. การปรับปรุงฐานข้อมูล -->
+        <div class="section-title">
+            <i class="fas fa-database text-primary"></i> 2. การปรับปรุงโครงสร้างฐานข้อมูล (Database Schema)
+        </div>
+        <p>ทำการเพิ่ม 3 ฟิลด์ใหม่ในทั้ง 2 ตารางหลัก (ยางเล็กและยางใหญ่) บนฐานข้อมูล <code>sac_data2</code> (MySQL 192.168.88.7:3307):</p>
+        
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 border">
+                    <span class="badge bg-primary mb-2">ตารางยางเล็ก (Small Tires)</span>
+                    <div class="code-block" style="margin:0; font-size:0.8rem;">
+ALTER TABLE ims_tires_plan_forecast_realtime 
+    ADD COLUMN is_locked TINYINT(1) NOT NULL DEFAULT 0,
+    ADD COLUMN locked_at DATETIME NULL,
+    ADD COLUMN locked_by VARCHAR(100) NULL;
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 border">
+                    <span class="badge bg-success mb-2">ตารางยางใหญ่ (Big Tires)</span>
+                    <div class="code-block" style="margin:0; font-size:0.8rem;">
+ALTER TABLE ims_tires_plan_forecast_realtime_big_tirs 
+    ADD COLUMN is_locked TINYINT(1) NOT NULL DEFAULT 0,
+    ADD COLUMN locked_at DATETIME NULL,
+    ADD COLUMN locked_by VARCHAR(100) NULL;
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>ชื่อฟิลด์</th>
+                    <th>ประเภทข้อมูล</th>
+                    <th>ค่าเริ่มต้น</th>
+                    <th>คำอธิบาย</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>is_locked</code></td>
+                    <td>TINYINT(1)</td>
+                    <td><code>0</code></td>
+                    <td>สถานะการล็อค (0 = สามารถแก้ไขและ Save ได้, 1 = ถูกล็อคห้ามแก้ไข)</td>
+                </tr>
+                <tr>
+                    <td><code>locked_at</code></td>
+                    <td>DATETIME</td>
+                    <td><code>NULL</code></td>
+                    <td>วันเวลาที่มีการกดยืนยันล็อคข้อมูล (TIMESTAMP)</td>
+                </tr>
+                <tr>
+                    <td><code>locked_by</code></td>
+                    <td>VARCHAR(100)</td>
+                    <td><code>NULL</code></td>
+                    <td>Username ของผู้ที่ทำการกดยืนยันล็อค</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 3. รายการไฟล์และรายละเอียดการแก้ไข -->
+        <div class="section-title">
+            <i class="fas fa-file-code text-primary"></i> 3. รายการไฟล์และรายละเอียดการแก้ไข (Source Code Changes)
+        </div>
+
+        <div class="accordion mb-4" id="accordionFiles">
+            
+            <!-- SECTION A: SMALL TIRES -->
+            <div class="mb-3">
+                <h5 class="text-primary fw-bold mb-2"><i class="fas fa-car me-2"></i> ก. ระบบยางเล็ก (Small Tires)</h5>
+            </div>
+
+            <!-- File 1 -->
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-bold py-2" type="button" data-bs-toggle="collapse" data-bs-target="#file1">
+                        <i class="fas fa-file-alt text-primary me-2"></i> 1. forecast_plan_fetch_realtime.php (ดึงข้อมูลแสดงผล - ยางเล็ก)
+                    </button>
+                </h2>
+                <div id="file1" class="accordion-collapse collapse show">
+                    <div class="accordion-body bg-light">
+                        <ul>
+                            <li><strong>เพิ่มปุ่มบันทึกแต่ละรายการ:</strong> เพิ่มปุ่ม <code><i class="fas fa-save"></i> บันทึก</code> (ปุ่มสีเขียว <code>btn-save-row-inline</code>) ในคอลัมน์จัดการของทุกแถวที่ยังไม่ล็อค เพื่อให้ผู้ใช้สามารถคลิกเซฟแถวนั้นได้ทันที</li>
+                            <li><strong>ปลดล็อค input:</strong> นำแอตทริบิวต์ <code>readonly</code> ออกจาก <code>target_qty_month</code> และ <code>forecast_qty_month_1</code> เมื่อ <code>is_locked == 0</code></li>
+                            <li><strong>การแสดงผลเมื่อล็อค:</strong> ถ้า <code>is_locked == 1</code> จะใส่ <code>readonly</code>, คลาส <code>locked-input</code>, ไอคอน 🔒 ที่ SKU และเปลี่ยนปุ่มจัดการเป็นป้ายสถานะ <code><i class="fas fa-lock"></i> ล็อค</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File 2 -->
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold py-2" type="button" data-bs-toggle="collapse" data-bs-target="#file2">
+                        <i class="fas fa-file-alt text-primary me-2"></i> 2. forecast_plan_display_realtime.php (หน้าจอแสดงผลและบันทึก - ยางเล็ก)
+                    </button>
+                </h2>
+                <div id="file2" class="accordion-collapse collapse">
+                    <div class="accordion-body bg-light">
+                        <ul>
+                            <li><strong>แยกปุ่มควบคุมบน Toolbar:</strong>
+                                <ul>
+                                    <li>ปุ่ม <span class="badge bg-warning text-dark"><i class="fas fa-save"></i> บันทึกการแก้ไขทั้งหมด</span>: เซฟข้อมูลทุกแถวบนตารางโดย<strong>ไม่ล็อค</strong></li>
+                                    <li>ปุ่ม <span class="badge bg-outline-danger text-danger border border-danger"><i class="fas fa-lock"></i> ยืนยันล็อคเดือนนี้</span>: แสดงข้อความยืนยันการล็อคทั้งเดือน เมื่อกดยืนยันจึงจะตั้งค่า <code>is_locked = 1</code></li>
+                                    <li>ปุ่ม <span class="badge bg-outline-success text-success border border-success"><i class="fas fa-lock-open"></i> ปลดล็อคเดือนนี้</span>: สิทธิ์เฉพาะ Admin / Sale Sup</li>
+                                </ul>
+                            </li>
+                            <li><strong>รองรับการคลิกบันทึกเฉพาะรายการ (Inline Save):</strong> ผูก Event กับ <code>.btn-save-row-inline</code> บันทึกเฉพาะข้อมูลแถวนั้น และแสดง Toast แจ้งเตือนสวยงาม</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File 3 -->
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold py-2" type="button" data-bs-toggle="collapse" data-bs-target="#file3">
+                        <i class="fas fa-file-alt text-primary me-2"></i> 3. forecast_update_plan_realtime.php (บันทึกข้อมูล - ยางเล็ก)
+                    </button>
+                </h2>
+                <div id="file3" class="accordion-collapse collapse">
+                    <div class="accordion-body bg-light">
+                        <ul>
+                            <li><strong>ยกเลิกการตั้งค่า <code>is_locked = 1</code> ในการ Save:</strong> ปรับปรุง SQL UPDATE ให้บันทึกเฉพาะตัวเลขเป้าหมาย, แพลน, หมายเหตุ โดยไม่ปรับเปลี่ยนสถานะการล็อค ทำให้ผู้ใช้บันทึกซ้ำได้เรื่อยๆ</li>
+                            <li><strong>Backend Guard:</strong> ตรวจสอบว่า หากรายการดังกล่าวมีสถานะ <code>is_locked = 1</code> อยู่แล้ว และผู้ใช้ไม่ใช่ Admin จะปฏิเสธการแก้ไขทันที</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File 4 -->
+            <div class="accordion-item border rounded-3 mb-3 overflow-hidden">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold py-2" type="button" data-bs-toggle="collapse" data-bs-target="#file4">
+                        <i class="fas fa-file-alt text-success me-2"></i> 4. forecast_unlock_plan_realtime.php (API ล็อค/ปลดล็อค - ยางเล็ก)
+                    </button>
+                </h2>
+                <div id="file4" class="accordion-collapse collapse">
+                    <div class="accordion-body bg-light">
+                        <ul>
+                            <li><strong>รองรับการกดยืนยันล็อคทีเดียว (action=lock):</strong> บันทึก <code>is_locked = 1</code>, <code>locked_at = CURRENT_TIMESTAMP</code>, <code>locked_by = $_SESSION['alogin']</code></li>
+                            <li><strong>คำสั่งปลดล็อค (action=unlock):</strong> อนุญาตเฉพาะผู้ใช้ระดับ <code>admin</code> และ <code>sale_sup</code> เท่านั้น</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION B: BIG TIRES -->
+            <div class="mb-3 mt-4">
+                <h5 class="text-success fw-bold mb-2"><i class="fas fa-truck-monster me-2"></i> ข. ระบบยางใหญ่ (Big Tires)</h5>
+            </div>
+
+            <!-- File 5 -->
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold py-2" type="button" data-bs-toggle="collapse" data-bs-target="#file5">
+                        <i class="fas fa-file-alt text-success me-2"></i> 5. forecast_plan_fetch_realtime_big_tires.php (ดึงข้อมูลแสดงผล - ยางใหญ่)
+                    </button>
+                </h2>
+                <div id="file5" class="accordion-collapse collapse">
+                    <div class="accordion-body bg-light">
+                        <ul>
+                            <li><strong>เพิ่มปุ่มบันทึกแต่ละรายการ:</strong> มีปุ่ม <code><i class="fas fa-save"></i> บันทึก</code> (<code>btn-save-row-inline</code>) ในทุกแถวที่ยังไม่ล็อค</li>
+                            <li><strong>เปิดช่องคีย์:</strong> ปลด <code>readonly</code> ในช่องเป้ารายเดือนและแพลนยางเมื่อ <code>is_locked == 0</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File 6 -->
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold py-2" type="button" data-bs-toggle="collapse" data-bs-target="#file6">
+                        <i class="fas fa-file-alt text-success me-2"></i> 6. forecast_plan_display_realtime_big_tires.php (หน้าจอแสดงผลและบันทึก - ยางใหญ่)
+                    </button>
+                </h2>
+                <div id="file6" class="accordion-collapse collapse">
+                    <div class="accordion-body bg-light">
+                        <ul>
+                            <li><strong>แยกปุ่มควบคุมบน Toolbar:</strong> มีปุ่ม "บันทึกการแก้ไขทั้งหมด" (ไม่ล็อค) และปุ่ม "ยืนยันล็อคเดือนนี้" แยกออกจากกันอย่างชัดเจน</li>
+                            <li><strong>รองรับการคลิกบันทึกแต่ละแถว:</strong> ทำงานผ่าน Event <code>.btn-save-row-inline</code> เซฟเฉพาะแถวนั้นได้ทันที</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File 7 -->
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold py-2" type="button" data-bs-toggle="collapse" data-bs-target="#file7">
+                        <i class="fas fa-file-alt text-success me-2"></i> 7. forecast_update_plan_realtime_big_tires.php (บันทึกข้อมูล - ยางใหญ่)
+                    </button>
+                </h2>
+                <div id="file7" class="accordion-collapse collapse">
+                    <div class="accordion-body bg-light">
+                        <ul>
+                            <li><strong>บันทึกข้อมูลโดยไม่ล็อค:</strong> ปรับปรุง UPDATE ใน <code>ims_tires_plan_forecast_realtime_big_tirs</code> โดยไม่ใส่ <code>is_locked = 1</code></li>
+                            <li><strong>Backend Guard:</strong> ป้องกันไม่ให้แก้ไขแถวที่ถูกล็อคแล้ว</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File 8 -->
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold py-2" type="button" data-bs-toggle="collapse" data-bs-target="#file8">
+                        <i class="fas fa-file-alt text-success me-2"></i> 8. forecast_unlock_plan_realtime_big_tires.php (API ล็อค/ปลดล็อค - ยางใหญ่)
+                    </button>
+                </h2>
+                <div id="file8" class="accordion-collapse collapse">
+                    <div class="accordion-body bg-light">
+                        <ul>
+                            <li><strong>ระบบล็อค/ปลดล็อคตามคำสั่ง:</strong> สั่งล็อคเมื่อกดปุ่มยืนยัน หรือปลดล็อคเฉพาะผู้มีสิทธิ์ Admin / Sale Sup</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 4. ขั้นตอนการทำงานของผู้ใช้งาน -->
+        <div class="section-title">
+            <i class="fas fa-tasks text-primary"></i> 4. ขั้นตอนการใช้งานจริง (Workflow Guide)
+        </div>
+
+        <div class="row g-4 mb-4">
+            <!-- ขั้นตอนที่ 1 & 2 -->
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 border h-100">
+                    <div class="fw-bold text-primary mb-3"><i class="fas fa-edit me-1"></i> ขั้นตอนการคีย์และ Save (ระหว่างทำงาน)</div>
+                    <div class="d-flex mb-3">
+                        <span class="step-number">1</span>
+                        <div>เลือก <strong>เดือน</strong> และ <strong>ปี</strong> ที่ต้องการวางแผนการขาย</div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <span class="step-number">2</span>
+                        <div>กรอกตัวเลขในช่อง <strong>"เป้ารายเดือน"</strong> และ <strong>"แพลนยาง"</strong> ตามต้องการ ระบบจะคำนวณและซิงค์ยอดร้านค้าให้อัตโนมัติ</div>
+                    </div>
+                    <div class="d-flex">
+                        <span class="step-number">3</span>
+                        <div><strong>การบันทึก:</strong>
+                            <ul class="mb-0 ps-3 mt-1">
+                                <li>คลิกปุ่ม <span class="badge bg-success"><i class="fas fa-save"></i> บันทึก</span> ท้ายแถว เพื่อเซฟเฉพาะแถวนั้น</li>
+                                <li>หรือคลิกปุ่ม <span class="badge bg-warning text-dark"><i class="fas fa-save"></i> บันทึกการแก้ไขทั้งหมด</span> เพื่อเซฟทุกแถวบนหน้า</li>
+                                <li class="text-primary mt-1"><em>* การบันทึกขั้นตอนนี้จะยังไม่ล็อค สามารถแก้ไขและเซฟซ้ำได้ตลอดเวลา</em></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ขั้นตอนที่ 3 & 4 -->
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 border h-100">
+                    <div class="fw-bold text-danger mb-3"><i class="fas fa-lock me-1"></i> ขั้นตอนการยืนยันล็อค / ปลดล็อค</div>
+                    <div class="d-flex mb-3">
+                        <span class="step-number">4</span>
+                        <div><strong>ยืนยันล็อคทีเดียว:</strong> เมื่อกรอกตัวเลขครบถ้วนและตรวจทานความถูกต้องเรียบร้อยแล้ว ให้กดปุ่ม <span class="badge bg-outline-danger text-danger border border-danger"><i class="fas fa-lock"></i> ยืนยันล็อคเดือนนี้</span></div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <span class="step-number">5</span>
+                        <div>กดยืนยันในกล่องข้อความเตือน ข้อมูลประจำเดือนนั้นจะเปลี่ยนสถานะเป็น <span class="badge bg-secondary"><i class="fas fa-lock"></i> ล็อคแล้ว</span> ทันที ช่องจะกลายเป็นสีเทาและไม่อนุญาตให้แก้ไขอีกต่อไป</div>
+                    </div>
+                    <div class="d-flex">
+                        <span class="step-number">6</span>
+                        <div><strong>การปลดล็อค:</strong> หากมีกรณีจำเป็นต้องแก้ไขย้อนหลัง ให้ผู้มีสิทธิ์ระดับ Admin หรือ Sale Sup กดปุ่ม <span class="badge bg-outline-success text-success border border-success"><i class="fas fa-lock-open"></i> ปลดล็อคเดือนนี้</span> เพื่อเปิดให้กลับมาแก้ไขได้ใหม่</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. ผลการทดสอบ -->
+        <div class="section-title">
+            <i class="fas fa-clipboard-check text-primary"></i> 5. สรุปผลการทดสอบระบบ (Test Results)
+        </div>
+        <div class="callout-info">
+            <ul class="mb-0">
+                <li><i class="fas fa-check text-success me-2"></i> <strong>ทดสอบการบันทึกโดยไม่ล็อค:</strong> จำลองการส่งคำสั่ง Save ค่า <code>target_qty_month</code> และ <code>forecast_qty_month_1</code> ผลคือฐานข้อมูลอัปเดตตัวเลขถูกต้อง 100% และสถานะ <code>is_locked</code> ยังคงเป็น <code>0</code> (ไม่ล็อค)</li>
+                <li><i class="fas fa-check text-success me-2"></i> <strong>ทดสอบการบันทึกซ้ำ:</strong> สามารถแก้ไขตัวเลขและกดบันทึกต่อได้ทันทีโดยไม่ถูกบล็อก</li>
+                <li><i class="fas fa-check text-success me-2"></i> <strong>ทดสอบการยืนยันล็อคทีเดียว:</strong> สั่ง Lock ผ่าน API ผลคือ <code>is_locked</code> ถูกปรับเป็น <code>1</code> พร้อมระบุ <code>locked_at</code> และ <code>locked_by</code> ครบถ้วน</li>
+                <li><i class="fas fa-check text-success me-2"></i> <strong>ทดสอบ Backend Guard:</strong> เมื่อแถวมีสถานะ <code>is_locked = 1</code> หากพยายามบันทึกข้อมูลโดยไม่ใช่สิทธิ์ Admin ระบบจะปฏิเสธการแก้ไขทันที</li>
+                <li><i class="fas fa-check text-success me-2"></i> <strong>ทดสอบปุ่มปลดล็อค:</strong> Admin สั่ง Unlock ระบบรีเซ็ตสถานะ <code>is_locked = 0</code> และเปิดช่องให้คีย์แก้ไขได้ตามปกติ</li>
+                <li><i class="fas fa-check text-success me-2"></i> <strong>PHP Syntax Lint:</strong> ตรวจสอบไฟล์ PHP ทั้ง 8 ไฟล์ผ่านคำสั่ง <code>php -l</code> ผลผ่าน 100% ไม่มีข้อผิดพลาด</li>
+            </ul>
+        </div>
+
+        <!-- 6. ระบบใหม่: แผนก Volume Tires (template_v_tires.xlsx) -->
+        <div class="section-title">
+            <i class="fas fa-boxes text-warning"></i> 6. ระบบใหม่สำหรับแผนก Volume Tires (ตามไฟล์ template_v_tires.xlsx)
+        </div>
+        <div class="callout-info border-warning bg-light">
+            <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-warning text-dark me-2">งานคนละแผนก</span>
+                <h5 class="mb-0 fw-bold text-dark">แยกหน้าจอและฐานข้อมูลอิสระสำหรับ Volume Tires</h5>
+            </div>
+            <p class="mb-2">เนื่องจากไฟล์ <code>template_v_tires.xlsx</code> เป็นของแผนก <strong>Volume Tires</strong> ซึ่งมีรูปแบบคอลัมน์ 18 คอลัมน์ (A ถึง R) และมีตัวชี้วัดเรื่อง Volume (ลบ.ม.) โดยเฉพาะ ระบบจึงถูกสร้างแยกเป็นอิสระ เพื่อไม่ให้ปะปนกับยางเล็กและยางใหญ่เดิม</p>
+            <div class="row g-3 mt-1">
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded border">
+                        <div class="fw-bold text-primary mb-1"><i class="fas fa-desktop me-1"></i> หน้าจอหลัก</div>
+                        <div><code>forecast_plan_display_volume_tires.php</code></div>
+                        <small class="text-muted">หน้าจอวางแผนการขายเฉพาะแผนก Volume Tires รองรับ 18 คอลัมน์และคำนวณ Volume รวม</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded border">
+                        <div class="fw-bold text-success mb-1"><i class="fas fa-database me-1"></i> ตารางฐานข้อมูล</div>
+                        <div><code>ims_tires_plan_forecast_volume_tires</code></div>
+                        <small class="text-muted">ตารางจัดเก็บข้อมูลเฉพาะ มีฟิลด์ volume, total_volume และระบบล็อครายเดือน</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded border">
+                        <div class="fw-bold text-danger mb-1"><i class="fas fa-file-excel me-1"></i> ตัวประมวลผลนำเข้า</div>
+                        <div><code>import_forecast_volume_tires_process.php</code></div>
+                        <small class="text-muted">จับคู่ชื่อลูกค้า -> รหัส AR_CODE และรายละเอียดสินค้า -> SKU_CODE, Brand, Volume อัตโนมัติ 100%</small>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3">
+                <div class="fw-bold mb-1"><i class="fas fa-check-circle text-success me-1"></i> จุดเด่นระบบ Volume Tires:</div>
+                <ul class="mb-0 ps-3">
+                    <li><strong>Smart Customer Match:</strong> ดึงรหัสลูกค้า <code>AR_CODE</code> อัตโนมัติจากชื่อลูกค้าใน Excel แม้มีวงเล็บชื่อร้าน เช่น <code>คุณจักรพงค์ ชัยถาวรกิจ (ร้าน SK ไทร์เซอร์วิส 2014)</code> &rarr; <code>SAC.0000439</code></li>
+                    <li><strong>Smart Product & Volume Match:</strong> ค้นหาและจับคู่รหัสสินค้า <code>SKU_CODE</code>, ยี่ห้อ <code>BRAND</code>, ประเภท <code>SKU_CAT</code> และ <code>VOLUME</code> จากฐานข้อมูล <code>m_volume_tires</code> และ <code>ims_product</code> อัตโนมัติ</li>
+                    <li><strong>ระบบบันทึก & ล็อคมาตรฐานเดียวกัน:</strong> บันทึกแถวได้อิสระโดยยังไม่ล็อค และกดยืนยันล็อคทั้งเดือนเมื่อพร้อม ปลดล็อคได้โดย Admin</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div>เอกสารสรุปการแก้ไขระบบ - แผนกพัฒนาระบบเทคโนโลยีสารสนเทศ (IT Department)</div>
+        <div class="text-muted mt-1">ไฟล์อ้างอิงยางเล็ก: <code>forecast_plan_display_realtime.php</code> | <code>forecast_plan_fetch_realtime.php</code> | <code>forecast_update_plan_realtime.php</code> | <code>forecast_unlock_plan_realtime.php</code></div>
+        <div class="text-muted mt-1">ไฟล์อ้างอิงยางใหญ่: <code>forecast_plan_display_realtime_big_tires.php</code> | <code>forecast_plan_fetch_realtime_big_tires.php</code> | <code>forecast_update_plan_realtime_big_tires.php</code> | <code>forecast_unlock_plan_realtime_big_tires.php</code></div>
+        <div class="text-muted mt-1">ไฟล์อ้างอิงยาง Volume: <code>forecast_plan_display_volume_tires.php</code> | <code>forecast_plan_fetch_volume_tires.php</code> | <code>forecast_update_plan_volume_tires.php</code> | <code>forecast_unlock_plan_volume_tires.php</code> | <code>import_forecast_volume_tires_process.php</code></div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+php ..\cronjob_dbs.php

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการเพิ่มตัวเลือกซ่อน/แสดง Column ใน DataTables (forecast_plan_display_realtime.php)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Prompt', 'Sarabun', sans-serif; 
+            line-height: 1.6; 
+            color: #1e293b; 
+            background-color: #f1f5f9;
+            padding: 30px 15px;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            padding: 40px;
+        }
+        .header-title {
+            color: #0f172a;
+            border-bottom: 3px solid #0d6efd;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            border-left: 6px solid #0284c7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .summary-box h4 {
+            color: #0369a1;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .section-header {
+            color: #1e293b;
+            font-weight: 600;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #0d6efd;
+            padding-left: 12px;
+        }
+        .card-custom {
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .card-custom .card-header {
+            background-color: #f8fafc;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.88rem;
+        }
+        code {
+            color: #0284c7;
+            background-color: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        pre code {
+            color: inherit;
+            background-color: transparent;
+            padding: 0;
+        }
+        .table-ref {
+            font-size: 0.88rem;
+        }
+        .table-ref th {
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+        .badge-group {
+            font-size: 0.78rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background-color: #0d6efd;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .demo-preview {
+            background-color: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <h2 class="header-title">
+        <i class="fas fa-columns text-primary me-2"></i> 
+        คำแนะนำการเพิ่มปุ่ม Checkbox / ตัวเลือกสำหรับแสดงและซ่อน Column ใน DataTables
+    </h2>
+    <p class="text-muted">สำหรับหน้าจอ <code>forecast_plan_display_realtime.php</code></p>
+
+    <!-- Summary Box -->
+    <div class="summary-box">
+        <h4><i class="fas fa-check-circle me-2"></i> ระบบจำการตั้งค่าคอลัมน์แบบ Hybrid (LocalStorage + DB MySQL)</h4>
+        <p class="mb-0">
+            ระบบทำงานร่วมกันอย่างสมบูรณ์แบบ 2 ระดับ: โหลดจาก <strong>LocalStorage</strong> ทันทีเพื่อให้แสดงผลรวดเร็วแบบ 0ms latency และซิงก์ข้อมูลกับ <strong>Database MySQL (ตาราง <code>ims_user_column_config</code>)</strong> ในเบื้องหลัง เพื่อให้ผู้ใช้แต่ละท่านเมื่อไปเข้าใช้งานที่เครื่องอื่น (มือถือ, แท็บเล็ต, PC เครื่องอื่น) ก็ยังได้การตั้งค่าคอลัมน์เดิมเสมอ
+        </p>
+    </div>
+
+    <!-- Overview Methods -->
+    <h3 class="section-header">2 แนวทางการ 구현 (Implementation Methods)</h3>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card card-custom h-100">
+                <div class="card-header text-primary">
+                    <i class="fas fa-toggle-on me-2"></i> แนวทางที่ 1: Custom UI Checkbox Modal (แนะนำที่สุด ⭐⭐⭐⭐⭐)
+                </div>
+                <div class="card-body">
+                    <p>สร้างปุ่ม Modal รวมรายการ Checkbox ของแต่ละ Column สามารถแบ่งกลุ่มคอลัมน์ให้เลือกปิด/เปิดได้ง่าย เช่น กลุ่มข้อมูลสินค้า, กลุ่มยอดขายย้อนหลัง, กลุ่มเป้าหมาย/แผนงาน, กลุ่มพื้นที่</p>
+                    <ul>
+                        <li><strong>ข้อดี:</strong> สวยงาม ใช้งานง่าย จัดหมวดหมู่คอลัมน์ได้ดี</li>
+                        <li><strong>ฟีเจอร์พิเศษ:</strong> บันทึกสถานะการเปิด/ปิดลง <code>localStorage</code> ทำให้เมื่อรีเฟรชหน้าเว็บ ค่าที่เคยซ่อน/แสดงยังคงอยู่เหมือนเดิม</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card card-custom h-100">
+                <div class="card-header text-success">
+                    <i class="fas fa-list-ul me-2"></i> แนวทางที่ 2: DataTables ColVis Button (Built-in)
+                </div>
+                <div class="card-body">
+                    <p>ใช้งาน DataTables Buttons Extension (colvis) ซึ่งเป็นปลั๊กอินมาตรฐานของ DataTables เพียงเรียกใช้ CSS/JS ของ Buttons และตั้งค่าใน DataTables Options</p>
+                    <ul>
+                        <li><strong>ข้อดี:</strong> โค้ดน้อย ตั้งค่าง่ายมาก รวดเร็ว</li>
+                        <li><strong>ข้อจำกัด:</strong> แสดงเป็นเมนูดรอปดาวน์รายการยาวๆ ไม่สามารถแบ่งกลุ่มหมวดหมู่ย่อยได้สวยงามเท่า Modal Custom</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Method 1 Detailed Setup -->
+    <h3 class="section-header"><span class="step-number">1</span>วิธีติดตั้งแบบที่ 1: Custom Checkbox Modal + LocalStorage (แนะนำ)</h3>
+    <p>เหมาะที่สุดสำหรับหน้า <code>forecast_plan_display_realtime.php</code> เพราะมีคอลัมน์จำนวนมากถึง 24 คอลัมน์</p>
+
+    <h5 class="fw-bold mt-3">ขั้นตอนที่ 1.1: เพิ่มปุ่มเปิด Modal ในส่วน Card Header</h5>
+    <p>ค้นหาจุดแสดงปุ่มเครื่องมือในไฟล์ <code>forecast_plan_display_realtime.php</code> (บริเวณบรรทัด 107-136) แล้วเพิ่มปุ่มนี้เข้าไป:</p>
+<pre><code>&lt;!-- ปุ่มเปิด Modal ตั้งค่าการซ่อน/แสดง Column --&gt;
+&lt;button type="button" class="btn btn-outline-dark btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#columnToggleModal"&gt;
+    &lt;i class="fas fa-sliders-h me-1"&gt;&lt;/i&gt; ตั้งค่าแสดง/ซ่อน คอลัมน์
+&lt;/button&gt;</code></pre>
+
+    <h5 class="fw-bold mt-4">ขั้นตอนที่ 1.2: วาง HTML Modal ของ Checkbox ซ่อน/แสดง คอลัมน์</h5>
+    <p>นำโค้ด HTML Modal ด้านล่างนี้ไปวางไว้ที่ด้านล่างสุดของไฟล์ (ก่อนปิด <code>&lt;/body&gt;</code>):</p>
+<pre><code>&lt;!-- Modal สำหรับ Checkbox ซ่อน/แสดง Column --&gt;
+&lt;div class="modal fade" id="columnToggleModal" tabindex="-1" aria-labelledby="columnToggleModalLabel" aria-hidden="true"&gt;
+    &lt;div class="modal-dialog modal-lg modal-dialog-scrollable"&gt;
+        &lt;div class="modal-content"&gt;
+            &lt;div class="modal-header bg-dark text-white"&gt;
+                &lt;h5 class="modal-title" id="columnToggleModalLabel"&gt;
+                    &lt;i class="fas fa-columns me-2"&gt;&lt;/i&gt; เลือกแสดง / ซ่อน คอลัมน์ตาราง
+                &lt;/h5&gt;
+                &lt;button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"&gt;&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class="modal-body"&gt;
+                &lt;div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom"&gt;
+                    &lt;span class="text-muted small"&gt;ติ๊กเลือกคอลัมน์ที่ต้องการให้แสดงในตาราง&lt;/span&gt;
+                    &lt;div&gt;
+                        &lt;button type="button" class="btn btn-sm btn-outline-primary me-1" id="btnSelectAllCols"&gt;เลือกทั้งหมด&lt;/button&gt;
+                        &lt;button type="button" class="btn btn-sm btn-outline-secondary me-1" id="btnResetCols"&gt;ค่าเริ่มต้น&lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;form id="colToggleForm"&gt;
+                    &lt;!-- กลุ่มที่ 1: ข้อมูลลูกค้าและสินค้า --&gt;
+                    &lt;h6 class="fw-bold text-primary border-bottom pb-1 mb-2"&gt;&lt;i class="fas fa-info-circle me-1"&gt;&lt;/i&gt; 1. ข้อมูลร้านค้าและสินค้า&lt;/h6&gt;
+                    &lt;div class="row g-2 mb-3"&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="0" id="col_0" checked&gt;
+                                &lt;label class="form-check-label" for="col_0"&gt;รหัสร้านค้า&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="1" id="col_1" checked disabled&gt;
+                                &lt;label class="form-check-label" for="col_1"&gt;ชื่อร้านค้า (ตรึง)&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="2" id="col_2" checked&gt;
+                                &lt;label class="form-check-label" for="col_2"&gt;ยี่ห้อ&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="3" id="col_3" checked&gt;
+                                &lt;label class="form-check-label" for="col_3"&gt;รหัสสินค้า (SKU)&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- กลุ่มที่ 2: สถิติและยอดขายย้อนหลัง --&gt;
+                    &lt;h6 class="fw-bold text-success border-bottom pb-1 mb-2"&gt;&lt;i class="fas fa-chart-line me-1"&gt;&lt;/i&gt; 2. สถิติย้อนหลัง&lt;/h6&gt;
+                    &lt;div class="row g-2 mb-3"&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="4" id="col_4" checked&gt;
+                                &lt;label class="form-check-label" for="col_4"&gt;เฉลี่ย 12 เดือน&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="5" id="col_5" checked&gt;
+                                &lt;label class="form-check-label" for="col_5"&gt;MAX (สูงสุด)&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="6" id="col_6" checked&gt;
+                                &lt;label class="form-check-label" for="col_6"&gt;MIN (ต่ำสุด)&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="7" id="col_7" checked&gt;
+                                &lt;label class="form-check-label" for="col_7"&gt;ยอดขาย M-3&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="8" id="col_8" checked&gt;
+                                &lt;label class="form-check-label" for="col_8"&gt;ยอดขาย M-2&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="9" id="col_9" checked&gt;
+                                &lt;label class="form-check-label" for="col_9"&gt;ยอดขาย M-1&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="10" id="col_10" checked&gt;
+                                &lt;label class="form-check-label" for="col_10"&gt;เฉลี่ย 3 เดือน&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- กลุ่มที่ 3: แพลนพยากรณ์และเป้าหมาย --&gt;
+                    &lt;h6 class="fw-bold text-warning text-dark border-bottom pb-1 mb-2"&gt;&lt;i class="fas fa-bullseye me-1"&gt;&lt;/i&gt; 3. เป้ารายเดือน &amp; แพลนยาง (Forecast)&lt;/h6&gt;
+                    &lt;div class="row g-2 mb-3"&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="11" id="col_11" checked&gt;
+                                &lt;label class="form-check-label" for="col_11"&gt;เป้ารายเดือน&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="12" id="col_12" checked&gt;
+                                &lt;label class="form-check-label" for="col_12"&gt;แพลนยาง&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="13" id="col_13" checked&gt;
+                                &lt;label class="form-check-label" for="col_13"&gt;เทียบ แพลน - เฉลี่ย&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="14" id="col_14" checked&gt;
+                                &lt;label class="form-check-label" for="col_14"&gt;เทียบ แพลน - เฉลี่ย %&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- กลุ่มที่ 4: ยอดขายจริงและการเปรียบเทียบ --&gt;
+                    &lt;h6 class="fw-bold text-danger border-bottom pb-1 mb-2"&gt;&lt;i class="fas fa-shopping-cart me-1"&gt;&lt;/i&gt; 4. ยอดขายจริง (Actual Sales)&lt;/h6&gt;
+                    &lt;div class="row g-2 mb-3"&gt;
+                        &lt;div class="col-md-4 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="15" id="col_15" checked&gt;
+                                &lt;label class="form-check-label" for="col_15"&gt;ยอดขายจริง&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-4 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="16" id="col_16" checked&gt;
+                                &lt;label class="form-check-label" for="col_16"&gt;ผลต่าง ขาด/เกิน&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-4 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="17" id="col_17" checked&gt;
+                                &lt;label class="form-check-label" for="col_17"&gt;หมายเหตุ&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- กลุ่มที่ 5: พนักงานและพื้นที่ --&gt;
+                    &lt;h6 class="fw-bold text-secondary border-bottom pb-1 mb-2"&gt;&lt;i class="fas fa-user-tag me-1"&gt;&lt;/i&gt; 5. ข้อมูลพนักงานและพื้นที่&lt;/h6&gt;
+                    &lt;div class="row g-2"&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="18" id="col_18" checked&gt;
+                                &lt;label class="form-check-label" for="col_18"&gt;พนักงานขาย&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="19" id="col_19" checked&gt;
+                                &lt;label class="form-check-label" for="col_19"&gt;คนเทค&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="20" id="col_20" checked&gt;
+                                &lt;label class="form-check-label" for="col_20"&gt;อำเภอ&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="21" id="col_21" checked&gt;
+                                &lt;label class="form-check-label" for="col_21"&gt;จังหวัด&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="22" id="col_22" checked&gt;
+                                &lt;label class="form-check-label" for="col_22"&gt;วันที่นำเข้า&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-3 col-6"&gt;
+                            &lt;div class="form-check form-switch"&gt;
+                                &lt;input class="form-check-input col-toggle-chk" type="checkbox" data-column="23" id="col_23" checked disabled&gt;
+                                &lt;label class="form-check-label" for="col_23"&gt;จัดการ (บังคับ)&lt;/label&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+            &lt;div class="modal-footer"&gt;
+                &lt;button type="button" class="btn btn-secondary" data-bs-dismiss="modal"&gt;ปิด&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+    <h5 class="fw-bold mt-4">ขั้นตอนที่ 1.3: เพิ่ม JavaScript ในส่วนการทำงานของ DataTables</h5>
+    <p>ในไฟล์ <code>forecast_plan_display_realtime.php</code> บริเวณด้านล่างต่อจาก <code>const table = $('#planTable').DataTable({...});</code> ให้ใส่สคริปต์นี้เข้าไป:</p>
+
+<pre><code>// ========================================================
+// ระบบจัดการ ซ่อน / แสดง Column DataTables + LocalStorage (แยกราย User)
+// ========================================================
+const currentUser = <?php echo json_encode($_SESSION['alogin'] ?? 'default'); ?>;
+const STORAGE_KEY = 'forecast_realtime_columns_visible_' + currentUser;
+
+// ฟังก์ชันโหลดค่าสถานะที่บันทึกไว้ใน LocalStorage
+function loadColumnVisibility() {
+    const savedState = localStorage.getItem(STORAGE_KEY);
+    if (!savedState) return;
+
+    try {
+        const visibleCols = JSON.parse(savedState);
+        // วนลูปตั้งค่า Column ตามค่าที่เคยบันทึกไว้
+        $.each(visibleCols, function(colIdx, isVisible) {
+            const column = table.column(colIdx);
+            if (column.length &amp;&amp; colIdx != 23 &amp;&amp; colIdx != 1) { // ยกเว้นคอลัมน์สำคัญที่ตรึงไว้
+                column.visible(isVisible, false);
+                $(`#col_${colIdx}`).prop('checked', isVisible);
+            }
+        });
+        table.columns.adjust().draw(false);
+    } catch (e) {
+        console.error("Error loading column visibility settings", e);
+    }
+}
+
+// เมื่อมีการกดเปลี่ยนแปลง Checkbox
+$('.col-toggle-chk').on('change', function () {
+    const colIdx = $(this).data('column');
+    const isChecked = $(this).is(':checked');
+
+    // สั่ง DataTables ให้แสดง/ซ่อนคอลัมน์นั้นๆ
+    const column = table.column(colIdx);
+    column.visible(isChecked);
+
+    // บันทึกสถานะใหม่ลง LocalStorage
+    saveColumnVisibility();
+});
+
+// ฟังก์ชันบันทึกค่าสถานะ Checkbox ทั้งหมดลง LocalStorage
+function saveColumnVisibility() {
+    const colState = {};
+    $('.col-toggle-chk').each(function() {
+        const colIdx = $(this).data('column');
+        colState[colIdx] = $(this).is(':checked');
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(colState));
+}
+
+// ปุ่มเลือกทั้งหมด
+$('#btnSelectAllCols').on('click', function() {
+    $('.col-toggle-chk').not(':disabled').prop('checked', true).trigger('change');
+});
+
+// ปุ่มคืนค่าเริ่มต้น (แสดงทุกคอลัมน์)
+$('#btnResetCols').on('click', function() {
+    localStorage.removeItem(STORAGE_KEY);
+    $('.col-toggle-chk').not(':disabled').prop('checked', true);
+    for (let i = 0; i &lt; 24; i++) {
+        table.column(i).visible(true, false);
+    }
+    table.columns.adjust().draw(false);
+});
+
+// เรียกใช้งานฟังก์ชันโหลดตั้งค่าเมื่อ DataTables สร้างเสร็จแล้ว
+loadColumnVisibility();
+</code></pre>
+
+    <hr class="my-4">
+
+    <!-- Method 2 Detailed Setup -->
+    <h3 class="section-header"><span class="step-number">2</span>วิธีติดตั้งแบบที่ 2: DataTables ColVis Button (Standard Built-in)</h3>
+    <p>หากต้องการแบบสำเร็จรูปที่ไม่ต้องเขียน HTML Modal เอง สามารถใช้ DataTables Buttons ได้ดังนี้:</p>
+
+    <h5 class="fw-bold mt-3">ขั้นตอนที่ 2.1: เพิ่ม CDN ของ DataTables Buttons</h5>
+    <p>เพิ่มบรรทัด CDN เหล่านี้ใน <code>&lt;head&gt;</code> และท้ายไฟล์ก่อนปิด <code>&lt;/body&gt;</code>:</p>
+
+<pre><code>&lt;!-- ในส่วน &lt;head&gt; --&gt;
+&lt;link href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css" rel="stylesheet"&gt;
+
+&lt;!-- ในส่วนสคริปต์ก่อนปิด &lt;/body&gt; --&gt;
+&lt;script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"&gt;&lt;/script&gt;
+</code></pre>
+
+    <h5 class="fw-bold mt-4">ขั้นตอนที่ 2.2: ปรับออปชันของ DataTables ใน JavaScript</h5>
+    <p>แก้ไขการประกาศ <code>const table = $('#planTable').DataTable({...})</code> โดยเพิ่ม <code>dom</code> และ <code>buttons</code>:</p>
+
+<pre><code>const table = $('#planTable').DataTable({
+    "dom": "&lt;'row mb-2'&lt;'col-md-6'l&gt;&lt;'col-md-6 text-end'B&gt;&gt;" +
+           "&lt;'row'&lt;'col-sm-12'tr&gt;&gt;" +
+           "&lt;'row mt-2'&lt;'col-md-5'i&gt;&lt;'col-md-7'p&gt;&gt;",
+    "buttons": [
+        {
+            extend: 'colvis',
+            text: '&lt;i class="fas fa-columns me-1"&gt;&lt;/i&gt; ซ่อน/แสดง คอลัมน์',
+            className: 'btn btn-outline-dark btn-sm fw-bold',
+            columns: ':not(:eq(1)):not(:last-child)' // ยกเว้นคอลัมน์ชื่อร้านค้าและปุ่มจัดการ
+        }
+    ],
+    "processing": true,
+    "serverSide": true,
+    // ... ค่าออปชันอื่นๆ ตามเดิม ...
+});
+</code></pre>
+
+    <hr class="my-4">
+
+    <!-- Column Index Reference Table -->
+    <h3 class="section-header"><i class="fas fa-list-ol me-2 text-primary"></i> ตารางอ้างอิงลำดับ Index ของ คอลัมน์ (Column Index Reference)</h3>
+    <p>รายละเอียด Index ของคอลัมน์ทั้ง 24 คอลัมน์ ใน <code>forecast_plan_display_realtime.php</code>:</p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover table-ref">
+            <thead>
+                <tr>
+                    <th style="width: 80px;" class="text-center">Index</th>
+                    <th>ชื่อ Data Key</th>
+                    <th>หัวข้อคอลัมน์ (Header Title)</th>
+                    <th>หมวดหมู่ (Category)</th>
+                    <th style="width: 130px;" class="text-center">การซ่อน/แสดง</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center font-monospace">0</td>
+                    <td><code>ar_code</code></td>
+                    <td>รหัสร้านค้า</td>
+                    <td><span class="badge bg-primary badge-group">ร้านค้า/สินค้า</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">1</td>
+                    <td><code>ar_name</code></td>
+                    <td>ชื่อร้านค้า</td>
+                    <td><span class="badge bg-primary badge-group">ร้านค้า/สินค้า</span></td>
+                    <td class="text-center text-secondary">ตรึงไว้ (แนะนำให้แสดง)</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">2</td>
+                    <td><code>brand_code</code></td>
+                    <td>ยี่ห้อ</td>
+                    <td><span class="badge bg-primary badge-group">ร้านค้า/สินค้า</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">3</td>
+                    <td><code>sku_code</code></td>
+                    <td>รหัสสินค้า (SKU)</td>
+                    <td><span class="badge bg-primary badge-group">ร้านค้า/สินค้า</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">4</td>
+                    <td><code>avg_per_month_year</code></td>
+                    <td>เฉลี่ย 12ด.</td>
+                    <td><span class="badge bg-success badge-group">สถิติย้อนหลัง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">5</td>
+                    <td><code>max_qty_year</code></td>
+                    <td>MAX (ปีก่อนหน้า)</td>
+                    <td><span class="badge bg-success badge-group">สถิติย้อนหลัง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">6</td>
+                    <td><code>min_qty_year</code></td>
+                    <td>MIN (ปีก่อนหน้า)</td>
+                    <td><span class="badge bg-success badge-group">สถิติย้อนหลัง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">7</td>
+                    <td><code>sales_month_3</code></td>
+                    <td>ยอดขาย M-3</td>
+                    <td><span class="badge bg-success badge-group">สถิติย้อนหลัง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">8</td>
+                    <td><code>sales_month_2</code></td>
+                    <td>ยอดขาย M-2</td>
+                    <td><span class="badge bg-success badge-group">สถิติย้อนหลัง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">9</td>
+                    <td><code>sales_month_1</code></td>
+                    <td>ยอดขาย M-1</td>
+                    <td><span class="badge bg-success badge-group">สถิติย้อนหลัง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">10</td>
+                    <td><code>avg_3_month</code></td>
+                    <td>เฉลี่ย 3ด.</td>
+                    <td><span class="badge bg-success badge-group">สถิติย้อนหลัง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">11</td>
+                    <td><code>target_qty_month</code></td>
+                    <td>เป้ารายเดือน</td>
+                    <td><span class="badge bg-warning text-dark badge-group">แผนพยากรณ์</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">12</td>
+                    <td><code>forecast_qty_month_1</code></td>
+                    <td>แพลนยาง</td>
+                    <td><span class="badge bg-warning text-dark badge-group">แผนพยากรณ์</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">13</td>
+                    <td><code>compare_forecast_month_1</code></td>
+                    <td>เทียบ แพลนยาง ลบ ค่าเฉลี่ย</td>
+                    <td><span class="badge bg-warning text-dark badge-group">แผนพยากรณ์</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">14</td>
+                    <td><code>compare_sales_percent</code></td>
+                    <td>เทียบ แพลนยาง ลบ ค่าเฉลี่ย %</td>
+                    <td><span class="badge bg-warning text-dark badge-group">แผนพยากรณ์</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">15</td>
+                    <td><code>sales_actual_month</code></td>
+                    <td>ยอดขายจริง</td>
+                    <td><span class="badge bg-danger badge-group">ยอดขายจริง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">16</td>
+                    <td><code>sales_diff_actual</code></td>
+                    <td>ขาด/เกิน</td>
+                    <td><span class="badge bg-danger badge-group">ยอดขายจริง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">17</td>
+                    <td><code>remark</code></td>
+                    <td>หมายเหตุ</td>
+                    <td><span class="badge bg-danger badge-group">ยอดขายจริง</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">18</td>
+                    <td><code>sale_name</code></td>
+                    <td>พนักงานขาย</td>
+                    <td><span class="badge bg-secondary badge-group">พนักงาน/พื้นที่</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">19</td>
+                    <td><code>take_name</code></td>
+                    <td>คนเทค</td>
+                    <td><span class="badge bg-secondary badge-group">พนักงาน/พื้นที่</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">20</td>
+                    <td><code>amphur</code></td>
+                    <td>อำเภอ</td>
+                    <td><span class="badge bg-secondary badge-group">พนักงาน/พื้นที่</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">21</td>
+                    <td><code>province</code></td>
+                    <td>จังหวัด</td>
+                    <td><span class="badge bg-secondary badge-group">พนักงาน/พื้นที่</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">22</td>
+                    <td><code>import_date</code></td>
+                    <td>วันที่นำเข้า</td>
+                    <td><span class="badge bg-secondary badge-group">พนักงาน/พื้นที่</span></td>
+                    <td class="text-center text-success">ซ่อน/แสดง ได้</td>
+                </tr>
+                <tr>
+                    <td class="text-center font-monospace">23</td>
+                    <td><code>actions</code></td>
+                    <td>จัดการ</td>
+                    <td><span class="badge bg-dark badge-group">ระบบ</span></td>
+                    <td class="text-center text-danger">บังคับแสดง</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Additional Recommendations -->
+    <div class="alert alert-info mt-4">
+        <h5 class="alert-heading"><i class="fas fa-lightbulb me-2"></i> คำแนะนำเพิ่มเติมสำหรับการใช้งาน FixedColumns</h5>
+        <p class="mb-0">
+            เนื่องจากตาราง <code>#planTable</code> มีการใช้งาน <code>fixedColumns: { left: 4 }</code> (ตรึง 4 คอลัมน์แรก) หากผู้ใช้งานทำการซ่อนคอลัมน์ใน 4 คอลัมน์แรก ควรเรียกฟังก์ชัน <code>table.columns.adjust().draw(false);</code> เพื่อให้ DataTables คำนวณความกว้างและตำแหน่งการตรึงคอลัมน์ใหม่ได้อย่างถูกต้องครับ
+        </p>
+    </div>
+
+    <div class="text-center mt-5 text-muted small">
+        <hr>
+        <p>© 2026 Tires Plan Forecast Management System - Documentation for DataTables Column Visibility Controls</p>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

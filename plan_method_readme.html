@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>รายละเอียดการพัฒนาระบบ Tires Plan Forecast (Interactive & Live Data)</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1100px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        .container { background-color: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 3px solid #198754; padding-bottom: 10px; text-align: center; }
+        h2 { color: #198754; margin-top: 30px; border-left: 6px solid #198754; padding-left: 15px; background: #e8f5e9; }
+        .section { margin-bottom: 25px; }
+        .info-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 15px 0; }
+        .formula-box { background: #fff3e0; border: 1px solid #ff9800; padding: 15px; border-radius: 5px; font-family: 'Courier New', monospace; font-weight: bold; color: #e65100; }
+        .file-list { list-style: none; padding-left: 0; }
+        .file-list li { background: #e3f2fd; margin: 5px 0; padding: 10px; border-radius: 5px; border-left: 4px solid #2196f3; }
+        .highlight { color: #d32f2f; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #198754; color: white; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; color: white; }
+        .badge-php { background-color: #4f5b93; }
+        .badge-js { background-color: #f7df1e; color: black; }
+        .badge-sql { background-color: #f29111; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>สรุปรายละเอียดการพัฒนาระบบ Tires Plan Forecast รูปแบบใหม่</h1>
+
+        <div class="section">
+            <h2>1. ไฟล์ที่จัดทำขึ้นใหม่ (New System Components)</h2>
+            <ul class="file-list">
+                <li><span class="badge badge-php">PHP</span> <b>forecast_plan_display_new.php</b>: หน้าจอหลักสำหรับแสดงผลและแก้ไขข้อมูล (Interactive UI)</li>
+                <li><span class="badge badge-php">PHP</span> <b>forecast_plan_fetch_new.php</b>: ระบบดึงข้อมูลเบื้องหลังที่รวมยอดขายจริงจาก Database (Live Data Engine)</li>
+                <li><span class="badge badge-php">PHP</span> <b>forecast_update_plan_new.php</b>: ระบบบันทึกข้อมูลแบบกลุ่มลงฐานข้อมูล (Bulk Update Processor)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2. กลไกการดึงข้อมูล (Live Data Retrieval)</h2>
+            <div class="info-card">
+                <p>ระบบเปลี่ยนจากการดึงยอดขายคงที่จาก Excel มาเป็นการดึง <b>ยอดขายจริง (Live Data)</b> จากตาราง <code>ims_data_sale_sac_all</code> โดยใช้เงื่อนไขดังนี้:</p>
+                <ul>
+                    <li><span class="highlight">Anchor Point:</span> ใช้เดือน/ปี ที่ระบุตอน Import (forcast_month/year) เป็นตัวตั้งต้น</li>
+                    <li><span class="highlight">Dynamic Lookup:</span> ระบบคำนวณเดือนย้อนหลัง M-1, M-2, M-3 อัตโนมัติจาก SQL Subquery</li>
+                    <li><span class="highlight">Data Matching:</span> จับคู่ข้อมูลด้วย <code>AR_CODE</code> (ลูกค้า) และ <code>SKU_CODE</code> (สินค้า) เพื่อให้ยอดขายตรงตัว</li>
+                    <li><span class="highlight">Historical Average:</span> คำนวณค่าเฉลี่ย 12 เดือนของปีก่อนหน้า (Last Year / 12) แบบ Real-time</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. หลักการคำนวณ (Logic & Calculation)</h2>
+            <div class="info-card">
+                <p>ใช้มาตรฐานการคำนวณเดียวกับหน้า Sales Report เพื่อความแม่นยำสูงสุด:</p>
+                <table>
+                    <tr>
+                        <th>หัวข้อ</th>
+                        <th>สูตรการคำนวณ</th>
+                        <th>หมายเหตุ</th>
+                    </tr>
+                    <tr>
+                        <td><b>ค่าเฉลี่ย 3 เดือน</b></td>
+                        <td><div class="formula-box">(M1 + M2 + M3) / 3</div></td>
+                        <td>ใช้การปัดเศษ: เศษ >= 0.5 ปัดขึ้น, < 0.5 ปัดลง</td>
+                    </tr>
+                    <tr>
+                        <td><b>ผลต่างคาดการณ์</b></td>
+                        <td><div class="formula-box">Forecast - Avg3M</div></td>
+                        <td>คำนวณสดทันทีผ่าน JavaScript เมื่อมีการพิมพ์</td>
+                    </tr>
+                    <tr>
+                        <td><b>% เทียบยอดขาย</b></td>
+                        <td><div class="formula-box">(ผลต่าง / Avg3M) * 100</div></td>
+                        <td>แสดงผลเป็นตัวเลขจำนวนเต็มตามด้วยเครื่องหมาย %</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. ระบบ Interactive & Bulk Save</h2>
+            <div class="info-card">
+                <ul>
+                    <li><span class="badge badge-js">JS</span> <b>Real-time Logic:</b> คอลัมน์ "เทียบคาดการณ์" และ "% เทียบยอดขาย" จะอัปเดตทันทีที่ผู้ใช้แก้ไขตัวเลขในช่อง "คาดการณ์"</li>
+                    <li><span class="badge badge-php">PHP</span> <b>Bulk Saving:</b> ระบบบันทึกข้อมูลแบบกลุ่ม (Batch Processing) ช่วยให้สามารถแก้ไขข้อมูลหลายบรรทัดพร้อมกันและบันทึกด้วยการกดปุ่มเพียงครั้งเดียว</li>
+                    <li><span class="badge badge-sql">SQL</span> <b>Transaction Mode:</b> การบันทึกใช้ระบบ Transaction เพื่อป้องกันข้อมูลผิดพลาดหากเกิดปัญหาขณะ Update</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5. ความปลอดภัยและการกรองข้อมูล (Role-Based Access)</h2>
+            <div class="info-card">
+                <p>ระบบยังคงรักษามาตรฐานความปลอดภัยตามสิทธิ์การใช้งาน (Account Type):</p>
+                <ul>
+                    <li>สิทธิ์ <b>sale_user</b>: จะเห็นและแก้ไขได้เฉพาะข้อมูลที่ตรงกับชื่อเซลส์ของตนเอง</li>
+                    <li>สิทธิ์ <b>take</b>: จะเห็นและแก้ไขได้เฉพาะข้อมูลที่ตรงกับชื่อคนเทคของตนเอง</li>
+                    <li>สิทธิ์ <b>admin / อื่นๆ</b>: สามารถดูและจัดการข้อมูลได้ทั้งหมดตามเงื่อนไขที่กำหนด</li>
+                </ul>
+            </div>
+        </div>
+
+        <p style="text-align: center; color: #7f8c8d; margin-top: 50px; font-size: 0.9em;">
+            จัดทำโดย Gemini CLI | ระบบ Tires Plan Forecast v2.0
+        </p>
+    </div>
+</body>
+</html>

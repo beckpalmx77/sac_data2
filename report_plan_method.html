@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>แนวทางการจัดทำรายงานสรุปคาดการณ์และเป้าหมายรายปี (Yearly Forecast Summary)</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1100px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #e67e22; padding-bottom: 10px; }
+        h2 { color: #d35400; margin-top: 30px; border-left: 5px solid #e67e22; padding-left: 10px; }
+        .concept-card { background: #fef5e7; border: 1px solid #fad7a0; border-radius: 8px; padding: 20px; margin: 15px 0; }
+        .method-box { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .highlight { color: #c0392b; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #bdc3c7; padding: 10px; text-align: left; }
+        th { background: #f2f4f4; }
+        .code { background: #2c3e50; color: #ecf0f1; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 0.9em; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>แนวทางการจัดทำรายงานสรุปรายปี (Yearly Summary Report)</h1>
+
+    <div class="concept-card">
+        <h2>1. แนวคิดหลัก (Core Concept)</h2>
+        <p>เนื่องจากการนำเข้าข้อมูล (Import) และการแก้ไข (Edit) ทำเป็นรายเดือน รายงานสรุปรายปีจึงมีหน้าที่ในการ <b>"รวบรวม (Aggregate)"</b> ข้อมูลจากทุกเดือนในปีนั้นๆ มาแสดงผลในรูปแบบที่เปรียบเทียบให้เห็นภาพรวมของทั้งปี เพื่อใช้ในการประเมินศักยภาพของพนักงานขายและแนวโน้มของลูกค้า</p>
+    </div>
+
+    <h2>2. รูปแบบของรายงาน (Report Formats)</h2>
+    
+    <div class="method-box">
+        <h3>แบบที่ A: Yearly Dashboard (Pivot Table)</h3>
+        <p>แสดงรายชื่อพนักงานขาย/ลูกค้า และมีคอลัมน์เป็นเดือน 1-12 เพื่อดู Target หรือ Forecast รวมทั้งปี</p>
+        <table>
+            <tr><th>พนักงานขาย / ลูกค้า</th><th>ม.ค.</th><th>ก.พ.</th><th>...</th><th>ธ.ค.</th><th>รวมทั้งปี</th></tr>
+            <tr><td>Sales A</td><td>100</td><td>120</td><td>...</td><td>150</td><td><b>1,400</b></td></tr>
+        </table>
+    </div>
+
+    <div class="method-box">
+        <h3>แบบที่ B: Comparison Summary</h3>
+        <p>สรุปยอดรวมทั้งปีแยกตามหมวดหมู่ (เช่น ตามยี่ห้อ หรือ ตามทีม) โดยเปรียบเทียบ:</p>
+        <ul>
+            <li><span class="highlight">Yearly Target:</span> เป้าหมายรวมทั้งปี</li>
+            <li><span class="highlight">Yearly Forecast:</span> ยอดคาดการณ์รวมทั้งปี</li>
+            <li><span class="highlight">Achievement %:</span> อัตราส่วนความสำเร็จ (Forecast vs Target)</li>
+        </ul>
+    </div>
+
+    <h2>3. วิธีการดึงข้อมูล (Data Retrieval Logic)</h2>
+    <p>ใช้คำสั่ง SQL Group By ปี และ Month เพื่อดึงข้อมูลจาก <code>ims_tires_plan_forecast</code>:</p>
+    <div class="code">
+        SELECT <br>
+        &nbsp;&nbsp;sale_name, <br>
+        &nbsp;&nbsp;SUM(target_qty_month) as total_target, <br>
+        &nbsp;&nbsp;SUM(forecast_qty_month_1) as total_forecast, <br>
+        &nbsp;&nbsp;AVG(compare_sales_percent) as avg_achievement <br>
+        FROM ims_tires_plan_forecast <br>
+        WHERE forcast_year = '2025' <br>
+        GROUP BY sale_name
+    </div>
+
+    <h2>4. ขั้นตอนการดำเนินงาน (Implementation Steps)</h2>
+    <ol>
+        <li><b>สร้างหน้าจอ Filter:</b> ให้เลือก "ปี" ที่ต้องการดูรายงาน (Default เป็นปีปัจจุบัน)</li>
+        <li><b>ประมวลผลข้อมูล:</b> สร้างไฟล์ <code>forecast_report_yearly_fetch.php</code> เพื่อคำนวณยอดรวม</li>
+        <li><b>แสดงผล Interactive:</b> ใช้ DataTable แสดงผลพร้อมปุ่ม Toggle ระหว่าง "ดูตามยอดเป้า" หรือ "ดูตามยอดคาดการณ์"</li>
+        <li><b>ระบบส่งออก:</b> เพิ่มปุ่ม <b>"Export to Excel"</b> เพื่อนำผลสรุปทั้งปีไปใช้งานต่อในรูปแบบไฟล์สรุปนิ่ง</li>
+    </ol>
+
+    <h2>5. ประโยชน์ที่ได้รับ</h2>
+    <div class="concept-card" style="background: #eafaf1; border-color: #2ecc71;">
+        <ul>
+            <li>เห็นภาพรวมการเติบโตของแต่ละพื้นที่ (Zone/Province) ตลอดทั้งปี</li>
+            <li>ประเมินความแม่นยำในการคาดการณ์ของพนักงานขาย (Forecast Accuracy)</li>
+            <li>ใช้เป็นฐานข้อมูลในการตั้งเป้าหมาย (Quota Setting) สำหรับปีถัดไป</li>
+        </ul>
+    </div>
+
+    <footer style="text-align: center; margin-top: 50px; font-size: 0.85em; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px;">
+        &copy; 2025 BY SAC System Admin
+    </footer>
+</body>
+</html>

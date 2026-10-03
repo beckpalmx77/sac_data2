@@ -1,0 +1,41 @@
+name: Fetch Latest CA File
+
+on:
+  schedule:
+    # This will run daily at 00:00 UTC.
+    - cron:  '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  fetch-ca-file:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Fetch the latest CA file
+      run: |
+        curl -O https://curl.se/ca/cacert.pem
+        echo "Fetched the latest CA file."
+
+    - name: Check if the CA file has changed
+      id: cafile
+      run: |
+        CHANGED=$(git diff --name-only | grep cacert.pem || true)
+        if [[ ! -z "$CHANGED" ]]; then
+          echo "CHANGED=true" >> $GITHUB_ENV
+        else
+          echo "CHANGED=false" >> $GITHUB_ENV
+        fi
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v7
+      with:
+        branch: update-ca-file
+        title: "Update CA file"
+        commit-message: "Update CA file"
+        base: main

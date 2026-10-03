@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>สรุปภาพรวมแผนการปรับปรุงระบบ Tires Plan Forecast (README)</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1100px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 30px; border-left: 6px solid #3498db; padding-left: 10px; background: #f4f7f9; }
+        .overview-card { background: #fff; border: 1px solid #d6eaf8; border-radius: 8px; padding: 25px; margin: 20px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .process-flow { display: flex; align-items: center; justify-content: space-between; margin: 30px 0; padding: 20px; background: #ebf5fb; border-radius: 10px; text-align: center; }
+        .flow-step { flex: 1; padding: 10px; font-weight: bold; color: #2980b9; }
+        .flow-arrow { color: #bdc3c7; font-size: 24px; }
+        .highlight { color: #e67e22; font-weight: bold; }
+        .formula-box { background: #fdf2e9; border: 1px solid #e67e22; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        th { background: #3498db; color: white; }
+    </style>
+</head>
+<body>
+    <h1>ภาพรวมการปรับปรุงระบบ Tires Plan Forecast สู่ระบบ Interactive & Live Data</h1>
+
+    <div class="overview-card">
+        <p>เอกสารฉบับนี้สรุปแนวทางการปรับปรุงหน้าจอ <b>forecast_plan_display.php</b> โดยเริ่มต้นจากจุดเริ่มต้นที่สำคัญคือ <span class="highlight">forcast_month</span> และ <span class="highlight">forcast_year</span> ที่ผู้ใช้งานระบุไว้ตั้งแต่ขั้นตอนการนำเข้าไฟล์ Excel</p>
+    </div>
+
+    <h2>1. วงจรการทำงานของระบบใหม่ (The New Workflow)</h2>
+    <div class="process-flow">
+        <div class="flow-step">1. นำเข้า (Import)<br><small>ระบุเดือน/ปี วางแผน</small></div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">2. ดึงข้อมูล (Fetch)<br><small>ดึงยอดขายจริงจาก DB</small></div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">3. ปรับแต่ง (Edit)<br><small>แก้ไขและคำนวณสด</small></div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">4. บันทึก (Save)<br><small>บันทึกลงฐานข้อมูล</small></div>
+    </div>
+
+    <h2>2. หลักการคำนวณแบบ Dynamic (Dynamic Lookup Logic)</h2>
+    <p>ระบบจะใช้ <span class="highlight">forcast_month</span> เป็นตัวตั้งต้น (Anchor) เพื่อย้อนหาช่วงเวลาของยอดขายจริงโดยอัตโนมัติ:</p>
+    <div class="formula-box">
+        <b>ตัวอย่าง:</b> หากวางแผนเดือน <span class="highlight">6 (มิถุนายน) 2024</span> ระบบจะคำนวณอัตโนมัติดังนี้:
+        <ul>
+            <li><b>M-1 (เดือนก่อนหน้า):</b> เดือน 5 (พฤษภาคม) 2024</li>
+            <li><b>M-2:</b> เดือน 4 (เมษายน) 2024</li>
+            <li><b>M-3:</b> เดือน 3 (มีนาคม) 2024</li>
+            <li><b>Last Year:</b> ปี 2023 (หาค่าเฉลี่ย 12 เดือน)</li>
+        </ul>
+    </div>
+
+    <h2>3. รายละเอียดการเปลี่ยนแปลงทางเทคนิค</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ส่วนประกอบ</th>
+                <th>เดิม (Static)</th>
+                <th>ใหม่ (Interactive & Live)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>แหล่งข้อมูลยอดขาย</b></td>
+                <td>ดึงจากคอลัมน์ในตารางที่นำเข้าจาก Excel</td>
+                <td><span class="highlight">JOIN ยอดขายจริง</span> จากตาราง <code>ims_data_sale_sac_all</code></td>
+            </tr>
+            <tr>
+                <td><b>การแสดงผลตาราง</b></td>
+                <td>เป็นข้อความธรรมดา (Text)</td>
+                <td>เป็นกล่องข้อความ (<span class="highlight">Input Box</span>) ในคอลัมน์ที่ต้องแก้ไข</td>
+            </tr>
+            <tr>
+                <td><b>การคำนวณ % ต่างๆ</b></td>
+                <td>ค่าคงที่ (Static)</td>
+                <td>คำนวณใหม่ทุกครั้งที่พิมพ์ตัวเลขด้วย <span class="highlight">JavaScript</span></td>
+            </tr>
+            <tr>
+                <td><b>การบันทึกข้อมูล</b></td>
+                <td>ต้องแก้ใน Excel แล้ว Import ใหม่</td>
+                <td>กดปุ่ม <span class="highlight">Save</span> บันทึกลง Database ได้ทันที</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. ผลลัพธ์ที่ได้รับ (Expected Outcome)</h2>
+    <ul>
+        <li><b>ความแม่นยำ:</b> ข้อมูลยอดขายย้อนหลังจะตรงกับความเป็นจริงในระบบบัญชีเสมอ</li>
+        <li><b>ความรวดเร็ว:</b> เซลส์หรือผู้บริหารสามารถ "จำลองตัวเลข" (Simulate) เพื่อดูผลกระทบต่อเป้าหมายได้ทันทีบนหน้าเว็บ</li>
+        <li><b>ความคล่องตัว:</b> ลดขั้นตอนการทำงานกับไฟล์ Excel ที่ซับซ้อนและลดโอกาสเกิดข้อผิดพลาดจากการคัดลอกข้อมูล</li>
+    </ul>
+
+    <div style="margin-top: 40px; font-size: 0.9em; color: #7f8c8d;">
+        * สำหรับรายละเอียดเชิงลึกและขั้นตอนการเขียนโค้ด สามารถดูได้ที่ไฟล์ <code>plan_method_change_how_to.html</code>
+    </div>
+
+</body>
+</html>

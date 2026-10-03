@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานการตรวจสอบ Syntax & การแก้ไขปัญหา Deprecated: preg_replace() | export_process</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-body: #0b0f19;
+            --bg-surface: #111827;
+            --bg-card: #162032;
+            --bg-card-hover: #1e293b;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-focus: #3b82f6;
+
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+
+            --color-primary: #3b82f6;
+            --color-primary-rgb: 59, 130, 246;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --color-info: #06b6d4;
+            --color-purple: #8b5cf6;
+
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Sarabun', 'Outfit', sans-serif;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        /* Top Navbar */
+        .navbar-sticky {
+            position: sticky;
+            top: 0;
+            background: rgba(17, 24, 39, 0.88);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 32px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+        }
+
+        .nav-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-php {
+            background: rgba(139, 92, 246, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* Hero Header */
+        .hero {
+            background: linear-gradient(135deg, rgba(22, 32, 50, 0.95), rgba(17, 24, 39, 0.95));
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 36px 40px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.18), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 900px;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 22px 24px;
+            transition: all 0.25s ease;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon-wrapper {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 14px;
+        }
+
+        .stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        /* Section Layout */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 30px;
+            margin-bottom: 28px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--color-primary);
+        }
+
+        /* Callout Box */
+        .callout {
+            border-left: 4px solid;
+            padding: 16px 20px;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .callout-danger {
+            border-color: var(--color-danger);
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .callout-success {
+            border-color: var(--color-success);
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .callout-info {
+            border-color: var(--color-info);
+            background: rgba(6, 182, 212, 0.08);
+        }
+
+        .callout-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+            text-align: left;
+        }
+
+        thead th {
+            background: rgba(17, 24, 39, 0.9);
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Code Block */
+        .code-box {
+            background: #090d16;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-top: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+        }
+
+        .code-header {
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        pre {
+            padding: 16px;
+            overflow-x: auto;
+            color: #e2e8f0;
+            line-height: 1.5;
+        }
+
+        .code-del {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            display: block;
+            margin: 0 -16px;
+            padding: 2px 16px;
+        }
+
+        .code-add {
+            background: rgba(16, 185, 129, 0.15);
+            color: #86efac;
+            display: block;
+            margin: 0 -16px;
+            padding: 2px 16px;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.07);
+            font-size: 0.85em;
+            color: #93c5fd;
+        }
+
+        .tag-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .tag-ok {
+            background: rgba(16, 185, 129, 0.2);
+            color: #86efac;
+        }
+
+        /* Steps */
+        .step-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #60a5fa;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+        }
+
+        /* File List Grid */
+        .file-list-container {
+            max-height: 380px;
+            overflow-y: auto;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            background: #090d16;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+        }
+
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .file-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar-sticky">
+        <a href="#" class="navbar-brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-file-export"></i>
+            </div>
+            <span>SAC DATA &bull; Export Process Audit</span>
+        </a>
+        <div class="nav-badges">
+            <span class="badge-pill badge-php"><i class="fa-brands fa-php"></i> PHP 8.3.14 (ZTS + Xdebug 3.5.3)</span>
+            <span class="badge-pill badge-success"><i class="fa-solid fa-circle-check"></i> Syntax 100% Passed</span>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Hero Header -->
+        <header class="hero">
+            <h1><i class="fa-solid fa-shield-virus" style="color: #60a5fa;"></i> รายงานการตรวจสอบ Syntax & การแก้ไขปัญหา Deprecated: preg_replace()</h1>
+            <p>
+                รายงานสรุปผลการตรวจสอบความเข้ากันได้ของโค้ดในโฟลเดอร์ <code>export_process</code> บน PHP 8.3.14 เพื่อแก้ไขปัญหา 
+                <span class="tag tag-error">Deprecated: preg_replace(): Passing null to parameter #3</span> 
+                พร้อมการปรับปรุงความปลอดภัยของฟังก์ชันสตริงเพื่อป้องกันการเสียหายของไฟล์ Export (CSV/PDF)
+            </p>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>วันที่ตรวจสอบ: 26 กันยายน 2026</span>
+                </div>
+                <div class="hero-meta-item">
+                    <i class="fa-solid fa-folder-tree"></i>
+                    <span>ตำแหน่งโฟลเดอร์: <code>D:\website\sac_data2\export_process</code></span>
+                </div>
+                <div class="hero-meta-item">
+                    <i class="fa-solid fa-server"></i>
+                    <span>สภาพแวดล้อม: Windows 64-bit / PHP 8.3.14 / Xdebug 3.5.3</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+                    <i class="fa-solid fa-file-code"></i>
+                </div>
+                <div class="stat-num">65</div>
+                <div class="stat-label">ไฟล์ PHP ทั้งหมดใน export_process</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="stat-num">65 / 65</div>
+                <div class="stat-label">ผ่านการทดสอบ Syntax (php -l) 100%</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div class="stat-num">9</div>
+                <div class="stat-label">ไฟล์ที่ได้รับการแก้ไข/ปรับปรุงความปลอดภัย</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper" style="background: rgba(139, 92, 246, 0.15); color: #c084fc;">
+                    <i class="fa-solid fa-bug-slash"></i>
+                </div>
+                <div class="stat-num">0</div>
+                <div class="stat-label">ข้อผิดพลาดคงค้าง (Zero Errors)</div>
+            </div>
+        </div>
+
+        <!-- Root Cause Analysis -->
+        <section class="section">
+            <h2 class="section-title"><i class="fa-solid fa-magnifying-glass-chart"></i> วิเคราะห์สาเหตุของปัญหา (Root Cause Analysis)</h2>
+
+            <div class="callout callout-danger">
+                <div class="callout-title" style="color: #ef4444;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> ข้อผิดพลาดที่เกิดขึ้นเดิม
+                </div>
+                <p>
+                    <code>Deprecated: preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in D:\website\sac_data2\export_process\export_data_sale_data_readyquick.php on line 130</code>
+                </p>
+            </div>
+
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>การเปลี่ยนแปลง Type System ใน PHP 8.1 เป็นต้นไป</h4>
+                        <p>
+                            ใน PHP เวอร์ชัน 7.x เมื่อส่งค่า <code>null</code> เข้าไปยังฟังก์ชัน Built-in เช่น <code>preg_replace()</code>, <code>str_replace()</code>, <code>trim()</code>, <code>strlen()</code> ตัว PHP Engine จะทำการ Type Cast แปลง <code>null</code> ให้เป็นสตริงว่าง (<code>""</code>) โดยอัตโนมัติอย่างเงียบๆ<br>
+                            แต่ตั้งแต่ **PHP 8.1** เป็นต้นไป PHP ได้เข้มงวดเรื่อง Type System มากขึ้น โดยไม่อนุญาตให้ส่ง <code>null</code> ให้กับพารามิเตอร์ที่รับเฉพาะ <code>string|array</code> หากส่ง <code>null</code> จะสร้างคำเตือนระดับ <code>E_DEPRECATED</code> ทันที
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>ผลกระทบต่อเนื่องเมื่อเปิดใช้งาน Xdebug</h4>
+                        <p>
+                            เนื่องจากเครื่องเซิร์ฟเวอร์เปิดใช้งาน <strong>Xdebug 3.5.3</strong> เมื่อเกิดข้อความ Deprecation ทาง Xdebug จะเรนเดอร์แท็กตาราง HTML <code>&lt;table class='xdebug-error xe-deprecated'&gt;...&lt;/table&gt;</code> ออกมายัง Output Stream ทันที<br>
+                            ซึ่งในกรณีของไฟล์ Export CSV นั้น มีการตั้งค่า Header เป็น <code>Content-type: text/csv</code> จึงทำให้ตารางข้อผิดพลาด HTML แทรกเข้าไปในเนื้อหาไฟล์ CSV ส่งผลให้ไฟล์เสียหาย (Corrupted) หรือเปิดไม่ได้
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>ต้นตอของข้อมูล Null จาก Database</h4>
+                        <p>
+                            ในไฟล์สคริปต์ ดึงข้อมูล <code>$original_remark = $row['DI_REMARK'];</code> โดยเรคคอร์ดของใบสั่งขายบางรายการไม่มีหมายเหตุ หรือในฐานข้อมูลเก็บเป็น <code>NULL</code> เมื่อส่งตัวแปรนี้เข้า <code>preg_replace('/[\r\n]+/', ' ', $original_remark)</code> จึงเกิดข้อผิดพลาดดังกล่าว
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Modified Files -->
+        <section class="section">
+            <h2 class="section-title"><i class="fa-solid fa-code-compare"></i> รายการไฟล์ที่ตรวจพบและได้รับการแก้ไข</h2>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ชื่อไฟล์</th>
+                            <th>ตำแหน่งฟังก์ชัน</th>
+                            <th>สาเหตุและจุดที่มีความเสี่ยง</th>
+                            <th>สถานะการแก้ไข</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>export_data_sale_data_readyquick.php</strong><br>
+                                <span class="tag">export_process/</span>
+                            </td>
+                            <td>บรรทัดที่ 130 + Top header</td>
+                            <td>
+                                <code>preg_replace()</code> รับตัวแปร <code>$original_remark</code> ที่มีค่าเป็น <code>null</code> จาก DB รวมถึง <code>strlen()</code>, <code>str_replace()</code>, <code>strpos()</code> จากฟิลด์อื่นๆ
+                            </td>
+                            <td>
+                                <span class="badge-pill badge-success"><i class="fa-solid fa-check"></i> แก้ไขแล้ว (Null-Safe + Error Handling)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>export_data_sale_return_data_readyquick-bak.php</strong><br>
+                                <span class="tag">export_process/</span>
+                            </td>
+                            <td>บรรทัดที่ 149 + Top header</td>
+                            <td>
+                                เป็นโค้ดชุดเดียวกันที่ใช้ <code>$original_remark</code> กับ <code>preg_replace()</code> โดยตรง เสี่ยงต่อการเกิด error หากนำกลับมาใช้งาน
+                            </td>
+                            <td>
+                                <span class="badge-pill badge-success"><i class="fa-solid fa-check"></i> แก้ไขแล้ว (Null-Safe + Error Handling)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>export_data_sale_return_data_readyquick.php</strong><br>
+                                <span class="tag">export_process/</span>
+                            </td>
+                            <td>บรรทัดที่ 40-70 + Top header</td>
+                            <td>
+                                ฟิลด์ <code>str_replace()</code> และ <code>strpos()</code> อาจได้รับค่า null จากฐานข้อมูล รวมถึงเพิ่มการป้องกัน Error Leakage ลง CSV
+                            </td>
+                            <td>
+                                <span class="badge-pill badge-success"><i class="fa-solid fa-check"></i> แก้ไขแล้ว (Null-Safe + Error Handling)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>export_data_sale_data_all_daily.php</strong><br>
+                                <span class="tag">export_process/</span>
+                            </td>
+                            <td>บรรทัดที่ 42-130 + Top header</td>
+                            <td>
+                                ฟิลด์ <code>explode()</code>, <code>str_replace()</code> และ <code>strpos()</code> เสี่ยงต่อ null และเพิ่มการป้องกัน Error Leakage ลง CSV
+                            </td>
+                            <td>
+                                <span class="badge-pill badge-success"><i class="fa-solid fa-check"></i> แก้ไขแล้ว (Null-Safe + Error Handling)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>export_data_sale_data_free_daily.php</strong><br>
+                                <span class="tag">export_process/</span>
+                            </td>
+                            <td>บรรทัดที่ 40-70 + Top header</td>
+                            <td>
+                                ฟิลด์ <code>str_replace()</code> และ <code>strpos()</code> เสี่ยงต่อ null และเพิ่มการป้องกัน Error Leakage ลง CSV
+                            </td>
+                            <td>
+                                <span class="badge-pill badge-success"><i class="fa-solid fa-check"></i> แก้ไขแล้ว (Null-Safe + Error Handling)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>export_data_sale_return_daily.php</strong><br>
+                                <span class="tag">export_process/</span>
+                            </td>
+                            <td>บรรทัดที่ 40-70 + Top header</td>
+                            <td>
+                                ฟิลด์ <code>str_replace()</code> และ <code>strpos()</code> เสี่ยงต่อ null และเพิ่มการป้องกัน Error Leakage ลง CSV
+                            </td>
+                            <td>
+                                <span class="badge-pill badge-success"><i class="fa-solid fa-check"></i> แก้ไขแล้ว (Null-Safe + Error Handling)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>export_data_sale_sac_csv.php</strong><br>
+                                <span class="tag">export_process/</span>
+                            </td>
+                            <td>บรรทัดที่ 31</td>
+                            <td>
+                                ลูป <code>$sale_names_input</code> เรียก <code>trim($s_name)</code> ก่อน <code>preg_replace()</code> หากมี element เป็น null ใน array จะ Deprecated
+                            </td>
+                            <td>
+                                <span class="badge-pill badge-success"><i class="fa-solid fa-check"></i> ปรับปรุง <code>trim($s_name ?? '')</code></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>forecast_auto_process.php</strong><br>
+                                <span class="tag">export_process/</span>
+                            </td>
+                            <td>บรรทัดที่ 62</td>
+                            <td>
+                                ในฟังก์ชัน <code>array_map</code> เพื่อ normalize ชื่อพนักงานขาย มีการเรียก <code>trim($s)</code> และ <code>preg_replace()</code>
+                            </td>
+                            <td>
+                                <span class="badge-pill badge-success"><i class="fa-solid fa-check"></i> ปรับปรุง <code>trim($s ?? '')</code></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>payment_pass_cheque_data.php</strong><br>
+                                <span class="tag">export_process/</span>
+                            </td>
+                            <td>บรรทัดที่ 27</td>
+                            <td>
+                                ฟังก์ชัน <code>convertDateForSql($dateStr)</code> เรียก <code>trim($dateStr)</code> โดยตรง หากส่ง null จะเกิด Deprecation
+                            </td>
+                            <td>
+                                <span class="badge-pill badge-success"><i class="fa-solid fa-check"></i> ปรับปรุง <code>trim((string)$dateStr)</code></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Code Comparison -->
+        <section class="section">
+            <h2 class="section-title"><i class="fa-solid fa-file-lines"></i> ตัวอย่างโค้ดเปรียบเทียบ ก่อนแก้ไข vs หลังแก้ไข</h2>
+
+            <div class="code-box">
+                <div class="code-header">
+                    <span><i class="fa-solid fa-file-code"></i> export_data_sale_data_readyquick.php (และ export_data_sale_return_data_readyquick-bak.php)</span>
+                    <span>PHP 8.3 Defensive Fix</span>
+                </div>
+                <pre><code>// --- โค้ดเดิม (ก่อนแก้ไข - เกิด Deprecated Warning เมื่อมีค่า null) ---
+<span class="code-del">- $original_remark = $row['DI_REMARK'];</span>
+<span class="code-del">- $original_sb_name = $row['SB_NAME'];</span>
+<span class="code-del">- $CUST_NAME = (strlen($row['TRH_SHIP_REMARK']) > 10 ? "'" . $row['TRH_SHIP_REMARK'] : $row['TRH_SHIP_REMARK']);</span>
+<span class="code-del">- if (strpos($row['DT_DOCCODE'], $DT_DOCCODE_MINUS) !== false) {</span>
+<span class="code-del">- $cleaned_remark = preg_replace('/[\r\n]+/', ' ', $original_remark);</span>
+
+// --- โค้ดใหม่ (หลังแก้ไข - ปลอดภัย 100% ต่อ PHP 8.1+) ---
+<span class="code-add">+ $original_remark = $row['DI_REMARK'] ?? '';</span>
+<span class="code-add">+ $original_sb_name = $row['SB_NAME'] ?? '';</span>
+<span class="code-add">+ $ship_remark = $row['TRH_SHIP_REMARK'] ?? '';</span>
+<span class="code-add">+ $CUST_NAME = (strlen($ship_remark) > 10 ? "'" . $ship_remark : $ship_remark);</span>
+<span class="code-add">+ if (strpos($row['DT_DOCCODE'] ?? '', $DT_DOCCODE_MINUS) !== false) {</span>
+<span class="code-add">+ $cleaned_remark = preg_replace('/[\r\n]+/', ' ', $original_remark ?? '');</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Syntax Check Results of all 65 files -->
+        <section class="section">
+            <h2 class="section-title"><i class="fa-solid fa-list-check"></i> ผลการทดสอบ Syntax (PHP Lint: <code>php -l</code>) ครบทุกไฟล์</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 14px;">
+                ทำการรันตรวจสอบ Syntax ด้วยคำสั่ง <code>php -l</code> ผ่าน CLI PHP 8.3.14 ครบทั้ง 65 ไฟล์ในโฟลเดอร์ <code>export_process</code>:
+            </p>
+
+            <div class="file-list-container">
+                <div class="file-item"><span class="file-name">cond_brand.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_customer_ar.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_bank_statement.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_cheque_receive_process.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_customer_addr.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_due_date_process-bak.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_due_date_process.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_product_prices.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_product_prices_wp.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_receive_products.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_reserve_product_process.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_return_document_cp.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_data_all_daily.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_data_free_daily.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_data_readyquick-bak.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_data_readyquick.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_payment.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_return_daily_2.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_return_daily_out.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_return_daily.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_return_data_readyquick-bak.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_return_data_readyquick.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_return_document_cp.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_return_document_cp_tires.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_return.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_return_use.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_sac_csv_bak.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_sac_csv.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_sac.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_sac_take_csv.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_salesman.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_sale_user_sac_csv.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_stock_balance_all_process-bak.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_stock_balance_all_process.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_stock_receive_send_2.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_stock_receive_send-org.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_stock_receive_send.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_tires_number_process.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_user_name.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_data_wholesale.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_data_product_sale_sac.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_data_sale_total_cp.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_data_tires_request.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_data_wh_movement_out.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_data_wh_movement.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_data_wh_stock_balance.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_data_wh_stock_location_transaction.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_data_wh_stock_transaction.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_display_data_wh_stock_balance.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_product_receive.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_process_product_receive_tires.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_sale_user.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_store_sku_matrix_excel.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">export_top_store_sales_excel.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">forecast_auto_process.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">payment_export_data.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">payment_pass_cheque_data.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">print_stock_all_pdf.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">print_stock_pdf.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">wh_export_data_stock_balance_all_pdf.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">wh_export_data_stock_balance_all_process.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">wh_export_sac_customer_csv.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">wh_print_sac_customer_pdf.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+                <div class="file-item"><span class="file-name">wh_print_stock_all_pdf.php</span> <span class="tag tag-ok">No syntax errors</span></div>
+            </div>
+        </section>
+
+        <!-- Best Practices Section -->
+        <section class="section">
+            <h2 class="section-title"><i class="fa-solid fa-lightbulb"></i> แนวทางปฏิบัติที่ดี (Best Practices สำหรับ PHP 8.1 - 8.3+)</h2>
+
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-num"><i class="fa-solid fa-shield-halved" style="font-size: 0.8rem;"></i></div>
+                    <div class="step-content">
+                        <h4>1. ใช้ Null Coalescing Operator (<code>?? ''</code>) เสมอ</h4>
+                        <p>
+                            ฟิลด์จากฐานข้อมูลที่อนุญาตให้เป็น NULL (Nullable Columns) เช่น หมายเหตุ, ชื่อสาขา, รหัสอ้างอิง ควรกำหนดเป็น <code>$row['COLUMN'] ?? ''</code> เสมอ เพื่อให้การเรียกฟังก์ชันสตริง เช่น <code>preg_replace()</code>, <code>str_replace()</code>, <code>trim()</code>, <code>strlen()</code> ทำงานได้อย่างปลอดภัยและไม่มีข้อความเตือน
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-num"><i class="fa-solid fa-code" style="font-size: 0.8rem;"></i></div>
+                    <div class="step-content">
+                        <h4>2. การแปลง Type อย่างชัดเจน (Explicit Type Casting)</h4>
+                        <p>
+                            ในกรณีที่รับตัวแปรที่ไม่แน่ใจประเภท สามารถใช้ <code>trim((string)$str)</code> เพื่อบังคับ Type เป็นสตริงก่อนเสมอ ป้องกัน Type Error และ Deprecation ได้ทุกกรณี
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-num"><i class="fa-solid fa-file-csv" style="font-size: 0.8rem;"></i></div>
+                    <div class="step-content">
+                        <h4>3. การจัดการ Error Reporting ในไฟล์ Export</h4>
+                        <p>
+                            สำหรับไฟล์ที่ทำหน้าที่ Stream ดาวน์โหลด CSV หรือ PDF หากเกิดข้อผิดพลาดระดับ Notice/Deprecated การเปิด <code>display_errors</code> อาจทำให้ตาราง Error ถูกส่งปนไปกับเนื้อหาไฟล์ จึงแนะนำให้มั่นใจว่าข้อมูลไม่มีค่า null หรือกำหนด <code>error_reporting(E_ALL & ~E_DEPRECATED);</code> ใน Environment ที่จำเป็น
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2026 SAC DATA | Export Process System Diagnostics & Compliance Report</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

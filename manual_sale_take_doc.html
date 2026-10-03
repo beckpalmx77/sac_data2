@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการอัปเดตข้อมูลพนักงานขายตามเลขที่เอกสาร</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #f8f9fa; color: #444; line-height: 1.6; }
+        .hero-section { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 50px 0; margin-bottom: 40px; border-radius: 0 0 30px 30px; }
+        .instruction-box { background: white; padding: 30px; border-radius: 20px; border-left: 10px solid #f59e0b; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .badge-number { background: #f59e0b; color: white; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; font-weight: bold; }
+        .highlight-amber { color: #d97706; font-weight: bold; }
+        .tip-box { background: #fffbeb; border-radius: 15px; padding: 20px; border: 1px dashed #f59e0b; margin-top: 20px; }
+        .warning-box { background: #fef2f2; border-radius: 15px; padding: 20px; border: 1px dashed #ef4444; margin-top: 20px; }
+        .table-template th { background-color: #f8fafc !important; }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-6 fw-bold"><i class="fas fa-file-invoice me-2"></i>คู่มืออัปเดตพนักงานขายตามเลขที่เอกสาร</h1>
+            <p class="lead">สำหรับอัปเดตข้อมูลพนักงานขาย (Sale), พนักงาน Take และข้อมูลที่ตั้งตามเลขที่ใบส่งของ/ใบกำกับภาษี</p>
+        </div>
+    </div>
+
+    <div class="container mb-5" style="max-width: 900px;">
+        <!-- Objective -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-bullseye me-2 text-danger"></i>1. วัตถุประสงค์ของระบบ</h3>
+            <p class="text-muted">ความสำคัญของการอัปเดตข้อมูลพนักงานขายตามเอกสาร</p>
+            <hr>
+            <p>หน้าจอการอัปโหลดไฟล์ Excel นี้ ถูกพัฒนาขึ้นเพื่อให้ผู้ใช้สามารถจัดการและอัปเดตพนักงานขาย (Sale) และพนักงานจดออเดอร์ (Take) แยกตาม **เลขที่เอกสาร (Document Ref)** ของการขายในระบบโดยตรง มีประโยชน์อย่างมากในกรณีที่มีการโอนถ่ายเอกสารใบส่งของหรือใบกำกับภาษีให้กับพนักงานขายคนอื่นเข้ามาดูแลรับผิดชอบแทน เพื่อให้การคำนวณค่าคอมมิชชันและรายงานยอดขายตามพนักงานถูกต้องตรงกัน</p>
+        </div>
+
+        <!-- Excel Format -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-file-excel me-2 text-success"></i>2. โครงสร้างไฟล์ Excel Template</h3>
+            <p class="text-muted">รูปแบบไฟล์และชื่อคอลัมน์มาตรฐาน (Row ที่ 1 ในไฟล์ Excel)</p>
+            <hr>
+            <p>ข้อมูลในไฟล์ Excel ต้องประกอบไปด้วยคอลัมน์และลำดับหัวข้อตามแบบฟอร์มมาตรฐานดังนี้:</p>
+            
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-template">
+                    <thead>
+                        <tr>
+                            <th>คอลัมน์</th>
+                            <th>ชื่อหัวข้อ (Header)</th>
+                            <th>คำอธิบายข้อมูล</th>
+                            <th>ตัวอย่างข้อมูล</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center fw-bold">A</td>
+                            <td class="fw-bold">DI_REF</td>
+                            <td>เลขที่เอกสารอ้างอิงของการขาย (ห้ามเว้นว่าง)</td>
+                            <td><code>IV-2605001</code></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">B</td>
+                            <td class="fw-bold">AR_CODE</td>
+                            <td>รหัสร้านค้าของคู่ค้า</td>
+                            <td><code>SAC.0000272</code></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">C</td>
+                            <td class="fw-bold">AR_NAME</td>
+                            <td>ชื่อบริษัทหรือชื่อร้านค้าของลูกค้า</td>
+                            <td><code>หจก.เกรียงไกรการยาง</code></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">D</td>
+                            <td class="fw-bold">SALE_NAME</td>
+                            <td>ชื่อพนักงานขายผู้ดูแลรับเอกสารชุดใหม่ (Sale)</td>
+                            <td><code>วิโรจน์ (กทม)</code></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">E</td>
+                            <td class="fw-bold">TAKE_NAME</td>
+                            <td>ชื่อพนักงานเทคออเดอร์ผู้รับผิดชอบใหม่ (Take)</td>
+                            <td><code>นริศ</code></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">F</td>
+                            <td class="fw-bold">TRD_AMPHUR</td>
+                            <td>อำเภอของที่ตั้งร้านค้าตามเอกสาร</td>
+                            <td><code>อ.ดอนตูม</code></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">G</td>
+                            <td class="fw-bold">TRD_PROVINCE</td>
+                            <td>จังหวัดของที่ตั้งร้านค้าตามเอกสาร</td>
+                            <td><code>จ.นครปฐม</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle text-danger me-2"></i><strong>ข้อควรระวังสำคัญ:</strong> 
+                แถวแรก (Row 1) ของตารางต้องเป็นข้อมูลชื่อคอลัมน์มาตรฐานภาษาอังกฤษอ้างอิงตรงตามตารางด้านบนทุกประการ และต้องไม่มีเซลล์ที่เป็นค่าว่างในส่วนของ **DI_REF**
+            </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-tasks me-2 text-primary"></i>3. ขั้นตอนวิธีการนำเข้าข้อมูล</h3>
+            <p class="text-muted">วิธีการดำเนินการอัปโหลดไฟล์อ้างอิงเข้าระบบ</p>
+            <hr>
+            <p><span class="badge-number">1</span><strong>ดาวน์โหลดแบบฟอร์ม:</strong> คลิกปุ่ม <span class="badge bg-success">ตัวอย่างไฟล์ Excel...</span> เพื่อรับแบบฟอร์มเทมเพลตมาตรฐานในการอัปเดต</p>
+            <p><span class="badge-number">2</span><strong>ระบุข้อมูลการย้ายคู่สาย:</strong> กรอกเลขที่ใบกำกับภาษี/เอกสารในคอลัมน์ A พร้อมทั้งใส่พนักงานขาย (Sale) หรือคนดูแลใหม่ (Take) ลงในคอลัมน์ที่กำหนดในตาราง Excel</p>
+            <p><span class="badge-number">3</span><strong>เลือกและอัปโหลดไฟล์:</strong> ที่หน้าจอระบบ ให้คลิก <strong>"Choose File"</strong> และเลือกไฟล์ Excel จากนั้นคลิกปุ่ม <span class="highlight-amber">Import</span></p>
+            <p><span class="badge-number">4</span><strong>ยืนยันการนำเข้าสำเร็จ:</strong> รอระบบดึงและอัปเดตข้อมูลรายแถวจนกล่อง SweetAlert ขึ้นข้อความว่า <code>"Data imported successfully."</code></p>
+        </div>
+
+        <!-- Expected Results -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-check-circle me-2 text-success"></i>4. ผลลัพธ์และพฤติกรรมระบบ</h3>
+            <p class="text-muted">ความเปลี่ยนแปลงของยอดเอกสารหลังจากอัปโหลดไฟล์</p>
+            <hr>
+            <ul>
+                <li class="mb-2"><b>อัปเดตความสัมพันธ์เอกสารการขาย:</b> ระบบจะทำการปรับเปลี่ยนชื่อพนักงานขาย (`SALE_NAME`) และพนักงาน Take (`TAKE_NAME`) ของเลขที่ใบส่งของ/ใบกำกับภาษีที่ตรงกันในตารางหลัก (`ims_data_sale_sac_all`) ทันที</li>
+                <li class="mb-2"><b>อัปเดตข้อมูลสถานที่:</b> ปรับปรุงชื่ออำเภอและจังหวัดในชุดเอกสารการขายนั้นๆ ให้ถูกต้องตามไฟล์ Excel</li>
+                <li class="mb-2"><b>ข้อมูลยอดขายและค่าคอมมิชชัน:</b> ยอดขายของเอกสารนั้นจะถูกคำนวณและปันส่วนผลงานให้กับพนักงานขายคนใหม่ในการดึงรายงานสรุปยอดขายทันที</li>
+            </ul>
+
+            <div class="tip-box">
+                <i class="fas fa-lightbulb text-warning me-2"></i><strong>คำแนะนำเพิ่มเติม:</strong> 
+                หากระบบแจ้งเตือนว่านำเข้าข้อมูลสำเร็จแต่ไม่เกิดความเปลี่ยนแปลงในตารางด้านล่าง กรุณาตรวจสอบว่า **เลขที่เอกสาร (DI_REF)** ในไฟล์ Excel ของคุณพิมพ์ถูกต้องและมีตัวตนจริงอยู่ในฐานข้อมูลยอดขายของระบบหรือไม่
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-secondary px-4 py-2" onclick="window.close();">
+                <i class="fas fa-times me-1"></i> ปิดหน้าต่างนี้
+            </button>
+        </div>
+    </div>
+
+    <footer class="text-center py-4 bg-white border-top mt-5">
+        <p class="small text-muted mb-0">&copy; 2026 SAC Sales Planning System - System Admin</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

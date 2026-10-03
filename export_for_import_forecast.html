@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายละเอียดการ Export ข้อมูลเพื่อทำ Template Import Forecast</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #198754;
+            --primary-dark: #146c43;
+            --header-gradient: linear-gradient(135deg, #198754 0%, #0d5132 100%);
+            --accent-gold: #ffc107;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-light);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .hero-header {
+            background: var(--header-gradient);
+            color: white;
+            padding: 40px 0 35px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-bottom: 5px solid var(--accent-gold);
+        }
+
+        .card-custom {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .step-icon-box {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .badge-source {
+            font-size: 0.82rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background-color: #e7f5ed;
+            color: #0d5132;
+            border: 1px solid #b7e4c7;
+            font-weight: 600;
+        }
+
+        .badge-formula {
+            font-size: 0.82rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background-color: #fff8e6;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            font-weight: 600;
+        }
+
+        .badge-exclude {
+            font-size: 0.82rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background-color: #ffe3e3;
+            color: #c92a2a;
+            border: 1px solid #ffc9c9;
+            font-weight: 600;
+        }
+
+        .code-pill {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.88rem;
+            border: 1px solid #cbd5e1;
+        }
+
+        .table-custom {
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .table-custom th {
+            background-color: #1e293b;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            border: none;
+        }
+
+        .table-custom td {
+            padding: 12px 14px;
+        }
+
+        .callout-info {
+            background-color: #eef9f3;
+            border-left: 5px solid #198754;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .callout-warning {
+            background-color: #fff9ea;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Header -->
+    <header class="hero-header mb-4">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <h2 class="fw-bold mb-1"><i class="fas fa-file-export me-2"></i> รายละเอียดการ Export ข้อมูลเพื่อทำ Template Import Forecast</h2>
+                    <p class="mb-0 text-white-50 fs-6">
+                        คู่มือและขั้นตอนการส่งออกไฟล์ข้อมูลยอดขายจาก <span class="badge bg-warning text-dark"><i class="fas fa-database me-1"></i> ims_data_sale_sac_all</span> เพื่อทำเป็น Template สำหรับนำเข้าแผนการขาย (Forecast Realtime)
+                    </p>
+                </div>
+                <div>
+                    <a href="export_forecast_template.php" class="btn btn-warning fw-bold text-dark me-2 shadow-sm">
+                        <i class="fas fa-external-link-alt me-1"></i> ไปยังหน้าจอ Export Template
+                    </a>
+                    <a href="forecast_plan_display_realtime.php" class="btn btn-outline-light fw-bold">
+                        <i class="fas fa-arrow-left me-1"></i> กลับหน้า Forecast Realtime
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid px-4 pb-5">
+
+        <!-- 1. Overview Summary Card -->
+        <div class="card card-custom mb-4 p-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h4 class="fw-bold text-success mb-3"><i class="fas fa-check-circle me-2"></i> สรุปการทำงานและโครงสร้างการกรองข้อมูล</h4>
+                    <p class="fs-6 text-secondary mb-3">
+                        ผู้ใช้งานสามารถเลือกส่งออกไฟล์ข้อมูลแผนการขายและยอดขายย้อนหลังผ่านหน้าจอ 
+                        <a href="export_forecast_template.php" class="fw-bold text-success"><code class="code-pill">export_forecast_template.php</code></a> 
+                        โดยระบุตัวกรองเพียง 3 รายการหลัก ได้แก่ <strong>เดือน (Month), ปี (Year), และ พนักงานขาย (Sale Name)</strong> 
+                        เพื่อนำไฟล์ Excel/CSV ที่ได้ไปกรอกเป้าแผนการขาย และนำเข้ากลับเข้าสู่ระบบที่หน้าจอ <code class="code-pill">forecast_plan_display_realtime.php</code>
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge badge-source"><i class="fas fa-database me-1"></i> ดึงรายชื่อเซลล์จาก: ims_data_sale_sac_all</span>
+                        <span class="badge badge-exclude"><i class="fas fa-filter me-1"></i> ยกเว้น: BTC, RQ, -, SACส่วนกลาง, READYQUICK</span>
+                        <span class="badge badge-formula"><i class="fas fa-sync-alt me-1"></i> ระบบ Auto-Sync สถิติยอดขายย้อนหลังจาก DB</span>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center mt-3 mt-lg-0">
+                    <div class="p-3 rounded-4 bg-light border text-center">
+                        <i class="fas fa-file-excel fa-3x text-success mb-2"></i>
+                        <h6 class="fw-bold text-dark mb-1">ไฟล์ Template มาตรฐาน</h6>
+                        <small class="text-muted d-block mb-2">รองรับไฟล์รูปแบบ .xlsx และ .csv (UTF-8 BOM)</small>
+                        <a href="export_forecast_template.php" class="btn btn-success btn-sm fw-bold me-1">
+                            <i class="fas fa-external-link-alt me-1"></i> หน้าจอ Export Template
+                        </a>
+                        <a href="doc/plan_tires_r1.xlsx" class="btn btn-outline-secondary btn-sm fw-bold">
+                            <i class="fas fa-download me-1"></i> plan_tires_r1.xlsx
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Step-by-step Workflow -->
+        <h4 class="fw-bold text-dark mb-3"><i class="fas fa-stream me-2 text-success"></i> ขั้นตอนการทำงาน 5 ขั้นตอน (5-Step End-to-End Process)</h4>
+        
+        <div class="row g-3 mb-4">
+            <!-- Step 1 -->
+            <div class="col-md-4 col-lg">
+                <div class="card card-custom h-100 p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-icon-box">1</div>
+                        <h6 class="fw-bold mb-0">เลือกเงื่อนไข Export</h6>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        เข้าหน้าจอ <code class="code-pill">export_forecast_template.php</code> แล้วเลือก **เดือน, ปี, และ พนักงานขาย**
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="col-md-4 col-lg">
+                <div class="card card-custom h-100 p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-icon-box">2</div>
+                        <h6 class="fw-bold mb-0">Export ข้อมูลเป็น Excel</h6>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        กดปุ่ม **Export Template** ระบบจะส่งออกไฟล์ข้อมูลลูกค้า SKU และประวัติยอดขายจาก <code class="code-pill">ims_data_sale_sac_all</code>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="col-md-4 col-lg">
+                <div class="card card-custom h-100 p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-icon-box">3</div>
+                        <h6 class="fw-bold mb-0">กรอกเป้า Forecast</h6>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        เปิดไฟล์ Excel บนคอมพิวเตอร์ของคุณ แล้วทำการกรอก/แก้ไขคอลัมน์ **เป้า/แพลนยาง** (<code class="code-pill">forecast_qty_month_1</code>)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="col-md-6 col-lg">
+                <div class="card card-custom h-100 p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-icon-box">4</div>
+                        <h6 class="fw-bold mb-0">Import เข้าสู่ระบบ</h6>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        กดปุ่ม **"นำเข้าข้อมูล Realtime Excel"** บนหน้าจอ Forecast Realtime เลือกเดือน/ปีเป้าหมาย แล้วอัปโหลดไฟล์กลับเข้าระบบ
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="col-md-6 col-lg">
+                <div class="card card-custom h-100 p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-icon-box">5</div>
+                        <h6 class="fw-bold mb-0">Auto-Calculate & Sync</h6>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        Backend จะดึงยอดขายจาก <code class="code-pill">ims_data_sale_sac_all</code> เพื่อคำนวณส่วนต่าง ค่าเฉลี่ย และ % ให้อัตโนมัติ
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Dynamic Filter & Exclusion Rules -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+                <div class="card card-custom h-100 p-4">
+                    <h5 class="fw-bold text-dark mb-3"><i class="fas fa-filter text-success me-2"></i> 1. ตัวกรองการ Export (Filter Parameters)</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle small mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ตัวกรอง (Filter)</th>
+                                    <th>พารามิเตอร์</th>
+                                    <th>คำอธิบาย & แหล่งข้อมูล</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>เลือกเดือน</strong></td>
+                                    <td><code class="code-pill">month</code></td>
+                                    <td>ระบุเดือนเป้าหมายการทำ Forecast (1 - 12)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>เลือกปี</strong></td>
+                                    <td><code class="code-pill">year</code></td>
+                                    <td>ระบุปี ค.ศ. เป้าหมาย เช่น 2026</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>พนักงานขาย</strong></td>
+                                    <td><code class="code-pill">sale_name</code></td>
+                                    <td>ดึงรายชื่อพนักงานขายตรงจาก <code class="code-pill">ims_data_sale_sac_all</code> (เรียงตามตัวอักษร)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card card-custom h-100 p-4">
+                    <h5 class="fw-bold text-dark mb-3"><i class="fas fa-ban text-danger me-2"></i> 2. รายชื่อที่ถูกยกเว้น (Exclusion Rules)</h5>
+                    <p class="small text-muted mb-2">
+                        ในตัวกรองพนักงานขาย ระบบจะทำการคัดออก (Exclude) รายชื่อที่เป็นบัญชีส่วนกลาง บัญชีสาขา หรือสัญลักษณ์ที่ไม่ใช่พนักงานขายเขตพื้นที่ ดังนี้:
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-danger p-2"><i class="fas fa-times me-1"></i> BTC</span>
+                        <span class="badge bg-danger p-2"><i class="fas fa-times me-1"></i> RQ</span>
+                        <span class="badge bg-danger p-2"><i class="fas fa-times me-1"></i> - (ขีด)</span>
+                        <span class="badge bg-danger p-2"><i class="fas fa-times me-1"></i> ส่วนกลาง</span>
+                        <span class="badge bg-danger p-2"><i class="fas fa-times me-1"></i> READYQUICK</span>
+                        <span class="badge bg-danger p-2"><i class="fas fa-times me-1"></i> READY QUICK</span>
+                    </div>
+                    <div class="callout-info">
+                        <h6 class="fw-bold text-success mb-1"><i class="fas fa-database me-1"></i> เงื่อนไข SQL</h6>
+                        <code class="small d-block text-dark">
+                            WHERE SALE_NAME IS NOT NULL AND TRIM(SALE_NAME) != '' AND TRIM(SALE_NAME) != '-' AND SALE_NAME NOT LIKE '%BTC%' AND SALE_NAME NOT LIKE '%RQ%' AND SALE_NAME NOT LIKE '%ส่วนกลาง%' AND SALE_NAME NOT LIKE '%READYQUICK%' AND SALE_NAME NOT LIKE '%READY QUICK%'
+                        </code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Excel Template Column Mapping Table -->
+        <div class="card card-custom mb-4 p-4">
+            <h5 class="fw-bold text-dark mb-3"><i class="fas fa-columns text-success me-2"></i> 3. โครงสร้างคอลัมน์ Excel Template (Standard Column Mapping)</h5>
+            <p class="small text-muted mb-3">
+                ไฟล์ Excel Template มาตรฐานที่ส่งออกและนำเข้า จะมีโครงสร้างคอลัมน์ตรงกับ <code class="code-pill">plan_tires_r1.xlsx</code> ดังนี้:
+            </p>
+            
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-bordered table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">Index</th>
+                            <th style="width: 5%;">Col</th>
+                            <th style="width: 20%;">ชื่อคอลัมน์ใน Excel</th>
+                            <th style="width: 20%;">Field ฐานข้อมูล</th>
+                            <th style="width: 20%;">แหล่งข้อมูล / สูตรคำนวณ</th>
+                            <th style="width: 30%;">คำอธิบายการใช้งานในการ Import</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center font-monospace">0</td>
+                            <td class="text-center fw-bold">A</td>
+                            <td><strong>รหัสลูกค้า</strong></td>
+                            <td><code class="code-pill">ar_code</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td><span class="text-danger fw-bold">* จำเป็น</span> ใช้จับคู่ข้อมูลลูกค้า</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">1</td>
+                            <td class="text-center fw-bold">B</td>
+                            <td><strong>รายชื่อลูกค้า</strong></td>
+                            <td><code class="code-pill">ar_name</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td>แสดงชื่อลูกค้าร้านค้า</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">2</td>
+                            <td class="text-center fw-bold">C</td>
+                            <td><strong>เซลล์</strong></td>
+                            <td><code class="code-pill">sale_name</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td>พนักงานขายผู้ดูแลลูกค้า</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">3</td>
+                            <td class="text-center fw-bold">D</td>
+                            <td><strong>เทค</strong></td>
+                            <td><code class="code-pill">take_name</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td>พนักงานเทคผู้ดูแลลูกค้า</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">4</td>
+                            <td class="text-center fw-bold">E</td>
+                            <td><strong>อำเภอ</strong></td>
+                            <td><code class="code-pill">amphur</code></td>
+                            <td><span class="badge badge-source">v_customer_data_sale_all_zone</span></td>
+                            <td>อำเภอที่ตั้งของร้านค้า</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">5</td>
+                            <td class="text-center fw-bold">F</td>
+                            <td><strong>จังหวัด</strong></td>
+                            <td><code class="code-pill">province</code></td>
+                            <td><span class="badge badge-source">v_customer_data_sale_all_zone</span></td>
+                            <td>จังหวัดที่ตั้งของร้านค้า</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">6</td>
+                            <td class="text-center fw-bold">G</td>
+                            <td><strong>ยี่ห้อ</strong></td>
+                            <td><code class="code-pill">brand_code</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td><span class="text-danger fw-bold">* จำเป็น</span> แบรนด์สินค้ายาง</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">7</td>
+                            <td class="text-center fw-bold">H</td>
+                            <td><strong>รหัสสินค้า 1</strong></td>
+                            <td><code class="code-pill">sku_code</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td><span class="text-danger fw-bold">* จำเป็น</span> รหัสสินค้า SKU</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">8</td>
+                            <td class="text-center fw-bold">I</td>
+                            <td><strong>รายละเอียด</strong></td>
+                            <td><code class="code-pill">sku_name</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td>แสดงชื่อรายละเอียดสินค้า / SKU Description</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">9</td>
+                            <td class="text-center fw-bold">J</td>
+                            <td><strong>เฉลี่ย 12 เดือน ปีก่อน</strong></td>
+                            <td><code class="code-pill">avg_per_month_year</code></td>
+                            <td><span class="badge badge-formula">Auto-Calculate (Y-1 / 12)</span></td>
+                            <td>ยอดขายเฉลี่ยต่อเดือนของปีก่อนหน้า</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">10</td>
+                            <td class="text-center fw-bold">K</td>
+                            <td><strong>ยอดขายสูงสุดต่อเดือน(ปีก่อน)</strong></td>
+                            <td><code class="code-pill">max_qty_year</code></td>
+                            <td><span class="badge badge-formula">MAX Monthly Sales (Y-1)</span></td>
+                            <td>ยอดขายสูงสุดต่อเดือนของปีก่อนหน้า</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">11</td>
+                            <td class="text-center fw-bold">L</td>
+                            <td><strong>ยอดขายต่ำสุดต่อเดือน(ปีก่อน)</strong></td>
+                            <td><code class="code-pill">min_qty_year</code></td>
+                            <td><span class="badge badge-formula">MIN Monthly Sales (Y-1)</span></td>
+                            <td>ยอดขายต่ำสุดต่อเดือนของปีก่อนหน้า</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">12</td>
+                            <td class="text-center fw-bold">M</td>
+                            <td><strong>[เดือน-ปี ย้อนหลัง M-3]</strong> (เช่น เมษายน'26)</td>
+                            <td><code class="code-pill">sales_month_3</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td>ยอดขายจริงย้อนหลัง 3 เดือน</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">13</td>
+                            <td class="text-center fw-bold">N</td>
+                            <td><strong>[เดือน-ปี ย้อนหลัง M-2]</strong> (เช่น พฤษภาคม'26)</td>
+                            <td><code class="code-pill">sales_month_2</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td>ยอดขายจริงย้อนหลัง 2 เดือน</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">14</td>
+                            <td class="text-center fw-bold">O</td>
+                            <td><strong>[เดือน-ปี ย้อนหลัง M-1]</strong> (เช่น มิถุนายน'26)</td>
+                            <td><code class="code-pill">sales_month_1</code></td>
+                            <td><span class="badge badge-source">ims_data_sale_sac_all</span></td>
+                            <td>ยอดขายจริงย้อนหลัง 1 เดือน</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">15</td>
+                            <td class="text-center fw-bold">P</td>
+                            <td><strong>ค่าเฉลี่ย 3 เดือน</strong></td>
+                            <td><code class="code-pill">avg_3_month</code></td>
+                            <td><span class="badge badge-formula">(M-3 + M-2 + M-1) / 3</span></td>
+                            <td>ค่าเฉลี่ยยอดขายย้อนหลัง 3 เดือน</td>
+                        </tr>
+                        <tr class="table-warning">
+                            <td class="text-center font-monospace">16</td>
+                            <td class="text-center fw-bold">Q</td>
+                            <td><strong>เป้ารายเดือน</strong></td>
+                            <td><code class="code-pill">target_qty_month</code></td>
+                            <td>กรอกข้อมูลเป้าหมาย</td>
+                            <td>จำนวนเป้ายางประจำเดือน</td>
+                        </tr>
+                        <tr class="table-success">
+                            <td class="text-center font-monospace">17</td>
+                            <td class="text-center fw-bold">R</td>
+                            <td><strong>แพลนยางเดือนที่ต้องการ</strong></td>
+                            <td><code class="code-pill">forecast_qty_month_1</code></td>
+                            <td><span class="badge bg-success text-white">เป้าหมายหลักในการ Import</span></td>
+                            <td><span class="text-danger fw-bold">* สำคัญที่สุด</span> ยอดที่พนักงานวางแผนการขายประจำเดือน</td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="text-center font-monospace">18-19</td>
+                            <td class="text-center fw-bold">S-T</td>
+                            <td><strong>เทียบ แพลนยาง ลบ ค่าเฉลี่ย / %</strong></td>
+                            <td><code class="code-pill">compare_forecast_month_1...</code></td>
+                            <td><span class="badge badge-formula">Auto-Calculate</span></td>
+                            <td>ระบบคำนวณอัตโนมัติ: <code class="code-pill">แพลนยาง - ค่าเฉลี่ย 3 เดือน</code> และ <code class="code-pill">(แพลนยาง / ค่าเฉลี่ย) * 100</code></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center font-monospace">20</td>
+                            <td class="text-center fw-bold">U</td>
+                            <td><strong>ผู้รับผิดชอบ</strong></td>
+                            <td><code class="code-pill">responsible_person</code></td>
+                            <td><span class="badge badge-source">User Input</span></td>
+                            <td>ชื่อผู้รับผิดชอบ / ผู้ดูแลร้านค้า (Optional)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. Warnings and Recommendations -->
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="callout-warning h-100">
+                    <h5 class="fw-bold text-dark mb-2"><i class="fas fa-exclamation-triangle text-warning me-2"></i> ข้อควรระวังในการเตรียมไฟล์ Import</h5>
+                    <ul class="mb-0 ps-3 small text-secondary">
+                        <li class="mb-2"><strong>รหัสลูกค้า (AR_CODE) และ รหัสสินค้า (SKU_CODE):</strong> ต้องถูกต้องตรงกับฐานข้อมูลหลัก หากระบุรหัสผิด ข้อมูลรายการนั้นอาจจะไม่ถูกบันทึก</li>
+                        <li class="mb-2"><strong>แถวหัวข้อ (Row 1 Header):</strong> ห้ามลบหรือเปลี่ยนชื่อหัวข้อหลักภาษาไทย เพื่อให้ระบบ Dynamic Header Matching สามารถสแกนคอลัมน์ได้ถูกต้อง</li>
+                        <li class="mb-1"><strong>รูปแบบไฟล์:</strong> บันทึกไฟล์เป็นนามสกุล <code class="code-pill">.xlsx</code> หรือ <code class="code-pill">.csv</code> (UTF-8)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="callout-info h-100">
+                    <h5 class="fw-bold text-dark mb-2"><i class="fas fa-lightbulb text-success me-2"></i> คำแนะนำเพื่อความสะดวกรวดเร็ว</h5>
+                    <ul class="mb-0 ps-3 small text-secondary">
+                        <li class="mb-2"><strong>เทคนิคการกรอกข้อมูลอย่างเร็ว:</strong> ไม่จำเป็นต้องกรอกคอลัมน์สถิติต่างๆ ในคอลัมน์ J ถึง P ให้กรอกเฉพาะ **ยอดแพลนยาง (Col R)** เท่านั้น แล้วอัปโหลดได้เลย</li>
+                        <li class="mb-2"><strong>การกรองก่อน Export:</strong> เลือก **เดือน, ปี, และพนักงานขาย** ที่หน้าจอ <code class="code-pill">export_forecast_template.php</code> ก่อนกด Export เพื่อให้ได้ไฟล์ Template ตรงกับที่ต้องการ</li>
+                        <li class="mb-1"><strong>การนำเข้าซ้ำ (Update Existing):</strong> หากนำเข้าไฟล์เดิมซ้ำ ระบบจะทำการ อัปเดต (Update) ข้อมูลที่มีอยู่เดิมให้ทันทีโดยไม่เกิดข้อมูลซ้ำซ้อน</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-top py-3 text-center text-muted small">
+        <div class="container-fluid">
+            &copy; 2026 SAC Sales Management & Forecasting System | Realtime Import/Export Technical Specification
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการใช้งาน หน้าจอนำเข้าข้อมูลการขาย SAC</title>
+    <meta name="description" content="คู่มือการใช้งานหน้าจอ import_data_sale_sac.php สำหรับนำเข้า ตรวจสอบ และลบข้อมูลการขายของบริษัท SAC">
+    <!-- Google Fonts: Prompt & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #e0e7ff;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --info: #0ea5e9;
+            --info-light: #e0f2fe;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --border-color: #e2e8f0;
+            --sidebar-width: 280px;
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: #312e81;
+            --success: #34d399;
+            --success-light: #064e3b;
+            --danger: #f87171;
+            --danger-light: #7f1d1d;
+            --info: #38bdf8;
+            --info-light: #0c4a6e;
+            --warning: #fbbf24;
+            --warning-light: #78350f;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Prompt', 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        /* Sidebar Styling */
+        aside.sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            flex-column: column;
+            overflow-y: auto;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-brand i {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .sidebar-brand span {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 12px;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 6px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu li.active a {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .sidebar-menu li.active a {
+            font-weight: 600;
+        }
+
+        /* Top controls inside Sidebar */
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-switch {
+            cursor: pointer;
+            width: 48px;
+            height: 24px;
+            background-color: var(--border-color);
+            border-radius: 12px;
+            position: relative;
+            display: inline-block;
+            transition: background-color var(--transition-speed);
+        }
+
+        .theme-switch::before {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            top: 3px;
+            left: 3px;
+            transition: transform var(--transition-speed);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        [data-theme="dark"] .theme-switch {
+            background-color: var(--primary);
+        }
+
+        [data-theme="dark"] .theme-switch::before {
+            transform: translateX(24px);
+            background-color: #0f172a;
+        }
+
+        /* Main Content Styling */
+        main.main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-doc {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+        }
+
+        .header-doc h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .header-doc p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .doc-section {
+            margin-bottom: 60px;
+            scroll-margin-top: 40px;
+        }
+
+        .doc-section h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-section h2 i {
+            color: var(--primary);
+        }
+
+        .doc-section p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        /* Alert / Callout Boxes */
+        .callout {
+            padding: 16px 20px;
+            border-left: 4px solid;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .callout-info {
+            background-color: var(--info-light);
+            border-left-color: var(--info);
+            color: var(--text-main);
+        }
+
+        .callout-warning {
+            background-color: var(--warning-light);
+            border-left-color: var(--warning);
+            color: var(--text-main);
+        }
+
+        .callout-danger {
+            background-color: var(--danger-light);
+            border-left-color: var(--danger);
+            color: var(--text-main);
+        }
+
+        .callout-success {
+            background-color: var(--success-light);
+            border-left-color: var(--success);
+            color: var(--text-main);
+        }
+
+        .callout-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Screen Mockup */
+        .mockup-container {
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
+        }
+
+        .mockup-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+
+        .mockup-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ef4444;
+        }
+
+        .mockup-dot:nth-child(2) { background-color: #eab308; }
+        .mockup-dot:nth-child(3) { background-color: #22c55e; }
+
+        .mockup-address-bar {
+            background-color: #0f172a;
+            color: #94a3b8;
+            font-family: monospace;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-left: 12px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mockup-screen {
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            padding: 24px;
+            color: #334155;
+            font-size: 13px;
+        }
+
+        .dark-theme-mockup .mockup-screen {
+            background-color: #0f172a;
+            color: #cbd5e1;
+        }
+
+        /* Mockup elements */
+        .mock-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .mock-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+
+        .mock-form-group {
+            margin-bottom: 16px;
+        }
+
+        .mock-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #475569;
+        }
+
+        .mock-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
+        .mock-btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .mock-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .mock-btn-primary { background-color: #007bff; color: white; }
+        .mock-btn-success { background-color: #28a745; color: white; }
+        .mock-btn-danger { background-color: #dc3545; color: white; }
+        .mock-btn-info { background-color: #17a2b8; color: white; }
+
+        .mock-last-log {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .mock-divider {
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 20px 0;
+        }
+
+        /* Mock Interactive Indicators */
+        .interactive-mockup {
+            position: relative;
+        }
+
+        .hotspot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: var(--primary);
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.4);
+            animation: pulse 2s infinite;
+            z-index: 10;
+        }
+
+        .hotspot:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.5); }
+            70% { box-shadow: 0 0 0 8px rgba(79, 70, 229, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+        }
+
+        /* Hotspot specific positions on mockup */
+        #h1 { top: 55px; left: 40px; } /* File chooser */
+        #h2 { top: 110px; left: 60px; } /* Import button */
+        #h3 { top: 110px; left: 240px; } /* Template button */
+        #h4 { top: 175px; left: 140px; } /* Last log */
+        #h5 { top: 250px; left: 120px; } /* Date picker */
+        #h6 { top: 250px; left: 320px; } /* Delete button */
+        #h7 { top: 250px; left: 470px; } /* Show button */
+        #h8 { top: 380px; left: 400px; } /* DataTable */
+
+        /* Interactive Panel */
+        .hotspot-details {
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Step Card Grid */
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .step-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px -10px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--border-color);
+            opacity: 0.15;
+            transition: color 0.3s ease;
+        }
+
+        .step-card:hover .step-number {
+            color: var(--primary);
+            opacity: 0.25;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-title i {
+            color: var(--primary);
+        }
+
+        .step-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Custom Table Style for Excel structure */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 24px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table.doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+            background-color: var(--bg-card);
+        }
+
+        table.doc-table th {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            padding: 12px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        table.doc-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        table.doc-table tr:hover {
+            background-color: var(--bg-primary);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-primary { background-color: var(--primary-light); color: var(--primary); }
+        .badge-success { background-color: var(--success-light); color: var(--success); }
+        .badge-danger { background-color: var(--danger-light); color: var(--danger); }
+        .badge-warning { background-color: var(--warning-light); color: var(--warning); }
+
+        /* Search input inside main content */
+        .search-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Back to top button */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+
+        #backToTop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #backToTop:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+        }
+
+        /* Highlight Search Match */
+        .highlight {
+            background-color: yellow;
+            color: black;
+            border-radius: 2px;
+            padding: 0 2px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 992px) {
+            aside.sidebar {
+                width: 70px;
+            }
+            aside.sidebar .sidebar-brand span, 
+            aside.sidebar .sidebar-menu a span, 
+            aside.sidebar .sidebar-footer {
+                display: none;
+            }
+            aside.sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 12px;
+            }
+            main.main-content {
+                margin-left: 70px;
+                padding: 24px;
+            }
+            .hotspot {
+                display: none; /* Hide interactive hotspots on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Menu -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>SAC Data Import</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active"><a href="#overview"><i class="fa-solid fa-house"></i> <span>1. ภาพรวมระบบ</span></a></li>
+            <li><a href="#ui-layout"><i class="fa-solid fa-desktop"></i> <span>2. โครงสร้างหน้าจอ</span></a></li>
+            <li><a href="#import-process"><i class="fa-solid fa-cloud-arrow-up"></i> <span>3. ขั้นตอนนำเข้าข้อมูล</span></a></li>
+            <li><a href="#delete-process"><i class="fa-solid fa-trash-can"></i> <span>4. การลบข้อมูลตามวันที่</span></a></li>
+            <li><a href="#display-process"><i class="fa-solid fa-magnifying-glass"></i> <span>5. การดูและค้นหาข้อมูล</span></a></li>
+            <li><a href="#excel-template"><i class="fa-solid fa-table-cells"></i> <span>6. รูปแบบไฟล์ Excel</span></a></li>
+            <li><a href="#troubleshooting"><i class="fa-solid fa-circle-exclamation"></i> <span>7. ปัญหาและข้อควรระวัง</span></a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <span style="font-size: 12px; color: var(--text-muted);">โหมดมืด/สว่าง</span>
+            <div class="theme-switch" id="themeSwitch" onclick="toggleTheme()" title="เปลี่ยนโหมดสี"></div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header-doc">
+            <h1>คู่มือการใช้งาน หน้าจอนำเข้าข้อมูลการขาย SAC</h1>
+            <p>ระบบจัดการเอกสารนำเข้าข้อมูลยอดขายทางธุรกิจของ บริษัท ส.อรุณ คอนกรีต จำกัด (SAC)</p>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" class="search-input" id="docSearch" placeholder="ค้นหาหัวข้อ คำค้นหา เช่น 'การลบข้อมูล', 'Excel template', 'DI_DATE'..." onkeyup="searchDocumentation()">
+        </div>
+
+        <!-- SECTION 1: Overview -->
+        <section id="overview" class="doc-section">
+            <h2><i class="fa-solid fa-house"></i> 1. ภาพรวมระบบ (System Overview)</h2>
+            <p>หน้าจอ <strong>import_data_sale_sac.php</strong> ถูกออกแบบขึ้นเพื่อให้เจ้าหน้าที่ผู้ดูแลระบบหรือฝ่ายขายที่ได้รับอนุญาต สามารถนำเข้าไฟล์รายงานยอดขายประจำวัน/ประจำเดือน ซึ่งบันทึกในรูปแบบไฟล์ Excel (นามสกุล <code>.xlsx</code> หรือ <code>.xls</code>) เข้าสู่ฐานข้อมูลหลักของระบบอย่างรวดเร็ว โดยไม่จำเป็นต้องคีย์ข้อมูลทีละรายการ</p>
+            <p>นอกจากนี้ หน้าจอยังมีฟังก์ชันสำหรับจัดการข้อมูลแบบครอบคลุม เช่น การเรียกดูบันทึกประวัติการนำเข้าล่าสุด การลบข้อมูลผิดพลาดแบบระบุวันที่ และการลิงก์เชื่อมต่อเพื่อสืบค้นข้อมูลโดยละเอียดผ่านหน้าต่างป๊อปอัป</p>
+            
+            <div class="callout callout-info">
+                <div class="callout-title"><i class="fa-solid fa-circle-info"></i> ระบบรักษาความปลอดภัยและสิทธิ์การใช้งาน</div>
+                หน้าจอนี้มีการตรวจสอบสิทธิ์ความปลอดภัยในระบบ (Session) หากผู้ใช้งานไม่ได้ทำการเข้าสู่ระบบผ่านการตรวจสอบ (ไม่มีตัวแปร <code>alogin</code> หรือ <code>sale_name_id</code>) ระบบจะปฏิเสธการเข้าถึงและนำกลับไปยังหน้าล็อกอิน <code>index.php</code> ทันทีเพื่อความปลอดภัยของข้อมูล
+            </div>
+        </section>
+
+        <!-- SECTION 2: UI Layout -->
+        <section id="ui-layout" class="doc-section">
+            <h2><i class="fa-solid fa-desktop"></i> 2. โครงสร้างและการจัดวางหน้าจอ (Interactive Screen Layout)</h2>
+            <p>เพื่อทำความเข้าใจปุ่มและฟิลด์ต่างๆ บนหน้าจอ ให้เลื่อนเมาส์ไปชี้หรือคลิกที่ตัวเลขกำกับหมายเลขสีม่วงด้านล่างเพื่อดูคำอธิบายของแต่ละปุ่มฟังก์ชัน</p>
+
+            <div class="interactive-mockup">
+                <!-- Hotspots for Interactive Tour -->
+                <div class="hotspot" id="h1" onclick="showHotspot(1)">1</div>
+                <div class="hotspot" id="h2" onclick="showHotspot(2)">2</div>
+                <div class="hotspot" id="h3" onclick="showHotspot(3)">3</div>
+                <div class="hotspot" id="h4" onclick="showHotspot(4)">4</div>
+                <div class="hotspot" id="h5" onclick="showHotspot(5)">5</div>
+                <div class="hotspot" id="h6" onclick="showHotspot(6)">6</div>
+                <div class="hotspot" id="h7" onclick="showHotspot(7)">7</div>
+                <div class="hotspot" id="h8" onclick="showHotspot(8)">8</div>
+
+                <!-- Browser Screen Mockup -->
+                <div class="mockup-container">
+                    <div class="mockup-header">
+                        <div class="mockup-dot"></div>
+                        <div class="mockup-dot"></div>
+                        <div class="mockup-dot"></div>
+                        <div class="mockup-address-bar"><i class="fa-solid fa-lock"></i> https://sac-portal.com/import_data_sale_sac.php?m=ยอดขาย&s=นำเข้ายอดขาย</div>
+                    </div>
+                    <div class="mockup-screen">
+                        <div class="mock-card">
+                            <div class="mock-title"><i class="fa-solid fa-file-import"></i> นำเข้าข้อมูลการขาย SAC</div>
+                            
+                            <div class="mock-form-group">
+                                <label class="mock-label" style="border: 2px dashed #4f46e5; padding: 4px; border-radius: 4px; display:inline-block;">Select Excel File (เลือกไฟล์ Excel)</label>
+                                <input type="file" class="mock-input" disabled style="background-color:#fff;">
+                            </div>
+                            
+                            <div class="mock-btn-group">
+                                <button type="button" class="mock-btn mock-btn-primary" disabled><i class="fa-solid fa-upload"></i> Import</button>
+                                <button type="button" class="mock-btn mock-btn-success" disabled><i class="fa-solid fa-file-excel"></i> ตัวอย่างไฟล์ Excel Format Data สำหรับนำเข้า</button>
+                            </div>
+
+                            <div class="mock-last-log">
+                                📝 ข้อมูลประวัติการนำเข้าล่าสุด:<br>
+                                📥 นำเข้าไฟล์: ims_data_sale_sac_all_2026_06.xlsx<br>
+                                ⏱️ ล่าสุดวันที่: 19-06-2026 10:15:32 | จำนวนนำเข้าสำเร็จ: 1,520 รายการ
+                            </div>
+
+                            <div class="mock-divider"></div>
+
+                            <div class="row" style="display:flex; gap: 15px; align-items:flex-end;">
+                                <div style="flex:1;">
+                                    <label class="mock-label">เลือกวันที่ที่จะลบ (DI_DATE)</label>
+                                    <input type="date" class="mock-input" disabled value="2026-06-19" style="background-color:#fff;">
+                                </div>
+                                <div style="display:flex; gap:8px;">
+                                    <button type="button" class="mock-btn mock-btn-danger" disabled><i class="fa-solid fa-trash"></i> ลบข้อมูลตามวันที่</button>
+                                    <button type="button" class="mock-btn mock-btn-info" disabled><i class="fa-solid fa-eye"></i> ดูข้อมูลตามวันที่</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mock-card" style="margin-top: 15px;">
+                            <div class="mock-title" style="margin-bottom:10px;"><i class="fa-solid fa-table"></i> ตารางแสดงข้อมูลนำเข้าล่าสุด (ในฐานข้อมูล)</div>
+                            <div style="overflow-x:auto; background:white; padding:10px; border-radius:4px; border:1px solid #e2e8f0;">
+                                <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:left;">
+                                    <thead>
+                                        <tr style="border-bottom:2px solid #cbd5e1; background:#f1f5f9;">
+                                            <th style="padding:6px;">วันที่</th>
+                                            <th style="padding:6px;">เลขที่เอกสาร</th>
+                                            <th style="padding:6px;">ชื่อลูกค้า</th>
+                                            <th style="padding:6px;">ชื่อ Sale</th>
+                                            <th style="padding:6px;">รหัสสินค้า</th>
+                                            <th style="padding:6px;">รายละเอียด</th>
+                                            <th style="padding:6px;">จำนวน</th>
+                                            <th style="padding:6px;">ประเภท</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="border-bottom:1px solid #e2e8f0;">
+                                            <td style="padding:6px; font-weight:600; color:#3b82f6;">19-06-2026</td>
+                                            <td style="padding:6px;">IV-260619001</td>
+                                            <td style="padding:6px;">ร้านยางรุ่งเรืองยนต์</td>
+                                            <td style="padding:6px;">สมชาย มั่งมี</td>
+                                            <td style="padding:6px;">TIRE-MICH-001</td>
+                                            <td style="padding:6px;">ยาง Michelin Primacy 4 205/55R16</td>
+                                            <td style="padding:6px; font-weight:600;">4.00</td>
+                                            <td style="padding:6px;">ยางรถยนต์</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hotspot Details Container (Dynamically Updated) -->
+            <div class="hotspot-details" id="hotspotDetails">
+                <h4 id="hotspotTitle" style="font-size:16px; font-weight:600; margin-bottom:8px; display:flex; align-items:center; gap:8px;"></h4>
+                <p id="hotspotDesc" style="font-size:14px; margin:0; line-height:1.6;"></p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Import Process -->
+        <section id="import-process" class="doc-section">
+            <h2><i class="fa-solid fa-cloud-arrow-up"></i> 3. ขั้นตอนการนำเข้าไฟล์ข้อมูลการขาย (Excel Data Import Steps)</h2>
+            <p>ทำตามขั้นตอนดังต่อไปนี้เพื่อนำเข้าข้อมูลอย่างถูกต้องเข้าสู่ฐานข้อมูลหลัก:</p>
+            
+            <div class="step-grid">
+                <!-- Step 1 -->
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <div class="step-title"><i class="fa-solid fa-download"></i> 1. ดาวน์โหลดเทมเพลต</div>
+                    <div class="step-desc">คลิกปุ่ม <strong>"ตัวอย่างไฟล์ Excel Format Data สำหรับนำเข้า"</strong> เพื่อดาวน์โหลดรูปแบบการจัดเก็บข้อมูลยอดขายที่เป็นมาตรฐานของระบบ</div>
+                </div>
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <div class="step-title"><i class="fa-solid fa-file-circle-check"></i> 2. เตรียมเอกสารข้อมูล</div>
+                    <div class="step-desc">เปิดไฟล์ Excel และบันทึกข้อมูลยอดขายลงในชีตงานให้ตรงตามจำนวน ลำดับ และชนิดตัวแปรของคอลัมน์มาตรฐาน 37 คอลัมน์ (ห้ามสลับคอลัมน์)</div>
+                </div>
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <div class="step-title"><i class="fa-solid fa-file-circle-plus"></i> 3. เลือกไฟล์เข้าระบบ</div>
+                    <div class="step-desc">ที่หน้าจอหลัก ส่วนหัวข้อ <strong>"Select Excel File"</strong> ให้คลิกที่ช่องเลือกไฟล์ แล้วสืบค้นหาไฟล์เอกสาร Excel ที่ต้องการนำเข้าในคอมพิวเตอร์ของคุณ</div>
+                </div>
+                <!-- Step 4 -->
+                <div class="step-card">
+                    <div class="step-number">04</div>
+                    <div class="step-title"><i class="fa-solid fa-spinner"></i> 4. กดนำเข้าข้อมูล</div>
+                    <div class="step-desc">คลิกปุ่ม <strong>"Import"</strong> ตัวอักษรสีขาวพื้นหลังสีน้ำเงิน ระบบจะเริ่มทำงานแสดงสปินเนอร์หมุน ให้รอจนกว่าจะมีข้อความป๊อปอัปยืนยันผลลัพธ์</div>
+                </div>
+            </div>
+
+            <div class="callout callout-success">
+                <div class="callout-title"><i class="fa-solid fa-check-double"></i> เมื่อนำเข้าข้อมูลเสร็จสมบูรณ์</div>
+                ตารางรายการข้อมูลการนำเข้าด้านล่าง (DataTable) จะถูกโหลดข้อมูลขึ้นมาใหม่โดยอัตโนมัติ (Auto-reload) ทันที เพื่อให้คุณตรวจสอบรายการที่นำเข้าล่าสุดได้แบบเรียลไทม์
+            </div>
+        </section>
+
+        <!-- SECTION 4: Delete Process -->
+        <section id="delete-process" class="doc-section">
+            <h2><i class="fa-solid fa-trash-can"></i> 4. การลบข้อมูลแยกตามวันที่ (Delete Import Data By Date)</h2>
+            <p>ในกรณีที่นำเข้าข้อมูลผิดพลาด หรือยอดขายของวันที่ใดๆ มีข้อมูลไม่สมบูรณ์ ผู้ใช้สามารถล้างข้อมูลยอดขายทั้งวันของวันนั้นๆ เพื่อรอการนำเข้าใหม่ได้</p>
+            
+            <div class="callout callout-danger">
+                <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> ข้อควรระวังสูงสุด</div>
+                การดำเนินการลบข้อมูลตามวันที่ จะลบแถวรายการยอดขายของวันที่ระบุนั้น <strong>"ทั้งหมดทุกรายการ"</strong> ออกจากฐานข้อมูลของบริษัท และการลบนี้จะสำเร็จทันทีแบบไม่มีวิธีกู้คืน (Undo) ยอดขายกลับมาได้หลังจากลบแล้ว กรุณาตรวจสอบวันที่ยืนยันอย่างเข้มงวด
+            </div>
+
+            <h4 style="font-size:15px; font-weight:600; margin-bottom:12px; margin-top:20px;">ขั้นตอนการลบข้อมูลการขาย:</h4>
+            <ol style="margin-left: 20px; line-height: 1.8; color: var(--text-muted); font-size:14px;">
+                <li>เลื่อนลงไปที่กล่องเมนูการจัดการข้อมูล (ล่างปุ่มนำเข้า)</li>
+                <li>คลิกปฏิทินที่ช่อง <strong>"เลือกวันที่ที่จะลบ"</strong> เลือกวัน เดือน ปี ค.ศ. ที่ต้องการประมวลผลลบข้อมูล</li>
+                <li>คลิกปุ่มสีแดง <strong>"ลบข้อมูลตามวันที่"</strong></li>
+                <li>ระบบจะแสดงกล่องแจ้งเตือน Pop-up แจ้งคำยืนยัน เช่น <em>"คุณต้องการลบข้อมูลวันที่ DD-MM-YYYY จริงหรือไม่?"</em></li>
+                <li>กดตกลง (OK) เพื่อยืนยันการลบ หรือ ยกเลิก (Cancel) เพื่อถอยกลับ</li>
+                <li>เมื่อระบบลบข้อมูลเสร็จสิ้น จะแสดงผลสถานะแจ้งเตือนจำนวนแถวที่ลบไป และตารางรายการด้านล่างจะอัปเดตรีเฟรชผลลัพธ์ทันที</li>
+            </ol>
+        </section>
+
+        <!-- SECTION 5: Display Process -->
+        <section id="display-process" class="doc-section">
+            <h2><i class="fa-solid fa-magnifying-glass"></i> 5. การดูและค้นหาข้อมูลละเอียด (Popup Details & Query Screen)</h2>
+            <p>เพื่อหลีกเลี่ยงการสืบค้นข้อมูลที่ทำให้หน้าจอหลักช้าลง ระบบได้แยกหน้าแสดงข้อมูลไว้อีกหนึ่งหน้าจอคือ <code>display_import_data_sale_sac.php</code> ซึ่งจะเปิดขึ้นในแท็บหรือหน้าต่างใหม่</p>
+
+            <h4 style="font-size:15px; font-weight:600; margin-bottom:12px; margin-top:20px;">วิธีการใช้งานหน้าต่างแสดงข้อมูลนำเข้าย่อย (Popup Display Window):</h4>
+            <ol style="margin-left: 20px; line-height: 1.8; color: var(--text-muted); font-size:14px; margin-bottom: 20px;">
+                <li>คลิกที่ปุ่มสีฟ้า <strong>"ดูข้อมูลตามวันที่"</strong> (มีไอคอนแว่นขยาย) บนหน้าจอหลัก</li>
+                <li>ระบบจะเปิดหน้าต่างใหม่ในเว็บเบราว์เซอร์ ซึ่งจะแสดงข้อมูลประวัติของวันนี้ (Today) เป็นค่าเริ่มต้นโดยอัตโนมัติ</li>
+                <li><strong>หากต้องการค้นหาวันที่อื่น:</strong>
+                    <ul style="margin-left:20px; list-style-type:circle;">
+                        <li>คลิกเปลี่ยนวันที่ในช่อง <code>เลือกวันที่ (DI_DATE)</code></li>
+                        <li>ระบบจะทำการดึงข้อมูลใหม่มาแสดงในตารางแบบเรียลไทม์ทันทีเมื่อมีการคลิกเปลี่ยนวันที่</li>
+                        <li>หรือคลิกปุ่ม <strong>"ค้นหา"</strong> (สีน้ำเงิน) เพื่อค้นหาด้วยตนเอง</li>
+                    </ul>
+                </li>
+                <li>คลิกปุ่ม <strong>"รีเซ็ตเป็นวันนี้"</strong> (สีเทา) เพื่อย้อนกลับมาที่ข้อมูลของวันปัจจุบันได้อย่างรวดเร็ว</li>
+                <li><strong>ฟังก์ชันลบข้อมูลด่วน:</strong> สามารถคลิกปุ่มสีส้ม/เหลือง <strong>"ลบข้อมูลตามวันที่"</strong> เพื่อทำการลบประวัติเฉพาะวันที่คุณกำลังเปิดแสดงอยู่ ณ ขณะนั้นได้ทันที</li>
+                <li>คลิกปุ่ม <strong>"ปิดหน้าต่าง"</strong> (สีแดง) เมื่อต้องการยุติการสืบค้นและปิดหน้าต่างย่อยนี้ลง</li>
+            </ol>
+            
+            <div class="callout callout-warning">
+                <div class="callout-title"><i class="fa-solid fa-window-restore"></i> กรณีปุ่มดูข้อมูลตามวันที่ใช้งานไม่ได้</div>
+                หากคลิกปุ่ม "ดูข้อมูลตามวันที่" แล้วไม่มีอะไรเกิดขึ้น โปรดตรวจสอบว่าเว็บเบราว์เซอร์ของคุณมีการบล็อกป๊อปอัป (Popup Blocker) หรือไม่ ให้กดอนุญาตการเปิดหน้าต่างสำหรับโดเมนเว็บไซต์นี้เสมอ
+            </div>
+        </section>
+
+        <!-- SECTION 6: Excel Template Structure -->
+        <section id="excel-template" class="doc-section">
+            <h2><i class="fa-solid fa-table-cells"></i> 6. รูปแบบโครงสร้างไฟล์ Excel นำเข้า (Standard Template Specifications)</h2>
+            <p>เพื่อป้องกันไม่ให้การรันสคริปต์ PHP เกิดความล้มเหลว ไฟล์ข้อมูล Excel ที่นำเข้าจะต้องประกอบด้วยคอลัมน์มาตรฐานทั้งหมด 37 คอลัมน์ (Index 0 ถึง 36) โดยห้ามลบ ย้าย หรือเพิ่มหัวคอลัมน์ใดๆ เข้ามา ตารางด้านล่างแสดงโครงสร้างคอลัมน์สำคัญที่ระบบประมวลผล:</p>
+            
+            <div class="table-responsive">
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>คอลัมน์ (Index)</th>
+                            <th>รหัสตัวแปรระบบ</th>
+                            <th>รายละเอียดข้อมูล</th>
+                            <th>ชนิดข้อมูล (Data Type)</th>
+                            <th>ตัวอย่างข้อมูล</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                                            <td><code>A (0)</code></td>
+                                            <td>DI_DATE_BLANK</td>
+                                            <td>วันที่เอกสาร (วันที่ต้นทางจากไฟล์)</td>
+                                            <td><span class="badge badge-primary">String / Date</span></td>
+                                            <td>19-06-2026</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>B (1)</code></td>
+                                            <td>DI_DAY</td>
+                                            <td>วันที่ขาย (เฉพาะตัวเลขวัน 1-31)</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>19</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>C (2)</code></td>
+                                            <td>DI_MONTH_NAME</td>
+                                            <td>ชื่อย่อหรือชื่อเต็มของเดือน</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>มิ.ย. / Jun</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>D (3)</code></td>
+                                            <td>DI_YEAR</td>
+                                            <td>ปี ค.ศ. (ตัวเลข 4 หลัก)</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>2026</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>E (4)</code></td>
+                                            <td>AR_CODE</td>
+                                            <td>รหัสลูกค้า / รหัสสมาชิกร้านค้า</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>AR-00421</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>F (5)</code></td>
+                                            <td>SKU_CODE</td>
+                                            <td>รหัสสินค้าหลัก</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>TIRE-MICH-001</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>G (6)</code></td>
+                                            <td>SKU_NAME</td>
+                                            <td>ชื่อสินค้าอย่างละเอียด</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>ยาง Michelin Primacy 4 205/55R16</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>H (7)</code></td>
+                                            <td>DETAIL</td>
+                                            <td>รายละเอียดเพิ่มเติมของสินค้า</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>ยางรถยนต์ขอบ 16 นิ้ว</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>I (8)</code></td>
+                                            <td>BRAND</td>
+                                            <td>ยี่ห้อ / แบรนด์สินค้า</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>MICHELIN</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>J (9)</code></td>
+                                            <td>DI_REF</td>
+                                            <td>เลขที่ใบกำกับภาษี / เลขที่เอกสารการขาย</td>
+                                            <td><span class="badge badge-warning">Required</span></td>
+                                            <td>IV-69123001</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>K (10)</code></td>
+                                            <td>AR_NAME</td>
+                                            <td>ชื่อ-นามสกุลลูกค้า / ชื่อร้านค้า</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>ร้านนำชัยยางยนต์</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>L (11)</code></td>
+                                            <td>SALE_NAME</td>
+                                            <td>ชื่อพนักงานขายผู้รับผิดชอบหลัก</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>วิภาดา ลาภผล</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>M (12)</code></td>
+                                            <td>TAKE_NAME</td>
+                                            <td>ชื่อผู้ร่วมขาย / พนักงานรับสินค้า</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>สมยศ สุขใจ</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>N (13)</code></td>
+                                            <td>SALE_NAME_BLANK</td>
+                                            <td>คอลัมน์สำรองชื่อผู้ขาย</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>O (14)</code></td>
+                                            <td>TAKE_NAME_BLANK</td>
+                                            <td>คอลัมน์สำรองชื่อผู้ร่วมรับสินค้า</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>P (15)</code></td>
+                                            <td>TRD_QTY</td>
+                                            <td>จำนวนสินค้าที่ขาย</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>4.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>Q (16)</code></td>
+                                            <td>TRD_PRC</td>
+                                            <td>ราคาขายต่อหน่วยสินค้า</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>3200.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>R (17)</code></td>
+                                            <td>TRD_DISCOUNT</td>
+                                            <td>ส่วนลดรวมประจำรายการ</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>500.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>S (18)</code></td>
+                                            <td>TRD_TOTAL_PRICE</td>
+                                            <td>มูลค่าขายรวมก่อนภาษี (Subtotal)</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>12800.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>T (19)</code></td>
+                                            <td>TRD_VAT</td>
+                                            <td>ภาษีมูลค่าเพิ่ม (VAT 7%)</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>861.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>U (20)</code></td>
+                                            <td>TRD_AMOUNT_PRICE</td>
+                                            <td>จำนวนเงินขายสุทธิรวมภาษี (Net Price)</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>13161.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>V (21)</code></td>
+                                            <td>TRD_PER_POINT</td>
+                                            <td>คะแนนสะสมที่ได้ต่อชิ้นสินค้า</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>10.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>W (22)</code></td>
+                                            <td>TRD_TOTAL_POINT</td>
+                                            <td>คะแนนสะสมรวมของรายการ</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>40.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>X (23)</code></td>
+                                            <td>WL_CODE</td>
+                                            <td>รหัสคลังสินค้าเบิกจ่าย</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>WH-TIRE01</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>Y (24)</code></td>
+                                            <td>TRD_Q_FREE</td>
+                                            <td>จำนวนของแถม (กรณีแจกฟรี)</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>Z (25)</code></td>
+                                            <td>TRD_AMPHUR</td>
+                                            <td>อำเภอ (ที่ตั้งลูกค้า)</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>สามพราน</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AA (26)</code></td>
+                                            <td>TRD_PROVINCE</td>
+                                            <td>จังหวัด (ที่ตั้งลูกค้า)</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>นครปฐม</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AB (27)</code></td>
+                                            <td>TRD_MARK</td>
+                                            <td>หมายเหตุการส่งสินค้า (Zone)</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>ส่งหน้างานเฟส 2</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AC (28)</code></td>
+                                            <td>TRD_U_POINT</td>
+                                            <td>คะแนนที่ใช้สิทธิ์ไป</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AD (29)</code></td>
+                                            <td>TRD_R_POINT</td>
+                                            <td>คะแนนสะสมทั่วไป</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>40</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AE (30)</code></td>
+                                            <td>TRD_S_POINT</td>
+                                            <td>คะแนนสะสมพิเศษ</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AF (31)</code></td>
+                                            <td>TRD_T_POINT</td>
+                                            <td>ยอดสะสมคะแนนสุทธิรวม</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>40</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AG (32)</code></td>
+                                            <td>TRD_COMPARE</td>
+                                            <td>ข้อมูลสำหรับเปรียบเทียบวิเคราะห์</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AH (33)</code></td>
+                                            <td>TRD_SHOP</td>
+                                            <td>รหัสสาขาร้านค้า / ช่องทางการขาย</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>OFFLINE</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AI (34)</code></td>
+                                            <td>TRD_BY_MOBAPP</td>
+                                            <td>บ่งชี้สั่งซื้อผ่านโมบายแอปพลิเคชัน</td>
+                                            <td><span class="badge badge-primary">String / Numeric</span></td>
+                                            <td>N / 0</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AJ (35)</code></td>
+                                            <td>TRD_YEAR_OLD</td>
+                                            <td>อายุลูกค้าเป็นปี / ปีเก่าข้อมูล</td>
+                                            <td><span class="badge badge-success">Numeric</span></td>
+                                            <td>2026</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AK (36)</code></td>
+                                            <td>SKU_CAT</td>
+                                            <td>รหัสหมวดหมู่หรือกลุ่มสินค้า</td>
+                                            <td><span class="badge badge-primary">String</span></td>
+                                            <td>TIRES</td>
+                                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <p style="font-size:13px; font-style:italic;">* หมายเหตุ: ลำดับแถวและจำนวนคอลัมน์ของไฟล์ Excel นำเข้าต้องเรียงตามหัวตารางข้างต้นจากคอลัมน์ A (Index 0) ถึง คอลัมน์ AK (Index 36) ครบถ้วนทุกคอลัมน์ (ห้ามทำการสลับคอลัมน์ หรือตัดทิ้งเด็ดขาด) เพื่อไม่ให้ระบบดึงข้อมูลผิดพลาด</p>
+        </section>
+
+        <!-- SECTION 7: Troubleshooting -->
+        <section id="troubleshooting" class="doc-section">
+            <h2><i class="fa-solid fa-circle-exclamation"></i> 7. ปัญหาที่พบบ่อยและข้อควรระวัง (Troubleshooting & Caveats)</h2>
+            <p>หากคุณพบข้อผิดพลาดหรือปัญหาเกี่ยวกับการทำงานของระบบระหว่างการใช้งานหน้าจอนำเข้าข้อมูลยอดขาย ให้ลองตรวจสอบแนวทางแก้ไขดังต่อไปนี้:</p>
+            
+            <div style="margin: 20px 0;">
+                <h4 style="font-size: 15px; font-weight: 600; color: var(--text-main); margin-bottom: 6px;"><i class="fa-solid fa-circle-chevron-right" style="color:var(--danger);"></i> เกิดข้อผิดพลาด "Invalid file type"</h4>
+                <p style="margin-left: 20px; font-size:14px;">ระบบนี้อนุญาตให้นำเข้าเฉพาะไฟล์ที่ตรวจพบชนิดข้อมูลแบบ <strong>Excel (.xlsx และ .xls)</strong> เท่านั้น หากบันทึกไฟล์เป็น PDF, CSV, Word หรือรูปภาพ ระบบจะตรวจจับและยกเลิกกระบวนการอัปโหลดอัตโนมัติ วิธีแก้คือให้ตรวจสอบนามสกุลของไฟล์งานและทำการบันทึกข้อมูลเป็น Excel Worksheet เสมอ</p>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="font-size: 15px; font-weight: 600; color: var(--text-main); margin-bottom: 6px;"><i class="fa-solid fa-circle-chevron-right" style="color:var(--danger);"></i> นำเข้าข้อมูลแล้ว ตัวเลขหรือจำนวนแสดงเป็นศูนย์ (0)</h4>
+                <p style="margin-left: 20px; font-size:14px;">หากข้อมูล เช่น ยอดเงิน หรือ จำนวนขาย มีการขึ้นเครื่องหมายผิดพลาดทางสูตร เช่น <code>#N/A</code> หรือ <code>#REF!</code> ระบบนำเข้าอัจฉริยะจะทำการกรองและแปลงค่าผิดพลาดเหล่านั้นให้กลายเป็นตัวเลข <code>0</code> ทันทีเพื่อป้องกันไม่ให้โครงสร้างฐานข้อมูลเสียหาย โปรดตรวจสอบสูตรการคำนวณและข้อมูลต้นทางใน Excel ให้ไม่มีค่า Error ก่อนการนำเข้า</p>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="font-size: 15px; font-weight: 600; color: var(--text-main); margin-bottom: 6px;"><i class="fa-solid fa-circle-chevron-right" style="color:var(--danger);"></i> หน้าจอค้าง หรือขึ้นแจ้งเตือน Timeout ในการอัปโหลดไฟล์ขนาดใหญ่</h4>
+                <p style="margin-left: 20px; font-size:14px;">ฝั่งเซิร์ฟเวอร์ได้รับการตั้งค่าให้รองรับการทำงานแบบยาวนานโดยไม่จำกัดเวลา (<code>set_time_limit(0)</code>) และขยายหน่วยความจำสำหรับไฟล์ขนาดใหญ่ถึง 2GB (<code>memory_limit 2048M</code>) แต่หากอินเทอร์เน็ตของผู้ใช้งานไม่เสถียร อาจส่งผลให้เว็บเบราว์เซอร์หยุดตอบสนอง แนะนำให้แบ่งย่อยไฟล์ยอดขายหากมีขนาดใหญ่เกินกว่า 30,000 แถว หรือติดต่อผู้ดูแลระบบเน็ตเวิร์กเพื่อช่วยนำเข้า</p>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <h4 style="font-size: 15px; font-weight: 600; color: var(--text-main); margin-bottom: 6px;"><i class="fa-solid fa-circle-chevron-right" style="color:var(--danger);"></i> ข้อมูลการขายไม่แสดงในตารางหลังนำเข้าสำเร็จ</h4>
+                <p style="margin-left: 20px; font-size:14px;">ระบบมีกลไกป้องกันการนำเข้าข้อมูลซ้ำ (Duplicate Prevention) โดยตรวจสอบคีย์สำคัญของรายการ เช่น วันที่, เลขที่เอกสาร, รหัสสินค้า, จำนวนขาย และมูลค่าเงินสุทธิ หากตรวจสอบแล้วพบว่าแถวนั้นมีอยู่แล้วในระบบอย่างสมบูรณ์ รายการดังกล่าวจะไม่ถูกนำเข้าเพิ่มเพื่อป้องกันข้อมูลทับซ้อนและข้อมูลไม่ตรงตามจริง</p>
+            </div>
+        </section>
+
+        <!-- Footer section -->
+        <footer>
+            <p>© 2026 บริษัท ส.อรุณ คอนกรีต จำกัด (SAC). สงวนลิขสิทธิ์ระบบประมวลผลข้อมูลการขายภายในองค์กร</p>
+            <p style="margin-top: 5px; font-size:11px; color:var(--text-muted);">คู่มือเอกสารเวอร์ชัน 1.0.2 - ปรับปรุงล่าสุดวันที่ 19 มิถุนายน 2589</p>
+        </footer>
+    </main>
+
+    <!-- Back to top button -->
+    <button id="backToTop" onclick="scrollToTop()" title="กลับไปด้านบน"><i class="fa-solid fa-arrow-up"></i></button>
+
+    <!-- Script Section -->
+    <script>
+        // Hotspot information data source
+        const hotspotData = {
+            1: {
+                title: "เลือกไฟล์นำเข้า (Select Excel File)",
+                desc: "คลิกเพื่อเรียกดูและอัปโหลดไฟล์ Excel (.xlsx หรือ .xls) ที่เก็บข้อมูลยอดขายเพื่อทำการนำเข้าสู่ระบบ"
+            },
+            2: {
+                title: "ปุ่ม Import (นำเข้าข้อมูล)",
+                desc: "คลิกเพื่อส่งไฟล์ Excel ที่เลือกไปให้ระบบหลังบ้านทำการนำเข้าข้อมูลลงสู่ตารางระบบหลัก มีสปินเนอร์หมุนตรวจสอบการโหลดและจะแสดงแจ้งเตือนความสำเร็จเมื่อนำเข้าเสร็จสิ้น"
+            },
+            3: {
+                title: "ปุ่มตัวอย่างไฟล์ Excel",
+                desc: "คลิกเพื่อเปิดแท็บใหม่และดาวน์โหลดไฟล์ Excel ต้นแบบมาตรฐาน (.xlsx) สำหรับเป็นตัวอย่างในการจัดลำดับคอลัมน์ 37 คอลัมน์ที่จำเป็น"
+            },
+            4: {
+                title: "บันทึกและสถานะการนำเข้าล่าสุด",
+                desc: "แสดงรายละเอียดรายงานล่าสุดที่เคยมีผู้นำเข้าสำเร็จ เช่น ชื่อไฟล์ล่าสุด วันและเวลา และยอดรวมจำนวนรายการที่ถูกบันทึกลงฐานข้อมูลเพื่อการตรวจสอบย้อนหลัง"
+            },
+            5: {
+                title: "เลือกวันที่ลบข้อมูล (Delete Date)",
+                desc: "คลิกเพื่อเปิดเครื่องมือเลือกวัน เดือน ปี เพื่อกำหนดเป้าหมายวันที่ที่ต้องการล้างยอดขายออกจากระบบ"
+            },
+            6: {
+                title: "ปุ่มลบข้อมูลตามวันที่",
+                desc: "กดเพื่อดำเนินการล้างข้อมูลยอดขายทั้งหมดที่มีค่าของวันที่การขาย (DI_DATE) ตรงตามที่คุณระบุในช่องเลือกวันที่ มีหน้าต่างยืนยันความปลอดภัยเพื่อป้องกันการกดพลาด"
+            },
+            7: {
+                title: "ปุ่มดูข้อมูลตามวันที่",
+                desc: "คลิกเพื่อเปิดหน้าต่าง Popup ย่อย (display_import_data_sale_sac.php) ในแท็บใหม่ สำหรับทำการสืบค้น เจาะลึกข้อมูลของวันต่างๆ และลบข้อมูลได้อย่างอิสระโดยตรง"
+            },
+            8: {
+                title: "ตารางสรุปรายการล่าสุด (DataTable)",
+                desc: "ตารางแสดงผลประวัติยอดขายล่าสุดที่อยู่ในระบบ แสดงคอลัมน์สำคัญ เช่น เลขที่เอกสาร ชื่อลูกค้า รหัสสินค้า และยอดเงินขาย สามารถจัดเรียงและสไลด์เลื่อนแถวในแนวนอนได้"
+            }
+        };
+
+        // Hotspot Interaction Function
+        function showHotspot(id) {
+            const details = document.getElementById("hotspotDetails");
+            const title = document.getElementById("hotspotTitle");
+            const desc = document.getElementById("hotspotDesc");
+
+            if (hotspotData[id]) {
+                title.innerHTML = `<i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> จุดที่ ${id}: ${hotspotData[id].title}`;
+                desc.innerText = hotspotData[id].desc;
+                details.style.display = "block";
+                
+                // Scroll down to the details box smoothly
+                details.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // Search in documentation function
+        function searchDocumentation() {
+            const input = document.getElementById('docSearch');
+            const filter = input.value.toLowerCase();
+            const sections = document.querySelectorAll('.doc-section');
+            
+            sections.forEach(section => {
+                const text = section.innerText.toLowerCase();
+                if (text.includes(filter)) {
+                    section.style.display = "";
+                } else {
+                    section.style.display = "none";
+                }
+            });
+        }
+
+        // Toggle Dark/Light Theme
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute("data-theme");
+            const mockup = document.querySelector(".mockup-container");
+            
+            if (currentTheme === "dark") {
+                body.removeAttribute("data-theme");
+                mockup.classList.remove("dark-theme-mockup");
+                localStorage.setItem("theme", "light");
+            } else {
+                body.setAttribute("data-theme", "dark");
+                mockup.classList.add("dark-theme-mockup");
+                localStorage.setItem("theme", "dark");
+            }
+        }
+
+        // Restore theme on load
+        window.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("theme");
+            const mockup = document.querySelector(".mockup-container");
+            if (savedTheme === "dark") {
+                document.body.setAttribute("data-theme", "dark");
+                if (mockup) mockup.classList.add("dark-theme-mockup");
+            }
+        });
+
+        // Sidebar active link spy
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.doc-section');
+            const navLi = document.querySelectorAll('aside.sidebar .sidebar-menu li');
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLi.forEach(li => {
+                li.classList.remove('active');
+                const href = li.querySelector('a').getAttribute('href').substring(1);
+                if (href === current) {
+                    li.classList.add('active');
+                }
+            });
+        });
+
+        // Back to top scroll tracking
+        const backToTopBtn = document.getElementById("backToTop");
+        window.onscroll = function() {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTopBtn.classList.add("show");
+            } else {
+                backToTopBtn.classList.remove("show");
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+    </script>
+</body>
+</html>

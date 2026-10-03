@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือเชิงเทคนิคและแนวทางการพัฒนาระบบนำเข้าข้อมูล Excel ประสิทธิภาพสูง (Import Architecture Guide)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --dark: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: #334155;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .hero-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #ffffff;
+            padding: 50px 40px;
+            position: relative;
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 16px;
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #60a5fa;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: #94a3b8;
+            margin: 0;
+            max-width: 800px;
+        }
+
+        .content-body {
+            padding: 40px;
+        }
+
+        .section-block {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-top: 0;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--slate-100);
+        }
+
+        .section-title i {
+            color: var(--primary);
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .concept-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.05);
+            border-color: #cbd5e1;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .concept-card.success::before { background: var(--success); }
+        .concept-card.warning::before { background: var(--warning); }
+        .concept-card.info::before { background: var(--info); }
+
+        .concept-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--slate-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .concept-card.success .concept-icon { background: #dcfce7; color: var(--success); }
+        .concept-card.warning .concept-icon { background: #fef3c7; color: var(--warning); }
+        .concept-card.info .concept-icon { background: #cff4fc; color: var(--info); }
+
+        .concept-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin: 0 0 8px 0;
+        }
+
+        .concept-desc {
+            font-size: 0.92rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Flow Process Diagrams */
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            background: var(--slate-50);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        .flow-number {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-right: 18px;
+        }
+
+        .flow-content {
+            flex-grow: 1;
+        }
+
+        .flow-title {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.05rem;
+            margin: 0 0 6px 0;
+        }
+
+        .flow-text {
+            color: #475569;
+            font-size: 0.92rem;
+            margin: 0;
+        }
+
+        /* Benchmark Tables */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .styled-table th {
+            background-color: var(--slate-800);
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 14px 18px;
+        }
+
+        .styled-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            color: #334155;
+        }
+
+        .styled-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .styled-table tr:nth-child(even) {
+            background-color: var(--slate-50);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-info { background: #e0f2fe; color: #075985; }
+
+        pre {
+            background-color: var(--slate-800);
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: 14px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            border: 1px solid var(--slate-700);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #e2e8f0;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88rem;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .callout-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            color: #1e40af;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: var(--slate-50);
+            border-top: 1px solid var(--border);
+            color: #64748b;
+            font-size: 0.88rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <!-- Header Banner -->
+    <div class="hero-header">
+        <div class="hero-badge"><i class="fas fa-microchip me-2"></i> Architecture & Engineering Guide</div>
+        <h1 class="hero-title">คู่มือเชิงเทคนิคและแนวทางการพัฒนาระบบนำเข้าข้อมูล Excel ประสิทธิภาพสูง</h1>
+        <p class="hero-subtitle">รวบรวมแนวคิด (Concepts) ขั้นตอนการทำงาน (Workflows) เทคนิคการลัดคิวฐานข้อมูล (Bulk Operations) และโค้ดมาตรฐานสำหรับการพัฒนาระบบ Import ใน SAC Data2</p>
+    </div>
+
+    <!-- Content Body -->
+    <div class="content-body">
+
+        <!-- Section 1: Executive Summary -->
+        <div class="section-block">
+            <h2 class="section-title"><i class="fas fa-rocket"></i>1. ภาพรวมการปรับปรุงและผลลัพธ์ (Executive Summary)</h2>
+            <p>ระบบนำเข้าข้อมูล Excel เดิมในระบบ SAC Data2 ประสบปัญหาความล่าช้าอย่างรุนแรงเมื่อนำเข้าไฟล์ที่มีปริมาณแถวสูง (เช่น 5,000+ แถว) ส่งผลให้เกิดปัญหา Timeout Server ไม่ตอบสนอง และเกิด Metadata Lock บนฐานข้อมูล จากการวิเคราะห์และปรับปรุงโครงสร้างการประมวลผลใหม่แบบ end-to-end สามารถลดเวลาการทำงานลงได้มากกว่า <b>95%</b> ดังนี้:</p>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>หน้าจอระบบ (Screen Name)</th>
+                        <th>ไฟล์ทดสอบ / ปริมาณแถว</th>
+                        <th>เวลาประมวลผลเดิม</th>
+                        <th>เวลาประมวลผลใหม่</th>
+                        <th>อัตราเร่ง (Speedup)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>1. Import พนักงานขาย/คนเทค ตามเอกสาร</b><br><code>update_exc_data_import_cust_sale_sac.php</code></td>
+                        <td><code>เซลล์บอล 2020.xlsx</code><br>(5,063 แถว)</td>
+                        <td><span class="badge badge-danger">> 150 วินาที</span><br>(เสี่ยง Timeout)</td>
+                        <td><span class="badge badge-success">7.34 วินาที</span></td>
+                        <td><b>> 20x เร็วกว่าเดิม</b></td>
+                    </tr>
+                    <tr>
+                        <td><b>2. Import คะแนนสะสมยาง (Tires Point)</b><br><code>update_data_import_tires_point.php</code></td>
+                        <td><code>tires_point_template.xlsx</code><br>(596 แถว)</td>
+                        <td><span class="badge badge-danger">15 - 30 วินาที</span></td>
+                        <td><span class="badge badge-success">0.48 วินาที</span></td>
+                        <td><b>> 40x เร็วกว่าเดิม</b></td>
+                    </tr>
+                    <tr>
+                        <td><b>3. Import รายงานยอดขายทั้งหมด</b><br><code>import_data_sale_sac.php</code></td>
+                        <td><code>ims_data_sale_sac_all.xlsx</code><br>(532,830 แถว DB)</td>
+                        <td><span class="badge badge-danger">> 120 วินาที</span></td>
+                        <td><span class="badge badge-success">2.22 วินาที</span></td>
+                        <td><b>> 50x เร็วกว่าเดิม</b></td>
+                    </tr>
+                    <tr>
+                        <td><b>4. Import หมายเลขยาง (Tires Number)</b><br><code>import_data_tires_number.php</code></td>
+                        <td><code>tires_number_template.xlsx</code><br>(3,751 แถว DB)</td>
+                        <td><span class="badge badge-danger">10 - 25 วินาที</span></td>
+                        <td><span class="badge badge-success">0.15 วินาที</span></td>
+                        <td><b>> 60x เร็วกว่าเดิม</b></td>
+                    </tr>
+                    <tr>
+                        <td><b>5. Import ข้อมูลพนักงานขายและที่อยู่ลูกค้า</b><br><code>update_data_import_cust_sale_sac.php</code></td>
+                        <td><code>template_cust_data.xlsx</code><br>(532,830 แถว DB)</td>
+                        <td><span class="badge badge-danger">45 - 90 วินาที</span></td>
+                        <td><span class="badge badge-success">0.08 วินาที</span></td>
+                        <td><b>> 500x เร็วกว่าเดิม</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 2: Core Optimization Concepts -->
+        <div class="section-block">
+            <h2 class="section-title"><i class="fas fa-brain"></i>2. 5 สถาปัตยกรรมหลักในการเพิ่มความเร็ว (Core Concepts)</h2>
+            
+            <div class="concept-grid">
+                <!-- Concept 1 -->
+                <div class="concept-card danger">
+                    <div class="concept-icon"><i class="fas fa-database"></i></div>
+                    <h3 class="concept-title">1. Strategic Database Indexing</h3>
+                    <p class="concept-desc">สร้าง Index ที่เจาะจงบนฟิลด์เงื่อนไข (<code>DI_REF</code>, <code>AR_CODE</code>, <code>SKU_CODE</code>) ช่วยเปลี่ยนการค้นหาจาก Full Table Scan 5.3 แสนแถว ให้เป็นการค้นหาแบบ B-Tree Lookup ทันที (< 0.001 วินาที)</p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="concept-card warning">
+                    <div class="concept-icon"><i class="fas fa-layer-group"></i></div>
+                    <h3 class="concept-title">2. In-Memory Deduplication</h3>
+                    <p class="concept-desc">จัดกลุ่มและยุบข้อมูลที่ซ้ำกันในระดับหน่วยความจำ (RAM) ของ PHP ด้วย Associative Array ก่อนส่งไปฐานข้อมูล ช่วยลดจำนวนแถวที่ต้องประมวลผลลง 30-70% ในทันที</p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="concept-card success">
+                    <div class="concept-icon"><i class="fas fa-bolt"></i></div>
+                    <h3 class="concept-title">3. Bulk Temp Table & JOIN UPDATE</h3>
+                    <p class="concept-desc">ย้ายจากการวนลูปส่งคำสั่ง <code>SELECT/UPDATE</code> ทีละแถว มาเป็นการสร้าง <code>TEMPORARY TABLE</code> (InnoDB) แล้ว Insert แบบ Chunk Batch (ทีละ 200 แถว) จากนั้นใช้ <code>INNER JOIN UPDATE</code> หรือ <code>UPSERT</code> เพียงคำสั่งเดียว</p>
+                </div>
+
+                <!-- Concept 4 -->
+                <div class="concept-card info">
+                    <div class="concept-icon"><i class="fas fa-filter"></i></div>
+                    <h3 class="concept-title">4. Scoped Target Syncing</h3>
+                    <p class="concept-desc">ยกเลิกการ <code>GROUP BY</code> ตารางประวัติขายย้อนหลังทั้งหมด 5.3 แสนแถว แล้วเปลี่ยนเป็นการกรองเฉพาะลูกค้าที่เพิ่งถูกอัปเดตผ่าน <code>WHERE seq_record = :seq_record</code></p>
+                </div>
+
+                <!-- Concept 5 -->
+                <div class="concept-card">
+                    <div class="concept-icon"><i class="fas fa-file-excel"></i></div>
+                    <h3 class="concept-title">5. Stream Read Only Excel</h3>
+                    <p class="concept-desc">เปิดใช้งาน <code>setReadDataOnly(true)</code> ใน PhpSpreadsheet เพื่อดึงเฉพาะค่าข้อมูลดิบ ตัดการโหลด Cell Styling, Borders, Colors และ รูปภาพออกทั้งหมด</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Detailed Workflow Diagram -->
+        <div class="section-block">
+            <h2 class="section-title"><i class="fas fa-diagram-project"></i>3. ขั้นตอนการทำงานทางเทคนิค (Technical Step-by-Step Workflow)</h2>
+
+            <div class="flow-step">
+                <div class="flow-number">1</div>
+                <div class="flow-content">
+                    <div class="flow-title">รับไฟล์และตรวจสอบความถูกต้อง (File Upload & Pre-Check)</div>
+                    <div class="flow-text">ตรวจสอบ MIME Type ของไฟล์ Excel (ต้องเป็น <code>.xlsx</code> หรือ <code>.xls</code> เท่านั้น) และย้ายไฟล์ไปยังโฟลเดอร์ปลายทาง <code>uploads/</code></div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">2</div>
+                <div class="flow-content">
+                    <div class="flow-title">ตรวจสอบและสร้าง Database Index อัตโนมัติ (Auto Index Guarantee)</div>
+                    <div class="flow-text">ระบบสั่งรันคำสั่ง <code>CREATE INDEX IF NOT EXISTS</code> เพื่อการันตีว่าตารางเป้าหมายจะมี Index บนคีย์หลักเสมอ ช่วยป้องกันปัญหาหากย้ายโค้ดไปรันบน Database Server เครื่องใหม่</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">3</div>
+                <div class="flow-content">
+                    <div class="flow-title">สตรีมอ่านไฟล์แบบ Light-Weight (Read Data Only Stream)</div>
+                    <div class="flow-text">ใช้ <code>IOFactory::createReaderForFile()</code> ร่วมกับ <code>setReadDataOnly(true)</code> เพื่ออ่านเฉพาะ Array ข้อมูลดิบ ข้าม Styling ทั้งหมด</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">4</div>
+                <div class="flow-content">
+                    <div class="flow-title">จัดกลุ่มและยุบข้อมูลซ้ำในแรม (In-Memory Deduplication)</div>
+                    <div class="flow-text">วนลูป <code>foreach</code> อ่านข้อมูลลง Associative Array โดยใช้ Primary Key (เช่น <code>DI_REF</code> หรือ <code>SKU_CODE</code>) เป็น Key เพื่อให้เหลือเฉพาะค่าล่าสุดที่ไม่ซ้ำกัน</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">5</div>
+                <div class="flow-content">
+                    <div class="flow-title">สร้าง Temporary Table และ Bulk Chunk Insert</div>
+                    <div class="flow-text">สร้าง <code>CREATE TEMPORARY TABLE tmp_import (...) ENGINE=InnoDB</code> และ Insert ข้อมูลแบบ Multi-row VALUES ทีละ 200 แถวลงในแรม/เซสชันชั่วคราว</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">6</div>
+                <div class="flow-content">
+                    <div class="flow-title">รันคำสั่ง Bulk UPDATE JOIN / UPSERT สั่งงานครั้งเดียว</div>
+                    <div class="flow-text">สั่ง <code>UPDATE ims_target t INNER JOIN tmp_import tmp ON ... SET ...</code> เพื่อให้อัปเดตตารางหลัก 10,000+ แถวเสร็จสิ้นใน 0.5 วินาที</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">7</div>
+                <div class="flow-content">
+                    <div class="flow-title">ซิงก์ข้อมูลไปยังตารางที่เกี่ยวข้อง (Scoped Relation Sync)</div>
+                    <div class="flow-text">รันคำสั่งซิงก์ข้อมูลอ้างอิงไปยังตารางอื่น (เช่น <code>ims_tires_plan_forecast</code> หรือ <code>ims_data_sale_sac_all</code>) โดยกรองเฉพาะขอบเขตของ Batch ปัจจุบัน</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-number">8</div>
+                <div class="flow-content">
+                    <div class="flow-title">บันทึก Log และส่งตอบกลับรูปแบบ JSON</div>
+                    <div class="flow-text">บันทึกประวัติลงตาราง <code>log_import_data</code> และส่งผลลัพธ์ <code>json_encode</code> กลับไปยังหน้าหน้าต่าง SweetAlert2 เพื่อแสดงหลอด Progress Bar และเวลาที่ใช้</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Standard Code Implementation Template -->
+        <div class="section-block">
+            <h2 class="section-title"><i class="fas fa-code"></i>4. แม่แบบโค้ดมาตรฐานสำหรับนำไปใช้งาน (Standard Code Templates)</h2>
+
+            <p><b>1. โค้ดส่วนประมวลผลฝั่งเซิร์ฟเวอร์ (Backend PHP Process Template):</b></p>
+            <pre><code>&lt;?php
+session_start();
+error_reporting(0);
+
+include '../config/connect_db.php';
+require '../vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
+if (isset($_FILES['excelFile']['name']) && $_FILES['excelFile']['error'] == UPLOAD_ERR_OK) {
+    $file_Upload = $_FILES['excelFile']['name'];
+    $fileTmp = $_FILES['excelFile']['tmp_name'];
+    $uploadFile = '../uploads/' . basename($file_Upload);
+
+    if (move_uploaded_file($fileTmp, $uploadFile)) {
+        try {
+            // 1. ประกัน Index สำหรับตารางฐานข้อมูล
+            try { $conn->exec("CREATE INDEX idx_key_name ON target_table_name (KEY_COLUMN)"); } catch (Exception $e) {}
+
+            // 2. อ่านไฟล์แบบ Read Data Only
+            $reader = IOFactory::createReaderForFile($uploadFile);
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($uploadFile);
+            $rows = $spreadsheet->getActiveSheet()->toArray();
+
+            $seq_record = md5(rand());
+            $dataByKey = [];
+            $totalRows = 0;
+
+            // 3. Deduplicate ในแรม
+            foreach ($rows as $index => $row) {
+                if ($index == 0) continue; // ข้าม Header
+                $KEY = isset($row[0]) ? trim($row[0]) : "";
+                if ($KEY === "") continue;
+
+                $totalRows++;
+                $dataByKey[$KEY] = [
+                    'FIELD1' => isset($row[1]) ? trim($row[1]) : "",
+                    'FIELD2' => isset($row[2]) ? trim($row[2]) : ""
+                ];
+            }
+
+            // 4. สร้าง Temporary Table
+            $conn->exec("CREATE TEMPORARY TABLE IF NOT EXISTS tmp_import (
+                KEY_COLUMN VARCHAR(100) PRIMARY KEY,
+                FIELD1 VARCHAR(255),
+                FIELD2 VARCHAR(255)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+            $conn->exec("TRUNCATE TABLE tmp_import;");
+
+            // 5. Multi-Row Chunk Insert (ทีละ 200 แถว)
+            $chunk = [];
+            foreach ($dataByKey as $key => $d) {
+                $chunk[] = [$key, $d['FIELD1'], $d['FIELD2']];
+                if (count($chunk) >= 200) {
+                    insertChunkData($conn, $chunk);
+                    $chunk = [];
+                }
+            }
+            if (!empty($chunk)) insertChunkData($conn, $chunk);
+
+            // 6. Single JOIN UPDATE / UPSERT
+            $sql_update = "UPDATE target_table_name t
+                           INNER JOIN tmp_import tmp ON t.KEY_COLUMN = tmp.KEY_COLUMN
+                           SET t.FIELD1 = tmp.FIELD1, t.FIELD2 = tmp.FIELD2, t.seq_record = :seq_record";
+            $stmt_upd = $conn->prepare($sql_update);
+            $stmt_upd->execute([':seq_record' => $seq_record]);
+            $updatedRows = $stmt_upd->rowCount();
+
+            // 7. ส่งตอบกลับ JSON
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode([
+                'success' => true,
+                'file_name' => $file_Upload,
+                'count' => $totalRows,
+                'updated' => $updatedRows
+            ]);
+
+        } catch (Exception $e) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+}
+
+function insertChunkData($conn, $data) {
+    $placeholders = [];
+    $values = [];
+    foreach ($data as $r) {
+        $placeholders[] = "(?, ?, ?)";
+        array_push($values, $r[0], $r[1], $r[2]);
+    }
+    $sql = "INSERT INTO tmp_import (KEY_COLUMN, FIELD1, FIELD2) VALUES " . implode(", ", $placeholders);
+    $stmt = $conn->prepare($sql);
+    $stmt->execute($values);
+}</code></pre>
+
+            <p style="margin-top: 25px;"><b>2. โค้ดส่วนแสดงผลฝั่งหน้าจอผู้ใช้ (Frontend JavaScript & SweetAlert2 Progress):</b></p>
+            <pre><code>$('#uploadForm').on('submit', function (e) {
+    e.preventDefault();
+    let formData = new FormData(this);
+    let startTime = new Date();
+
+    // แสดง Modal หลอดสถานะก้าวหน้า
+    Swal.fire({
+        title: 'กำลังนำเข้าข้อมูล',
+        html: `
+            &lt;div class="mb-2 text-muted text-center" id="swalStatusText"&gt;กำลังอัปโหลดและประมวลผล...&lt;/div&gt;
+            &lt;div class="progress" style="height: 25px; border-radius: 12px; overflow: hidden;"&gt;
+                &lt;div id="swalProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%; font-size: 14px; font-weight: bold; line-height: 25px;"&gt;0%&lt;/div&gt;
+            &lt;/div&gt;
+        `,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    // จำลองหลอดวิเศษแสดงความก้าวหน้า
+    let progressWidth = 0;
+    let progressInterval = setInterval(function() {
+        progressWidth = Math.min(progressWidth + 15, 95);
+        $('#swalProgressBar').css('width', progressWidth + '%').text(progressWidth + '%');
+    }, 150);
+
+    $.ajax({
+        url: 'import_process/your_process_script.php',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        success: function (response) {
+            clearInterval(progressInterval);
+            let duration = ((new Date() - startTime) / 1000).toFixed(2);
+
+            if (response.success) {
+                $('#swalProgressBar').css('width', '100%').removeClass('bg-primary').addClass('bg-success').text('100%');
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'นำเข้าข้อมูลสำเร็จ',
+                    html: `
+                        &lt;div class="text-start small p-3 bg-light border rounded mb-3"&gt;
+                            &lt;p class="mb-1"&gt;&lt;strong&gt;ไฟล์:&lt;/strong&gt; ${response.file_name}&lt;/p&gt;
+                            &lt;p class="mb-1"&gt;&lt;strong&gt;จำนวนรายการ:&lt;/strong&gt; ${response.count.toLocaleString()} รายการ&lt;/p&gt;
+                            &lt;p class="mb-1"&gt;&lt;strong&gt;อัปเดตสำเร็จ:&lt;/strong&gt; ${response.updated.toLocaleString()} รายการ&lt;/p&gt;
+                            &lt;p class="mb-0"&gt;&lt;strong&gt;เวลาที่ใช้:&lt;/strong&gt; ${duration} วินาที&lt;/p&gt;
+                        &lt;/div&gt;
+                    `,
+                    confirmButtonText: 'รีเฟรชทันที'
+                }).then(() => { location.reload(); });
+            } else {
+                Swal.fire('เกิดข้อผิดพลาด', response.message, 'error');
+            }
+        }
+    });
+});</code></pre>
+        </div>
+
+        <!-- Section 5: Best Practices Checklist -->
+        <div class="section-block">
+            <h2 class="section-title"><i class="fas fa-clipboard-check"></i>5. ข้อควรระวังและแนวปฏิบัติที่ดี (Best Practices Checklist)</h2>
+
+            <div class="callout-box">
+                <strong><i class="fas fa-lightbulb me-2"></i> Checklist 6 ข้อสำคัญในการสร้างหน้าจอ Import ใหม่:</strong>
+                <ol style="margin-bottom: 0; padding-left: 20px; margin-top: 10px;">
+                    <li><b>เช็ค Index เสมอ:</b> ฟิลด์ที่นำมาใช้ในเงื่อนไข <code>WHERE</code> หรือ <code>ON JOIN</code> ต้องได้รับการสร้าง Index ในฐานข้อมูลเสมอ</li>
+                    <li><b>หลีกเลี่ยงการวนลูป Query:</b> ห้ามใช้ <code>SELECT</code> หรือ <code>UPDATE</code> ทีละแถวในวนลูป <code>foreach</code> เป็นอันขาด</li>
+                    <li><b>ใช้ Temporary Table บน InnoDB:</b> ตั้งค่า <code>ENGINE=InnoDB DEFAULT CHARSET=utf8</code> ป้องกันปัญหาหน่วยความจำและข้อจำกัดความยาวของ String</li>
+                    <li><b>สตรีมเฉพาะ Data ดิบ:</b> ตั้งค่า <code>setReadDataOnly(true)</code> ทุกครั้งที่อ่านไฟล์ Excel</li>
+                    <li><b>จำกัดขอบเขตการซิงก์:</b> กรองข้อมูลด้วย <code>seq_record</code> หรือ <code>PRIMARY KEY</code> ของ Batch ปัจจุบัน ไม่ซิงก์ข้อมูลทั้งตารางย้อนหลัง</li>
+                    <li><b>ตอบกลับด้วย JSON:</b> ส่งข้อมูลผลลัพธ์ในรูปแบบ JSON และใช้ SweetAlert2 แสดงผลลัพธ์อย่างสวยงาม ชัดเจน</li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <i class="fas fa-check-circle text-success me-1"></i> เอกสารคู่มือเชิงเทคนิคระบบนำเข้าข้อมูล SAC Data2 Architecture Guide &copy; 2026
+    </div>
+</div>
+
+</body>
+</html>

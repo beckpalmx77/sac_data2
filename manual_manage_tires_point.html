@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการจัดการข้อมูลคะแนนสะสมยาง (Tires Point Master Management)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #f8f9fa; color: #444; line-height: 1.6; }
+        .hero-section { background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%); color: white; padding: 50px 0; margin-bottom: 40px; border-radius: 0 0 30px 30px; }
+        .instruction-box { background: white; padding: 30px; border-radius: 20px; border-left: 10px solid #4f46e5; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .badge-number { background: #4f46e5; color: white; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; font-weight: bold; }
+        .highlight-indigo { color: #4f46e5; font-weight: bold; }
+        .tip-box { background: #e0e7ff; border-radius: 15px; padding: 20px; border: 1px dashed #4f46e5; margin-top: 20px; }
+        .warning-box { background: #fef2f2; border-radius: 15px; padding: 20px; border: 1px dashed #ef4444; margin-top: 20px; }
+        .table-template th { background-color: #f8fafc !important; }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-6 fw-bold"><i class="fas fa-tasks me-2"></i>คู่มือการจัดการฐานข้อมูลคะแนนสะสมยาง (Tires Point)</h1>
+            <p class="lead">สำหรับ เพิ่ม, แก้ไข, ลบ และค้นหา ข้อมูลคะแนนสะสมยางแยกตามแบรนด์และขนาดสินค้า</p>
+        </div>
+    </div>
+
+    <div class="container mb-5" style="max-width: 900px;">
+        <!-- Objective -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-bullseye me-2 text-danger"></i>1. วัตถุประสงค์ของระบบ</h3>
+            <p class="text-muted">ความสำคัญของหน้าจอจัดการฐานข้อมูลคะแนน</p>
+            <hr>
+            <p>หน้าจอ **จัดการข้อมูลคะแนนยาง (Tires Point Master)** มีวัตถุประสงค์เพื่อเป็นศูนย์กลางในการควบคุมข้อมูลแต้มสะสมของสินค้ายางรถยนต์แต่ละรุ่น ผู้ดูแลระบบสามารถเข้ามาจัดแจง เพิ่มยอดสินค้าใหม่ หรือแก้ไขปรับปรุงคะแนนของสินค้าที่มีอยู่ในระบบแบบทีละรายการ (Single Record CRUD) โดยไม่ต้องนำเข้าข้อมูลด้วยไฟล์ Excel ทั้งหมด เพื่อความรวดเร็วในการดำเนินงานรายวัน</p>
+        </div>
+
+        <!-- CRUD Actions -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-cogs me-2 text-primary"></i>2. ฟังก์ชันการทำงานหลัก (CRUD Actions)</h3>
+            <p class="text-muted">วิธีการ เพิ่ม แก้ไข และลบข้อมูล</p>
+            <hr>
+            
+            <p><span class="badge-number"><i class="fas fa-plus"></i></span><strong>การเพิ่มข้อมูลใหม่ (ADD):</strong></p>
+            <ul>
+                <li>คลิกปุ่ม <span class="badge bg-primary"><i class="fa fa-plus"></i> Add</span> ด้านบนตาราง</li>
+                <li>กรอกรหัสสินค้า, ขนาดยาง, ยี่ห้อ, กลุ่มสินค้า, ขอบยาง และคะแนนทั้งสองประเภท (ทั่วไป/Shop)</li>
+                <li>กดปุ่ม **Save** เพื่อบันทึกข้อมูลเข้าระบบ</li>
+            </ul>
+
+            <p><span class="badge-number"><i class="fas fa-edit"></i></span><strong>การแก้ไขข้อมูล (UPDATE):</strong></p>
+            <ul>
+                <li>ที่รายการตารางสินค้าที่ต้องการอัปเดต คลิกปุ่มไอคอน <span class="badge bg-warning text-dark"><i class="fas fa-edit"></i> Edit</span> ในคอลัมน์ Action</li>
+                <li>หน้าต่างป็อปอัปจะแสดงข้อมูลเดิม ให้ผู้ใช้แก้ไขค่าฟิลด์ต่างๆ ตามที่ต้องการ</li>
+                <li>กดปุ่ม **Save** เพื่อยืนยันการบันทึก</li>
+            </ul>
+
+            <p><span class="badge-number"><i class="fas fa-trash-alt"></i></span><strong>การลบข้อมูล (DELETE):</strong></p>
+            <ul>
+                <li>คลิกปุ่มไอคอน <span class="badge bg-danger"><i class="fas fa-trash-alt"></i> Delete</span> ในแถวสินค้าที่ต้องการลบ</li>
+                <li>หน้าต่างจะขึ้นหัวข้อ `Delete Record` เพื่อตรวจสอบความถูกต้อง</li>
+                <li>คลิกปุ่ม <span class="badge bg-danger">Confirm Delete</span> เพื่อยืนยันการลบออกจากระบบเป็นการถาวร</li>
+            </ul>
+        </div>
+
+        <!-- Field Details -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-list me-2 text-success"></i>3. รายละเอียดข้อมูลในแต่ละฟิลด์</h3>
+            <p class="text-muted">ฟิลด์ข้อมูลที่ต้องกรอกในหน้าต่างแบบฟอร์ม</p>
+            <hr>
+            
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-template">
+                    <thead>
+                        <tr>
+                            <th>ชื่อฟิลด์ข้อมูล</th>
+                            <th>คำอธิบาย</th>
+                            <th>เงื่อนไขการกรอก</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">รหัสสินค้า (SKU_CODE)</td>
+                            <td>รหัสสินค้าหลักที่ใช้ในการสืบค้น</td>
+                            <td>ตัวอักษรภาษาอังกฤษและตัวเลข (ห้ามกรอกซ้ำในระบบ)</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">ขนาดยาง/ดอกยาง (SKU_NAME)</td>
+                            <td>รายละเอียดชื่อขนาดของหน้ายางและดอกยาง</td>
+                            <td>ข้อความอธิบายความยาว เช่น <code>195/65R15</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">ยี่ห้อ (BRAND)</td>
+                            <td>แบรนด์ผู้ผลิตของยาง</td>
+                            <td>กรอกเป็นภาษาอังกฤษ (ระบบจะปรับเป็นตัวพิมพ์ใหญ่โดยอัตโนมัติ)</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">กลุ่มสินค้า (SKU_CAT)</td>
+                            <td>หมวดหมู่การใช้งานของยาง</td>
+                            <td>เช่น <code>ยางรถเก๋ง</code>, <code>ยางรถกระบะ</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">ขอบ (TIRES_EDGE)</td>
+                            <td>ขนาดขอบล้อรถยนต์</td>
+                            <td>กรอกเป็นตัวเลขขนาดขอบนิ้ว เช่น <code>15</code>, <code>17</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">คะแนนร้านทั่วไป (TRD_U_POINT)</td>
+                            <td>แต้มสะสมสำหรับร้านค้าทั่วไป</td>
+                            <td>ต้องกรอกเป็นจำนวนตัวเลขจำนวนเต็มเท่านั้น</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">คะแนน Shop (TRD_S_POINT)</td>
+                            <td>แต้มสะสมสำหรับร้านที่เป็นกลุ่ม Shop</td>
+                            <td>ต้องกรอกเป็นจำนวนตัวเลขจำนวนเต็มเท่านั้น</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle text-danger me-2"></i><strong>ระบบตรวจสอบรหัสซ้ำ:</strong> 
+                หากกรอกรหัสสินค้าและขนาดยางซ้ำกับข้อมูลที่มีอยู่ในระบบอยู่แล้ว ระบบจะขึ้นข้อความแจ้งเตือนสีแดงเตือนว่า `Duplicate` และจะไม่ยอมให้บันทึกเพื่อป้องกันข้อมูลแต้มซ้ำซ้อน
+            </div>
+        </div>
+
+        <!-- Search Feature -->
+        <div class="instruction-box">
+            <h3><i class="fas fa-search me-2 text-indigo"></i>4. ฟังก์ชันการค้นหา (Filter Search)</h3>
+            <p class="text-muted">วิธีการสืบค้นข้อมูลสินค้าอย่างรวดเร็ว</p>
+            <hr>
+            <p>ผู้ใช้สามารถใช้ช่อง **ค้นหา (Search)** ด้านขวาบนของตารางในการค้นหาข้อมูลสินค้าได้ทันที โดยพิมพ์ข้อมูลบางส่วนของ รหัสสินค้า, ชื่อรุ่นขนาดยาง, หรือแบรนด์สินค้า ระบบจะทำการกรองข้อมูลแบบเรียลไทม์ (Live Search) ทันทีโดยไม่ต้องโหลดหน้าเว็บใหม่</p>
+        </div>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-secondary px-4 py-2" onclick="window.close();">
+                <i class="fas fa-times me-1"></i> ปิดหน้าต่างนี้
+            </button>
+        </div>
+    </div>
+
+    <footer class="text-center py-4 bg-white border-top mt-5">
+        <p class="small text-muted mb-0">&copy; 2026 SAC Sales Planning System - System Admin</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

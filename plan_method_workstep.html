@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ขั้นตอนการปฏิบัติงาน (Workflow) - Tires Plan Forecast</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
+        .container { background-color: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; text-align: center; }
+        h2 { color: #2980b9; margin-top: 30px; border-left: 5px solid #3498db; padding-left: 15px; }
+        .step-group { margin-bottom: 30px; }
+        .step-item { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-bottom: 15px; position: relative; }
+        .step-number { position: absolute; left: -15px; top: -15px; width: 35px; height: 35px; background: #3498db; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; font-weight: bold; margin-bottom: 10px; }
+        .badge-pre { background-color: #e67e22; color: white; }
+        .badge-main { background-color: #27ae60; color: white; }
+        .badge-post { background-color: #9b59b6; color: white; }
+        .highlight { color: #c0392b; font-weight: bold; }
+        .note { background: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-top: 10px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>คู่มือขั้นตอนการทำงาน (User Workflow)</h1>
+        <p style="text-align: center; color: #7f8c8d;">เพื่อให้ข้อมูลในระบบ Tires Plan Forecast มีความสมบูรณ์และถูกต้องแม่นยำที่สุด</p>
+
+        <div class="step-group">
+            <h2>1. ขั้นตอนก่อนเริ่มดำเนินการ (Pre-requisites)</h2>
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <span class="badge badge-pre">PRE-PROCESS</span>
+                <p><b>ตรวจสอบข้อมูลยอดขายจริง:</b> ตรวจสอบให้แน่ใจว่าได้ทำการนำเข้าข้อมูลยอดขายล่าสุด (Daily Sales) ลงในระบบเรียบร้อยแล้ว เนื่องจากระบบใหม่จะดึงยอดขายจริงจากฐานข้อมูลมาแสดงโดยอัตโนมัติ</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <span class="badge badge-pre">PRE-PROCESS</span>
+                <p><b>เตรียมไฟล์ Template:</b> จัดเตรียมไฟล์ Excel ที่มีข้อมูลรหัสร้านค้า (AR_CODE) และรหัสสินค้า (SKU_CODE) ที่ต้องการวางแผนให้ครบถ้วน</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <span class="badge badge-pre">PRE-PROCESS</span>
+                <p><b>นำเข้าโครงสร้างแผน (Import):</b> ไปที่หน้าจอ <span class="highlight">forecast_import_plan.php</span> เลือกเดือนและปีที่ต้องการเริ่มแผน แล้วอัปโหลดไฟล์ Excel เพื่อสร้างโครงสร้างข้อมูลในระบบ</p>
+            </div>
+        </div>
+
+        <div class="step-group">
+            <h2>2. ขั้นตอนการวางแผนและปรับปรุงข้อมูล (Main Process)</h2>
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <span class="badge badge-main">ACTIVE</span>
+                <p><b>เปิดหน้าจอ Interactive:</b> เข้าสู่หน้าจอ <span class="highlight">forecast_plan_display_new.php</span> และใช้ตัวกรอง (Filter) เพื่อเลือกข้อมูลที่ต้องการจัดการ</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">5</div>
+                <span class="badge badge-main">ACTIVE</span>
+                <p><b>ระบุเป้าหมายและคาดการณ์:</b> พิมพ์ตัวเลขในช่อง <span class="highlight">เป้าหมาย (Target)</span> และ <span class="highlight">คาดการณ์ (Forecast)</span> ระบบจะคำนวณผลต่างและเปอร์เซ็นต์ให้ทันทีแบบ Real-time</p>
+                <div class="note"><b>ข้อควรระวัง:</b> หากค่า "เฉลี่ย 3 เดือน" เป็น 0 ระบบจะแสดง % เป็น 0 เพื่อป้องกันข้อผิดพลาดทางคณิตศาสตร์</div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">6</div>
+                <span class="badge badge-main">ACTIVE</span>
+                <p><b>บันทึกข้อมูล:</b> เมื่อปรับปรุงตัวเลขในหน้าจอนั้นๆ เรียบร้อยแล้ว ให้กดปุ่ม <span class="highlight">"บันทึกการแก้ไขทั้งหมด"</span> เพื่อยืนยันการลงฐานข้อมูล</p>
+            </div>
+        </div>
+
+        <div class="step-group">
+            <h2>3. ขั้นตอนหลังดำเนินการ (Post-Verification)</h2>
+            <div class="step-item">
+                <div class="step-number">7</div>
+                <span class="badge badge-post">POST-PROCESS</span>
+                <p><b>ตรวจสอบความเรียบร้อย:</b> รีเฟรชหน้าจออีกครั้งเพื่อตรวจสอบว่าค่าที่บันทึกไปนั้นถูกต้องและแสดงผลตรงกับที่ต้องการ</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">8</div>
+                <span class="badge badge-post">POST-PROCESS</span>
+                <p><b>วิเคราะห์หมายเหตุ:</b> ตรวจสอบช่อง "หมายเหตุ" (Remark) หากมีสินค้าที่มีผลต่างหรือ % สูงเกินปกติ เพื่อใช้เป็นข้อมูลประกอบการประชุมหรือการตัดสินใจ</p>
+            </div>
+        </div>
+
+        <div style="background: #e8f4fd; border: 1px solid #3498db; padding: 20px; border-radius: 8px; margin-top: 40px;">
+            <p style="margin: 0; font-weight: bold; color: #2c3e50;">เคล็ดลับเพื่อประสิทธิภาพสูงสุด:</p>
+            <ul style="margin-top: 10px; margin-bottom: 0;">
+                <li>ควรทำการบันทึกทุกครั้งก่อนที่จะเปลี่ยนหน้า (Pagination) หรือเปลี่ยนตัวกรองใหม่</li>
+                <li>ระบบจะแสดงยอดขายย้อนหลังให้ทันที ดังนั้นหากมีการแก้ไขยอดขายย้อนหลังในระบบบัญชี ตัวเลขในหน้านี้จะอัปเดตตามทันทีเมื่อมีการดึงข้อมูลใหม่</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

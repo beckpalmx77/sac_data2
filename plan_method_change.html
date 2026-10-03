@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>แผนการปรับปรุงระบบ Tires Plan Forecast (Interactive Upgrade)</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #27ae60; padding-bottom: 10px; }
+        h2 { color: #219150; margin-top: 30px; border-left: 5px solid #27ae60; padding-left: 10px; }
+        .step-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .highlight { color: #e67e22; font-weight: bold; }
+        .code-block { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; font-family: monospace; overflow-x: auto; margin: 10px 0; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <h1>แผนการปรับปรุงหน้าจอ forecast_plan_display.php ให้เป็นแบบ Interactive</h1>
+
+    <p>แนวทางนี้คือการเปลี่ยนหน้าจอแสดงผล "Tires Plan" จากเดิมที่เป็นแบบ <b>อ่านอย่างเดียว (Read-only)</b> ให้สามารถ <b>แก้ไขและคำนวณผลลัพธ์ได้ทันที (Interactive)</b> โดยยังคงใช้ข้อมูลพื้นฐานจากการ Import ไฟล์ Excel เช่นเดิม</p>
+
+    <h2>1. การปรับปรุงส่วนการแสดงผล (Frontend UI)</h2>
+    <div class="step-card">
+        <ul>
+            <li><b>เปลี่ยนคอลัมน์เป็น Input:</b> เปลี่ยนการแสดงผลในคอลัมน์ <span class="highlight">เป้าหมาย (Target)</span>, <span class="highlight">คาดการณ์ (Forecast)</span> และ <span class="highlight">หมายเหตุ (Remark)</span> ให้เป็นกล่องข้อความ <code>&lt;input&gt;</code></li>
+            <li><b>เพิ่มปุ่มบันทึก:</b> เพิ่มปุ่ม "บันทึกข้อมูล" (Save Changes) ไว้ที่ส่วนหัวของตาราง (Card Header)</li>
+            <li><b>CSS Styling:</b> ปรับแต่ง Input ให้มีขนาดพอดีกับตาราง และจัดตัวเลขให้ชิดขวา (text-end)</li>
+        </ul>
+    </div>
+
+    <h2>2. ระบบคำนวณอัตโนมัติ (Real-time Calculation)</h2>
+    <div class="step-card">
+        <p>ใช้ JavaScript (jQuery) เพื่อดึง Logic มาจากหน้า Sales Report:</p>
+        <ul>
+            <li><b>Event Listener:</b> เมื่อมีการพิมพ์ตัวเลขในช่อง "คาดการณ์ยอดขาย"</li>
+            <li><b>Formula 1 (Difference):</b> <code>ผลต่าง = ยอดคาดการณ์ - ค่าเฉลี่ย 3 เดือน</code></li>
+            <li><b>Formula 2 (Percentage):</b> <code>% ต่าง = (ผลต่าง / ค่าเฉลี่ย 3 เดือน) * 100</code></li>
+            <li><b>Instant Update:</b> แสดงผลลัพธ์ในคอลัมน์ "เทียบคาดการณ์" และ "% เทียบยอดขาย" ทันทีโดยไม่ต้อง Refresh หน้าจอ</li>
+        </ul>
+    </div>
+
+    <h2>3. การจัดการข้อมูลฝั่งเซิร์ฟเวอร์ (Backend & Database)</h2>
+    <div class="step-card">
+        <ul>
+            <li><b>AJAX Update:</b> เมื่อกดปุ่มบันทึก ระบบจะส่งชุดข้อมูล (Array of Objects) ไปยังไฟล์ PHP ใหม่ (เช่น <code>forecast_update_plan_data.php</code>)</li>
+            <li><b>Batch Update:</b> ใช้คำสั่ง <code>UPDATE ims_tires_plan_forecast</code> โดยระบุ <code>ID</code> ของแต่ละแถว เพื่อบันทึกค่าที่แก้ไขลงฐานข้อมูล</li>
+            <li><b>Data Consistency:</b> ข้อมูลที่ถูกแก้ไขจะยังคงอยู่ในตารางเดิม (ims_tires_plan_forecast) ทำให้การดึงข้อมูลครั้งต่อไปเป็นค่าที่แก้ไขล่าสุด</li>
+        </ul>
+    </div>
+
+    <h2>4. ขั้นตอนการดำเนินการ (Action Plan)</h2>
+    <ol>
+        <li>แก้ไข <code>forecast_plan_fetch.php</code>: ให้ส่ง HTML <code>&lt;input&gt;</code> กลับมาใน JSON แทนข้อความปกติ</li>
+        <li>แก้ไข <code>forecast_plan_display.php</code>: เพิ่ม Script การคำนวณอัตโนมัติและปุ่มบันทึก</li>
+        <li>สร้าง <code>forecast_update_plan_data.php</code>: เพื่อรับค่าจากการแก้ไขและ Update ลง Database</li>
+        <li>ทดสอบการคำนวณและการบันทึกข้อมูล (Validation)</li>
+    </ol>
+
+    <div style="background: #fdf2e9; border: 1px solid #e67e22; padding: 15px; border-radius: 5px; margin-top: 30px;">
+        <b>ข้อดีของแนวทางนี้:</b> ช่วยให้ทีมงานสามารถ "ปรับจูน" ตัวเลขเป้าหมายหรือยอดคาดการณ์ที่นำเข้ามาจาก Excel ได้ทันทีผ่านหน้าเว็บ โดยไม่ต้องกลับไปแก้ไขในไฟล์ Excel แล้วนำเข้าใหม่ทุกครั้ง
+    </div>
+
+</body>
+</html>

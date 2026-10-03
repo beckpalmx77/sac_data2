@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานการตรวจสอบการใช้งานตาราง ims_product_stock_balance - SAC Data 2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-light: #0d9488;
+            --success: #15803d;
+            --success-bg: #dcfce7;
+            --danger: #b91c1c;
+            --danger-bg: #fee2e2;
+            --warning: #b45309;
+            --warning-bg: #fef3c7;
+            --info: #0369a1;
+            --info-bg: #e0f2fe;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: var(--gray-800);
+            line-height: 1.6;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, #115e59 0%, #0d9488 100%);
+            color: white;
+            padding: 28px 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.25);
+            margin-bottom: 28px;
+        }
+
+        .header-card h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-card p {
+            font-size: 15px;
+            opacity: 0.92;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .stat-title {
+            font-size: 13px;
+            color: var(--gray-600);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .stat-badge {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+            width: fit-content;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            background-color: var(--gray-50);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--gray-700);
+            font-weight: 600;
+            padding: 14px 18px;
+            border-bottom: 2px solid var(--gray-200);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--gray-200);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            gap: 4px;
+        }
+
+        .badge-danger {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        .badge-success {
+            background-color: var(--success-bg);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background-color: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .badge-info {
+            background-color: var(--info-bg);
+            color: var(--info);
+        }
+
+        .badge-teal {
+            background-color: #ccfbf1;
+            color: #0f766e;
+        }
+
+        .code-pill {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 13px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .note-box {
+            padding: 16px 20px;
+            border-radius: 8px;
+            background-color: #f0fdfa;
+            border-left: 4px solid #0d9488;
+            margin: 20px;
+            font-size: 14px;
+            color: #134e4a;
+        }
+
+        .note-box strong {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header-card">
+        <h1>📊 รายงานการตรวจสอบการใช้งานตาราง <code>ims_product_stock_balance</code> (SAC DATA 2)</h1>
+        <p>ตรวจสอบไฟล์ในโฟลเดอร์ <span class="code-pill" style="color: #fff; background: rgba(255,255,255,0.2); border: none;">export_process</span>, <span class="code-pill" style="color: #fff; background: rgba(255,255,255,0.2); border: none;">model</span>, <span class="code-pill" style="color: #fff; background: rgba(255,255,255,0.2); border: none;">engine</span> และ Root Directory ของ <span class="code-pill" style="color: #fff; background: rgba(255,255,255,0.2); border: none;">d:\website\sac_data2</span></p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-title">ตารางเป้าหมาย</span>
+            <span class="stat-value" style="font-size: 18px;">ims_product_stock_balance</span>
+            <span class="stat-badge" style="background: var(--info-bg); color: var(--info);">MySQL: sac_data2</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">จำนวนแถวในฐานข้อมูล</span>
+            <span class="stat-value">52,587</span>
+            <span class="stat-badge" style="background: var(--success-bg); color: var(--success);">พร้อมใช้งาน (มีข้อมูลจริง)</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">พบใน 4 โฟลเดอร์ที่ระบุ</span>
+            <span class="stat-value" style="color: var(--danger);">0 ไฟล์</span>
+            <span class="stat-badge" style="background: var(--danger-bg); color: var(--danger);">ไม่พบการเรียกใช้งานตารางนี้</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">พบในทั้งระบบ sac_data2</span>
+            <span class="stat-value" style="color: var(--primary);">3 ไฟล์</span>
+            <span class="stat-badge" style="background: #ccfbf1; color: #0f766e;">อยู่ในโฟลเดอร์ cronjob/</span>
+        </div>
+    </div>
+
+    <!-- Section 1: สรุปผลการตรวจสอบตามโฟลเดอร์ -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2>1. สรุปผลการตรวจสอบรายโฟลเดอร์ (Folder Audit Result)</h2>
+            <span class="badge badge-teal">สแกนทั้งหมด 714 ไฟล์ ใน 4 โฟลเดอร์เป้าหมาย</span>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>โฟลเดอร์ / ไดเรกทอรี</th>
+                        <th style="text-align: center;">จำนวนไฟล์ทั้งหมด</th>
+                        <th style="text-align: center;">ไฟล์ที่ใช้ตาราง</th>
+                        <th>สถานะการใช้งานตาราง ims_product_stock_balance</th>
+                        <th>หมายเหตุ / แหล่งข้อมูลที่โฟลเดอร์นี้ใช้จริง</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><strong class="code-pill">d:\website\sac_data2\export_process</strong></td>
+                        <td style="text-align: center;">60 ไฟล์</td>
+                        <td style="text-align: center;"><strong style="color: var(--danger);">0</strong></td>
+                        <td><span class="badge badge-danger">❌ ไม่พบการใช้งาน</span></td>
+                        <td>ไฟล์ Export สต็อกใช้ <strong>MS SQL Server</strong> ตรง หรือใช้ตาราง <code>wh_stock_transaction</code> / View <code>v_wh_stock_balance</code></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><strong class="code-pill">d:\website\sac_data2\model</strong></td>
+                        <td style="text-align: center;">162 ไฟล์</td>
+                        <td style="text-align: center;"><strong style="color: var(--danger);">0</strong></td>
+                        <td><span class="badge badge-danger">❌ ไม่พบการใช้งาน</span></td>
+                        <td>โมเดลสต็อก เช่น <code>fetch_stock_balance.php</code> ดึงจากตาราง <code>wh_stock_transaction</code> และ <code>wh_product_master</code></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><strong class="code-pill">d:\website\sac_data2\engine</strong></td>
+                        <td style="text-align: center;">34 ไฟล์</td>
+                        <td style="text-align: center;"><strong style="color: var(--danger);">0</strong></td>
+                        <td><span class="badge badge-danger">❌ ไม่พบการใช้งาน</span></td>
+                        <td>คิวรีข้อมูลแดชบอร์ด/กราฟสรุปยอดขายจาก <code>ims_product_sale_cockpit</code> และยอดขายแยกตามสาขา</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><strong class="code-pill">d:\website\sac_data2\</strong> (Root Files)</td>
+                        <td style="text-align: center;">458 ไฟล์</td>
+                        <td style="text-align: center;"><strong style="color: var(--danger);">0</strong></td>
+                        <td><span class="badge badge-danger">❌ ไม่พบการใช้งาน</span></td>
+                        <td>หน้าจอ UI สต็อก เช่น <code>display_stock_balance.php</code> และ <code>manage-stock-balance.php</code> เชื่อมต่อผ่าน AJAX Model</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 2: เจาะลึกไฟล์เกี่ยวกับสต็อกในโฟลเดอร์เป้าหมาย -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2>2. เจาะลึกไฟล์ที่ทำงานเกี่ยวกับ Stock Balance ใน sac_data2 (ปัจจุบันดึงจากไหน?)</h2>
+            <span class="badge badge-warning">Stock Files & Data Sources</span>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ตำแหน่งไฟล์</th>
+                        <th>หน้าที่การทำงาน</th>
+                        <th>แหล่งข้อมูลที่ใช้งานอยู่ปัจจุบัน</th>
+                        <th style="text-align: center;">ใช้ ims_product_stock_balance?</th>
+                        <th>คำอธิบายเพิ่มเติม</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong class="code-pill">export_process/export_data_stock_balance_all_process.php</strong></td>
+                        <td>ประมวลผลส่งออกไฟล์ CSV สต็อกรวมแยกหมวด/แบรนด์</td>
+                        <td><span class="badge badge-warning">⚡ MS SQL Server โดยตรง</span></td>
+                        <td style="text-align: center;"><span class="badge badge-danger">❌ ไม่ได้ใช้</span></td>
+                        <td>คิวรีสดจาก <code>dbo.SKUMASTER</code> ร่วมกับ <code>dbo.SKUMOVE</code> บน SQL Server</td>
+                    </tr>
+                    <tr>
+                        <td><strong class="code-pill">export_process/wh_export_data_stock_balance_all_process.php</strong></td>
+                        <td>ประมวลผลส่งออกสต็อกคลังหลัก WH</td>
+                        <td><span class="badge badge-warning">⚡ MS SQL Server โดยตรง</span></td>
+                        <td style="text-align: center;"><span class="badge badge-danger">❌ ไม่ได้ใช้</span></td>
+                        <td>คิวรีสดจาก SQL Server ข้ามตาราง <code>SKUMASTER, ICCAT, BRAND, SKUMOVE, WAREHOUSE</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong class="code-pill">export_process/export_process_data_wh_stock_balance.php</strong></td>
+                        <td>ประมวลผลส่งออกสต็อกคงเหลือคลัง WH</td>
+                        <td><span class="badge badge-info">MySQL (v_wh_stock_balance)</span></td>
+                        <td style="text-align: center;"><span class="badge badge-danger">❌ ไม่ได้ใช้</span></td>
+                        <td>คิวรีจาก Database View ใน MySQL ชื่อ <code>v_wh_stock_balance</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong class="code-pill">export_process/export_process_display_data_wh_stock_balance.php</strong></td>
+                        <td>ส่งออกข้อมูลแสดงผลสต็อกคงเหลือ</td>
+                        <td><span class="badge badge-info">MySQL (wh_stock_transaction)</span></td>
+                        <td style="text-align: center;"><span class="badge badge-danger">❌ ไม่ได้ใช้</span></td>
+                        <td>คิวรีจาก <code>wh_stock_transaction</code> JOIN กับ <code>wh_product_master</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong class="code-pill">model/fetch_stock_balance.php</strong></td>
+                        <td>API ดึงข้อมูลสต็อกคงเหลือสำหรับ DataTables</td>
+                        <td><span class="badge badge-info">MySQL (wh_stock_transaction)</span></td>
+                        <td style="text-align: center;"><span class="badge badge-danger">❌ ไม่ได้ใช้</span></td>
+                        <td>คำนวณยอด <code>SUM(CASE record_type WHEN '+' THEN qty WHEN '-' THEN -qty)</code> จาก <code>wh_stock_transaction</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong class="code-pill">display_stock_balance.php</strong></td>
+                        <td>หน้าจอ UI รายงาน Stock Transaction Report</td>
+                        <td><span class="badge badge-teal">AJAX (model/fetch_stock_balance.php)</span></td>
+                        <td style="text-align: center;"><span class="badge badge-danger">❌ ไม่ได้ใช้</span></td>
+                        <td>โหลดข้อมูลผ่าน DataTables AJAX ไปยัง <code>fetch_stock_balance.php</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong class="code-pill">manage-stock-balance.php</strong></td>
+                        <td>หน้าจอจัดการสต็อกคงเหลือคลังสินค้า</td>
+                        <td><span class="badge badge-teal">Form Submit -> export_process</span></td>
+                        <td style="text-align: center;"><span class="badge badge-danger">❌ ไม่ได้ใช้</span></td>
+                        <td>ส่งค่าแบบ POST ไปประมวลผลที่ <code>export_process_data_wh_stock_balance.php</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 3: ไฟล์ที่พบการใช้งานจริงใน sac_data2 -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2>3. ไฟล์ที่พบการใช้งานตาราง <code>ims_product_stock_balance</code> ใน sac_data2</h2>
+            <span class="badge badge-success">✅ พบ 3 ไฟล์ (ในโฟลเดอร์ cronjob/)</span>
+        </div>
+        <div style="padding: 20px 24px;">
+            <p>ในโปรเจกต์ <code>d:\website\sac_data2</code> พบการใช้งานตารางนี้เฉพาะในส่วนงาน Background Process / Cronjob จำนวน 3 ไฟล์ ดังนี้:</p>
+
+            <table style="margin-top: 16px;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ตำแหน่งไฟล์</th>
+                        <th style="width: 130px;">บรรทัดที่</th>
+                        <th>ลักษณะการใช้งาน (Operation)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><strong class="code-pill">cronjob/delete_duplicates.php</strong></td>
+                        <td><code>บรรทัด 17</code></td>
+                        <td>กำหนด Keys <code>['SKU_CODE', 'WH_CODE', 'WL_CODE', 'DI_DATE']</code> สำหรับตรวจสอบและลบแถวข้อมูลที่ซ้ำกันในตาราง</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><strong class="code-pill">cronjob/import_data_stock_balance.php</strong></td>
+                        <td><code>บรรทัด 20, 27, 30, 34</code></td>
+                        <td>ซิงค์ข้อมูลสต็อกจาก MS SQL Server เข้าสู่ MySQL <code>ims_product_stock_balance</code> (ตรวจสอบ Key ซ้ำ -> UPDATE หรือ INSERT)</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><strong class="code-pill">cronjob/import_stock_movement.php</strong></td>
+                        <td><code>บรรทัด 31, 47, 52</code></td>
+                        <td>พรีโหลดข้อมูล <code>SELECT</code> และทำการ <code>UPDATE / INSERT</code> ข้อมูลความเคลื่อนไหวสต็อกล่าสุดเข้าตาราง <code>ims_product_stock_balance</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="note-box" style="margin: 20px 0 0 0;">
+                <strong>💡 ข้อสังเกตเชิงโครงสร้างของ sac_data2:</strong>
+                ตาราง <code>ims_product_stock_balance</code> ใน <code>sac_data2</code> ได้รับการซิงค์ข้อมูลอย่างต่อเนื่องผ่าน <strong>Cronjob 3 ไฟล์ข้างต้น</strong> และมีข้อมูลสมบูรณ์พร้อมอยู่แล้วถึง <strong>52,587 รายการ</strong> แต่ส่วนงาน Export และ Frontend ใน <code>export_process/</code> และ <code>model/</code> ยังคงถูกเขียนแบบดั้งเดิมที่เรียกคิวรีตรงจาก MS SQL Server หรือคิวรีตาราง Transaction แทน
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: ข้อเสนอแนะเชิงเทคนิค -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2>4. ข้อเสนอแนะเชิงเทคนิคเพื่อเพิ่มประสิทธิภาพ (Technical Recommendations)</h2>
+            <span class="badge badge-info">Performance Tuning</span>
+        </div>
+        <div style="padding: 20px 24px; font-size: 14px; line-height: 1.8;">
+            <ul style="padding-left: 20px;">
+                <li style="margin-bottom: 10px;">
+                    <strong>เพิ่มความเร็วการ Export สต็อก (Export Optimization):</strong><br>
+                    ไฟล์ <code>export_data_stock_balance_all_process.php</code> และ <code>wh_export_data_stock_balance_all_process.php</code> ปัจจุบันต้องไปรันคำนวณยอด <code>SUM(SKM_QTY)</code> บน MS SQL Server สดทุกครั้งที่มีการกดดาวน์โหลด ซึ่งทำให้ใช้เวลาประมวลผลนาน สามารถปรับเปลี่ยนมา <code>SELECT</code> จากตาราง <code>ims_product_stock_balance</code> ใน MySQL ได้ทันที ซึ่งจะทำงานได้เร็วกว่าหลายเท่าตัว
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>ลดภาระฐานข้อมูลหลัก (Reduce SQL Server Load):</strong><br>
+                    การเปลี่ยนมาใช้ตาราง <code>ims_product_stock_balance</code> ใน MySQL จะช่วยปลดภาระการคำนวณของเซิร์ฟเวอร์ MS SQL Server หลัก ทำให้ระบบ ERP ใช้งานได้ลื่นไหล ไม่ติดปัญหา Database Lock หรือ CPU Spike ขณะมีผู้ใช้ดาวน์โหลดรายงานพร้อมกัน
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        รายงานสร้างขึ้นโดยอัตโนมัติ | ฐานข้อมูล sac_data2 (MySQL 3307) | วันที่ 16 กันยายน 2026
+    </footer>
+</div>
+
+</body>
+</html>

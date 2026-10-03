@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการใช้งานระบบวางแผนการขายยาง (ฉบับสมบูรณ์ - ยางเล็ก, ยางใหญ่, ยาง Volume)</title>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; color: #334155; line-height: 1.6; }
+        .hero-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%); color: white; padding: 50px 0; margin-bottom: 35px; border-radius: 0 0 35px 35px; box-shadow: 0 10px 25px rgba(15,23,42,0.15); }
+        .card-step { border: none; border-radius: 16px; transition: transform 0.25s; box-shadow: 0 6px 16px rgba(0,0,0,0.04); margin-bottom: 25px; }
+        .instruction-box { background: white; padding: 35px; border-radius: 20px; border-left: 8px solid #0d6efd; margin-bottom: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
+        .badge-number { background: #0d6efd; color: white; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; font-size: 14px; font-weight: 600; flex-shrink: 0; }
+        .nav-pills .nav-link { color: #334155; font-weight: 500; border-radius: 12px; margin: 4px 0; text-align: left; padding: 12px 16px; transition: all 0.2s; border: 1px solid transparent; }
+        .nav-pills .nav-link:hover { background-color: #e0f2fe; color: #0284c7; }
+        .nav-pills .nav-link.active { background-color: #0284c7; color: white; box-shadow: 0 4px 12px rgba(2,132,199,0.3); }
+        .tip-box { background: #eff6ff; border-radius: 14px; padding: 20px; border-left: 5px solid #3b82f6; margin-top: 20px; }
+        .warning-box { background: #fffbeb; border-radius: 14px; padding: 20px; border-left: 5px solid #f59e0b; margin-top: 20px; }
+        .danger-box { background: #fef2f2; border-radius: 14px; padding: 20px; border-left: 5px solid #ef4444; margin-top: 20px; }
+        .success-box { background: #f0fdf4; border-radius: 14px; padding: 20px; border-left: 5px solid #22c55e; margin-top: 20px; }
+        .code-inline { background: #f1f5f9; padding: 2px 6px; border-radius: 6px; color: #d97706; font-family: monospace; font-size: 0.9em; }
+        .key-badge { background: #e2e8f0; border: 1px solid #cbd5e1; border-radius: 6px; padding: 2px 8px; font-family: monospace; font-weight: 600; font-size: 0.85em; box-shadow: 0 2px 0 #94a3b8; }
+        .badge-screen-small { background-color: #0d6efd; color: white; }
+        .badge-screen-big { background-color: #0284c7; color: white; }
+        .badge-screen-volume { background-color: #f59e0b; color: white; }
+        .table-custom-header th { background-color: #0f172a !important; color: #ffffff !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <div class="hero-section text-center">
+        <div class="container">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 shadow-sm">
+                <i class="fas fa-sparkles me-1"></i> ฉบับปรับปรุงตามโค้ดล่าสุด 2026 (ครบทั้ง 3 หน้าจอ)
+            </span>
+            <h1 class="display-6 fw-bold mb-2">คู่มือการใช้งานระบบ "วางแผนการขายยาง (Tires Plan Forecast)"</h1>
+            <p class="lead opacity-90 mb-0">ครอบคลุมทั้ง 3 ระบบหน้าจอ: <strong>ยางเล็ก</strong>, <strong>ยางใหญ่ (Big Tires)</strong> และ <strong>ยาง Volume (Volume Tires)</strong><br>พร้อมระบบคีย์ตัวเลขอิสระ, การบันทึกโดยไม่ล็อค, การยืนยันล็อครายเดือน และการคำนวณ Volume รวม</p>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <!-- Navigation Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="sticky-top" style="top: 20px; z-index: 10;">
+                    <div class="bg-white p-3 rounded-4 shadow-sm border">
+                        <h6 class="fw-bold mb-3 text-secondary text-uppercase small"><i class="fas fa-compass me-2 text-primary"></i>สารบัญคู่มือ</h6>
+                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#step_overview"><i class="fas fa-layer-group me-2 text-primary"></i>1. ภาพรวม 3 ระบบหน้าจอ</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step_import"><i class="fas fa-file-import me-2 text-success"></i>2. การนำเข้าและ Template</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step_search"><i class="fas fa-search me-2 text-info"></i>3. ค้นหา กรอง และการ์ดลูกค้า</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step_edit"><i class="fas fa-keyboard me-2 text-warning"></i>4. วิธีคีย์และแก้ไขตัวเลข</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step_lock"><i class="fas fa-lock me-2 text-danger"></i>5. การบันทึกและระบบล็อค</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step_formula"><i class="fas fa-calculator me-2 text-primary"></i>6. ความหมายและสูตรคำนวณ</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step_reports"><i class="fas fa-chart-pie me-2 text-success"></i>7. รายงานและ Export Excel</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step_big"><i class="fas fa-truck me-2 text-info"></i>8. ระบบยางใหญ่ (Big Tires)</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step_vol"><i class="fas fa-boxes me-2 text-warning"></i>9. Tires Plan วางแผนการขาย (ยางใหญ่ 2)</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step_faq"><i class="fas fa-question-circle me-2 text-secondary"></i>10. คำถามพบบ่อย & ข้อควรระวัง</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-lg-9">
+                <div class="tab-content">
+                    
+                    <!-- 1. ภาพรวม 3 ระบบหน้าจอ -->
+                    <div class="tab-pane fade show active" id="step_overview">
+                        <div class="instruction-box" style="border-left-color: #0d6efd;">
+                            <h3><i class="fas fa-layer-group me-2 text-primary"></i>1. ภาพรวมระบบวางแผนการขายยาง 3 หน้าจอ (System Matrix)</h3>
+                            <p class="text-muted">ระบบถูกออกแบบแยกตามประเภทสินค้าและแผนกงาน เพื่อความชัดเจนและไม่ให้ข้อมูลปะปนกัน</p>
+                            <hr>
+
+                            <div class="table-responsive mb-4">
+                                <table class="table table-bordered table-hover bg-white shadow-sm">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ระบบ / แผนก</th>
+                                            <th>ชื่อไฟล์หน้าจอ (URL)</th>
+                                            <th>ตารางฐานข้อมูล</th>
+                                            <th>ไฟล์ Template Excel</th>
+                                            <th>จุดเด่นเฉพาะ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-bold"><span class="badge badge-screen-small me-1">ยางเล็ก</span> ยางเล็กทั่วไป</td>
+                                            <td><a href="forecast_plan_display_realtime.php" target="_blank" class="fw-bold"><code>forecast_plan_display_realtime.php</code></a></td>
+                                            <td><code>ims_tires_plan_forecast_realtime</code></td>
+                                            <td>แบบฟอร์มมาตรฐาน</td>
+                                            <td>ซิงค์เป้าร้านค้า, Top 20 SKU, สรุปยี่ห้อ</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold"><span class="badge badge-screen-big me-1">ยางใหญ่</span> ยางใหญ่ (Big Tires)</td>
+                                            <td><a href="forecast_plan_display_realtime_big_tires.php" target="_blank" class="fw-bold"><code>forecast_plan_display_realtime_big_tires.php</code></a></td>
+                                            <td><code>ims_tires_plan_forecast_realtime_big_tirs</code></td>
+                                            <td><code>big_tires.xlsx</code></td>
+                                            <td>เป้าร้านค้า + แพลนยาง, จัดกลุ่ม 3 ยี่ห้อ (AT+LEAO+LLIT), Top 20 SKU</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold"><span class="badge badge-screen-volume text-dark me-1">ยาง Volume</span> แผนก Volume Tires</td>
+                                            <td><a href="forecast_plan_display_volume_tires.php" target="_blank" class="fw-bold text-warning text-dark"><code>forecast_plan_display_volume_tires.php</code></a></td>
+                                            <td><code>ims_tires_plan_forecast_volume_tires</code></td>
+                                            <td><code>template_v_tires.xlsx</code></td>
+                                            <td>18 คอลัมน์, คำนวณ Volume รวม (ลบ.ม.), Smart Customer & SKU Matching</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="success-box">
+                                <h6 class="fw-bold text-success mb-2"><i class="fas fa-shield-alt me-2"></i>มาตรฐานความปลอดภัยร่วมกันทั้ง 3 ระบบ (Unified Architecture):</h6>
+                                <ul class="mb-0 ps-3">
+                                    <li><strong>การบันทึกโดยไม่ล็อค (Save without Auto-lock):</strong> พนักงานสามารถกดบันทึกแต่ละแถว หรือบันทึกทั้งหมด เพื่อเซฟตัวเลขลงฐานข้อมูลได้ตลอดเวลา โดยที่ระบบจะยังไม่ล็อคข้อมูล</li>
+                                    <li><strong>การยืนยันล็อคทีเดียว (Monthly Lock):</strong> เมื่อพร้อมส่งแผน ให้กดยืนยันล็อคเดือนนี้ ข้อมูลจะเปลี่ยนสถานะเป็น <span class="badge bg-danger">ล็อคแล้ว</span> พร้อมกันทั้งเดือน</li>
+                                    <li><strong>การปลดล็อค (Admin / Sale Sup Unlock):</strong> ผู้มีสิทธิ์ระดับหัวหน้างานหรือแอดมินสามารถกดปลดล็อคเพื่อเปิดให้แก้ไขได้ทุกเมื่อ</li>
+                                    <li><strong>Backend Guard:</strong> ระบบมีตัวกรองความปลอดภัยระดับ Server ป้องกันไม่ให้แก้ไขข้อมูลที่ถูกล็อคแล้ว</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. การนำเข้าและ Template -->
+                    <div class="tab-pane fade" id="step_import">
+                        <div class="instruction-box" style="border-left-color: #198754;">
+                            <h3><i class="fas fa-file-import me-2 text-success"></i>2. การนำเข้าข้อมูลและ Template Excel แต่ละระบบ</h3>
+                            <p class="text-muted">วิธีการจัดเตรียมไฟล์ Excel และนำเข้าสู่ระบบวางแผนในแต่ละเดือน</p>
+                            <hr>
+
+                            <div class="row g-3 mb-4">
+                                <!-- ยางเล็ก -->
+                                <div class="col-md-4">
+                                    <div class="card-step p-3 bg-light border h-100">
+                                        <div class="fw-bold text-primary mb-2"><i class="fas fa-car me-1"></i> 1. Template ยางเล็ก</div>
+                                        <p class="small text-muted mb-2">ใช้ไฟล์ Template ยางเล็กมาตรฐาน มีรหัสลูกค้า, รหัสสินค้า, เป้ารายเดือน, และแพลนยาง</p>
+                                        <a href="export_forecast_template.php" target="_blank" class="btn btn-outline-primary btn-sm w-100">
+                                            <i class="fas fa-download me-1"></i> ดาวน์โหลดข้อมูลยอดขาย
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- ยางใหญ่ -->
+                                <div class="col-md-4">
+                                    <div class="card-step p-3 bg-light border h-100">
+                                        <div class="fw-bold text-info mb-2"><i class="fas fa-truck me-1"></i> 2. Template ยางใหญ่ (Big Tires)</div>
+                                        <p class="small text-muted mb-2">ใช้ไฟล์ <code>big_tires.xlsx</code> รองรับฟิลด์ประเภทสินค้า, ยี่ห้อ, เป้ารายเดือน และแพลนยาง</p>
+                                        <a href="import_process/template/big_tires.xlsx" class="btn btn-outline-info btn-sm w-100">
+                                            <i class="fas fa-download me-1"></i> ดาวน์โหลด big_tires.xlsx
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- ยาง Volume -->
+                                <div class="col-md-4">
+                                    <div class="card-step p-3 bg-light border h-100">
+                                        <div class="fw-bold text-warning text-dark mb-2"><i class="fas fa-boxes me-1"></i> 3. Template ยาง Volume (18 คอลัมน์)</div>
+                                        <p class="small text-muted mb-2">ใช้ไฟล์ <code>template_v_tires.xlsx</code> 18 คอลัมน์ (A ถึง R) หรือกดปุ่มดึงข้อมูลยอดขายพร้อมประวัติ 6 เดือนเพื่อเตรียมใส่แพลน</p>
+                                        <div class="d-grid gap-2">
+                                            <a href="export_data_v_template.php" target="_blank" class="btn btn-warning btn-sm fw-bold text-dark shadow-sm">
+                                                <i class="fas fa-file-export me-1"></i> Export ข้อมูลยอดขาย สำหรับ PLAN ยาง
+                                            </a>
+                                            <a href="import_process/template/template_v_tires.xlsx" class="btn btn-outline-secondary btn-sm">
+                                                <i class="fas fa-download me-1"></i> ดาวน์โหลด Template เปล่า
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold text-dark mb-3"><i class="fas fa-magic text-success me-2"></i>ระบบ Smart Matching ในการนำเข้าไฟล์ Volume Tires:</h5>
+                            <div class="card-step p-3 bg-light border mb-3">
+                                <ul class="mb-0 ps-3 small">
+                                    <li class="mb-2"><strong>Smart Customer Match:</strong> ในไฟล์ Excel หากไม่มีรหัสลูกค้า มีเฉพาะชื่อร้านหรือชื่อในวงเล็บ เช่น <code>คุณจักรพงค์ ชัยถาวรกิจ (ร้าน SK ไทร์เซอร์วิส 2014)</code> ระบบจะแยกวิเคราะห์คำว่า <code>ร้าน SK ไทร์เซอร์วิส 2014</code> และค้นหารหัสลูกค้า <code>SAC.0000439</code> พร้อมดึงอำเภอ จังหวัด และเขตพื้นที่ให้อัตโนมัติ 100%</li>
+                                    <li class="mb-2"><strong>Smart SKU & Volume Match:</strong> หากช่องรหัสสินค้าใน Excel ว่าง ระบบจะนำชื่อรายละเอียดสินค้าไปจับคู่กับตาราง <code>m_volume_tires</code> และ <code>ims_product</code> เพื่อดึงรหัสสินค้า, ยี่ห้อ, ประเภท, และปริมาตร <code>VOLUME</code> (ลบ.ม./เส้น) ให้อัตโนมัติ</li>
+                                    <li><strong>ข้ามแถวสรุปสูตร:</strong> หากมีแถวท้ายตารางที่ระบุว่า "ใส่สูตรแล้วครับ" หรือเซลล์ว่าง ระบบจะข้ามไปอัตโนมัติ ไม่เกิดข้อผิดพลาดในการประมวลผล</li>
+                                </ul>
+                            </div>
+
+                            <div class="tip-box">
+                                <i class="fas fa-sync-alt me-2 text-primary"></i><strong>การนำเข้าอัปเดตข้อมูลเดิม (Re-import Update):</strong> 
+                                หากนำเข้าไฟล์ซ้ำในเดือน/ปีเดียวกัน ระบบจะทำการ <strong>UPDATE ตัวเลขแพลนยาง</strong> ให้เป็นค่าล่าสุดจากไฟล์ Excel ทันที พร้อมคำนวณส่วนต่างและ % เปรียบเทียบใหม่อัตโนมัติ โดยไม่สูญเสียข้อมูลยอดขายย้อนหลัง
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. ค้นหา กรอง และการ์ดลูกค้า -->
+                    <div class="tab-pane fade" id="step_search">
+                        <div class="instruction-box" style="border-left-color: #0284c7;">
+                            <h3><i class="fas fa-search me-2 text-info"></i>3. การค้นหา กรองข้อมูล และการ์ดสรุปลูกค้า</h3>
+                            <p class="text-muted">การเรียกดูข้อมูลแผนงานตามเงื่อนไขเดือน ปี พนักงาน ร้านค้า และการวิเคราะห์ภาพรวม</p>
+                            <hr>
+
+                            <h5 class="fw-bold text-dark mb-3"><i class="fas fa-filter text-primary me-2"></i>เครื่องมือกรองข้อมูล (Filter Bar):</h5>
+                            <div class="row g-2 mb-4">
+                                <div class="col-md-3">
+                                    <div class="p-2 bg-light border rounded text-center">
+                                        <strong class="text-primary d-block">เดือน / ปี</strong>
+                                        <small class="text-muted">เลือกเดือนและปีที่ต้องการวางแผน</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-2 bg-light border rounded text-center">
+                                        <strong class="text-primary d-block">พนักงานขาย / คนเทค</strong>
+                                        <small class="text-muted">กรองตามผู้รับผิดชอบ (ล็อกตาม User Login)</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-2 bg-light border rounded text-center">
+                                        <strong class="text-primary d-block">ชื่อลูกค้า / จังหวัด / อำเภอ</strong>
+                                        <small class="text-muted">ค้นหาเฉพาะร้านค้าหรือพื้นที่เป้าหมาย</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-2 bg-light border rounded text-center">
+                                        <strong class="text-primary d-block">ยี่ห้อ / ประเภทสินค้า</strong>
+                                        <small class="text-muted">กรองตาม Brand และ Product Type</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold text-dark mb-3"><i class="fas fa-id-card text-success me-2"></i>การ์ดสรุปข้อมูลลูกค้ารายบุคคล (Customer Summary Card):</h5>
+                            <p class="small">เมื่อเลือกค้นหาโดยระบุ <strong>"ชื่อลูกค้า"</strong> ระบบจะแสดงการ์ดสรุปยอดเหนือตารางโดยอัตโนมัติ:</p>
+                            
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light border rounded-3 h-100">
+                                        <h6 class="fw-bold text-primary"><i class="fas fa-car me-1"></i> ในหน้าจอ ยางเล็ก & ยางใหญ่:</h6>
+                                        <ul class="small mb-0 ps-3">
+                                            <li>แสดงรหัสลูกค้า, พนักงานขายที่ดูแล, อำเภอ, จังหวัด</li>
+                                            <li><strong>เป้าหมายรวมทั้งร้าน (Total Target):</strong> คำนวณเป้าหมายร้านค้าอย่างถูกต้อง ไม่บวกซ้ำตามจำนวนแถว SKU</li>
+                                            <li><strong>ยอดขายจริงรวม (Actual Sales):</strong> ดึงยอดขายจริงสะสมจากระบบบัญชี</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light border rounded-3 h-100">
+                                        <h6 class="fw-bold text-warning text-dark"><i class="fas fa-boxes me-1"></i> ในหน้าจอ ยาง Volume:</h6>
+                                        <ul class="small mb-0 ps-3">
+                                            <li>แสดงรหัสลูกค้า, พนักงานขาย, จังหวัด</li>
+                                            <li><strong>รวมแพลนยาง (เส้น):</strong> ผลรวมจำนวนเส้นยางที่แพลนของร้านค้านี้</li>
+                                            <li><strong>รวม Volume (ลบ.ม.):</strong> ผลรวมปริมาตรลูกบาศก์เมตรของทุก SKU ที่แพลน</li>
+                                            <li><strong>เฉลี่ย 3 เดือน:</strong> ค่าเฉลี่ยยอดขายย้อนหลังของร้านค้านี้</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. วิธีคีย์และแก้ไขตัวเลข -->
+                    <div class="tab-pane fade" id="step_edit">
+                        <div class="instruction-box" style="border-left-color: #f59e0b;">
+                            <h3><i class="fas fa-keyboard me-2 text-warning"></i>4. วิธีคีย์และแก้ไขตัวเลขแผนงาน (Inline Edit)</h3>
+                            <p class="text-muted">ระบบเปิดให้พิมพ์ตัวเลขได้โดยตรงบนตาราง พร้อมคำนวณผลต่างเรียลไทม์ทันที</p>
+                            <hr>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 border h-100">
+                                        <div class="fw-bold text-primary mb-2"><i class="fas fa-bullseye me-1"></i> 1. ช่อง "เป้ารายเดือน" (ยางเล็ก & ยางใหญ่)</div>
+                                        <ul class="small mb-0 ps-3">
+                                            <li>เปิดให้กรอกเป้าหมายยอดขายของร้านค้า</li>
+                                            <li><strong>ระบบซิงค์อัจฉริยะ (Auto-Sync):</strong> เมื่อพิมพ์ตัวเลขเป้าหมายในแถวใดแถวหนึ่ง ระบบจะนำตัวเลขนี้ไปอัปเดตให้ทุกแถว SKU ของลูกค้ารายเดียวกันในตารางทันที</li>
+                                            <li>การ์ดสรุปยอดเป้าหมายร้านค้าด้านบนจะคำนวณใหม่ให้อัตโนมัติ</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 border h-100">
+                                        <div class="fw-bold text-success mb-2"><i class="fas fa-chart-line me-1"></i> 2. ช่อง "แพลนยาง" (ทุกหน้าจอ)</div>
+                                        <ul class="small mb-0 ps-3">
+                                            <li>กรอกจำนวนเส้นยางที่คาดว่าจะขายได้สำหรับ SKU นั้น</li>
+                                            <li><strong>คำนวณเรียลไทม์ทันที:</strong> ระบบจะคำนวณ <em>เทียบค่าเฉลี่ย 3ด.</em>, <em>เทียบยอดขาย %</em>, และ <em>ขาด/เกิน</em> ให้เห็นทันทีขณะพิมพ์</li>
+                                            <li>ในระบบ Volume Tires จะคำนวณ <em>รวม Volume (ลบ.ม.)</em> ทันที</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tip-box">
+                                <i class="fas fa-bolt text-warning me-2"></i><strong>เทคนิคการคีย์เร็ว (Fast Navigation):</strong> 
+                                ขณะกำลังพิมพ์ตัวเลขในช่องเป้าหมายหรือแพลนยาง สามารถกดปุ่ม <span class="key-badge">Enter</span> บนแป้นพิมพ์ เพื่อให้เคอร์เซอร์เลื่อนลงไปที่ช่องของแถวถัดไปโดยอัตโนมัติ ช่วยให้คีย์ข้อมูลต่อเนื่องได้อย่างรวดเร็ว
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. การบันทึกและระบบล็อค (LATEST WORKFLOW) -->
+                    <div class="tab-pane fade" id="step_lock">
+                        <div class="instruction-box" style="border-left-color: #dc3545;">
+                            <h3><i class="fas fa-lock me-2 text-danger"></i>5. การบันทึกข้อมูลและระบบยืนยันล็อคยอด (Save & Monthly Lock)</h3>
+                            <p class="text-muted">ขั้นตอนการบันทึกข้อมูลอิสระ และการกดยืนยันล็อครายเดือนตามโค้ดเวอร์ชันล่าสุด</p>
+                            <hr>
+
+                            <!-- 5.1 Save -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold text-success mb-2"><i class="fas fa-save me-2"></i>5.1 การบันทึกข้อมูล (Save - ยังไม่ล็อค)</h5>
+                                <p>ในระหว่างที่กำลังจัดเตรียมตัวเลข ผู้ใช้สามารถบันทึกข้อมูลลงฐานข้อมูลได้ตลอดเวลา โดยที่<strong>ระบบจะยังไม่ทำการล็อคข้อมูล</strong> ทำให้สามารถกลับมาแก้ไขและบันทึกซ้ำได้เรื่อยๆ โดยมี 2 วิธี:</p>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="p-3 bg-light rounded-3 border h-100">
+                                            <h6 class="fw-bold text-dark"><i class="fas fa-check-square text-success me-1"></i> บันทึกเฉพาะรายการ (Inline Row Save)</h6>
+                                            <p class="small text-muted mb-2">เมื่อแก้ไขตัวเลขในแถวใดเสร็จ สามารถคลิกปุ่ม <span class="badge bg-success"><i class="fas fa-save me-1"></i> บันทึก</span> ท้ายแถวนั้นได้ทันที</p>
+                                            <p class="small text-success mb-0"><i class="fas fa-check-circle me-1"></i> แถวจะบันทึกสำเร็จ ตัวเลขลง DB ทันทีโดยที่สถานะยังเป็นเปิดให้แก้ไข (is_locked = 0)</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 bg-light rounded-3 border h-100">
+                                            <h6 class="fw-bold text-dark"><i class="fas fa-th-list text-warning me-1"></i> บันทึกการแก้ไขทั้งหมด (Save All)</h6>
+                                            <p class="small text-muted mb-2">เมื่อแก้ไขตัวเลขหลายรายการบนหน้าจอ ให้กดปุ่ม <span class="badge bg-warning text-dark"><i class="fas fa-save me-1"></i> บันทึกการแก้ไขทั้งหมด</span> บนแถบเครื่องมือด้านบน</p>
+                                            <p class="small text-primary mb-0"><i class="fas fa-info-circle me-1"></i> ระบบจะรวบรวมตัวเลขทุกแถวที่แก้ไขไปบันทึกลงฐานข้อมูลพร้อมกันในครั้งเดียว</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 5.2 Confirm Lock -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold text-danger mb-2"><i class="fas fa-lock me-2"></i>5.2 การกดยืนยันล็อคเดือนนี้ (Confirm Lock by Month)</h5>
+                                <p>เมื่อตรวจทานความถูกต้องและบันทึกข้อมูลประจำเดือนเสร็จสิ้นสมบูรณ์แล้ว ให้ดำเนินการล็อคข้อมูลดังนี้:</p>
+                                
+                                <div class="card-step p-4 bg-light border">
+                                    <ol class="mb-0 ps-3">
+                                        <li class="mb-2">ตรวจสอบว่าเลือก <strong>เดือน</strong> และ <strong>ปี</strong> ที่ต้องการล็อคถูกต้องแล้ว</li>
+                                        <li class="mb-2">กดปุ่ม <span class="badge bg-outline-danger text-danger border border-danger"><i class="fas fa-lock me-1"></i> ยืนยันล็อคเดือนนี้</span> บนแถบเครื่องมือ</li>
+                                        <li class="mb-2">ระบบจะแสดงกล่องเตือนยืนยัน: <em>"คุณต้องการล็อคข้อมูลประจำเดือนนี้เพื่อไม่ให้แก้ไขได้ใช่หรือไม่?"</em></li>
+                                        <li>กดปุ่ม <strong>"ยืนยันล็อคข้อมูล"</strong></li>
+                                    </ol>
+                                </div>
+
+                                <div class="warning-box mt-3 mb-0">
+                                    <h6 class="fw-bold text-dark mb-2"><i class="fas fa-shield-alt text-warning me-2"></i>สถานะของระบบเมื่อข้อมูลถูกล็อคแล้ว:</h6>
+                                    <ul class="small mb-0 ps-3">
+                                        <li>แถบสถานะด้านบน (Banner) จะเปลี่ยนเป็นสีแดง <span class="badge bg-danger">LOCKED</span> พร้อมระบุวันเวลาและผู้ที่ทำการล็อค</li>
+                                        <li>ช่องกรอกเป้ารายเดือนและแพลนยางจะเปลี่ยนเป็นสีเทาอ่อน (<code class="code-inline">readonly</code>) และไม่สามารถพิมพ์ตัวเลขได้อีก</li>
+                                        <li>ปุ่มบันทึกในคอลัมน์จัดการ จะถูกเปลี่ยนเป็นป้ายสถานะ <span class="badge bg-secondary"><i class="fas fa-lock me-1"></i> ล็อคแล้ว</span></li>
+                                        <li>ปุ่มบันทึกการแก้ไขทั้งหมด และปุ่มยืนยันล็อคจะถูกปิดการทำงานอัตโนมัติ</li>
+                                        <li>ระบบมี <strong>Backend Guard</strong> ป้องกันไม่ให้ส่งคำสั่งบันทึกเข้ามาแก้ไขได้อีก</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 5.3 Unlock -->
+                            <div>
+                                <h5 class="fw-bold text-success mb-2"><i class="fas fa-lock-open me-2"></i>5.3 การปลดล็อคข้อมูล (Unlocking - สิทธิ์ Admin / Sale Sup)</h5>
+                                <p class="small">หากมีกรณีจำเป็นต้องแก้ไขข้อมูลที่ล็อคไปแล้ว เช่น มีการปรับเปลี่ยนเป้าหมายเพิ่มเติม:</p>
+                                <ul class="small mb-0">
+                                    <li>ผู้ใช้งานระดับ <strong>Admin</strong> หรือ <strong>Sale Supervisor</strong> จะมีปุ่ม <span class="badge bg-outline-success text-success border border-success"><i class="fas fa-lock-open me-1"></i> ปลดล็อคเดือนนี้</span></li>
+                                    <li>เมื่อกดยืนยันปลดล็อค ระบบจะรีเซ็ตสถานะข้อมูลของเดือนนั้นทั้งหมดให้กลับมาเป็นช่องสีขาว และเปิดให้พนักงานสามารถแก้ไขและกดบันทึกได้ใหม่อีกครั้ง</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- 6. ความหมายและสูตรคำนวณ -->
+                    <div class="tab-pane fade" id="step_formula">
+                        <div class="instruction-box" style="border-left-color: #0d6efd;">
+                            <h3><i class="fas fa-calculator me-2 text-primary"></i>6. ความหมายของตัวเลขและสูตรคำนวณ (Formula Glossary)</h3>
+                            <p class="text-muted">รายละเอียดที่มาของตัวเลขแต่ละคอลัมน์ เพื่อการวิเคราะห์แผนงานอย่างถูกต้อง</p>
+                            <hr>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-bordered bg-white shadow-sm">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th width="30%">ชื่อคอลัมน์</th>
+                                            <th>สูตรคำนวณและที่มาของข้อมูล</th>
+                                            <th>หน้าจอที่รองรับ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-bold">ยอดขายย้อนหลัง (M-3, M-2, M-1)</td>
+                                            <td>ยอดขายจริงย้อนหลัง 3 เดือนล่าสุด ดึงตรงจากระบบบัญชี <code>ims_data_sale_sac_all</code></td>
+                                            <td><span class="badge bg-secondary">ทุกหน้าจอ</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">เฉลี่ย 3 เดือน (Avg 3M)</td>
+                                            <td><code>(M-1 + M-2 + M-3) ÷ 3</code> ฐานตัวเลขสำหรับใช้อ้างอิงการวางแผน</td>
+                                            <td><span class="badge bg-secondary">ทุกหน้าจอ</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">เป้ารายเดือน (Target Qty)</td>
+                                            <td>เป้าหมายรวมของร้านค้าประจำเดือน (เปิดให้คีย์และซิงค์เท่ากันทุก SKU ในร้าน)</td>
+                                            <td>ยางเล็ก, ยางใหญ่</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">แพลนยาง (Forecast Qty)</td>
+                                            <td>ยอดจำนวนเส้นที่วางแผนจะขายประจำเดือน (เปิดให้คีย์อิสระในแต่ละ SKU)</td>
+                                            <td><span class="badge bg-secondary">ทุกหน้าจอ</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Volume (ลบ.ม./เส้น)</td>
+                                            <td>ปริมาตรลูกบาศก์เมตรต่อเส้นยาง ดึงจากมาสเตอร์ <code>m_volume_tires</code></td>
+                                            <td><span class="badge bg-warning text-dark">ยาง Volume</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">รวม Volume (ลบ.ม.)</td>
+                                            <td><code>แพลนยาง × Volume</code> คำนวณปริมาตรรวมของ SKU นั้นๆ</td>
+                                            <td><span class="badge bg-warning text-dark">ยาง Volume</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">เทียบ แพลนยาง ลบ เฉลี่ย</td>
+                                            <td><code>แพลนยาง - เฉลี่ย 3 เดือน</code> ดูว่าวางแผนโตขึ้น (+) หรือลดลง (-) จากค่าเฉลี่ย</td>
+                                            <td><span class="badge bg-secondary">ทุกหน้าจอ</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">เทียบ แพลนยาง ลบ เฉลี่ย %</td>
+                                            <td><code>((แพลนยาง - เฉลี่ย 3ด.) ÷ เฉลี่ย 3ด.) × 100</code></td>
+                                            <td><span class="badge bg-secondary">ทุกหน้าจอ</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">ยอดขายจริง (Actual Sales)</td>
+                                            <td>ยอดขายจริงสะสมของเดือนปัจจุบัน ดึงจาก <code>ims_product_sale_sac</code></td>
+                                            <td><span class="badge bg-secondary">ทุกหน้าจอ</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">ผลต่าง ขาด/เกิน</td>
+                                            <td><code>ยอดขายจริง - แพลนยาง</code> หากติดลบจะแสดงสีแดง (ยังไม่ถึงแพลน) หากบวกจะแสดงสีน้ำเงิน</td>
+                                            <td><span class="badge bg-secondary">ทุกหน้าจอ</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. รายงานและ Export Excel -->
+                    <div class="tab-pane fade" id="step_reports">
+                        <div class="instruction-box" style="border-left-color: #198754;">
+                            <h3><i class="fas fa-chart-pie me-2 text-success"></i>7. การดูรายงาน สรุปยี่ห้อ และ Export Excel</h3>
+                            <p class="text-muted">เครื่องมือสรุปภาพรวมยอดขายและการวิเคราะห์เชิงลึก</p>
+                            <hr>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="card-step p-3 bg-light border h-100">
+                                        <h6 class="fw-bold text-success"><i class="fas fa-file-excel me-1"></i> การส่งออก Excel (Export Excel)</h6>
+                                        <p class="small text-muted mb-0">กดปุ่ม <span class="badge bg-light text-success border">Export Excel</span> บนแถบเครื่องมือ เพื่อดาวน์โหลดข้อมูลตามเงื่อนไขที่กรองไว้ ออกมาเป็นไฟล์ CSV (UTF-8 with BOM) ภาษาไทยเปิดใน Excel ได้ถูกต้อง 100% ไม่เป็นภาษาต่างดาว</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-step p-3 bg-light border h-100">
+                                        <h6 class="fw-bold text-warning text-dark"><i class="fas fa-list-alt me-1"></i> สรุปตามยี่ห้อ (Brand Summary Modal)</h6>
+                                        <p class="small text-muted mb-0">กดปุ่ม <span class="badge bg-warning text-dark">สรุปยี่ห้อ</span> เพื่อเปิดหน้าต่างสรุปยอดรวม แพลนยาง, จำนวนร้านค้า, จำนวนรายการ, ยอดเฉลี่ย และรวม Volume แยกตามยี่ห้อสินค้า</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 8. ระบบยางใหญ่ (Big Tires) -->
+                    <div class="tab-pane fade" id="step_big">
+                        <div class="instruction-box" style="border-left-color: #0284c7;">
+                            <h3><i class="fas fa-truck me-2 text-info"></i>8. ระบบวางแผนการขายยางใหญ่ (Big Tires)</h3>
+                            <p class="text-muted">ระบบวางแผนการขายสำหรับกลุ่มสินค้าประเภทยางใหญ่โดยเฉพาะ</p>
+                            <hr>
+                            
+                            <div class="alert alert-info border-0 shadow-sm mb-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-truck-monster fa-2x text-info me-3"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">ลิงก์หน้าจอเฉพาะสำหรับระบบยางใหญ่:</h6>
+                                        <div><a href="forecast_plan_display_realtime_big_tires.php" target="_blank" class="fw-bold text-primary"><code>forecast_plan_display_realtime_big_tires.php</code></a></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold text-dark mb-3"><i class="fas fa-check-circle text-info me-2"></i>ฟังก์ชันและจุดเด่นของระบบยางใหญ่:</h5>
+                            <ul class="ps-3 mb-4">
+                                <li class="mb-2"><strong>Template เฉพาะ:</strong> ใช้ไฟล์ <code class="code-inline">big_tires.xlsx</code> ในโฟลเดอร์ <code>import_process/template/</code></li>
+                                <li class="mb-2"><strong>จัดกลุ่ม 3 ยี่ห้อ (AT+LEAO+LLIT):</strong> ในหน้าต่างสรุปยี่ห้อ มีฟังก์ชันรวมกลุ่ม 3 ยี่ห้อหลัก เพื่อเปรียบเทียบสัดส่วนยอดขายได้อย่างรวดเร็ว</li>
+                                <li class="mb-2"><strong>Top 20 SKU ยางใหญ่:</strong> มีปุ่มเปิดแถบ Offcanvas ด้านข้าง แสดง 20 อันดับสินค้ายางใหญ่ที่ขายดีที่สุด</li>
+                                <li class="mb-2"><strong>Save แต่ละรายการได้:</strong> บันทึกข้อมูลได้ตลอดเวลาโดยยังไม่ล็อค และกดยืนยันล็อคทั้งเดือนเมื่อตรวจทานเสร็จ</li>
+                                <li><strong>ฐานข้อมูลแยกอิสระ:</strong> จัดเก็บในตาราง <code class="code-inline">ims_tires_plan_forecast_realtime_big_tirs</code></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 9. ระบบยาง Volume (Volume Tires) -->
+                    <div class="tab-pane fade" id="step_vol">
+                        <div class="instruction-box" style="border-left-color: #f59e0b;">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                                <div>
+                                    <h3 class="mb-1"><i class="fas fa-boxes me-2 text-warning"></i>9. Tires Plan วางแผนการขาย (ยางใหญ่ 2)</h3>
+                                    <p class="text-muted mb-0">ระบบวางแผนการขายเฉพาะแผนก Volume Tires พร้อมคำนวณ Volume รวม (ลบ.ม.) และกระบวนการทำงานครบวงจร</p>
+                                </div>
+                                <div>
+                                    <a href="forecast_plan_display_volume_tires.php" target="_blank" class="btn btn-warning btn-sm fw-bold shadow-sm text-dark">
+                                        <i class="fas fa-external-link-alt me-1"></i> เปิดหน้าจอ Volume Tires
+                                    </a>
+                                </div>
+                            </div>
+                            <hr>
+                            
+                            <!-- Header Info Banner -->
+                            <div class="alert alert-warning border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning text-dark p-3 rounded-circle me-3 shadow-sm">
+                                        <i class="fas fa-boxes fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-1 text-dark">หน้าจอเฉพาะสำหรับระบบยาง Volume (งานเฉพาะแผนก):</h5>
+                                        <div class="small text-muted mb-1">
+                                            ไฟล์หน้าจอ: <a href="forecast_plan_display_volume_tires.php" target="_blank" class="fw-bold text-dark text-decoration-underline"><code>forecast_plan_display_volume_tires.php</code></a> 
+                                            | ตารางฐานข้อมูล: <code class="code-inline">ims_tires_plan_forecast_volume_tires</code> (แยกอิสระ ปลอดภัย ไม่ปะปนกับแผนกอื่น)
+                                        </div>
+                                        <div class="small text-dark">
+                                            <i class="fas fa-check-circle text-success me-1"></i> รองรับ Template 18 คอลัมน์ (<code class="code-inline">template_v_tires.xlsx</code>)
+                                            | <i class="fas fa-check-circle text-success me-1"></i> ดึงประวัติยอดขาย 6 เดือนอัตโนมัติ
+                                            | <i class="fas fa-check-circle text-success me-1"></i> คำนวณ Volume รวม (ลบ.ม.) เรียลไทม์
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- แถบปุ่มเครื่องมือบนหน้าจอ -->
+                            <h5 class="fw-bold text-dark mb-3"><i class="fas fa-tools text-primary me-2"></i>9.1 แถบปุ่มคำสั่งหลักบนหน้าจอ (Toolbar Matrix):</h5>
+                            <div class="table-responsive mb-4">
+                                <table class="table table-bordered table-sm table-hover bg-white shadow-sm align-middle">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th style="width: 22%;">ชื่อปุ่มบนหน้าจอ</th>
+                                            <th style="width: 15%;">ลักษณะปุ่ม</th>
+                                            <th>หน้าที่และการทำงาน</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-bold"><i class="fas fa-file-import text-success me-1"></i> นำเข้า Realtime Excel</td>
+                                            <td><span class="badge bg-success">สีเขียว</span></td>
+                                            <td>เปิดหน้าต่าง Modal เพื่ออัปโหลดไฟล์ Excel (<code class="code-inline">template_v_tires.xlsx</code>) ที่กรอกยอดแพลนแล้ว เข้าสู่ระบบฐานข้อมูล</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold"><i class="fas fa-file-download text-secondary me-1"></i> Download Template</td>
+                                            <td><span class="badge bg-outline-secondary border text-dark">สีขาวกรอบโปร่ง</span></td>
+                                            <td>ดาวน์โหลดไฟล์เทมเพลตเปล่าต้นแบบ (<code class="code-inline">template_v_tires.xlsx</code> 18 คอลัมน์) จากระบบ</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold text-dark"><i class="fas fa-file-export text-warning me-1"></i> Export ข้อมูลยอดขาย สำหรับ PLAN ยาง</td>
+                                            <td><span class="badge bg-warning text-dark">สีเหลือง/ส้ม (สำคัญ)</span></td>
+                                            <td><strong>ปุ่มสำคัญ!</strong> ลิงก์ไปยังหน้าจอ <a href="export_data_v_template.php" target="_blank" class="fw-bold"><code>export_data_v_template.php</code></a> เพื่อดึงประวัติยอดขาย 6 เดือนและสร้างไฟล์ Excel 18 คอลัมน์ที่ตรงตามโครงสร้างเทมเพลตสำหรับนำไปกรอกยอดแพลนได้ทันที</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold"><i class="fas fa-info-circle text-warning me-1"></i> คู่มือการใช้งานระบบ</td>
+                                            <td><span class="badge bg-outline-warning border text-dark">สีเหลืองกรอบโปร่ง</span></td>
+                                            <td>เปิดหน้าต่างคู่มือการใช้งานระบบฉบับนี้</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold text-success"><i class="fas fa-file-excel me-1"></i> Export Excel</td>
+                                            <td><span class="badge bg-light text-success border">สีขาวป้ายเขียว</span></td>
+                                            <td>ดาวน์โหลดข้อมูลแผนงานที่กำลังแสดงผลบนหน้าจอ ออกมาเป็นไฟล์ Excel/CSV (UTF-8 BOM)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold text-danger"><i class="fas fa-trash-alt me-1"></i> ลบข้อมูลตามเงื่อนไข</td>
+                                            <td><span class="badge bg-danger">สีแดง</span></td>
+                                            <td>เปิดหน้าต่างลบข้อมูลแผนงาน โดยสามารถเลือกเงื่อนไขเดือน, ปี, เซลล์, ยี่ห้อ, ประเภทสินค้า พร้อมปุ่มพรีวิวดูก่อนลบจริง</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold text-success"><i class="fas fa-lock-open me-1"></i> ปลดล็อคเดือนนี้</td>
+                                            <td><span class="badge bg-outline-success text-success border border-success">สีเขียวกักขอบ</span></td>
+                                            <td>ปลดล็อคข้อมูลเดือนที่เลือก เพื่อเปิดให้แก้ไขและบันทึกข้อมูลได้ใหม่ (แสดงเฉพาะสิทธิ์ <strong>Admin</strong> และ <strong>Sale Supervisor</strong>)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold text-danger"><i class="fas fa-lock me-1"></i> ยืนยันล็อคเดือนนี้</td>
+                                            <td><span class="badge bg-outline-danger text-danger border border-danger">สีแดงกักขอบ</span></td>
+                                            <td>ล็อคข้อมูลแผนงานประจำเดือนนั้นทั้งเดือน เพื่อป้องกันการแก้ไขก่อนสรุปส่งรายงาน</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold text-dark"><i class="fas fa-save text-warning me-1"></i> บันทึกการแก้ไขทั้งหมด</td>
+                                            <td><span class="badge bg-warning text-dark">สีเหลือง</span></td>
+                                            <td>บันทึกตัวเลขทุกแถวที่มีการพิมพ์แก้ไขลงฐานข้อมูลทันที <strong>โดยที่ยังไม่ล็อคข้อมูล</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold text-danger"><i class="fas fa-times me-1"></i> Close</td>
+                                            <td><span class="badge bg-danger">สีแดง</span></td>
+                                            <td>ปิดหน้าต่างการทำงาน</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- ขั้นตอนการทำงานแบบ End-to-End ครบวงจร 5 ขั้นตอน -->
+                            <h5 class="fw-bold text-dark mb-3"><i class="fas fa-project-diagram text-warning me-2"></i>9.2 ขั้นตอนการทำงานครบวงจร 5 ขั้นตอน (5-Step End-to-End Workflow):</h5>
+                            <p class="small text-muted mb-4">ลำดับขั้นตอนการจัดทำแผน Volume Tires ตั้งแต่การดึงข้อมูลประวัติยอดขาย จนถึงการยืนยันล็อคยอดประจำเดือน</p>
+
+                            <!-- Step 1 -->
+                            <div class="card-step p-3 bg-white border border-warning shadow-sm mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="badge-number bg-warning text-dark fw-bold">1</span>
+                                    <h6 class="fw-bold text-dark mb-0">ขั้นตอนที่ 1: ดึงประวัติข้อมูลยอดขาย (Export ข้อมูลยอดขาย สำหรับ PLAN ยาง)</h6>
+                                </div>
+                                <div class="ps-4">
+                                    <p class="small text-muted mb-2">ก่อนเริ่มทำแพลน ให้ดึงประวัติการขาย 6 เดือนย้อนหลังจากระบบ เพื่อนำมาเป็นฐานตัวเลขในการวางแผน:</p>
+                                    <ol class="small mb-2 ps-3">
+                                        <li class="mb-1">คลิกปุ่ม <span class="badge bg-warning text-dark"><i class="fas fa-file-export me-1"></i> Export ข้อมูลยอดขาย สำหรับ PLAN ยาง</span> บนหน้าจอ หรือเปิด <a href="export_data_v_template.php" target="_blank" class="fw-bold"><code>export_data_v_template.php</code></a></li>
+                                        <li class="mb-1"><strong>กำหนดช่วงวันที่:</strong> ระบุวันเริ่มต้นและสิ้นสุด (ระบบกำหนดค่าเริ่มต้นย้อนหลัง 6 เดือนให้อัตโนมัติ)</li>
+                                        <li class="mb-1"><strong>เลือกเดือนและปีเป้าหมาย:</strong> ระบุเดือนและปีที่ต้องการทำแพลนขาย (เช่น เดือน 10 ปี 2026)</li>
+                                        <li class="mb-1"><strong>เลือกรายชื่อพนักงานขาย (Dual Listbox):</strong> 
+                                            คลิกเลือกชื่อพนักงานขายจากกล่องซ้าย (กด <kbd>Ctrl</kbd>/<kbd>Shift</kbd> เพื่อเลือกหลายคน หรือดับเบิ้ลคลิก) แล้วกดปุ่ม <strong>[เพิ่มที่เลือก >]</strong> หรือกด <strong>[เพิ่มทั้งหมด >>]</strong> เข้ามายังกล่องขวา 
+                                            <em>(ระบบคัดกรองเฉพาะพนักงานขายจริงตามนโยบาย ไม่รวมบัญชีกลาง/BTC/RQ อัตโนมัติ)</em>
+                                        </li>
+                                        <li class="mb-1"><strong>ระบบกรองเงื่อนไขสินค้าอัตโนมัติ:</strong>
+                                            <span class="badge bg-light text-dark border me-1">ประเภท: TBR/LTR (ยางใหญ่), LSR, TBB/LTB (ยางผ้าใบ), TBR</span>
+                                            <span class="badge bg-light text-dark border me-1">ยี่ห้อ: VB, ATLAS, AT, BS/FS/DT, BS/FS, BS</span>
+                                            <span class="badge bg-light text-danger border">เอกสาร: DI_REF NOT LIKE 'DS%'</span>
+                                        </li>
+                                        <li class="mb-1">สามารถกดปุ่ม <span class="badge bg-info text-white"><i class="fas fa-search me-1"></i> ค้นหา / ดูตัวอย่างข้อมูล</span> เพื่อพรีวิวตารางข้อมูลก่อนส่งออก</li>
+                                        <li>กดปุ่ม <span class="badge bg-success"><i class="fas fa-file-excel me-1"></i> Export Excel (.xlsx)</span> หรือ <span class="badge bg-primary">Export CSV</span> เพื่อดาวน์โหลดไฟล์</li>
+                                    </ol>
+                                    <div class="tip-box p-2 mt-2">
+                                        <small><i class="fas fa-check-circle text-success me-1"></i> <strong>ไฟล์ที่ได้จะมีโครงสร้าง 18 คอลัมน์ (A ถึง R)</strong> ตรงตามไฟล์ <code>template_v_tires.xlsx</code> โดยแถวที่ 1 เป็นชื่อหัวคอลัมน์ และแถวที่ 2 เป็นต้นไปเป็นข้อมูลยอดขายย้อนหลัง พร้อมสูตรคำนวณเปรียบเทียบในคอลัมน์ P และ Q</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="card-step p-3 bg-white border border-primary shadow-sm mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="badge-number bg-primary fw-bold">2</span>
+                                    <h6 class="fw-bold text-dark mb-0">ขั้นตอนที่ 2: เปิดไฟล์ Excel และกรอกตัวเลขแพลนยาง</h6>
+                                </div>
+                                <div class="ps-4">
+                                    <p class="small text-muted mb-2">เปิดไฟล์ Excel ที่ได้จากขั้นตอนที่ 1 ขึ้นมา เพื่อกรอกตัวเลขยอดแผนการขาย:</p>
+                                    <ul class="small mb-2 ps-3">
+                                        <li class="mb-1">คอลัมน์ A ถึง N: เป็นข้อมูลเซลล์, ลูกค้า, สินค้า, ยี่ห้อ, ยอดขาย Max/Min, ยอดขาย 3 เดือนย้อนหลัง และค่าเฉลี่ย 3 เดือน ซึ่งระบบดึงให้อัตโนมัติแล้ว</li>
+                                        <li class="mb-1"><strong>กรอกตัวเลขเฉพาะ คอลัมน์ O: "แพลนยางเดือนที่ต้องการ"</strong> (ใส่จำนวนเส้นที่วางแผนจะขาย)</li>
+                                        <li class="mb-1"><strong>คอลัมน์ P ("เทียบ แพลนยาง ลบ ค่าเฉลี่ย"):</strong> มีสูตร <code class="code-inline">=O{row}-N{row}</code> คำนวณผลต่างเส้นยางให้อัตโนมัติ</li>
+                                        <li class="mb-1"><strong>คอลัมน์ Q ("เทียบ แพลนยาง ลบ ค่าเฉลี่ย %"):</strong> มีสูตรคำนวณ % ผลต่าง <code class="code-inline">=IF(N{row}&gt;0, (O{row}-N{row})/N{row}, 0)</code> ให้อัตโนมัติ ป้องกันปัญหา <code class="code-inline">#DIV/0!</code></li>
+                                        <li>เมื่อกรอกตัวเลขครบถ้วนตามต้องการ ให้ทำการบันทึกไฟล์ Excel (Save)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="card-step p-3 bg-white border border-success shadow-sm mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="badge-number bg-success fw-bold">3</span>
+                                    <h6 class="fw-bold text-dark mb-0">ขั้นตอนที่ 3: นำเข้าไฟล์กลับสู่ระบบ (Import Realtime Excel)</h6>
+                                </div>
+                                <div class="ps-4">
+                                    <p class="small text-muted mb-2">นำไฟล์ Excel ที่กรอกยอดแพลนแล้ว นำเข้าสู่ระบบบนหน้าจอ <code>forecast_plan_display_volume_tires.php</code>:</p>
+                                    <ol class="small mb-2 ps-3">
+                                        <li class="mb-1">คลิกปุ่ม <span class="badge bg-success"><i class="fas fa-file-import me-1"></i> นำเข้า Realtime Excel</span> ที่แถบเครื่องมือด้านบน</li>
+                                        <li class="mb-1">เลือก <strong>เดือนที่ต้องการนำเข้า</strong> และ <strong>ปีที่ต้องการนำเข้า</strong> ให้ตรงกับเดือนที่ทำแผน</li>
+                                        <li class="mb-1">คลิกเลือกไฟล์ Excel ที่กรอกยอดแพลนแล้ว</li>
+                                        <li class="mb-1">กดปุ่ม <strong>"เริ่มต้นนำเข้าข้อมูล"</strong></li>
+                                    </ol>
+                                    <div class="card p-2 bg-light border small mt-2">
+                                        <strong class="text-success mb-1"><i class="fas fa-cogs me-1"></i> การทำงานอัตโนมัติของระบบนำเข้า (Smart Auto-Processing):</strong>
+                                        <ul class="mb-0 ps-3">
+                                            <li><strong>Smart Customer Match:</strong> ดึงรหัสลูกค้า <code>AR_CODE</code>, จังหวัด, อำเภอ อัตโนมัติจากชื่อลูกค้าและชื่อร้านค้าในวงเล็บ</li>
+                                            <li><strong>Smart SKU & Volume Mapping:</strong> ค้นหาและดึงค่าปริมาตร <code>VOLUME</code> (ลบ.ม./เส้น) จากตารางมาสเตอร์ <code>m_volume_tires</code> อัตโนมัติ</li>
+                                            <li><strong>คำนวณรวม Volume:</strong> คำนวณ <code>รวม Volume (ลบ.ม.) = แพลนยาง × Volume ต่อเส้น</code> ให้อัตโนมัติทุกรายการ</li>
+                                            <li><strong>Re-import Update:</strong> หากมีการนำเข้าไฟล์ซ้ำในเดือนเดียวกัน ระบบจะอัปเดตเฉพาะตัวเลขแพลนยางให้เป็นค่าล่าสุด โดยไม่สูญเสียข้อมูลเดิม</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div class="card-step p-3 bg-white border border-info shadow-sm mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="badge-number bg-info text-white fw-bold">4</span>
+                                    <h6 class="fw-bold text-dark mb-0">ขั้นตอนที่ 4: ตรวจสอบ กรอง และแก้ไขตัวเลขบนหน้าจอ (Inline Edit & Save)</h6>
+                                </div>
+                                <div class="ps-4">
+                                    <p class="small text-muted mb-2">เมื่อข้อมูลนำเข้าสำเร็จ จะปรากฏในตารางแผนงาน สามารถเรียกดูและปรับแก้ตัวเลขได้ตามต้องการ:</p>
+                                    <ul class="small mb-2 ps-3">
+                                        <li class="mb-1"><strong>เครื่องมือกรองข้อมูล (Filter Bar):</strong> กรองตาม เดือน, ปี, พนักงานขาย, คนเทค, ชื่อลูกค้า, ยี่ห้อ, ประเภทสินค้า, เงื่อนไขแพลนยาง (<span class="badge bg-light text-dark border">แพลนยาง &gt; 0</span> หรือ <span class="badge bg-light text-dark border">แพลนยาง = 0</span>), จังหวัด, และอำเภอ แล้วกด <strong>[กรองข้อมูล]</strong></li>
+                                        <li class="mb-1"><strong>การ์ดสรุปลูกค้า (Customer Summary Card):</strong> เมื่อเลือกชื่อลูกค้า ระบบจะแสดงการ์ดสรุปยอดด้านบนทันที ประกอบด้วย:
+                                            <strong>รวมแพลนยาง (เส้น)</strong>, <strong>รวม Volume (ลบ.ม.)</strong>, และ <strong>เฉลี่ย 3 เดือน</strong>
+                                        </li>
+                                        <li class="mb-1"><strong>แก้ไขตัวเลขในตาราง (Inline Edit):</strong> สามารถคลิกพิมพ์ตัวเลขในช่อง <strong>"แพลนยาง"</strong> ได้โดยตรง ระบบจะคำนวณ <em>รวม Volume</em>, <em>เทียบค่าเฉลี่ย</em>, และ <em>ขาด/เกิน</em> ให้เห็นแบบเรียลไทม์ทันที</li>
+                                        <li class="mb-1"><strong>คีย์เร็ว:</strong> ขณะพิมพ์ตัวเลข สามารถกดปุ่ม <span class="key-badge">Enter</span> เพื่อเลื่อนเคอร์เซอร์ลงไปแถวถัดไปอัตโนมัติ</li>
+                                        <li><strong>การบันทึก:</strong> คลิกปุ่ม <span class="badge bg-success"><i class="fas fa-save me-1"></i> บันทึก</span> ท้ายแถว หรือกดปุ่ม <span class="badge bg-warning text-dark"><i class="fas fa-save me-1"></i> บันทึกการแก้ไขทั้งหมด</span> ด้านบน <em>(ตัวเลขจะเซฟลงฐานข้อมูลทันทีโดยที่ยังไม่ล็อคข้อมูล สามารถกลับมาแก้ไขซ้ำได้เรื่อยๆ)</em></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Step 5 -->
+                            <div class="card-step p-3 bg-white border border-danger shadow-sm mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="badge-number bg-danger fw-bold">5</span>
+                                    <h6 class="fw-bold text-dark mb-0">ขั้นตอนที่ 5: กดยืนยันล็อคยอดประจำเดือน (Confirm Monthly Lock)</h6>
+                                </div>
+                                <div class="ps-4">
+                                    <p class="small text-muted mb-2">เมื่อตรวจทานความถูกต้องและบันทึกข้อมูลประจำเดือนเสร็จสิ้นสมบูรณ์แล้ว:</p>
+                                    <ol class="small mb-2 ps-3">
+                                        <li class="mb-1">ตรวจสอบให้แน่ใจว่าเลือกเดือนและปีที่ต้องการส่งแผนถูกต้องแล้ว</li>
+                                        <li class="mb-1">กดปุ่ม <span class="badge bg-outline-danger text-danger border border-danger"><i class="fas fa-lock me-1"></i> ยืนยันล็อคเดือนนี้</span> บนแถบเครื่องมือ</li>
+                                        <li class="mb-1">กล่องข้อความจะแสดงยืนยัน &rarr; กดปุ่ม <strong>"ยืนยันล็อคข้อมูล"</strong></li>
+                                        <li>ระบบจะเปลี่ยนสถานะเป็นแถบสีแดง <span class="badge bg-danger">LOCKED</span> ช่องกรอกตัวเลขจะเปลี่ยนเป็นสีเทา (<code class="code-inline">readonly</code>) ป้องกันการแก้ไขโดยเด็ดขาด</li>
+                                    </ol>
+                                    <div class="danger-box p-2 mt-2">
+                                        <small><i class="fas fa-exclamation-triangle text-danger me-1"></i> <strong>กรณีจำเป็นต้องแก้ไขหลังล็อคแล้ว:</strong> ผู้ใช้งานระดับ <strong>Admin</strong> หรือ <strong>Sale Supervisor</strong> สามารถคลิกปุ่ม <span class="badge bg-outline-success text-success border border-success"><i class="fas fa-lock-open me-1"></i> ปลดล็อคเดือนนี้</span> เพื่อเปิดให้กลับมาแก้ไขและบันทึกข้อมูลได้ใหม่</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ตารางโครงสร้าง 18 คอลัมน์ของ Template -->
+                            <h5 class="fw-bold text-dark mb-3 mt-4"><i class="fas fa-table text-success me-2"></i>9.3 โครงสร้าง 18 คอลัมน์ของไฟล์เทมเพลต (template_v_tires.xlsx):</h5>
+                            <div class="table-responsive mb-4">
+                                <table class="table table-bordered table-sm bg-white shadow-sm align-middle">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th style="width: 8%;" class="text-center">คอลัมน์</th>
+                                            <th style="width: 25%;">ชื่อหัวตารางใน Excel</th>
+                                            <th style="width: 20%;">ฟิลด์ข้อมูลในระบบ</th>
+                                            <th>คำอธิบาย / รูปแบบข้อมูล</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="small">
+                                        <tr>
+                                            <td class="text-center fw-bold">A</td>
+                                            <td class="fw-bold">เซลล์</td>
+                                            <td><code>SALE_NAME</code></td>
+                                            <td>ชื่อพนักงานขายผู้รับผิดชอบลูกค้า</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">B</td>
+                                            <td class="fw-bold">เทค</td>
+                                            <td><code>TAKE_NAME</code></td>
+                                            <td>ชื่อผู้ช่วยขาย (คนเทค)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">C</td>
+                                            <td class="fw-bold">รายชื่อลูกค้า</td>
+                                            <td><code>AR_NAME</code></td>
+                                            <td>ชื่อร้านค้าหรือลูกค้า</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">D</td>
+                                            <td class="fw-bold">จังหวัด</td>
+                                            <td><code>TRD_PROVINCE</code></td>
+                                            <td>จังหวัดที่ตั้งของร้านค้า</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">E</td>
+                                            <td class="fw-bold">ประเภท</td>
+                                            <td><code>SKU_CAT</code></td>
+                                            <td>ประเภทยาง (TBR/LTR, LSR, TBB/LTB)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">F</td>
+                                            <td class="fw-bold text-primary">รหัสสินค้า</td>
+                                            <td><code>SKU_CODE</code></td>
+                                            <td>รหัสสินค้า (เช่น VB10002016-LUG)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">G</td>
+                                            <td class="fw-bold">รายละเอียด</td>
+                                            <td><code>SKU_NAME</code></td>
+                                            <td>ชื่อและรายละเอียดขนาดยาง/ลายดอก</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">H</td>
+                                            <td class="fw-bold text-success">ยี่ห้อ</td>
+                                            <td><code>BRAND</code></td>
+                                            <td>ยี่ห้อยาง (VB, ATLAS, AT, BS/FS ฯลฯ)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">I</td>
+                                            <td class="fw-bold">ยอดขายสูงสุดต่อเดือน {ปี}</td>
+                                            <td><code>max_qty_year</code></td>
+                                            <td>สถิติจำนวนเส้นที่เคยขายได้สูงสุดต่อเดือนในปีนั้น</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">J</td>
+                                            <td class="fw-bold">ยอดขายต่ำสุดต่อเดือน {ปี}</td>
+                                            <td><code>min_qty_year</code></td>
+                                            <td>สถิติจำนวนเส้นที่เคยขายได้ต่ำสุดต่อเดือนในปีนั้น</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">K</td>
+                                            <td class="fw-bold">เดือน -3 (เช่น กรกฎาคม'26)</td>
+                                            <td><code>sales_month_1</code></td>
+                                            <td>ยอดขายจริงย้อนหลัง 3 เดือนก่อนหน้า</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">L</td>
+                                            <td class="fw-bold">เดือน -2 (เช่น สิงหาคม'26)</td>
+                                            <td><code>sales_month_2</code></td>
+                                            <td>ยอดขายจริงย้อนหลัง 2 เดือนก่อนหน้า</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">M</td>
+                                            <td class="fw-bold">เดือน -1 (เช่น กันยายน'26)</td>
+                                            <td><code>sales_month_3</code></td>
+                                            <td>ยอดขายจริงย้อนหลัง 1 เดือนก่อนหน้า</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">N</td>
+                                            <td class="fw-bold text-success">ค่าเฉลี่ย 3 เดือน</td>
+                                            <td><code>avg_3_month</code></td>
+                                            <td>ค่าเฉลี่ยยอดขาย 3 เดือนย้อนหลัง <code>(K + L + M) ÷ 3</code></td>
+                                        </tr>
+                                        <tr class="table-warning">
+                                            <td class="text-center fw-bold">O</td>
+                                            <td class="fw-bold text-danger">แพลนยางเดือนที่ต้องการ</td>
+                                            <td><code>forecast_qty_month_1</code></td>
+                                            <td><strong>ช่องว่างสำหรับให้ผู้ใช้กรอกยอดแพลนขาย (จำนวนเส้น)</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">P</td>
+                                            <td class="fw-bold">เทียบ แพลนยาง ลบ ค่าเฉลี่ย</td>
+                                            <td><code>compare_forecast_month_1</code></td>
+                                            <td>สูตรคำนวณผลต่าง: <code class="code-inline">=O{row}-N{row}</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">Q</td>
+                                            <td class="fw-bold">เทียบ แพลนยาง ลบ ค่าเฉลี่ย %</td>
+                                            <td><code>compare_sales_percent</code></td>
+                                            <td>สูตรคำนวณ % ผลต่าง: <code class="code-inline">=IF(N{row}&gt;0, (O{row}-N{row})/N{row}, 0)</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center fw-bold">R</td>
+                                            <td class="fw-bold">ผู้รับผิดชอบ</td>
+                                            <td><code>responsible_person</code></td>
+                                            <td>ชื่อพนักงานขายผู้รับผิดชอบ</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- ระบบการลบข้อมูลตามเงื่อนไข -->
+                            <h5 class="fw-bold text-dark mb-3"><i class="fas fa-trash-alt text-danger me-2"></i>9.4 ระบบการลบข้อมูลตามเงื่อนไข (Delete by Conditions with Preview):</h5>
+                            <div class="card p-3 bg-light border border-danger rounded-3 mb-3">
+                                <p class="small text-muted mb-2">เมื่อต้องการล้างหรือลบข้อมูลแผนงานเก่าออกอย่างปลอดภัย:</p>
+                                <ol class="small mb-0 ps-3">
+                                    <li class="mb-1">คลิกปุ่ม <span class="badge bg-danger"><i class="fas fa-trash-alt me-1"></i> ลบข้อมูลตามเงื่อนไข</span> ที่แถบเครื่องมือด้านบน</li>
+                                    <li class="mb-1">เลือกเงื่อนไขที่ต้องการลบ: <strong>เดือน, ปี, พนักงานขาย, ยี่ห้อ (Brand), และประเภทสินค้า</strong></li>
+                                    <li class="mb-1">ระบบจะแสดง <strong>จำนวนรายการที่จะถูกลบ</strong> แบบเรียลไทม์ทันที</li>
+                                    <li class="mb-1">สามารถกดปุ่ม <span class="badge bg-outline-primary border text-primary"><i class="fas fa-eye me-1"></i> ดูรายการที่จะถูกลบ</span> เพื่อเปิดหน้าต่างพรีวิวตรวจสอบรายการที่จะถูกลบก่อนดำเนินการจริง</li>
+                                    <li>เมื่อตรวจสอบถูกต้องแล้ว ให้กดปุ่ม <strong>"ยืนยันการลบ"</strong> เพื่อลบข้อมูลออกจากระบบ</li>
+                                </ol>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- 10. FAQ คำถามพบบ่อย & ข้อควรระวัง -->
+                    <div class="tab-pane fade" id="step_faq">
+                        <div class="instruction-box" style="border-left-color: #64748b;">
+                            <h3><i class="fas fa-question-circle me-2 text-secondary"></i>10. คำถามที่พบบ่อยและข้อควรระวัง (FAQ & Best Practices)</h3>
+                            <p class="text-muted">ข้อแนะนำในการใช้งานระบบวางแผนการขายให้มีประสิทธิภาพสูงสุด</p>
+                            <hr>
+
+                            <div class="accordion" id="faqAccordion">
+                                <div class="accordion-item mb-2 border rounded">
+                                    <h2 class="accordion-header" id="faqHeading1">
+                                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1">
+                                            Q1: ถ้าต้องการ Save ข้อมูลไว้ก่อน แต่ยังไม่ต้องการส่งหรือล็อค ต้องทำอย่างไร?
+                                        </button>
+                                    </h2>
+                                    <div id="faqCollapse1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body bg-light">
+                                            <strong>ตอบ:</strong> สามารถกดปุ่ม <span class="badge bg-success"><i class="fas fa-save"></i> บันทึก</span> ท้ายแถว หรือกดปุ่ม <span class="badge bg-warning text-dark"><i class="fas fa-save"></i> บันทึกการแก้ไขทั้งหมด</span> ได้ตามปกติเลยครับ ข้อมูลจะถูกบันทึกลงฐานข้อมูลทันที <strong>โดยที่ยังไม่มีการล็อค</strong> สามารถกลับมาแก้ไขและกดบันทึกซ้ำได้ตลอดเวลา จนกว่าจะกดปุ่ม <span class="badge bg-danger"><i class="fas fa-lock"></i> ยืนยันล็อคเดือนนี้</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item mb-2 border rounded">
+                                    <h2 class="accordion-header" id="faqHeading2">
+                                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2">
+                                            Q2: ข้อมูลขึ้นสถานะ "LOCKED" (ล็อคแล้ว) แต่ต้องการแก้ไขตัวเลขด่วน ต้องทำอย่างไร?
+                                        </button>
+                                    </h2>
+                                    <div id="faqCollapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body bg-light">
+                                            <strong>ตอบ:</strong> ให้ติดต่อผู้มีสิทธิ์ระดับ <strong>Admin</strong> หรือ <strong>หัวหน้างาน (Sale Supervisor)</strong> โดยผู้มีสิทธิ์จะมองเห็นปุ่ม <span class="badge bg-outline-success text-success border border-success"><i class="fas fa-lock-open"></i> ปลดล็อคเดือนนี้</span> บนหน้าจอ เมื่อกดยืนยันปลดล็อค ข้อมูลของเดือนนั้นจะกลับมาเปิดให้แก้ไขและบันทึกได้ใหม่อีกครั้ง
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item mb-2 border rounded">
+                                    <h2 class="accordion-header" id="faqHeading3">
+                                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3">
+                                            Q3: นำเข้าไฟล์ Excel แล้วข้อมูลในเดือนนั้นจะหายหรือไม่?
+                                        </button>
+                                    </h2>
+                                    <div id="faqCollapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body bg-light">
+                                            <strong>ตอบ:</strong> ไม่หายครับ ระบบมีฟังก์ชัน Re-import Update อัตโนมัติ หากพบข้อมูลลูกค้าและสินค้าเดิมในเดือน/ปีเดียวกัน ระบบจะทำการ <strong>UPDATE ตัวเลขแพลนยาง</strong> ให้เป็นค่าล่าสุด โดยไม่ลบประวัติยอดขายเดิม
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item mb-2 border rounded">
+                                    <h2 class="accordion-header" id="faqHeading4">
+                                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4">
+                                            Q4: ทำไมตัวเลข Volume (ลบ.ม.) ไม่ขึ้นในหน้าจอ Volume Tires?
+                                        </button>
+                                    </h2>
+                                    <div id="faqCollapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body bg-light">
+                                            <strong>ตอบ:</strong> ตัวเลขรวม Volume จะคำนวณจาก <code>แพลนยาง × Volume ต่อเส้น</code> หากช่อง Volume เป็น 0.00 ให้ตรวจสอบว่ารหัสสินค้านั้นมีข้อมูลในตารางมาสเตอร์ <code>m_volume_tires</code> หรือไม่ หากยังไม่มีสามารถแจ้งแอดมินเพื่อเพิ่มค่า Volume ของสินค้านั้นเข้าระบบได้ครับ
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 bg-white border-top">
+        <div class="container">
+            <p class="small text-muted mb-1">&copy; 2026 SAC Sales Planning System | แผนกพัฒนาระบบเทคโนโลยีสารสนเทศ (IT Department)</p>
+            <p class="small text-muted mb-0">ระบบวางแผนการขายยาง: ยางเล็ก (<code>forecast_plan_display_realtime.php</code>) | ยางใหญ่ (<code>forecast_plan_display_realtime_big_tires.php</code>) | ยาง Volume (<code>forecast_plan_display_volume_tires.php</code>)</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

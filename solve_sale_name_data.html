@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานสรุปการแก้ไขปัญหาข้อมูลยอดขายและคะแนนยาง (เมธี(เม) ร้านค้า)</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --sac-primary: #0a3d62;
+            --sac-secondary: #0077b6;
+            --sac-accent: #00b4d8;
+            --sac-success: #10b981;
+            --sac-warning: #f59e0b;
+            --sac-danger: #ef4444;
+            --sac-dark: #1e293b;
+            --sac-light: #f8fafc;
+            --sac-card-border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Prompt', 'Sarabun', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--sac-dark);
+            line-height: 1.6;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #0a3d62 0%, #0077b6 60%, #0284c7 100%);
+            color: white;
+            padding: 2.5rem 0;
+            border-bottom: 4px solid var(--sac-accent);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .meta-pill {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 0.35rem 0.9rem;
+            font-size: 0.88rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .card-custom {
+            border: 1px solid var(--sac-card-border);
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.75rem;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .card-custom .card-header {
+            background-color: #ffffff;
+            border-bottom: 2px solid #edf2f7;
+            padding: 1.1rem 1.4rem;
+            font-weight: 600;
+            color: var(--sac-primary);
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-custom .card-header i {
+            color: var(--sac-secondary);
+        }
+
+        .stat-card {
+            border-radius: 10px;
+            padding: 1.25rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card .stat-title {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--sac-primary);
+        }
+
+        .badge-fixed {
+            background-color: #d1fae5;
+            color: #065f46;
+            font-weight: 600;
+            padding: 0.35em 0.7em;
+            border-radius: 6px;
+        }
+
+        .badge-issue {
+            background-color: #fee2e2;
+            color: #991b1b;
+            font-weight: 600;
+            padding: 0.35em 0.7em;
+            border-radius: 6px;
+        }
+
+        .table-custom {
+            margin-bottom: 0;
+        }
+
+        .table-custom th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .table-custom td {
+            vertical-align: middle;
+            font-size: 0.92rem;
+        }
+
+        code.inline-code {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 0.2rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88em;
+            font-family: Consolas, Monaco, monospace;
+            border: 1px solid #e2e8f0;
+        }
+
+        pre.code-block {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.86rem;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .callout-box {
+            border-left: 4px solid var(--sac-secondary);
+            background-color: #f0f9ff;
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .callout-box.warning {
+            border-left-color: var(--sac-warning);
+            background-color: #fffbeb;
+        }
+
+        .callout-box.success {
+            border-left-color: var(--sac-success);
+            background-color: #f0fdf4;
+        }
+
+        .callout-box.danger {
+            border-left-color: var(--sac-danger);
+            background-color: #fef2f2;
+        }
+
+        .step-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--sac-primary);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .header-banner {
+                background: #0a3d62 !important;
+                -webkit-print-color-adjust: exact;
+                color: white !important;
+            }
+            .card-custom {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Banner -->
+    <header class="header-banner">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold mb-1"><i class="fa-solid fa-file-circle-check me-2"></i>รายงานสรุปการตรวจสอบและแก้ไขปัญหาข้อมูลยอดขาย</h2>
+                    <p class="mb-0 text-white-50 fs-6">กรณีผู้ใช้งาน: <strong>เมธี(เม) ร้านค้า (sale026@sac.com)</strong> ไม่พบข้อมูลในระบบ Dashboard และรายงานคะแนนยาง</p>
+                </div>
+                <div class="text-md-end text-start">
+                    <span class="badge bg-success fs-6 py-2 px-3"><i class="fa-solid fa-circle-check me-1"></i>ดำเนินการแก้ไขสมบูรณ์แล้ว</span>
+                </div>
+            </div>
+            <div class="mt-3 pt-2 border-top border-white border-opacity-25 d-flex flex-wrap">
+                <span class="meta-pill"><i class="fa-solid fa-database"></i> Database: <strong>sac_data2</strong></span>
+                <span class="meta-pill"><i class="fa-solid fa-server"></i> MySQL Server: <strong>192.168.88.7:3307</strong></span>
+                <span class="meta-pill"><i class="fa-solid fa-user-tag"></i> Sale User ID: <strong>62 (sale026@sac.com)</strong></span>
+                <span class="meta-pill"><i class="fa-solid fa-calendar-days"></i> วันที่ปรับปรุง: <strong>28 กันยายน 2026</strong></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container my-4">
+
+        <!-- Quick Summary Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card border-start border-4 border-primary">
+                    <div class="stat-title"><i class="fa-solid fa-chart-line text-primary me-1"></i> ยอดขายยางใหญ่ปี 2026</div>
+                    <div class="stat-value text-primary">24.22 <span class="fs-6 text-muted">ล้านบาท</span></div>
+                    <div class="text-success small fw-medium mt-1"><i class="fa-solid fa-arrow-trend-up"></i> 4,778 เส้น (เดิมพบ 11 เส้น)</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card border-start border-4 border-success">
+                    <div class="stat-title"><i class="fa-solid fa-clock-rotate-left text-success me-1"></i> กู้คืนข้อมูลปี 2025</div>
+                    <div class="stat-value text-success">1,262 <span class="fs-6 text-muted">รายการ</span></div>
+                    <div class="text-muted small mt-1">ยอดรวม 38.15 ล้านบาท</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card border-start border-4 border-info">
+                    <div class="stat-title"><i class="fa-solid fa-store text-info me-1"></i> ร้านค้าในรายงานตามร้าน</div>
+                    <div class="stat-value text-info">384 / 18 <span class="fs-6 text-muted">แถว</span></div>
+                    <div class="text-muted small mt-1">ยางเล็ก 384 แถว / ยางใหญ่ 18 แถว</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card border-start border-4 border-warning">
+                    <div class="stat-title"><i class="fa-solid fa-code text-warning me-1"></i> ไฟล์ซอร์สโค้ดที่ปรับปรุง</div>
+                    <div class="stat-value text-warning">8 <span class="fs-6 text-muted">ไฟล์</span></div>
+                    <div class="text-muted small mt-1">พร้อมรองรับชุดยางทุกประเภท</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: หน้าจอที่เกี่ยวข้อง -->
+        <div class="card card-custom">
+            <div class="card-header">
+                <i class="fa-solid fa-desktop"></i> 1. หน้าจอของระบบที่ได้รับผลกระทบ
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded-3 bg-light h-100">
+                            <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-gauge me-1"></i> Dashboard_sale_user.php</h6>
+                            <p class="small text-muted mb-2">หน้าจอแดชบอร์ดยอดขายและเป้าขายของพนักงานขาย</p>
+                            <span class="badge bg-secondary">data_dashboard_sac_sale_cat_sm_brand-1.php</span>
+                            <span class="badge bg-secondary">data_dashboard_sac_sale_cat_ml_brand-1.php</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded-3 bg-light h-100">
+                            <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-shop me-1"></i> display_tires_point_by_ar_name.php</h6>
+                            <p class="small text-muted mb-2">หน้าจอรายงานคะแนนยางสะสมแยกตามรายชื่อร้านค้าลูกค้า</p>
+                            <span class="badge bg-secondary">model/fetch_data_tires_point_ar_name1.php</span>
+                            <span class="badge bg-secondary">model/fetch_data_tires_point_ar_name2.php</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded-3 bg-light h-100">
+                            <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-calendar-day me-1"></i> display_tires_point_by_date.php</h6>
+                            <p class="small text-muted mb-2">หน้าจอรายงานคะแนนยางสะสมตามช่วงวันที่เอกสารบิลขาย</p>
+                            <span class="badge bg-secondary">model/fetch_data_tires_point_by_date.php</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: สาเหตุของปัญหา (Root Causes) -->
+        <div class="card card-custom">
+            <div class="card-header">
+                <i class="fa-solid fa-triangle-exclamation text-danger"></i> 2. การวิเคราะห์สาเหตุของปัญหา (Root Causes)
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <!-- Issue 1 -->
+                    <div class="d-flex align-items-start mb-3 pb-3 border-bottom">
+                        <span class="step-badge bg-danger">1</span>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">ปัญหาการเว้นวรรคในชื่อพนักงานขาย (Spacing Mismatch)</h6>
+                            <p class="mb-2 text-muted">
+                                ในตารางบัญชีผู้ใช้ <code class="inline-code">ims_user</code> กำหนดชื่อ <code class="inline-code">first_name = 'เมธี(เม) ร้านค้า'</code> (<strong>ไม่มีเว้นวรรค</strong>)<br>
+                                แต่ในตารางประวัติการขาย <code class="inline-code">ims_data_sale_sac_all</code> สำหรับปี <strong>2025</strong> ทั้งหมด <strong>1,262 รายการ</strong> ถูกบันทึกไว้เป็น <code class="inline-code">'เมธี (เม) ร้านค้า'</code> (<strong>มีเว้นวรรค 1 เคาะหลังคำว่า เมธี</strong>)<br>
+                                ทำให้การ Query ด้วยเงื่อนไขเดิม <code class="inline-code">LIKE '%เมธี(เม) ร้านค้า%'</code> ไม่ตรงกับข้อมูล จึงไม่พบข้อมูลใดๆ ในปี 2025 เลย
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Issue 2 -->
+                    <div class="d-flex align-items-start mb-3 pb-3 border-bottom">
+                        <span class="step-badge bg-danger">2</span>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">เงื่อนไขใน View ยางใหญ่ (v_ims_data_sale_sac_all_ml_tire) ไม่รองรับประเภทยางปัจจุบัน</h6>
+                            <p class="mb-2 text-muted">
+                                นิยามเดิมของ View ตรวจสอบเฉพาะประเภทยางรหัสย่อแบบเดิมคือ <code class="inline-code">TRD_TIRE_TYPE IN ('LTB','LTR','TBB','TBR')</code><br>
+                                แต่ในข้อมูลจริงของระบบปัจจุบัน ข้อมูลถูกจัดกลุ่มเป็นภาษาไทย เช่น <code class="inline-code">'TBR/LTR (ยางใหญ่)'</code> และ <code class="inline-code">'TBB/LTB (ยางผ้าใบ)'</code> ส่งผลให้ยอดขายยางใหญ่ในปี 2026 ของ เมธี หายไปจากระบบกว่า <strong>99.7%</strong> (หลงเหลือแสดงผลเพียง 11 เส้น จากยอดจริง 4,778 เส้น)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Issue 3 -->
+                    <div class="d-flex align-items-start">
+                        <span class="step-badge bg-danger">3</span>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">หน้าจอค้นหาตามวันที่ (display_tires_point_by_date.php) ไม่มีตัวกรอง Session ของ Sales</h6>
+                            <p class="mb-2 text-muted">
+                                ไฟล์ <code class="inline-code">model/fetch_data_tires_point_by_date.php</code> ไม่มีการดึง <code class="inline-code">$_SESSION['first_name']</code> และไม่มีการต่อเงื่อนไข <code class="inline-code">WHERE a.SALE_NAME</code> สำหรับผู้ใช้กลุ่ม <code class="inline-code">sale_user</code><br>
+                                ทำให้ระบบประมวลผลดึงบิลขายของเซลส์ทุกคนพร้อมกันกว่า <strong>26,230 รายการ (ขนาด JSON 15.8 MB)</strong> ส่งผลให้หน้าจอค้าง (Timeout / Browser Crash) และไม่ยอมแสดงข้อมูลเฉพาะของ เมธี
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: สิ่งที่ดำเนินการแก้ไข (Implemented Fixes) -->
+        <div class="card card-custom">
+            <div class="card-header">
+                <i class="fa-solid fa-wrench text-success"></i> 3. รายละเอียดการดำเนินการแก้ไข (Implemented Fixes)
+            </div>
+            <div class="card-body">
+                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-database me-2"></i>3.1 การปรับปรุงข้อมูลและ View ในฐานข้อมูล MySQL</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-light">
+                            <span class="badge bg-primary mb-2">Data Normalization</span>
+                            <p class="small mb-2">ทำการ Update ปรับแก้ชื่อพนักงานขายในตาราง <code class="inline-code">ims_data_sale_sac_all</code> ของปี 2025 ให้เป็นรูปแบบมาตรฐานเดียวกันกับ <code class="inline-code">ims_user</code> (1,262 รายการ)</p>
+                            <pre class="code-block mb-0"><code>UPDATE ims_data_sale_sac_all 
+SET SALE_NAME = 'เมธี(เม) ร้านค้า' 
+WHERE SALE_NAME = 'เมธี (เม) ร้านค้า' 
+  AND DI_YEAR = '2025';</code></pre>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-light">
+                            <span class="badge bg-primary mb-2">View Expansion</span>
+                            <p class="small mb-2">อัปเดตนิยามของ MySQL View <code class="inline-code">v_ims_data_sale_sac_all_ml_tire</code> ให้ครอบคลุมทุกหมวดหมู่ยางขนาดใหญ่ของระบบในปัจจุบัน</p>
+                            <pre class="code-block mb-0"><code>-- เพิ่มเงื่อนไขประเภทยางใหญ่ครอบคลุม:
+TRD_TIRE_TYPE IN (
+  'LTB','LTR','TBB','TBR',
+  'TBR/LTR (ยางใหญ่)',
+  'TBB/LTB (ยางผ้าใบ)',
+  'TBB/LTB','TBR/LTB',
+  'ยางกลางยางใหญ่เรเดียล','ยางใหญ่'
+)</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-code me-2"></i>3.2 การปรับปรุง Source Code ในระบบ (8 ไฟล์)</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-custom">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%;">ไฟล์ซอร์สโค้ด</th>
+                                <th style="width: 25%;">ส่วนงาน / วัตถุประสงค์</th>
+                                <th style="width: 40%;">การปรับปรุงที่ทำ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="inline-code">data_dashboard_sac_sale_cat_sm_brand-1.php</code></td>
+                                <td>Dashboard ยางเล็ก (SM)</td>
+                                <td>เพิ่ม <code class="inline-code">REPLACE(SALE_NAME, ' ', '') LIKE :SALE_NAME_CLEAN</code> เพื่อให้ดึงข้อมูลได้เสมอแม้ในอนาคตจะมีเว้นวรรคผิดพลาด</td>
+                            </tr>
+                            <tr>
+                                <td><code class="inline-code">data_dashboard_sac_sale_cat_ml_brand-1.php</code></td>
+                                <td>Dashboard ยางใหญ่ (ML)</td>
+                                <td>เพิ่มการเปรียบเทียบชื่อเซลส์แบบตัดช่องว่าง (Whitespace-agnostic)</td>
+                            </tr>
+                            <tr>
+                                <td><code class="inline-code">model/fetch_data_tires_point_ar_name1.php</code></td>
+                                <td>คะแนนยางเล็กลูกค้า (SM)</td>
+                                <td>ปรับ SQL Clause ให้เปรียบเทียบทั้งแบบเดิม และแบบตัดช่องว่าง พร้อมปรับ Safe Session Start</td>
+                            </tr>
+                            <tr>
+                                <td><code class="inline-code">model/fetch_data_tires_point_ar_name2.php</code></td>
+                                <td>คะแนนยางใหญ่ลูกค้า (ML)</td>
+                                <td>ปรับ SQL Clause ให้เปรียบเทียบทั้งแบบเดิม และแบบตัดช่องว่าง พร้อมปรับ Safe Session Start</td>
+                            </tr>
+                            <tr>
+                                <td><code class="inline-code">model/fetch_data_tires_point_by_date.php</code></td>
+                                <td>คะแนนยางตามช่วงวันที่</td>
+                                <td>เพิ่มตรวจสอบ Session Role <code class="inline-code">account_type === 'sale_user'</code> และกรองข้อมูลเฉพาะเซลส์ที่ Login อยู่</td>
+                            </tr>
+                            <tr>
+                                <td><code class="inline-code">model/fetch_data_tires_point_ar_name1_prft.php</code><br>
+                                    <code class="inline-code">model/fetch_data_tires_point_ar_name2_prft.php</code><br>
+                                    <code class="inline-code">model/fetch_data_tires_point_by_date_prft.php</code>
+                                </td>
+                                <td>ชุดรายงานยาง PRINX / FORTUNE</td>
+                                <td>ปรับปรุง Logic ให้สอดคล้องกันทุกจุด เพื่อความสมบูรณ์แบบของทั้งระบบ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: ตารางเปรียบเทียบผลลัพธ์ (Verification Results) -->
+        <div class="card card-custom">
+            <div class="card-header">
+                <i class="fa-solid fa-square-poll-vertical text-info"></i> 4. ผลการทดสอบเปรียบเทียบ ก่อน - หลัง การแก้ไข (Verification Results)
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">ผลการทดสอบจำลองการเข้าสู่ระบบด้วยสิทธิ์ของ <strong>เมธี(เม) ร้านค้า</strong> (<code class="inline-code">account_type = sale_user</code>):</p>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-custom">
+                        <thead class="table-light">
+                            <tr>
+                                <th>หน้าจอ / รายงาน</th>
+                                <th class="text-center">ปีข้อมูล</th>
+                                <th class="text-center">ก่อนการแก้ไข</th>
+                                <th class="text-center">หลังการแก้ไข</th>
+                                <th class="text-center">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Dashboard ยางเล็ก (SM Tire)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2026</span></td>
+                                <td class="text-center text-muted">แสดงบางแบรนด์</td>
+                                <td class="text-center fw-bold text-success">38 เส้น (168,060.00 บาท)</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-check me-1"></i>เรียบร้อย</span></td>
+                            </tr>
+                            <tr class="table-info table-opacity-25">
+                                <td><strong>Dashboard ยางใหญ่ (ML Tire)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2026</span></td>
+                                <td class="text-center text-danger">11 เส้น (70,840.00 บาท)</td>
+                                <td class="text-center fw-bold text-primary">4,778 เส้น (24,222,885.00 บาท)</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-check me-1"></i>เรียบร้อย</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dashboard ยางเล็ก (SM Tire)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2025</span></td>
+                                <td class="text-center text-danger"><span class="badge-issue">0 เส้น (ไม่พบข้อมูล)</span></td>
+                                <td class="text-center fw-bold text-success">486 เส้น (869,880.00 บาท)</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-check me-1"></i>กู้คืนสำเร็จ</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dashboard ยางใหญ่ (ML Tire)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2025</span></td>
+                                <td class="text-center text-danger"><span class="badge-issue">0 เส้น (ไม่พบข้อมูล)</span></td>
+                                <td class="text-center fw-bold text-primary">7,249 เส้น (37,289,080.00 บาท)</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-check me-1"></i>กู้คืนสำเร็จ</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>display_tires_point_by_ar_name (ยางเล็ก)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2026</span></td>
+                                <td class="text-center">384 แถว</td>
+                                <td class="text-center fw-bold text-success">384 แถว</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-check me-1"></i>เรียบร้อย</span></td>
+                            </tr>
+                            <tr class="table-info table-opacity-25">
+                                <td><strong>display_tires_point_by_ar_name (ยางใหญ่)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2026</span></td>
+                                <td class="text-center text-danger"><span class="badge-issue">0 แถว</span></td>
+                                <td class="text-center fw-bold text-primary">18 แถว</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-check me-1"></i>แสดงข้อมูลแล้ว</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>display_tires_point_by_ar_name (ยางเล็ก)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2025</span></td>
+                                <td class="text-center text-danger"><span class="badge-issue">0 แถว</span></td>
+                                <td class="text-center fw-bold text-success">885 แถว</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-check me-1"></i>กู้คืนสำเร็จ</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>display_tires_point_by_ar_name (ยางใหญ่)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2025</span></td>
+                                <td class="text-center text-danger"><span class="badge-issue">0 แถว</span></td>
+                                <td class="text-center fw-bold text-primary">39 แถว</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-check me-1"></i>กู้คืนสำเร็จ</span></td>
+                            </tr>
+                            <tr class="table-warning table-opacity-25">
+                                <td><strong>display_tires_point_by_date (ช่วงวันที่)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2026</span></td>
+                                <td class="text-center text-danger"><span class="badge-issue"><i class="fa-solid fa-spinner fa-spin me-1"></i>ค้าง (ดึง 26,230 แถว)</span></td>
+                                <td class="text-center fw-bold text-success">384 แถว (เฉพาะของ เมธี)</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-bolt me-1"></i>โหลดเร็วสมบูรณ์</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>display_tires_point_by_date (ช่วงวันที่)</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">2025</span></td>
+                                <td class="text-center text-danger"><span class="badge-issue">0 แถว</span></td>
+                                <td class="text-center fw-bold text-success">885 แถว (เฉพาะของ เมธี)</td>
+                                <td class="text-center"><span class="badge-fixed"><i class="fa-solid fa-check me-1"></i>กู้คืนสำเร็จ</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: ข้อสังเกตเพิ่มเติม (Important Findings) -->
+        <div class="card card-custom">
+            <div class="card-header">
+                <i class="fa-solid fa-circle-info text-warning"></i> 5. ข้อสังเกตเพิ่มเติมเรื่องข้อมูลลูกค้า (Customer Assignment vs Invoice Records)
+            </div>
+            <div class="card-body">
+                <div class="callout-box warning">
+                    <h6 class="fw-bold text-dark"><i class="fa-solid fa-building-user me-2"></i>การผูกเซลส์ในทะเบียนลูกค้า กับ ชื่อเซลส์ในเอกสารบิลขายจริง</h6>
+                    <p class="mb-2">
+                        จากการตรวจสอบตารางทะเบียนลูกค้า <code class="inline-code">ims_customer_master</code> พบว่ามีร้านค้าจำนวน <strong>33 ร้าน</strong> ที่ถูกกำหนดผู้ดูแลเป็น <strong>เมธี(เม) ร้านค้า</strong> ตัวอย่างเช่น:
+                    </p>
+                    <ul class="mb-2 small">
+                        <li><strong>SAC.0000489</strong> - พิชัยการยาง</li>
+                        <li><strong>SAC.0001228</strong> - กิจเจริญการยาง</li>
+                        <li><strong>SAC.0001587</strong> - เอ็น.ทู.ไทร์</li>
+                        <li><strong>SAC0019</strong> - ไร่ขิงออโต้ไทร์</li>
+                        <li><strong>SAC0314</strong> - วันเพ็ญการยาง</li>
+                        <li><strong>SAC0001</strong> - ร้าน นิมิตการยาง</li>
+                    </ul>
+                    <p class="mb-0">
+                        อย่างไรก็ดี ในตารางการขายจริงปี 2026 (<code class="inline-code">ims_data_sale_sac_all</code>) เอกสารบิลของร้านเหล่านี้ ถูกบันทึกชื่อพนักงานขายในบิลเป็น <strong>'วิชชา (บาส)'</strong> (และ <code class="inline-code">SALE_NAME_BLANK = 'บาส./นุช'</code>)<br>
+                        เนื่องจากระบบรายงานปัจจุบันจะกรองตาม <strong>ชื่อเซลส์ที่ปรากฏในบิลขายจริง</strong> ดังนั้นหากต้องการให้บิลของร้านค้าข้างต้นนับเป็นยอดของ เมธี จะต้องมีการอัปเดตชื่อเซลส์ในรายการขายของบิลเหล่านั้น หรือแจ้งทีมพัฒนาเพื่อปรับโครงสร้างเงื่อนไขให้ดึงตามตาราง Master ลูกค้าแทนครับ
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-muted small py-3">
+            <p class="mb-0">รายงานนี้สร้างขึ้นโดยอัตโนมัติจากการตรวจสอบและทดสอบระบบ SAC Data System &copy; 2026</p>
+        </footer>
+
+    </main>
+
+</body>
+</html>

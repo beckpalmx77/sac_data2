@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือและรายงานระบบ Sync ฐานข้อมูล MySQL (Source -> Destination)</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --success-border: #bbf7d0;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+            --warning-border: #fef08a;
+            --info: #0284c7;
+            --info-bg: #f0f9ff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: #f8fafc;
+            color: var(--gray-800);
+            line-height: 1.6;
+            padding: 28px 16px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e3a5f 100%);
+            color: #ffffff;
+            padding: 36px 32px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header .meta {
+            font-size: 14px;
+            color: #94a3b8;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header .meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .content {
+            padding: 32px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .status-card {
+            padding: 18px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--gray-200);
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .status-card.success {
+            background-color: var(--success-bg);
+            border-color: var(--success-border);
+        }
+
+        .status-card.info {
+            background-color: var(--info-bg);
+            border-color: #bae6fd;
+        }
+
+        .status-card .title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--gray-900);
+        }
+
+        .status-card .subtitle {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-top: 2px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-success {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-info {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+
+        h2 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-top: 32px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: var(--gray-700);
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 16px;
+            color: var(--gray-700);
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        .code-block {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 14px 0;
+            border: 1px solid #334155;
+            line-height: 1.5;
+        }
+
+        .code-block .comment {
+            color: #94a3b8;
+        }
+
+        .code-block .keyword {
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        .code-block .val {
+            color: #a7f3d0;
+        }
+
+        .alert-box {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 18px 0;
+            border-left: 4px solid;
+            font-size: 14px;
+        }
+
+        .alert-danger {
+            background-color: var(--danger-bg);
+            border-color: var(--danger);
+            color: #991b1b;
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            border-color: var(--success);
+            color: #166534;
+        }
+
+        .alert-info {
+            background-color: var(--primary-light);
+            border-color: var(--primary);
+            color: #1e40af;
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            border-color: var(--warning);
+            color: #92400e;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px 0;
+            font-size: 13.5px;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid var(--gray-200);
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        .data-table th {
+            background-color: var(--gray-50);
+            color: var(--gray-800);
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background-color: var(--gray-50);
+        }
+
+        .data-table .num {
+            text-align: right;
+            font-family: Consolas, monospace;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 24px 16px;
+            margin: 20px 0;
+        }
+
+        .flow-node {
+            background: #ffffff;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 12px 18px;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .flow-node.source {
+            border-top: 4px solid var(--info);
+        }
+
+        .flow-node.dest {
+            border-top: 4px solid var(--success);
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            background-color: var(--primary);
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-200);
+            text-align: center;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>
+            <span>🔄</span> คู่มือและรายงานระบบ Sync ฐานข้อมูล MySQL
+        </h1>
+        <div class="meta">
+            <span>📅 วันที่: 16 กันยายน 2026</span>
+            <span>📍 เครื่องต้นทาง: 192.168.88.7:3307</span>
+            <span>🎯 เครื่องปลายทาง: 192.168.88.40:3307</span>
+            <span>⚡ สคริปต์: sync_mysql.bat</span>
+            <span>🐬 MySQL Version: 9.2.0</span>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- สถานะภาพรวม -->
+        <div class="status-grid">
+            <div class="status-card success">
+                <div>
+                    <div class="title">สถานะเครือข่าย</div>
+                    <div class="subtitle">เชื่อมต่อได้ทั้งสองเซิร์ฟเวอร์</div>
+                </div>
+                <span class="badge badge-success">READY</span>
+            </div>
+            <div class="status-card info">
+                <div>
+                    <div class="title">เครื่องยนต์ MySQL</div>
+                    <div class="subtitle">MySQL 9.2 (WampServer)</div>
+                </div>
+                <span class="badge badge-info">v9.2.0</span>
+            </div>
+            <div class="status-card info">
+                <div>
+                    <div class="title">เครื่องต้นทาง (Source)</div>
+                    <div class="subtitle">192.168.88.7:3307</div>
+                </div>
+                <span class="badge badge-info">3307</span>
+            </div>
+            <div class="status-card info">
+                <div>
+                    <div class="title">เครื่องปลายทาง (Dest)</div>
+                    <div class="subtitle">127.0.0.1:3307 (Localhost)</div>
+                </div>
+                <span class="badge badge-info">3307</span>
+            </div>
+            <div class="status-card success">
+                <div>
+                    <div class="title">ข้อมูลทั้งหมด</div>
+                    <div class="subtitle">6 ฐานข้อมูล (~2.99 GB)</div>
+                </div>
+                <span class="badge badge-success">6 DBS</span>
+            </div>
+        </div>
+
+        <!-- รายการฐานข้อมูล -->
+        <h2>📊 ข้อมูลและขนาดฐานข้อมูลที่ต้องการ Sync</h2>
+        <p>จากการตรวจสอบข้อมูลจริงบนเซิร์ฟเวอร์ต้นทาง (192.168.88.7:3307) มีฐานข้อมูล 6 รายการดังนี้:</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ลำดับ</th>
+                    <th>ชื่อฐานข้อมูล (Database Name)</th>
+                    <th style="width: 140px; text-align: right;">ขนาดข้อมูลจริง (MB)</th>
+                    <th style="width: 140px;">Character Set</th>
+                    <th style="width: 170px;">Collation</th>
+                    <th>สถานะปลายทาง</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><strong>sac_data</strong></td>
+                    <td class="num">717.67 MB</td>
+                    <td><code>utf8mb4</code></td>
+                    <td><code>utf8mb4_general_ci</code></td>
+                    <td><span class="badge badge-success">พร้อมรับข้อมูล</span></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>sac_data2</strong></td>
+                    <td class="num">1,708.94 MB</td>
+                    <td><code>utf8mb4</code></td>
+                    <td><code>utf8mb4_general_ci</code></td>
+                    <td><span class="badge badge-success">พร้อมรับข้อมูล</span></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><strong>sac_data_btc</strong></td>
+                    <td class="num">471.31 MB</td>
+                    <td><code>utf8mb4</code></td>
+                    <td><code>utf8mb4_general_ci</code></td>
+                    <td><span class="badge badge-success">พร้อมรับข้อมูล</span></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><strong>sac_emp_dbs</strong></td>
+                    <td class="num">33.17 MB</td>
+                    <td><code>utf8mb4</code></td>
+                    <td><code>utf8mb4_general_ci</code></td>
+                    <td><span class="badge badge-success">พร้อมรับข้อมูล</span></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><strong>sac_emp</strong></td>
+                    <td class="num">4.20 MB</td>
+                    <td><code>utf8mb4</code></td>
+                    <td><code>utf8mb4_general_ci</code></td>
+                    <td><span class="badge badge-success">พร้อมรับข้อมูล</span></td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><strong>sac_cust</strong></td>
+                    <td class="num">58.13 MB</td>
+                    <td><code>utf8mb4</code></td>
+                    <td><code>utf8mb4_general_ci</code></td>
+                    <td><span class="badge badge-success">พร้อมรับข้อมูล (เพิ่มใหม่)</span></td>
+                </tr>
+                <tr style="background-color: var(--gray-100); font-weight: bold;">
+                    <td colspan="2" style="text-align: right;">รวมขนาดทั้งหมด (6 ฐานข้อมูล):</td>
+                    <td class="num" style="color: var(--primary);">2,993.42 MB (~2.99 GB)</td>
+                    <td colspan="3"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- วิธีการเพิ่มหรือแก้ไขฐานข้อมูล -->
+        <h2>🔧 วิธีการเพิ่มหรือแก้ไขรายชื่อฐานข้อมูลที่ต้องการ Sync</h2>
+        <p>หากในอนาคตต้องการเพิ่มหรือลดฐานข้อมูลที่ต้องการ Sync สามารถแก้ไขได้ง่ายๆ ที่ไฟล์ <code>sync_mysql.bat</code> โดยทำตามขั้นตอนนี้:</p>
+        <ol>
+            <li>คลิกขวาที่ไฟล์ <code>sync_mysql.bat</code> แล้วเลือก <strong>Edit (แก้ไข)</strong> ด้วย Notepad หรือ Code Editor</li>
+            <li>ค้นหาบรรทัดที่กำหนดตัวแปร <code>set "DATABASES=..."</code> (ประมาณบรรทัดที่ 26)</li>
+            <li>เพิ่มชื่อฐานข้อมูลใหม่ต่อท้ายโดย<strong>เว้นวรรค 1 ช่อง</strong> เช่น:
+                <div class="code-block">
+<span class="comment">REM เพิ่ม sac_cust เข้ามาในรายการ:</span>
+<span class="keyword">set</span> <span class="val">"DATABASES=sac_data sac_data2 sac_emp_dbs sac_emp sac_data_btc sac_cust"</span>
+                </div>
+            </li>
+            <li>กดบันทึก (Save) ไฟล์ <code>sync_mysql.bat</code></li>
+        </ol>
+        <div class="alert-box alert-info">
+            <strong>💡 ข้อดีของระบบลูปอัตโนมัติ:</strong><br>
+            เมื่อระบุชื่อฐานข้อมูลเพิ่มเข้าไปในตัวแปร <code>DATABASES</code> แล้ว ตัวสคริปต์จะทำการตรวจสอบ, สร้างฐานข้อมูลที่ปลายทางให้อัตโนมัติ (หากยังไม่มี), และสั่งดัมพ์สตรีมข้อมูลผ่าน Direct Pipe ให้ครบถ้วนทีละฐานข้อมูลทันที โดยไม่ต้องแก้ไขคำสั่งหรือตรรกะบรรทัดอื่นเลย
+        </div>
+
+        <!-- ผลการทดสอบการรันจริง -->
+        <h2>✅ ผลการทดสอบรัน Sync จริง (Direct Stream Pipe Mode)</h2>
+        <div class="alert-box alert-success">
+            <strong>🎉 ผลการทดสอบสำเร็จ 100%:</strong> ได้ทำการรัน Sync ข้อมูลจริงทั้ง 5 ฐานข้อมูลจาก <code>192.168.88.7:3307</code> มายัง <code>127.0.0.1:3307</code> เรียบร้อยแล้วทุกฐานข้อมูล โดยมีสถิติการทำงานดังนี้:
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ฐานข้อมูล (Database)</th>
+                    <th style="width: 130px; text-align: right;">ขนาด (MB)</th>
+                    <th style="width: 140px;">เวลาที่เริ่ม</th>
+                    <th style="width: 140px;">เวลาที่เสร็จ</th>
+                    <th style="width: 130px; text-align: right;">ระยะเวลาที่ใช้</th>
+                    <th>สถานะ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>sac_data</strong></td>
+                    <td class="num">717.67 MB</td>
+                    <td>12:59:37</td>
+                    <td>13:02:32</td>
+                    <td class="num">2 นาที 55 วินาที</td>
+                    <td><span class="badge badge-success">สำเร็จ 100%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>sac_data2</strong></td>
+                    <td class="num">1,708.94 MB</td>
+                    <td>13:02:32</td>
+                    <td>13:09:22</td>
+                    <td class="num">6 นาที 50 วินาที</td>
+                    <td><span class="badge badge-success">สำเร็จ 100%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>sac_emp_dbs</strong></td>
+                    <td class="num">33.17 MB</td>
+                    <td>13:09:22</td>
+                    <td>13:09:35</td>
+                    <td class="num">13 วินาที</td>
+                    <td><span class="badge badge-success">สำเร็จ 100%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>sac_emp</strong></td>
+                    <td class="num">4.20 MB</td>
+                    <td>13:09:35</td>
+                    <td>13:09:40</td>
+                    <td class="num">5 วินาที</td>
+                    <td><span class="badge badge-success">สำเร็จ 100%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>sac_data_btc</strong></td>
+                    <td class="num">471.31 MB</td>
+                    <td>13:09:40</td>
+                    <td>13:12:25</td>
+                    <td class="num">2 นาที 45 วินาที</td>
+                    <td><span class="badge badge-success">สำเร็จ 100%</span></td>
+                </tr>
+                <tr style="background-color: var(--gray-100); font-weight: bold;">
+                    <td>รวมทั้งสิ้น (5 ฐานข้อมูล)</td>
+                    <td class="num">2,935.29 MB</td>
+                    <td>12:59:37</td>
+                    <td>13:12:25</td>
+                    <td class="num" style="color: var(--primary);">12 นาที 48 วินาที</td>
+                    <td><span class="badge badge-success">SUCCESS</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- สถาปัตยกรรมการเชื่อมต่อ -->
+        <h2>🌐 สถาปัตยกรรมการเชื่อมต่อเครือข่ายและพอร์ต</h2>
+        <div class="flow-diagram">
+            <div class="flow-node source">
+                <div style="font-size: 11px; color: var(--gray-600); font-weight: bold;">SOURCE SERVER</div>
+                <div style="font-weight: bold; font-size: 15px; margin: 4px 0;">192.168.88.7</div>
+                <div style="font-size: 12px; color: var(--info);">MySQL Port: 3307</div>
+            </div>
+
+            <div class="flow-arrow">➔</div>
+
+            <div style="text-align: center; padding: 0 10px;">
+                <div style="font-size: 12px; font-weight: bold; color: var(--primary);">mysqldump | mysql</div>
+                <div style="font-size: 11px; color: var(--gray-600);">Direct Stream Pipe</div>
+            </div>
+
+            <div class="flow-arrow">➔</div>
+
+            <div class="flow-node dest">
+                <div style="font-size: 11px; color: var(--gray-600); font-weight: bold;">DESTINATION SERVER</div>
+                <div style="font-weight: bold; font-size: 15px; margin: 4px 0;">192.168.88.40</div>
+                <div style="font-size: 12px; color: var(--success);">PortProxy 3307 ➔ 3306</div>
+            </div>
+        </div>
+
+        <div class="alert-box alert-info">
+            <strong>💡 หมายเหตุสำคัญเกี่ยวกับการเชื่อมต่อไปยังเครื่องปลายทาง (192.168.88.40):</strong><br>
+            เนื่องจากในเครื่องนี้ มีการตั้งค่า <code>Windows PortProxy</code> ดักฟังพอร์ต <code>3307</code> ผูกไว้เฉพาะกับ IP <code>127.0.0.1</code> (Localhost) แล้วส่งต่อเข้า MySQL หลักที่พอร์ต <code>3306</code><br>
+            ดังนั้น เมื่อรันสคริปต์บนเครื่องนี้เอง ตัวแปรปลายทางจึงถูกกำหนดเป็น:
+            <code>set "DST_HOST=127.0.0.1"</code> และ <code>set "DST_PORT=3307"</code> เพื่อให้เชื่อมต่อได้ทันทีโดยไม่ติดขัด
+        </div>
+
+        <!-- วิธีการใช้งานสคริปต์ -->
+        <h2>🚀 วิธีการใช้งานสคริปต์ sync_mysql.bat</h2>
+        <p>ไฟล์สคริปต์ถูกสร้างไว้ที่: <code>D:\wk_ai\repair_wamp_mysql\sync_mysql.bat</code></p>
+
+        <h3><span class="step-num">1</span>เปิดใช้งานสคริปต์</h3>
+        <p>ดับเบิ้ลคลิกไฟล์ <code>sync_mysql.bat</code> ได้ทันที หรือรันผ่าน Command Prompt:</p>
+        <div class="code-block">
+<span class="comment">REM รันแบบแสดงเมนูและทดสอบการเชื่อมต่อ</span>
+D:\wk_ai\repair_wamp_mysql\sync_mysql.bat
+        </div>
+
+        <h3><span class="step-num">2</span>การเลือกโหมดการทำงานผ่านหน้าจอเมนู</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">ปุ่มกด</th>
+                    <th>ชื่อโหมด</th>
+                    <th>คำอธิบาย</th>
+                    <th>คำแนะนำ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>กด 1</strong></td>
+                    <td><strong>Direct Stream Sync</strong></td>
+                    <td>ส่งข้อมูลจาก mysqldump เข้า mysql ปลายทางตรงๆ แบบ Pipe สตรีมผ่านเครือข่าย ไม่ต้องเขียนไฟล์ลงดิสก์</td>
+                    <td><span class="badge badge-success">แนะนำ (เร็วที่สุด)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>กด 2</strong></td>
+                    <td><strong>Backup then Import</strong></td>
+                    <td>ดัมพ์ไฟล์ <code>.sql</code> เก็บไว้ในโฟลเดอร์ <code>backups\</code> ก่อน แล้วค่อยสั่ง Import เข้าปลายทาง</td>
+                    <td><span class="badge badge-info">ปลอดภัย (เก็บไฟล์สำรอง)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>กด 3</strong></td>
+                    <td><strong>Test Connection Only</strong></td>
+                    <td>ทดสอบการเชื่อมต่อทั้งสองเครื่องและแสดงผล จากนั้นจบการทำงานโดยไม่มีการถ่ายโอนข้อมูล</td>
+                    <td><span class="badge badge-warning">ตรวจสอบระบบ</span></td>
+                </tr>
+                <tr>
+                    <td><strong>กด 4</strong></td>
+                    <td><strong>Exit</strong></td>
+                    <td>ยกเลิกและปิดหน้าต่างทันที</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3><span class="step-num">3</span>การตั้งเวลาทำงานอัตโนมัติ (Windows Task Scheduler) ด้วย Option 1</h3>
+        <p>เพื่อความสะดวกในการทำงานทุกวัน สคริปต์รองรับการทำงานแบบ Headless อัตโนมัติ (ไม่ถามยืนยัน ไม่ค้างหน้าต่าง) โดยเลือกโหมด 1 (Direct Stream Sync) เสมอผ่านพารามิเตอร์ <code>--auto</code></p>
+
+        <div class="alert-box alert-success">
+            <strong>⏰ สถานะปัจจุบัน:</strong> ได้สร้างและลงทะเบียน Task ชื่อ <code>MySQL_Sync_Daily</code> ไว้ใน Windows Task Scheduler แล้ว โดยมีกำหนดเวลาทำงาน<strong>ทุกวัน เวลา 02:00 น.</strong>
+        </div>
+
+        <h4>วิธีที่ 1: จัดการผ่านสคริปต์อัตโนมัติ (แนะนำ สะดวกที่สุด)</h4>
+        <p>สามารถดับเบิ้ลคลิกไฟล์ <code>create_task_schedule.bat</code> เพื่อเปิดเมนูจัดการได้ทันที:</p>
+        <ul>
+            <li><strong>กด 1:</strong> เปลี่ยนเวลาตั้งเวลา เช่น <code>01:00</code>, <code>02:30</code> หรือเวลาที่ต้องการ</li>
+            <li><strong>กด 2:</strong> สั่งรัน Task ทันทีเพื่อทดสอบการทำงานเบื้องหลัง</li>
+            <li><strong>กด 3:</strong> ตรวจสอบสถานะและเวลาที่จะรันรอบถัดไป (Next Run Time)</li>
+            <li><strong>กด 4:</strong> ลบ Task ออกจากระบบเมื่อไม่ต้องการใช้งานแล้ว</li>
+        </ul>
+
+        <h4>วิธีที่ 2: ตั้งค่าหรือตรวจสอบด้วยตนเองผ่าน Task Scheduler GUI (taskschd.msc)</h4>
+        <ol>
+            <li>กดปุ่มลัด <strong>Windows + R</strong> บนคีย์บอร์ด พิมพ์ <code>taskschd.msc</code> แล้วกด Enter เพื่อเปิดหน้าต่าง Task Scheduler</li>
+            <li>ที่แถบซ้าย คลิกที่ <strong>Task Scheduler Library</strong> จะพบ Task ชื่อ <code>MySQL_Sync_Daily</code></li>
+            <li>หากต้องการสร้างหรือปรับแต่งเอง ให้ตรวจสอบค่าต่างๆ ดังนี้:
+                <table class="data-table" style="margin-top: 8px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 180px;">แถบการตั้งค่า (Tab)</th>
+                            <th style="width: 220px;">หัวข้อ (Field)</th>
+                            <th>ค่าที่ต้องระบุ (Value)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>General</strong></td>
+                            <td>Name</td>
+                            <td><code>MySQL_Sync_Daily</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Triggers</strong></td>
+                            <td>Schedule</td>
+                            <td>Daily (ทุกวัน) กำหนดเวลาตามต้องการ เช่น <code>02:00:00</code></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3"><strong>Actions</strong></td>
+                            <td>Action</td>
+                            <td><code>Start a program</code></td>
+                        </tr>
+                        <tr>
+                            <td>Program/script</td>
+                            <td><code>cmd.exe</code></td>
+                        </tr>
+                        <tr>
+                            <td>Add arguments</td>
+                            <td><code>/c D:\wk_ai\repair_wamp_mysql\sync_mysql_auto.bat</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Settings</strong></td>
+                            <td>If the task fails...</td>
+                            <td>Restart every 10 minutes (ถ้าต้องการให้รันซ้ำเมื่อเน็ตหลุด)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+        </ol>
+
+        <h4>วิธีที่ 3: คำสั่ง Command Prompt สำหรับตั้งค่าด้วยตนเอง</h4>
+        <div class="code-block">
+<span class="comment">REM คำสั่งสร้าง Task Scheduler รันทุกวันเวลา 02:00 น. อัตโนมัติด้วย sync_mysql_auto.bat :</span>
+<span class="keyword">schtasks</span> /create /tn <span class="val">"MySQL_Sync_Daily"</span> /tr <span class="val">"cmd.exe /c D:\wk_ai\repair_wamp_mysql\sync_mysql_auto.bat"</span> /sc daily /st <span class="val">02:00</span> /f
+        </div>
+
+        <!-- พารามิเตอร์ความปลอดภัย -->
+        <h2>🛡️ พารามิเตอร์การดัมพ์ข้อมูลระดับ Production</h2>
+        <p>สคริปต์ได้ติดตั้งคำสั่งและ Flag ป้องกันปัญหาคอขวดและป้องกันข้อมูลสูญหายไว้ครบถ้วน:</p>
+        <ul>
+            <li><code>--single-transaction</code> : ป้องกันการ Lock Table ของเอนจิน InnoDB ทำให้ระบบและเว็บต้นทางยังสามารถทำงาน อ่าน/เขียน ต่อเนื่องได้ตลอดระยะเวลา Sync</li>
+            <li><code>--quick</code> : ทำการ Streaming ข้อมูลแถวต่อแถว ไม่โหลดทั้งตารางขึ้น Memory ป้องกัน RAM หมดหรือแฮงก์ระหว่างดัมพ์ไฟล์ขนาด 1.7 GB</li>
+            <li><code>--max_allowed_packet=512M</code> : ขยายขนาด Buffer สูงสุด 512MB เพื่อรองรับข้อมูลก้อนใหญ่และฟิลด์ BLOB/TEXT โดยไม่เกิด Error <code>Packet too large</code></li>
+            <li><code>--default-character-set=utf8mb4</code> : ป้องกันปัญหาวรรณยุกต์ ภาษาไทย และอีโมจิกลายเป็นเครื่องหมายคำถาม <code>???</code></li>
+            <li><code>--routines --triggers --events</code> : นำเข้า Stored Procedures, Functions, Database Triggers และ Event Schedulers ทั้งหมดอย่างสมบูรณ์</li>
+            <li><code>--databases</code> : สั่งสร้างฐานข้อมูลอัตโนมัติ (<code>CREATE DATABASE IF NOT EXISTS</code>) และเรียกใช้ <code>USE `db`</code> โดยอัตโนมัติ</li>
+        </ul>
+
+        <!-- ไดเรกทอรีและไฟล์ที่เกี่ยวข้อง -->
+        <h2>📁 รายการไดเรกทอรีและไฟล์ที่เกี่ยวข้อง</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>รายการ</th>
+                    <th>พาธบนเครื่อง</th>
+                    <th>รายละเอียด</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>สคริปต์ Sync อัตโนมัติ</strong></td>
+                    <td><code>D:\wk_ai\repair_wamp_mysql\sync_mysql_auto.bat</code></td>
+                    <td>ไฟล์ Batch Script สำหรับรัน Option 1 อัตโนมัติ (ไม่สร้างไฟล์ Log ลงดิสก์, ไม่ค้างหน้าจอ, เหมาะกับ Task Scheduler)</td>
+                </tr>
+                <tr>
+                    <td><strong>สคริปต์ Sync แบบเลือกโหมด</strong></td>
+                    <td><code>D:\wk_ai\repair_wamp_mysql\sync_mysql.bat</code></td>
+                    <td>ไฟล์ Batch Script หลักสำหรับผู้ใช้เปิดรันเอง (มีเมนูให้เลือก 4 โหมด)</td>
+                </tr>
+                <tr>
+                    <td><strong>ตัวจัดการ Schedule</strong></td>
+                    <td><code>D:\wk_ai\repair_wamp_mysql\create_task_schedule.bat</code></td>
+                    <td>เครื่องมือจัดการ Windows Task Scheduler (ตั้งเวลา, ทดสอบสั่งรัน, ดูสถานะ, ลบ Task)</td>
+                </tr>
+                <tr>
+                    <td><strong>โฟลเดอร์ Log</strong></td>
+                    <td><code>D:\wk_ai\repair_wamp_mysql\logs\</code></td>
+                    <td>เก็บไฟล์บันทึกประวัติการทำงาน (เช่น <code>sync_mysql_20260916_125144.log</code>)</td>
+                </tr>
+                <tr>
+                    <td><strong>โฟลเดอร์ Backup</strong></td>
+                    <td><code>D:\wk_ai\repair_wamp_mysql\backups\</code></td>
+                    <td>เก็บไฟล์ <code>.sql</code> เมื่อเลือกโหมดที่ 2</td>
+                </tr>
+                <tr>
+                    <td><strong>โปรแกรม MySQL</strong></td>
+                    <td><code>D:\wamp64\bin\mysql\mysql9.2.0\bin\</code></td>
+                    <td>ตำแหน่ง Binary <code>mysql.exe</code> และ <code>mysqldump.exe</code> (เวอร์ชัน 9.2.0)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- คำเตือนและความปลอดภัย -->
+        <div class="alert-box alert-warning">
+            <strong>⚠️ ข้อควรระวังก่อนเริ่มรัน Sync ข้อมูลจริง:</strong><br>
+            การนำเข้าข้อมูลจากต้นทางจะทำการเขียนทับตารางเดิมในเครื่องปลายทาง หากในเครื่องปลายทางมีข้อมูลใหม่ที่ต้องการเก็บรักษาไว้ กรุณาเลือก <strong>โหมด [2]</strong> เพื่อให้ระบบสำรองไฟล์ไว้ก่อน หรือทำการ Export สำรองข้อมูลปลายทางเก็บไว้ก่อนเริ่มกระบวนการ
+        </div>
+
+        <div class="footer">
+            รายงานและคู่มือการตั้งค่าระบบฐานข้อมูล WampServer MySQL &copy; 2026 | สร้างเมื่อ 16 กันยายน 2026
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

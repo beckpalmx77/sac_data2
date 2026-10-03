@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>วิธีการนำเข้าข้อมูล Tires Plan Forecast (Realtime Excel)</title>
+    <style>
+        body { 
+            font-family: 'Prompt', 'Sarabun', sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            padding: 30px 20px; 
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+        }
+        h1 { 
+            color: #198754; 
+            border-bottom: 3px solid #198754; 
+            padding-bottom: 15px; 
+            font-weight: 600;
+        }
+        h2 { 
+            color: #146c43; 
+            margin-top: 35px;
+            font-weight: 500;
+            border-left: 5px solid #198754;
+            padding-left: 12px;
+        }
+        .info-card { 
+            background: #f1fbf5; 
+            border: 1px solid #c7ebdb; 
+            border-radius: 12px; 
+            padding: 20px; 
+            margin: 20px 0; 
+        }
+        .warning { 
+            background: #fff8e6; 
+            border-left: 5px solid #ffc107; 
+            border-top: 1px solid #ffeeba;
+            border-right: 1px solid #ffeeba;
+            border-bottom: 1px solid #ffeeba;
+            border-radius: 4px;
+            padding: 15px 20px; 
+            margin: 20px 0; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+            font-size: 0.92em; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        th, td { 
+            border: 1px solid #dee2e6; 
+            padding: 10px 12px; 
+            text-align: left; 
+        }
+        th { 
+            background: #e9f7ef; 
+            color: #146c43; 
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #fdfdfd;
+        }
+        .highlight { 
+            color: #dc3545; 
+            font-weight: bold; 
+        }
+        .success-highlight {
+            color: #198754;
+            font-weight: bold;
+        }
+        code { 
+            background: #f1f3f5; 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            font-family: Consolas, monospace; 
+            color: #c92a2a;
+            font-size: 0.9em;
+        }
+        .btn-download {
+            display: inline-block;
+            background-color: #198754;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(25,135,84,0.15);
+            margin-top: 10px;
+        }
+        .btn-download:hover {
+            background-color: #146c43;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(25,135,84,0.25);
+        }
+        ol, ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>คู่มือการนำเข้าข้อมูล Tires Plan Forecast (Realtime Excel)</h1>
+
+        <div class="info-card">
+            <p>การนำเข้าข้อมูลแบบ Realtime ใช้ไฟล์ Excel (.xlsx) เป็นหลัก โดยรองรับโครงสร้างคอลัมน์และสูตรการคำนวณตามไฟล์ Template <strong>plan_tires_r1.xlsx</strong></p>
+            <p><b>Template & Export File สำหรับใช้ในระบบนี้:</b><br>
+                <a href="doc/plan_tires_r1.xlsx" class="btn-download me-2">
+                    <i class="fas fa-file-excel"></i> ดาวน์โหลด Template (plan_tires_r1.xlsx)
+                </a>
+                <a href="export_forecast_template.php" target="_blank" class="btn-download" style="background-color: #0d6efd;">
+                    <i class="fas fa-file-download"></i> download ข้อมูลยอดขาย
+                </a>
+            </p>
+        </div>
+
+        <h2>1. โครงสร้างไฟล์ Excel (Column Mapping)</h2>
+        <p>การจัดคอลัมน์ในแผ่นงาน Excel อ้างอิงตามไฟล์ <strong>plan_tires_r1.xlsx</strong> (21 คอลัมน์ A ถึง U โดย Row 1 เป็นหัวคอลัมน์ และข้อมูลจริงเริ่มต้นที่ <span class="highlight">แถวที่ 2</span> เป็นต้นไป):</p>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 15%;">คอลัมน์ (Index)</th>
+                    <th style="width: 25%;">หัวข้อคอลัมน์ใน Excel</th>
+                    <th style="width: 20%;">ชื่อฟิลด์ในระบบ</th>
+                    <th style="width: 40%;">คำอธิบาย / รายละเอียดเพิ่มเติม</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>A (1)</td><td>รหัสลูกค้า</td><td><code>ar_code</code></td><td><span class="highlight">จำเป็น</span> รหัสร้านค้า (เช่น SAC.0000006)</td></tr>
+                <tr><td>B (2)</td><td>รายชื่อลูกค้า</td><td><code>ar_name</code></td><td>ชื่อลูกค้า / ร้านค้า</td></tr>
+                <tr><td>C (3)</td><td>เซลล์</td><td><code>sale_name</code></td><td><span class="highlight">จำเป็น</span> ชื่อพนักงานขาย</td></tr>
+                <tr><td>D (4)</td><td>เทค</td><td><code>take_name</code></td><td>ชื่อพนักงานเทคที่ดูแล</td></tr>
+                <tr><td>E (5)</td><td>อำเภอ</td><td><code>amphur</code></td><td>อำเภอของที่อยู่ลูกค้า</td></tr>
+                <tr><td>F (6)</td><td>จังหวัด</td><td><code>province</code></td><td>จังหวัดของที่อยู่ลูกค้า</td></tr>
+                <tr><td>G (7)</td><td>ยี่ห้อ</td><td><code>brand_code</code></td><td>ยี่ห้อของยางรถยนต์ (เช่น LEAO, LLIT, BS, FS)</td></tr>
+                <tr><td>H (8)</td><td>รหัสสินค้า 1</td><td><code>sku_code</code></td><td><span class="highlight">จำเป็น</span> รหัสสินค้า / SKU (เช่น LE2055516-LISP/HP3)</td></tr>
+                <tr><td>I (9)</td><td>รายละเอียด</td><td><code>sku_name</code></td><td>รายละเอียด / ชื่อสินค้า SKU</td></tr>
+                <tr><td>J (10)</td><td>เฉลี่ย 12 เดือน ปีก่อน</td><td><code>avg_per_month_year</code></td><td><span class="success-highlight">คำนวณให้อัตโนมัติ</span> ยอดขายเฉลี่ยรายเดือนของปีก่อนหน้า</td></tr>
+                <tr><td>K (11)</td><td>ยอดขายสูงสุดต่อเดือน(ปีก่อน)</td><td><code>max_qty_year</code></td><td><span class="success-highlight">คำนวณให้อัตโนมัติ</span> ยอดขายสูงสุดต่อเดือนในปีก่อนหน้า</td></tr>
+                <tr><td>L (12)</td><td>ยอดขายต่ำสุดต่อเดือน(ปีก่อน)</td><td><code>min_qty_year</code></td><td><span class="success-highlight">คำนวณให้อัตโนมัติ</span> ยอดขายต่ำสุดต่อเดือนในปีก่อนหน้า</td></tr>
+                <tr><td>M (13)</td><td>[เดือน-ปี ย้อนหลัง M-3] (เช่น เมษายน'26)</td><td><code>sales_month_3</code></td><td><span class="success-highlight">ดึงให้อัตโนมัติ</span> ยอดขายจริงย้อนหลัง 3 เดือน (M-3)</td></tr>
+                <tr><td>N (14)</td><td>[เดือน-ปี ย้อนหลัง M-2] (เช่น พฤษภาคม'26)</td><td><code>sales_month_2</code></td><td><span class="success-highlight">ดึงให้อัตโนมัติ</span> ยอดขายจริงย้อนหลัง 2 เดือน (M-2)</td></tr>
+                <tr><td>O (15)</td><td>[เดือน-ปี ย้อนหลัง M-1] (เช่น มิถุนายน'26)</td><td><code>sales_month_1</code></td><td><span class="success-highlight">ดึงให้อัตโนมัติ</span> ยอดขายจริงย้อนหลัง 1 เดือน (M-1)</td></tr>
+                <tr><td>P (16)</td><td>ค่าเฉลี่ย 3 เดือน</td><td><code>avg_3_month</code></td><td><span class="success-highlight">คำนวณให้อัตโนมัติ</span> ค่าเฉลี่ยยอดขายย้อนหลัง 3 เดือน</td></tr>
+                <tr><td>Q (17)</td><td>เป้ารายเดือน</td><td><code>target_qty_month</code></td><td>เป้าหมายประจำเดือน</td></tr>
+                <tr><td>R (18)</td><td>แพลนยางเดือนที่ต้องการ</td><td><code>forecast_qty_month_1</code></td><td><span class="highlight">จำเป็น</span> จำนวนยางที่คาดการณ์/วางแผนจะขาย (ข้อมูลที่คุณระบุใส่ใน Excel)</td></tr>
+                <tr><td>S (19)</td><td>เทียบ แพลนยาง ลบ ค่าเฉลี่ย</td><td><code>compare_forecast_month_1</code></td><td><span class="success-highlight">คำนวณให้อัตโนมัติ</span> ส่วนต่างของแผนและค่าเฉลี่ยย้อนหลัง (สูตร: <code>=R2-P2</code>)</td></tr>
+                <tr><td>T (20)</td><td>เทียบ แพลนยาง ลบ ค่าเฉลี่ย %</td><td><code>compare_sales_percent</code></td><td><span class="success-highlight">คำนวณให้อัตโนมัติ</span> อัตราส่วนเปรียบเทียบ (สูตร: <code>=IFERROR(R2/P2,0)</code> เช่น ค่าในแผ่นงานเป็น 2 หมายถึง 200%)</td></tr>
+                <tr><td>U (21)</td><td>ผู้รับผิดชอบ</td><td><code>responsible_person</code></td><td>ชื่อผู้รับผิดชอบ / ผู้ดูแลร้านค้า (Optional)</td></tr>
+            </tbody>
+        </table>
+
+        <h2>2. เงื่อนไขและกฎเกณฑ์การคำนวณในระบบ</h2>
+        <div class="warning">
+            <ul>
+                <li><strong>การอัปเดตเมื่อพบข้อมูลซ้ำ (Update Duplicate Records):</strong> หากนำเข้าไฟล์ Excel แล้วพบรายการเดิมซ้ำในเดือน/ปีเดียวกัน (พิจารณาจาก <code>รหัสลูกค้า + รหัสสินค้า + พนักงานขาย</code>) ระบบจะทำการ <span class="success-highlight">UPDATE</span> ตัวเลขใหม่ลงใน <strong>Column Q (เป้ารายเดือน)</strong> และ <strong>Column R (แพลนยาง)</strong> ด้วยค่าล่าสุดจากไฟล์ Excel ทันที (รองรับกรณีที่ไม่ได้ป้อนตัวเลขใน Excel ในตอนแรก แล้วทำการนำเข้าไฟล์เพื่อมาอัปเดตภายหลัง) พร้อมคำนวณ <strong>Column S (ส่วนต่าง)</strong> และ <strong>Column T (% ต่าง)</strong> ใหม่ให้อัตโนมัติ โดยยังคงรักษาประวัติยอดขายเดิมในฐานข้อมูลไว้ไม่ให้สูญหาย</li>
+                <li><strong>คอลัมน์สถิติต่างๆ (คอลัมน์ J ถึง P):</strong> คอลัมน์สถิติย้อนหลัง ได้แก่ เฉลี่ยต่อเดือนปีที่แล้ว (J), ยอดขายสูงสุด/ต่ำสุด (K-L), ยอดขายย้อนหลัง M-3, M-2, M-1 (M-O) และค่าเฉลี่ย 3 เดือน (P) <strong>ไม่จำเป็นต้องใส่ค่าในไฟล์ Excel</strong> เนื่องจากเมื่อทำการนำเข้า (Import) ระบบจะดึงยอดขายจากฐานข้อมูลและคำนวณค่าสถิติต่างๆ ให้อัตโนมัติ</li>
+                <li><strong>การแยกตารางเก็บข้อมูลอย่างอิสระ:</strong> ข้อมูลเรียลไทม์ทั้งหมดจะถูกแยกไปบันทึกยังตารางฐานข้อมูลชุดใหม่ <code>ims_tires_plan_forecast_realtime</code> โดยสมบูรณ์ ไม่ปะปนกับตาราง Interactive เดิม</li>
+                <li><strong>การคำนวณคอลัมน์ใหม่ (เพิ่มเติมจาก Excel):</strong> ในตารางหลักบนหน้าจอจะมีคอลัมน์ <strong>"ยอดขายจริง"</strong> (ดึงสะสมจากฐานข้อมูลตามเดือน/ปีที่คาดการณ์) และคอลัมน์ <strong>"ขาด/เกิน"</strong> (คำนวณจากสูตร: <code>ยอดขายจริง - แพลนยาง</code>) โดยคอลัมน์พิเศษทั้ง 2 นี้ระบบจะคำนวณให้อัตโนมัติ <strong>โดยไม่จำเป็นต้องมีในไฟล์นำเข้า Excel (Template)</strong></li>
+                <li><strong>การคำนวณเปอร์เซ็นต์แบบ Realtime:</strong> ค่าเทียบยอดขาย % (คอลัมน์ T) ในสคริปต์ JavaScript และระบบประมวลผล จะคำนวณตรงตามสูตรของไฟล์ Excel คือ <code>คาดการณ์ / เฉลี่ย 3 เดือน * 100</code> (เช่น ค่าเฉลี่ย 3 เดือนเป็น 4 และคาดการณ์เป็น 8 เปอร์เซ็นต์ที่คำนวณได้บนจอคือ <code>200%</code>)</li>
+                <li><strong>ป้องกันการ Sync ทับข้อมูลใน Excel (load_time = 1):</strong> ระบบได้ตั้งค่าสถานะนำเข้าเป็น 1 ทันที เพื่อป้องกันไม่ให้สคริปต์อัปเดตอัตโนมัติบนหน้าเว็บเข้าไปดึงยอดขายจริงจากฐานข้อมูลระบบมาเขียนทับตัวเลขสถิติยอดขายที่ผู้ใช้นำเข้ามาจากไฟล์ Excel</li>
+                <li><strong>ข้ามแถวว่างอัตโนมัติ:</strong> แถวใดในไฟล์ Excel ที่ไม่มี <code>รหัสลูกค้า</code>, <code>รหัสสินค้า</code> หรือ <code>เซลล์</code> ระบบจะทำการข้ามการนำเข้าสำหรับแถวนั้นทันที</li>
+            </ul>
+        </div>
+
+        <h2>3. ขั้นตอนการนำเข้าไฟล์ Excel บนหน้าจอ</h2>
+        <ol>
+            <li>เปิดไปที่หน้าจอ <a href="forecast_plan_display_realtime.php" target="_blank" class="success-highlight">Tires Plan (Realtime Excel)</a></li>
+            <li>ที่เมนูด้านขวาบน ให้คลิกปุ่ม <strong>"นำเข้าข้อมูล Realtime Excel"</strong> เพื่อเปิดหน้าต่างอัปโหลด</li>
+            <li>ในหน้าต่างดาวน์โหลด ให้เลือก <strong>เดือน</strong> และ <strong>ปี</strong> ที่ตรงกับข้อมูลในไฟล์ Excel ที่นำเข้า</li>
+            <li>ลากไฟล์ Excel <code>plan_tires_r1.xlsx</code> มาวางในกรอบอัปโหลด หรือคลิกเพื่อเลือกไฟล์จากคอมพิวเตอร์ของคุณ</li>
+            <li>คลิกปุ่ม <strong>"เริ่มนำเข้าข้อมูล"</strong> ระบบจะอัปโหลดและแสดงสถานะประมวลผล เมื่อเสร็จสมบูรณ์ระบบจะปิดหน้าต่างลงและโหลดข้อมูลใหม่ขึ้นแสดงผลบนตารางหลักในทันที</li>
+        </ol>
+
+        <footer style="text-align: center; margin-top: 50px; font-size: 0.85em; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px;">
+            &copy; 2026 BY SAC System Admin
+        </footer>
+    </div>
+</body>
+</html>

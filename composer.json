@@ -1,0 +1,12 @@
+{
+    "require": {
+        "mobiledetect/mobiledetectlib": "^2.8",
+        "php-amqplib/php-amqplib": "^3.7",
+        "phpoffice/phpspreadsheet": "^5.4",
+        "mpdf/mpdf": "^8.2",
+        "endroid/qr-code": "^6.0",
+        "pragmarx/google2fa": "^8.0",
+        "phpgangsta/googleauthenticator": "*@dev",
+        "nativephp/electron": "^1.0"
+    }
+}

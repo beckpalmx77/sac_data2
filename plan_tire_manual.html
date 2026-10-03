@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>คู่มือการใช้งานระบบ Tires Plan Forecast (Full Manual)</title>
+    <style>
+        body { font-family: 'Prompt', 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 40px; background-color: #f4f7f6; }
+        .manual-container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { color: #1a5276; border-bottom: 3px solid #3498db; padding-bottom: 15px; text-align: center; }
+        h2 { color: #21618c; border-left: 6px solid #3498db; padding-left: 15px; margin-top: 40px; }
+        h3 { color: #2e86c1; margin-top: 25px; }
+        .step-box { background: #ebf5fb; border: 1px solid #d6eaf8; padding: 20px; border-radius: 8px; margin: 15px 0; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.85em; font-weight: bold; color: white; }
+        .bg-import { background-color: #3498db; }
+        .bg-sync { background-color: #17a2b8; }
+        .bg-save { background-color: #f39c12; }
+        .bg-report { background-color: #6f42c1; }
+        .highlight { color: #c0392b; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        th { background-color: #f8f9fa; }
+        .icon { width: 25px; text-align: center; display: inline-block; margin-right: 10px; }
+        .nav-link { color: #3498db; text-decoration: none; font-weight: bold; }
+        .nav-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="manual-container">
+        <h1>คู่มือการใช้งานระบบ Tires Plan Forecast</h1>
+        <p style="text-align: center; color: #7f8c8d;">(ระบบจัดการแผนงานและคาดการณ์ยอดขายยางรถยนต์)</p>
+
+        <div style="background: #fdf2e9; padding: 15px; border-radius: 8px; border: 1px solid #fae5d3; margin: 20px 0;">
+            <b>สารบัญ (Quick Links):</b><br>
+            1. <a href="#import" class="nav-link">การนำเข้าข้อมูล (Import)</a> | 
+            2. <a href="#manage" class="nav-link">การจัดการและแก้ไขแผน (Interactive)</a> | 
+            3. <a href="#sync" class="nav-link">การดึงยอดขายจริง (Sync Data)</a> | 
+            4. <a href="#reports" class="nav-link">รายงานสรุปรายปี (Yearly Reports)</a>
+        </div>
+
+        <h2 id="import">1. การนำเข้าข้อมูล (Data Import)</h2>
+        <p>เริ่มต้นการทำแผนงานด้วยการอัปโหลดไฟล์ Excel จาก Template มาตรฐาน</p>
+        <div class="step-box">
+            <ol>
+                <li>เข้าสู่เมนู <span class="badge bg-import">นำเข้าข้อมูล</span></li>
+                <li>ดาวน์โหลด <b>Template Excel</b> เพื่อเตรียมข้อมูล (สำคัญมาก: ห้ามสลับคอลัมน์)</li>
+                <li>กรอกข้อมูลใน Excel โดยเน้นที่ <span class="highlight">รหัสร้านค้า</span> และ <span class="highlight">รหัสสินค้า</span> เป็นหลัก (ยอดขาย M-1 ถึง M-3 สามารถเว้นว่างได้)</li>
+                <li>เลือก <b>เดือน</b> และ <b>ปี</b> ที่ต้องการนำเข้าในหน้าจอ</li>
+                <li>เลือกไฟล์และกดปุ่ม <b>"เริ่มนำเข้าข้อมูล"</b></li>
+            </ol>
+            <small>* หมายเหตุ: หากนำเข้าซ้ำในเดือนเดิม ระบบจะอัปเดตข้อมูลเก่าให้โดยอัตโนมัติ (Duplicate Check by Month/Year/AR/SKU/Sale)</small>
+        </div>
+
+        <h2 id="manage">2. การจัดการและแก้ไขแผน (Interactive Display)</h2>
+        <p>หน้าจอหลักสำหรับตรวจสอบและปรับแต่งแผนงานรายตัว</p>
+        <div class="step-box">
+            <ul>
+                <li><b>การค้นหา:</b> สามารถกรองตาม เดือน, ปี, ชื่อพนักงานขาย และชื่อลูกค้า ได้อย่างละเอียด</li>
+                <li><b>Fixed Columns:</b> ข้อมูลรหัสร้านค้าและสินค้าจะถูกล็อกไว้ทางซ้าย เพื่อให้สะดวกในการเลื่อนดูข้อมูลทางขวา</li>
+                <li><b>การแก้ไข:</b> สามารถแก้ไขช่อง <span class="highlight">เป้าหมาย</span>, <span class="highlight">คาดการณ์</span> และ <span class="highlight">หมายเหตุ</span> ได้โดยตรงบนตาราง</li>
+                <li><b>ระบบคำนวณ:</b> เมื่อเปลี่ยนยอดคาดการณ์ ระบบจะคำนวณส่วนต่างเทียบค่าเฉลี่ยและ % ความสำเร็จให้ทันที</li>
+                <li><b>การบันทึก:</b> กดปุ่ม <span class="badge bg-save">บันทึกการแก้ไขทั้งหมด</span> เพื่อเก็บข้อมูลที่แก้ไขลงฐานข้อมูล (บันทึกทีเดียวทั้งหน้า)</li>
+            </ul>
+        </div>
+
+        <h2 id="sync">3. ระบบดึงยอดขายจริง (Sales Sync)</h2>
+        <p>เพิ่มความแม่นยำด้วยข้อมูล Real-time จากฐานข้อมูลยอดขาย</p>
+        <div class="step-box">
+            <ul>
+                <li><b>Auto-Sync:</b> เมื่อเปิดดูข้อมูลของเดือน/ปี นั้นเป็นครั้งแรกหลังนำเข้า ระบบจะดึงยอดขายจริงมาบันทึกให้เองอัตโนมัติ</li>
+                <li><b>Manual Sync:</b> หากมีการขายเกิดขึ้นระหว่างเดือน และต้องการข้อมูลล่าสุด ให้กดปุ่ม <span class="badge bg-sync">ปรับปรุงข้อมูลยอดขาย</span></li>
+                <li><b>ข้อมูลที่ Sync:</b> ยอดขายย้อนหลัง 3 เดือน (M-1, M-2, M-3), ค่าเฉลี่ยรายเดือน และยอดสูงสุด/ต่ำสุด</li>
+            </ul>
+        </div>
+
+        <h2 id="reports">4. รายงานสรุปรายปี (Yearly Reports)</h2>
+        <p>ดูภาพรวมแผนงานตลอดทั้งปีในหลากหลายมิติ (เปิดในหน้าใหม่เสมอ)</p>
+        <table>
+            <tr>
+                <th width="30%">ชื่อรายงาน</th>
+                <th>คำอธิบาย</th>
+            </tr>
+            <tr>
+                <td><span class="badge bg-report">สรุปรายปี (แยกพนักงาน)</span></td>
+                <td>ดูภาพรวม Sales แต่ละคนว่ามีเป้าและคาดการณ์ทั้ง 12 เดือนเป็นอย่างไร (1 คน 1 บรรทัด)</td>
+            </tr>
+            <tr>
+                <td><span class="badge bg-report">สรุปรายปี (แยก SKU)</span></td>
+                <td>ดูยอดรวมสินค้าแต่ละตัวตลอดทั้งปี สามารถกรองดูเฉพาะสินค้าที่สนใจได้</td>
+            </tr>
+            <tr>
+                <td><span class="badge bg-report">สรุปรายปี (พนักงาน + ลูกค้า + SKU)</span></td>
+                <td>รายงานระดับละเอียดที่สุด แสดงข้อมูลทุกรายการแยกตามร้านค้าและพนักงาน</td>
+            </tr>
+        </table>
+        <p><i class="highlight">เคล็ดลับ:</i> ในหน้ารายงานรวม สามารถคลิกที่ <b>"ชื่อพนักงานขาย"</b> เพื่อ Drill-down เจาะลึกดูเฉพาะสินค้าของพนักงานคนนั้นได้ทันที</p>
+
+        <h2 id="security">5. สิทธิการใช้งาน (Access Control)</h2>
+        <div class="step-box" style="background: #f4f4f4; border-color: #ddd;">
+            <ul>
+                <li><b>พนักงานขาย (Sale/Take):</b> จะเห็นและจัดการได้เฉพาะแผนงานและรายงานของตนเองเท่านั้น ระบบจะล็อกตัวกรองชื่อไว้ให้โดยอัตโนมัติ</li>
+                <li><b>ผู้บริหาร/Admin:</b> สามารถดูข้อมูลของพนักงานทุกคน เลือกกรองรายคน หรือดูภาพรวมทั้งบริษัทได้</li>
+            </ul>
+        </div>
+
+        <footer style="text-align: center; margin-top: 50px; font-size: 0.85em; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px;">
+            &copy; 2025 BY SAC System Admin
+        </footer>
+    </div>
+</body>
+</html>

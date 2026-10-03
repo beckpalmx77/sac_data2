@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อสรุปแนวคิด ขั้นตอน และวิธีการ: ระบบปรับปรุง BRAND, SKU_CAT, DETAIL ตาม SKU_CODE</title>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0d9488 100%);
+            color: white;
+            padding: 50px 0;
+            margin-bottom: 35px;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+        }
+        .card-custom {
+            background: white;
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .instruction-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            border-left: 8px solid #0d9488;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+        }
+        .badge-step {
+            background: #0d9488;
+            color: white;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+        .tip-box {
+            background: #f0fdf4;
+            border-radius: 14px;
+            padding: 20px;
+            border-left: 5px solid #22c55e;
+            margin-top: 20px;
+        }
+        .warning-box {
+            background: #fffbeb;
+            border-radius: 14px;
+            padding: 20px;
+            border-left: 5px solid #f59e0b;
+            margin-top: 20px;
+        }
+        .info-box {
+            background: #f0f9ff;
+            border-radius: 14px;
+            padding: 20px;
+            border-left: 5px solid #0284c7;
+            margin-top: 20px;
+        }
+        .code-inline {
+            background: #f1f5f9;
+            padding: 2px 7px;
+            border-radius: 6px;
+            color: #d97706;
+            font-family: monospace;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        .table-template th {
+            background-color: #0f172a !important;
+            color: white !important;
+            vertical-align: middle;
+        }
+        .table-template td {
+            vertical-align: middle;
+        }
+        .workflow-arrow {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #0d9488;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <div class="hero-section text-center">
+        <div class="container">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 shadow-sm">
+                <i class="fas fa-file-invoice me-1"></i> Technical & Operational Specification 2026
+            </span>
+            <h1 class="display-6 fw-bold mb-2">
+                <i class="fas fa-tags me-2"></i>ข้อสรุปแนวคิด ขั้นตอน และวิธีการทำงาน
+            </h1>
+            <p class="lead opacity-90 mb-0">
+                ระบบปรับปรุง <strong>ยี่ห้อ (BRAND)</strong>, <strong>ประเภทสินค้า (SKU_CAT)</strong> และ <strong>รายละเอียด (DETAIL)</strong> ตามรหัสสินค้า <strong>(SKU_CODE)</strong><br>
+                ผ่านการนำเข้าไฟล์ Excel ลงสู่ตารางฐานข้อมูล <code>ims_data_sale_sac_all</code>
+            </p>
+        </div>
+    </div>
+
+    <div class="container mb-5" style="max-width: 1050px;">
+
+        <!-- 1. ความเป็นมาและวัตถุประสงค์ (Executive Summary & Problem Statement) -->
+        <div class="instruction-box" style="border-left-color: #0d9488;">
+            <div class="d-flex align-items-center mb-2">
+                <span class="badge-step bg-teal text-white" style="background-color: #0d9488;">1</span>
+                <h4 class="fw-bold mb-0 text-dark">วัตถุประสงค์และแนวคิดการทำงาน (Concept & Objectives)</h4>
+            </div>
+            <p class="text-muted ps-5">ที่มาของปัญหาและความสำคัญของการปรับปรุงข้อมูล Master Sales Data</p>
+            <hr>
+            
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                        <h6 class="fw-bold text-danger"><i class="fas fa-exclamation-circle me-1"></i> ปัญหาเดิมที่พบในระบบ:</h6>
+                        <ul class="small mb-0 ps-3">
+                            <li class="mb-2">ในตารางประวัติการขาย <code>ims_data_sale_sac_all</code> มักมีข้อมูลรายการสินค้าที่ฟิลด์ <strong>BRAND (ยี่ห้อ)</strong>, <strong>SKU_CAT (ประเภท)</strong> หรือ <strong>DETAIL</strong> ไม่สมบูรณ์, ค่าว่าง, หรือสะกดไม่เป็นไปตามมาตรฐาน</li>
+                            <li class="mb-2">ส่งผลให้หน้าจอรายงานและระบบวางแผนการขาย เช่น <strong>Export ข้อมูลยอดขาย สำหรับ PLAN ยาง (<code>export_data_v_template.php</code>)</strong> และ <strong>Volume Tires Plan (<code>forecast_plan_display_volume_tires.php</code>)</strong> ที่มีการกรองเงื่อนไข:
+                                <div class="mt-1">
+                                    <span class="badge bg-secondary me-1">BRAND: VB, ATLAS, AT, BS/FS ฯลฯ</span>
+                                    <span class="badge bg-secondary">SKU_CAT: TBR/LTR, LSR, TBB/LTB</span>
+                                </div>
+                                ไม่สามารถดึงยอดขายของสินค้านั้นๆ ออกมาได้อย่างครบถ้วน
+                            </li>
+                            <li>หากต้องตามแก้ไขทีละบิลในระบบบัญชีเดิมจะใช้เวลานานมากและไม่ทันต่อรอบการทำแผน Forecast</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3 border h-100">
+                        <h6 class="fw-bold text-success"><i class="fas fa-check-circle me-1"></i> แนวคิดการแก้ปัญหา (Solution Architecture):</h6>
+                        <ul class="small mb-0 ps-3">
+                            <li class="mb-2">สร้างหน้าจอ <strong>Excel Import Batch Update</strong> ตามรูปแบบของหน้าจอมาตรฐาน <code>update_data_import_cust_sale_sac_2.php</code></li>
+                            <li class="mb-2">ใช้ <strong>รหัสสินค้า (SKU_CODE)</strong> เป็น Primary Key ในการค้นหาและอัปเดตข้อมูลทุกแถวในตาราง <code>ims_data_sale_sac_all</code> พร้อมกันในคำสั่งเดียว</li>
+                            <li class="mb-2">ใช้โครงสร้างไฟล์ Excel กระชับเพียง <strong>3 Fields (คอลัมน์ A, B, C)</strong>:
+                                <ol class="mt-1 ps-3">
+                                    <li><code>SKU_CODE</code> (คอลัมน์ A) : รหัสสินค้าที่ใช้ค้นหา (Key)</li>
+                                    <li><code>BRAND</code> (คอลัมน์ B) : ยี่ห้อสินค้าตามมาตรฐานใหม่</li>
+                                    <li><code>SKU_CAT</code> (คอลัมน์ C) : ประเภทสินค้าหลัก (และระบบจะดูแลฟิลด์ <code>DETAIL</code> ให้สอดคล้องกัน)</li>
+                                </ol>
+                            </li>
+                            <li>มีระบบบันทึกประวัติการนำเข้าลงตาราง <code>log_import_data</code> พร้อมแสดงตารางสรุปข้อมูลสินค้าในระบบด้านล่างทันที</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <i class="fas fa-database text-primary me-2"></i><strong>ตารางฐานข้อมูลเป้าหมาย:</strong> 
+                ตาราง <code class="code-inline">ims_data_sale_sac_all</code> ซึ่งเป็นตารางคลังข้อมูลยอดขายกลาง (Sales Data Warehouse) ของบริษัท SAC ที่ทุกระบบนำไปใช้ประมวลผลต่อ
+            </div>
+        </div>
+
+        <!-- 2. โครงสร้างไฟล์ Excel Template -->
+        <div class="instruction-box" style="border-left-color: #0284c7;">
+            <div class="d-flex align-items-center mb-2">
+                <span class="badge-step" style="background-color: #0284c7;">2</span>
+                <h4 class="fw-bold mb-0 text-dark">โครงสร้างไฟล์ Excel สำหรับนำเข้า (Excel Template Specification)</h4>
+            </div>
+            <p class="text-muted ps-5">รูปแบบตารางและชื่อหัวคอลัมน์มาตรฐาน (Row 1 ในไฟล์ Excel)</p>
+            <hr>
+            
+            <p class="small">ไฟล์ Excel ที่จะนำเข้าจะต้องเป็นไฟล์นามสกุล <code class="code-inline">.xlsx</code> หรือ <code class="code-inline">.xls</code> โดยมีโครงสร้างหัวตารางใน <strong>แถวที่ 1 (Row 1)</strong> ดังนี้:</p>
+
+            <div class="table-responsive mb-3">
+                <table class="table table-bordered table-striped table-hover table-template small">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 10%;">คอลัมน์</th>
+                            <th style="width: 25%;">ชื่อหัวข้อ (Header)</th>
+                            <th style="width: 25%;">ฟิลด์ฐานข้อมูล</th>
+                            <th>คำอธิบายข้อมูลและเงื่อนไข</th>
+                            <th style="width: 20%;">ตัวอย่างข้อมูล</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center fw-bold bg-light">A</td>
+                            <td class="fw-bold text-danger">รหัสสินค้า <span class="badge bg-danger">Key</span></td>
+                            <td><code>SKU_CODE</code></td>
+                            <td>รหัสสินค้าในระบบ <strong>(ห้ามเว้นว่างเด็ดขาด)</strong> ใช้เป็นเงื่อนไขในการค้นหาเพื่ออัปเดตข้อมูลทุกบิล</td>
+                            <td><code>AT1122516-AP200</code><br><code>VB10002016-LUG</code></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold bg-light">B</td>
+                            <td class="fw-bold text-success">ยี่ห้อ (BRAND) <span class="badge bg-success">Update</span></td>
+                            <td><code>BRAND</code></td>
+                            <td>ชื่อยี่ห้อที่ต้องการปรับปรุง เช่น <code>ATLAS</code>, <code>VB</code>, <code>BS/FS</code>, <code>DS</code>, <code>DL</code></td>
+                            <td><code>ATLAS</code></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold bg-light">C</td>
+                            <td class="fw-bold text-primary">ประเภทสินค้า (SKU_CAT) <span class="badge bg-primary">Update</span></td>
+                            <td><code>SKU_CAT</code></td>
+                            <td>ประเภทยาง เช่น <code>TBR/LTR (ยางใหญ่)</code>, <code>LSR</code>, <code>TBB/LTB (ยางผ้าใบ)</code>, <code>ยางเล็ก</code> (ระบบจะซิงก์ <code>DETAIL</code> ให้สอดคล้องกันอัตโนมัติ)</td>
+                            <td><code>TBR/LTR (ยางใหญ่)</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box mt-3">
+                <i class="fas fa-exclamation-triangle text-warning me-2"></i><strong>ข้อควรระวังสำคัญในการเตรียมไฟล์:</strong>
+                <ul class="small mb-0 ps-3">
+                    <li>แถวที่ 1 (Row 1) ต้องเป็นหัวคอลัมน์ ห้ามผสานเซลล์ (Merge Cells) และต้องมีคอลัมน์ A เป็น <code>รหัสสินค้า</code></li>
+                    <li>ข้อมูลที่จะถูกอัปเดตจะเริ่มอ่านตั้งแต่ <strong>แถวที่ 2 (Row 2)</strong> เป็นต้นไป</li>
+                    <li>หากแถวใดไม่มีค่าในคอลัมน์ A (รหัสสินค้าว่าง) ระบบจะข้ามแถวนั้นไปโดยอัตโนมัติ</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3. ขั้นตอนวิธีการทำงานทีละสเต็ป (Step-by-Step User Workflow) -->
+        <div class="instruction-box" style="border-left-color: #f59e0b;">
+            <div class="d-flex align-items-center mb-2">
+                <span class="badge-step" style="background-color: #f59e0b;">3</span>
+                <h4 class="fw-bold mb-0 text-dark">ขั้นตอนการใช้งานหน้าจอระบบ (Operational Steps)</h4>
+            </div>
+            <p class="text-muted ps-5">ขั้นตอนการปฏิบัติงานสำหรับผู้ใช้งานระบบ</p>
+            <hr>
+
+            <div class="row g-3 mb-4">
+                <!-- Step 1 -->
+                <div class="col-md-4">
+                    <div class="card p-3 bg-light border h-100 shadow-sm">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-warning text-dark rounded-circle me-2 fw-bold" style="width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center;">1</span>
+                            <h6 class="fw-bold text-dark mb-0">โหลดเทมเพลตมาตรฐาน</h6>
+                        </div>
+                        <p class="small text-muted mb-0">คลิกปุ่ม <span class="badge bg-success"><i class="fas fa-file-excel me-1"></i> ตัวอย่างไฟล์ Excel Format</span> เพื่อโหลดเทมเพลตเปล่าต้นแบบ หรือนำไฟล์ Excel เดิมที่มีรหัสสินค้ามาจัดเรียงหัวคอลัมน์ให้ตรงกัน</p>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="col-md-4">
+                    <div class="card p-3 bg-light border h-100 shadow-sm">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-primary text-white rounded-circle me-2 fw-bold" style="width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center;">2</span>
+                            <h6 class="fw-bold text-dark mb-0">กรอกข้อมูล Brand/Cat</h6>
+                        </div>
+                        <p class="small text-muted mb-0">กรอกค่า <strong>ยี่ห้อ (BRAND)</strong>, <strong>ประเภทสินค้า (SKU_CAT)</strong> และ <strong>รายละเอียด (DETAIL)</strong> ที่ถูกต้องลงในไฟล์ Excel แล้วทำการบันทึกไฟล์ (Save)</p>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="col-md-4">
+                    <div class="card p-3 bg-light border h-100 shadow-sm">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-success text-white rounded-circle me-2 fw-bold" style="width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center;">3</span>
+                            <h6 class="fw-bold text-dark mb-0">อัปโหลดไฟล์ (Import)</h6>
+                        </div>
+                        <p class="small text-muted mb-0">ที่หน้าจอระบบ เลือกไฟล์ Excel แล้วกดปุ่ม <span class="badge bg-primary"><i class="fas fa-upload me-1"></i> Import</span> ระบบจะแสดง Progress Bar ความคืบหน้าขณะกำลังอัปเดตฐานข้อมูล</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-3 bg-white border border-success rounded-3 mb-3">
+                <h6 class="fw-bold text-success mb-2"><i class="fas fa-bell me-1"></i> กล่องแจ้งเตือนผลลัพธ์การนำเข้า (SweetAlert Summary Dialog):</h6>
+                <p class="small text-muted mb-2">เมื่อการอัปเดตเสร็จสมบูรณ์ ระบบจะสรุปรายงานตัวเลขอย่างชัดเจนเหมือนหน้าจอต้นแบบ <code>update_data_import_cust_sale_sac_2.php</code>:</p>
+                <div class="row g-2 small">
+                    <div class="col-md-4"><i class="fas fa-file-excel text-success me-1"></i> <strong>ชื่อไฟล์:</strong> แสดงชื่อไฟล์ Excel ที่นำเข้า</div>
+                    <div class="col-md-4"><i class="fas fa-list-ol text-primary me-1"></i> <strong>รายการทั้งหมด:</strong> นับจำนวนแถวใน Excel</div>
+                    <div class="col-md-4"><i class="fas fa-check-circle text-success me-1"></i> <strong>อัปเดตสำเร็จ:</strong> นับจำนวนแถวที่เกิดการเปลี่ยนแปลงจริง</div>
+                    <div class="col-md-4"><i class="fas fa-stopwatch text-warning me-1"></i> <strong>เวลาที่ใช้:</strong> คำนวณเป็นวินาที</div>
+                    <div class="col-md-4"><i class="fas fa-database text-info me-1"></i> <strong>ตารางที่บันทึก:</strong> <code>ims_data_sale_sac_all</code></div>
+                    <div class="col-md-4"><i class="fas fa-clock text-secondary me-1"></i> <strong>นับถอยหลังรีเฟรช:</strong> มีระบบ Auto-refresh 8 วินาที</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. วิธีการทำงานระดับเทคนิคและฐานข้อมูล (Technical Implementation) -->
+        <div class="instruction-box" style="border-left-color: #6366f1;">
+            <div class="d-flex align-items-center mb-2">
+                <span class="badge-step" style="background-color: #6366f1;">4</span>
+                <h4 class="fw-bold mb-0 text-dark">วิธีการทำงานระดับเทคนิคและฐานข้อมูล (Technical Architecture)</h4>
+            </div>
+            <p class="text-muted ps-5">เบื้องหลังการทำงาน การจัดการหน่วยความจำ และความปลอดภัยของข้อมูล</p>
+            <hr>
+
+            <h6 class="fw-bold text-dark mb-2"><i class="fas fa-code text-primary me-1"></i> 1. คำสั่ง SQL สำหรับอัปเดตข้อมูล (Prepared Statement):</h6>
+            <div class="p-3 bg-dark text-light rounded-3 mb-3 small font-monospace">
+UPDATE ims_data_sale_sac_all<br>
+SET BRAND = :BRAND,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SKU_CAT = :SKU_CAT,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DETAIL = :DETAIL,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SKU_NAME = COALESCE(NULLIF(:SKU_NAME, ''), SKU_NAME),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;seq_record = :seq_record,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;update_date = NOW()<br>
+WHERE SKU_CODE = :SKU_CODE;
+            </div>
+
+            <h6 class="fw-bold text-dark mb-2"><i class="fas fa-shield-alt text-success me-1"></i> 2. มาตรการความปลอดภัยและประสิทธิภาพ (Safety & Performance):</h6>
+            <ul class="small mb-3 ps-3">
+                <li class="mb-1"><strong>Database Transaction (ACID):</strong> ใช้ <code>$conn->beginTransaction()</code> ครอบการทำงาน และ <code>$conn->commit()</code> ทีเดียวเมื่อเสร็จสิ้น หากเกิดข้อผิดพลาดจะ <code>$conn->rollBack()</code> ข้อมูลจะไม่เสียหาย</li>
+                <li class="mb-1"><strong>Dynamic Memory & Execution Time:</strong> ปลดล็อก <code>set_time_limit(0)</code> และ <code>ini_set('memory_limit', '2048M')</code> รองรับไฟล์ Excel ที่มีจำนวนหลายหมื่นแถวได้อย่างเสถียร</li>
+                <li class="mb-1"><strong>MIME Type Validation:</strong> ตรวจสอบความถูกต้องของไฟล์ผ่าน <code>finfo_file()</code> ป้องกันการอัปโหลดไฟล์แปลกปลอม</li>
+                <li class="mb-1"><strong>Log Auditing:</strong> บันทึกประวัติการนำเข้าลงตาราง <code>log_import_data</code> ระบุชื่อไฟล์, จำนวน Record, วันเวลา, และผู้ใช้งาน (Create By)</li>
+            </ul>
+
+            <h6 class="fw-bold text-dark mb-2"><i class="fas fa-sync text-info me-1"></i> 3. การซิงค์ต่อเนื่อง (Optional Auto-Sync to Master Products):</h6>
+            <p class="small text-muted mb-0">สามารถเชื่อมโยงอัปเดตตาราง Master สินค้า <code>ims_product</code> หรือ <code>m_volume_tires</code> เพื่อให้ข้อมูลยี่ห้อและประเภทตรงกันทั้งระบบโดยอัตโนมัติ</p>
+        </div>
+
+        <!-- 5. องค์ประกอบของไฟล์ที่จะสร้างในระบบ (File Deliverables) -->
+        <div class="instruction-box" style="border-left-color: #ec4899;">
+            <div class="d-flex align-items-center mb-2">
+                <span class="badge-step" style="background-color: #ec4899;">5</span>
+                <h4 class="fw-bold mb-0 text-dark">โครงสร้างไฟล์และคอมโพเนนต์ที่จะพัฒนา (System Deliverables)</h4>
+            </div>
+            <p class="text-muted ps-5">ชุดไฟล์ทั้งหมดที่จะถูกสร้างขึ้นในโปรเจกต์ <code>sac_data2</code></p>
+            <hr>
+
+            <div class="table-responsive small">
+                <table class="table table-bordered bg-white shadow-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 30%;">ชื่อไฟล์</th>
+                            <th style="width: 25%;">โฟลเดอร์</th>
+                            <th>หน้าที่การทำงาน</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold text-primary"><code>HOW_TO_UPDATE_BRAND.html</code></td>
+                            <td>รูทโปรเจกต์ (Root)</td>
+                            <td>เอกสารสรุปแนวคิด ขั้นตอน และวิธีการทำงานฉบับนี้</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-success"><code>update_data_import_brand_sku_cat.php</code></td>
+                            <td>รูทโปรเจกต์ (Root)</td>
+                            <td>หน้าจอ UI หลักสำหรับนำเข้าไฟล์ Excel, แสดง Progress Bar, และแสดงตาราง DataTable รายการสินค้าล่าสุด</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-warning text-dark"><code>update_exc_data_brand_sku_cat_process.php</code></td>
+                            <td><code>import_process/</code></td>
+                            <td>สคริปต์ Backend อ่านไฟล์ Excel (PhpSpreadsheet) และทำการ UPDATE ข้อมูลลงตาราง <code>ims_data_sale_sac_all</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-info"><code>fetch_data_brand_sku_cat.php</code></td>
+                            <td><code>model/</code></td>
+                            <td>สคริปต์ JSON API สำหรับดึงข้อมูลสรุป SKU_CODE, SKU_NAME, BRAND, SKU_CAT, DETAIL มาแสดงผลใน DataTable</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-secondary"><code>import_brand_sku_cat_template.xlsx</code></td>
+                            <td><code>import_process/template/</code></td>
+                            <td>ไฟล์ Excel เทมเพลตมาตรฐาน 5 คอลัมน์ สำหรับให้ผู้ใช้ดาวน์โหลดไปกรอกข้อมูล</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 6. ปุ่มนำทางและปิดหน้าต่าง -->
+        <div class="text-center mt-4">
+            <a href="update_data_import_brand_sku_cat.php" class="btn btn-teal btn-lg text-white px-4 py-2 me-2 shadow-sm font-weight-bold" style="background-color: #0d9488;">
+                <i class="fas fa-arrow-right me-1"></i> ไปยังหน้าจอนำเข้าข้อมูล (update_data_import_brand_sku_cat.php)
+            </a>
+            <button class="btn btn-secondary btn-lg px-4 py-2 shadow-sm" onclick="window.close();">
+                <i class="fas fa-times me-1"></i> ปิดหน้าต่างนี้
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 bg-white border-top mt-5">
+        <div class="container">
+            <p class="small text-muted mb-1">&copy; 2026 SAC Sales Planning System | แผนกพัฒนาระบบเทคโนโลยีสารสนเทศ (IT Department)</p>
+            <p class="small text-muted mb-0">ระบบปรับปรุง Master Data สินค้า: <code>BRAND</code>, <code>SKU_CAT</code>, <code>DETAIL</code> ในตาราง <code>ims_data_sale_sac_all</code></p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

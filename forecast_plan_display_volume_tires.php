@@ -110,6 +110,15 @@ $types_list = array_keys($type_set); sort($types_list);
             font-weight: 600;
         }
         .swal2-popup h2::before { display: none !important; content: none !important; }
+        /* Ensure fixed columns have a solid background color when scrolling */
+        th.dtfc-fixed-left, td.dtfc-fixed-left {
+            background-color: #ffffff !important;
+            z-index: 1;
+        }
+        th.dtfc-fixed-left {
+            background-color: #f8f9fa !important;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
@@ -471,7 +480,6 @@ $types_list = array_keys($type_set); sort($types_list);
                     <table id="planTable" class="table table-bordered table-striped table-hover w-100">
                         <thead>
                             <tr>
-                                <th>จัดการ</th>
                                 <th>รหัสลูกค้า</th>
                                 <th>ชื่อลูกค้า</th>
                                 <th>พนักงานขาย</th>
@@ -481,7 +489,7 @@ $types_list = array_keys($type_set); sort($types_list);
                                 <th>รหัสสินค้า</th>
                                 <th>รายละเอียดสินค้า</th>
                                 <th>ยี่ห้อ</th>
-                                <th>Volume (ลบ.ม.)</th>
+                                <th>เฉลี่ย 12ด.</th>
                                 <th>MAX (ปีก่อน)</th>
                                 <th>MIN (ปีก่อน)</th>
                                 <th>ยอดขาย M-3</th>
@@ -489,7 +497,6 @@ $types_list = array_keys($type_set); sort($types_list);
                                 <th>ยอดขาย M-1</th>
                                 <th>เฉลี่ย 3ด.</th>
                                 <th>แพลนยาง</th>
-                                <th>รวม Volume</th>
                                 <th>เทียบ แพลน ลบ เฉลี่ย</th>
                                 <th>เทียบ แพลน ลบ เฉลี่ย %</th>
                                 <th>ยอดขายจริง</th>
@@ -497,6 +504,7 @@ $types_list = array_keys($type_set); sort($types_list);
                                 <th>ผู้รับผิดชอบ</th>
                                 <th>หมายเหตุ</th>
                                 <th>วันที่นำเข้า</th>
+                                <th>จัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -565,6 +573,7 @@ $types_list = array_keys($type_set); sort($types_list);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -583,8 +592,12 @@ $types_list = array_keys($type_set); sort($types_list);
             serverSide: true,
             responsive: false,
             scrollX: true,
-            order: [[1, 'asc']],
-            pageLength: 25,
+            scrollCollapse: true,
+            fixedColumns: {
+                left: 7
+            },
+            order: [[0, 'asc']],
+            pageLength: 10,
             lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "ทั้งหมด"]],
             ajax: {
                 url: 'forecast_plan_fetch_volume_tires.php',
@@ -608,7 +621,6 @@ $types_list = array_keys($type_set); sort($types_list);
                 }
             },
             columns: [
-                { data: 'actions', orderable: false, className: 'text-center' },
                 { data: 'ar_code', className: 'text-center' },
                 { data: 'ar_name' },
                 { data: 'sale_name' },
@@ -618,7 +630,7 @@ $types_list = array_keys($type_set); sort($types_list);
                 { data: 'sku_code', className: 'text-center' },
                 { data: 'sku_name' },
                 { data: 'brand_code', className: 'text-center' },
-                { data: 'volume', className: 'text-end badge-vol' },
+                { data: 'avg_per_month_year', className: 'text-end' },
                 { data: 'max_qty_year', className: 'text-end' },
                 { data: 'min_qty_year', className: 'text-end' },
                 { data: 'sales_month_1', className: 'text-end' },
@@ -626,15 +638,18 @@ $types_list = array_keys($type_set); sort($types_list);
                 { data: 'sales_month_3', className: 'text-end' },
                 { data: 'avg_3_month', className: 'text-end' },
                 { data: 'forecast_qty_month_1', className: 'text-end' },
-                { data: 'total_volume', className: 'text-end fw-bold text-success' },
                 { data: 'compare_forecast_month_1', className: 'text-end' },
                 { data: 'compare_sales_percent', className: 'text-end' },
                 { data: 'sales_actual_month', className: 'text-end' },
                 { data: 'sales_diff_actual', className: 'text-end' },
                 { data: 'responsible_person' },
                 { data: 'remark' },
-                { data: 'import_date', className: 'text-center' }
+                { data: 'import_date', className: 'text-center' },
+                { data: 'actions', orderable: false, className: 'text-center' }
             ],
+            drawCallback: function() {
+                updateTableHeaders();
+            },
             language: {
                 search: "ค้นหา:",
                 lengthMenu: "แสดง _MENU_ รายการ",
@@ -649,6 +664,40 @@ $types_list = array_keys($type_set); sort($types_list);
                     last: "หน้าสุดท้าย"
                 }
             }
+        });
+
+        function updateTableHeaders() {
+            const month = parseInt($('#filterMonth').val());
+            const year = parseInt($('#filterYear').val()) || new Date().getFullYear();
+
+            const prevYearBE = (year - 1) + 543;
+            $(table.column(9).header()).text('เฉลี่ย 12ด. (' + prevYearBE + ')');
+            $(table.column(10).header()).text('MAX (' + prevYearBE + ')');
+            $(table.column(11).header()).text('MIN (' + prevYearBE + ')');
+
+            if (!month) return;
+
+            const thai_months = [
+                '', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
+                'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
+            ];
+
+            let m1 = month - 1; if (m1 <= 0) m1 += 12;
+            let m2 = month - 2; if (m2 <= 0) m2 += 12;
+            let m3 = month - 3; if (m3 <= 0) m3 += 12;
+
+            $(table.column(12).header()).text('ยอดขายเดือน ' + thai_months[m3]);
+            $(table.column(13).header()).text('ยอดขายเดือน ' + thai_months[m2]);
+            $(table.column(14).header()).text('ยอดขายเดือน ' + thai_months[m1]);
+            $(table.column(15).header()).text('เฉลี่ย 3ด.');
+            $(table.column(16).header()).text('แพลนยาง ' + (thai_months[month] || ''));
+            $(table.column(19).header()).text('ยอดขายจริง ' + (thai_months[month] || ''));
+        }
+
+        updateTableHeaders();
+
+        $('#filterMonth, #filterYear').on('change', function() {
+            updateTableHeaders();
         });
 
         function updateMonthLockBanner(isLocked, lockInfo) {
@@ -680,10 +729,6 @@ $types_list = array_keys($type_set); sort($types_list);
             const id = $(this).data('id');
             const qty = parseFloat($(this).val()) || 0;
             const avg3m = parseFloat(row.find('.avg-3m').data('val')) || 0;
-            const volPerUnit = parseFloat(row.find('.total-vol').data('vol')) || 0;
-
-            const totalVol = qty * volPerUnit;
-            row.find('.total-vol').text(totalVol.toFixed(2));
 
             const diff = qty - avg3m;
             row.find('.compare-1').val(diff.toFixed(2));

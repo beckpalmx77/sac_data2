@@ -41,7 +41,7 @@ $columns = [
     6 => 'p.sku_code', 
     7 => 'p.sku_name',
     8 => 'p.brand_code', 
-    9 => 'p.volume',
+    9 => 'p.avg_per_month_year',
     10 => 'p.max_qty_year', 
     11 => 'p.min_qty_year', 
     12 => 'p.sales_month_1', 
@@ -52,10 +52,11 @@ $columns = [
     17 => 'p.compare_forecast_month_1', 
     18 => 'p.compare_sales_percent', 
     19 => 'sales_actual_month',
-    20 => 'p.responsible_person',
-    21 => 'p.remark',
-    22 => 'p.import_date',
-    23 => 'p.id'
+    20 => 'sales_diff_actual',
+    21 => 'p.responsible_person',
+    22 => 'p.remark',
+    23 => 'p.import_date',
+    24 => 'p.id'
 ];
 
 $order_by = $columns[$order_col_idx] ?? 'p.id';
@@ -294,6 +295,7 @@ try {
             "sku_code" => $sku_display,
             "sku_name" => $row['sku_name'] ?? '',
             "brand_code" => $row['brand_code'],
+            "avg_per_month_year" => number_format($row['avg_per_month_year'], 0),
             "volume" => number_format($vol_per_unit, 2),
             "max_qty_year" => number_format($row['max_qty_year'], 0),
             "min_qty_year" => number_format($row['min_qty_year'], 0),

@@ -117,14 +117,12 @@ try {
 
     echo "\xEF\xBB\xBF";
 
-    // 18 columns + volume columns
-    $csv_header = "เซลล์,เทค,รายชื่อลูกค้า,รหัสลูกค้า,จังหวัด,ประเภท,รหัสสินค้า,รายละเอียด,ยี่ห้อ,Volume(ลบ.ม./เส้น),ยอดขายสูงสุดต่อเดือน,ยอดขายต่ำสุดต่อเดือน,3 เดือนย้อนหลัง,2 เดือนย้อนหลัง,1 เดือนย้อนหลัง,ค่าเฉลี่ย 3 เดือน,แพลนยางเดือนที่ต้องการ,รวม Volume(ลบ.ม.),เทียบ แพลนยาง ลบ ค่าเฉลี่ย,เทียบ แพลนยาง ลบ ค่าเฉลี่ย %,ผู้รับผิดชอบ,หมายเหตุ,วันที่นำเข้า\n";
+    // CSV Header row
+    $csv_header = "เซลล์,เทค,รายชื่อลูกค้า,รหัสลูกค้า,จังหวัด,ประเภท,รหัสสินค้า,รายละเอียด,ยี่ห้อ,เฉลี่ย 12 เดือน ปีก่อน,ยอดขายสูงสุดต่อเดือน,ยอดขายต่ำสุดต่อเดือน,3 เดือนย้อนหลัง,2 เดือนย้อนหลัง,1 เดือนย้อนหลัง,ค่าเฉลี่ย 3 เดือน,แพลนยางเดือนที่ต้องการ,เทียบ แพลนยาง ลบ ค่าเฉลี่ย,เทียบ แพลนยาง ลบ ค่าเฉลี่ย %,ผู้รับผิดชอบ,หมายเหตุ,วันที่นำเข้า\n";
     echo $csv_header;
 
     foreach ($rows as $row) {
         $forecast = (float)($row['forecast_qty_month_1'] ?? 0);
-        $vol = (float)($row['volume'] ?? 0);
-        $total_vol = $forecast * $vol;
 
         $fields = [
             '"' . str_replace('"', '""', (string)($row['sale_name'] ?? '')) . '"',
@@ -136,7 +134,7 @@ try {
             '"' . str_replace('"', '""', (string)($row['sku_code'] ?? '')) . '"',
             '"' . str_replace('"', '""', (string)($row['sku_name'] ?? '')) . '"',
             '"' . str_replace('"', '""', (string)($row['brand_code'] ?? '')) . '"',
-            number_format($vol, 2, '.', ''),
+            number_format((float)($row['avg_per_month_year'] ?? 0), 0, '.', ''),
             number_format((float)($row['max_qty_year'] ?? 0), 0, '.', ''),
             number_format((float)($row['min_qty_year'] ?? 0), 0, '.', ''),
             number_format((float)($row['sales_month_1'] ?? 0), 0, '.', ''),
@@ -144,7 +142,6 @@ try {
             number_format((float)($row['sales_month_3'] ?? 0), 0, '.', ''),
             number_format((float)($row['avg_3_month'] ?? 0), 2, '.', ''),
             number_format($forecast, 0, '.', ''),
-            number_format($total_vol, 2, '.', ''),
             number_format((float)($row['compare_forecast_month_1'] ?? 0), 2, '.', ''),
             number_format((float)($row['compare_sales_percent'] ?? 0), 1, '.', '') . '%',
             '"' . str_replace('"', '""', (string)($row['responsible_person'] ?? '')) . '"',

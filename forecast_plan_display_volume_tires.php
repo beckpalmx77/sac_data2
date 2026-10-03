@@ -627,7 +627,7 @@ $types_list = array_keys($type_set); sort($types_list);
                 { data: 'take_name' },
                 { data: 'province' },
                 { data: 'product_type' },
-                { data: 'sku_code', className: 'text-center' },
+                { data: 'sku_code', className: 'text-start' },
                 { data: 'sku_name' },
                 { data: 'brand_code', className: 'text-center' },
                 { data: 'avg_per_month_year', className: 'text-end' },
